@@ -99,22 +99,24 @@ test("withdrawal stops the active package and is logged once", async () => {
   await rejects(admin.activateWaterPackage(s, { package_id: owner.package_id, decision: owner, expected_active: owner.package_id }, NOW), "PACKAGE_NOT_STAGED");
 });
 
+// Routes run against the real admin module with the auth/storage boundary stubbed.
+const serverStub = moduleUrl(`
+  import { WaterAdminError } from ${JSON.stringify(adminUrl)};
+  export const waterAdminHeaders = { "Cache-Control": "private, no-store" };
+  export const waterAdminStore = () => globalThis.__waterAdmin.store;
+  export const waterSameOrigin = (request) => { if (request.headers.get("origin") !== new URL(request.url).origin) throw new WaterAdminError("SAME_ORIGIN_REQUIRED", 403); };
+  export const waterOwner = async () => { if (!globalThis.__waterAdmin.owner) throw new WaterAdminError("OWNER_REQUIRED", 403); return { id: "owner-1", email: "owner@example.test" }; };
+  export const waterWorker = (request) => { if (request.headers.get("authorization") !== "Bearer staging-secret") throw new WaterAdminError("STAGING_TOKEN_REQUIRED", 403); };
+  export const readBoundedText = async (request) => request.text();
+  export const waterAdminFailure = (error) => Response.json({ outcome: "ERROR", reason_code: error instanceof WaterAdminError ? error.message : "WATER_ADMIN_UNAVAILABLE" }, { status: error.status ?? 503 });
+`, "governed-water-admin-server.ts");
+const route = async (name) => import(moduleUrl((await read(`../app/api/governed/water-admin/${name}/route.ts`))
+  .replaceAll('"../../../../governed-water-admin-server"', JSON.stringify(serverStub))
+  .replaceAll('"../../../../governed-water-admin"', JSON.stringify(adminUrl))
+  .replaceAll('"../../../../governed-water"', JSON.stringify(waterUrl)), name));
+
 test("routes require the staging token, the owner and the Site origin", async () => {
   const s = await store();
-  const serverStub = moduleUrl(`
-    import { WaterAdminError } from ${JSON.stringify(adminUrl)};
-    export const waterAdminHeaders = { "Cache-Control": "private, no-store" };
-    export const waterAdminStore = () => globalThis.__waterAdmin.store;
-    export const waterSameOrigin = (request) => { if (request.headers.get("origin") !== new URL(request.url).origin) throw new WaterAdminError("SAME_ORIGIN_REQUIRED", 403); };
-    export const waterOwner = async () => { if (!globalThis.__waterAdmin.owner) throw new WaterAdminError("OWNER_REQUIRED", 403); return { id: "owner-1", email: "owner@example.test" }; };
-    export const waterWorker = (request) => { if (request.headers.get("authorization") !== "Bearer staging-secret") throw new WaterAdminError("STAGING_TOKEN_REQUIRED", 403); };
-    export const readBoundedText = async (request) => request.text();
-    export const waterAdminFailure = (error) => Response.json({ outcome: "ERROR", reason_code: error instanceof WaterAdminError ? error.message : "WATER_ADMIN_UNAVAILABLE" }, { status: error.status ?? 503 });
-  `, "governed-water-admin-server.ts");
-  const route = async (name) => import(moduleUrl((await read(`../app/api/governed/water-admin/${name}/route.ts`))
-    .replaceAll('"../../../../governed-water-admin-server"', JSON.stringify(serverStub))
-    .replaceAll('"../../../../governed-water-admin"', JSON.stringify(adminUrl))
-    .replaceAll('"../../../../governed-water"', JSON.stringify(waterUrl)), name));
   globalThis.__waterAdmin = { store: s, owner: false };
   const stage = await route("stage"), activate = await route("activate");
   const text = await fixture("admitted-snapshot"), owner = JSON.parse(await fixture("owner-decision"));
@@ -129,6 +131,24 @@ test("routes require the staging token, the owner and the Site origin", async ()
   const response = await activate.POST(post("activate", body, { Origin: "https://site.test" }));
   // The route stamps the real clock; the fixture decision expired on 2026-10-01, so the gate refuses it.
   assert.deepEqual([response.status, (await response.json()).reason_code], [409, "RELEASE_TIME_INVALID"]);
+});
+
+test("status answers the owner or the staging token, and nobody else", async () => {
+  const s = await store(), owner = JSON.parse(await fixture("owner-decision"));
+  await admin.stageWaterPackage(s, await fixture("admitted-snapshot"), "staging-token", NOW);
+  await admin.activateWaterPackage(s, { package_id: owner.package_id, decision: owner, expected_active: null }, NOW);
+  const status = await route("status");
+  const get = (headers) => status.GET(new Request("https://site.test/api/governed/water-admin/status", { headers }));
+  globalThis.__waterAdmin = { store: s, owner: false };
+  assert.equal((await get({})).status, 403);
+  // A wrong token is refused even if the caller also holds an owner session.
+  globalThis.__waterAdmin.owner = true;
+  assert.equal((await get({ Authorization: "Bearer wrong" })).status, 403);
+  globalThis.__waterAdmin.owner = false;
+  const byToken = await get({ Authorization: "Bearer staging-secret" });
+  assert.deepEqual([byToken.status, await byToken.json()], [200, { active_package_id: owner.package_id, previous_package_id: null, revision: 1 }]);
+  globalThis.__waterAdmin.owner = true;
+  assert.equal((await (await get({})).json()).active_package_id, owner.package_id);
 });
 
 test("a losing concurrent activation logs no event", async () => {

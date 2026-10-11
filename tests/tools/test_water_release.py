@@ -1,5 +1,6 @@
 """Owner release rehearsal: admitted package -> decision -> stage -> activate -> governed API answers."""
 import json
+from datetime import datetime, timedelta, timezone
 from threading import Thread
 from urllib.request import urlopen
 from wsgiref.simple_server import WSGIRequestHandler, make_server
@@ -136,3 +137,113 @@ def test_stage_hosted_refuses_unsafe_urls_missing_tokens_and_activation_claims(t
     monkeypatch.setenv("KFM_WATER_WORKER_TOKEN", "short")
     with pytest.raises(ValueError, match="WATER_WORKER_TOKEN_REQUIRED"):
         water_release.stage_hosted(root, package_id, "https://kfm.example.test", opener=FakeOpener({}))
+
+
+class SiteOpener:
+    """Answers the status and stage routes in order and records each request."""
+
+    def __init__(self, active):
+        self.active, self.requests = active, []
+
+    def open(self, request, timeout):
+        self.requests.append(request)
+        if request.full_url.endswith("/status"):
+            return FakeResponse({"active_package_id": self.active, "previous_package_id": None, "revision": 1})
+        package_id = json.loads(request.data)["manifest"]["package_id"]
+        return FakeResponse({"package_id": package_id, "state": "STAGED", "activated": False})
+
+
+def cycle(tmp_path, *, acquire=acquired, now=None, **options):
+    root = tmp_path / "store"
+    init_store(root)
+    now = now or datetime(2026, 9, 30, 19, 0, tzinfo=timezone.utc)
+    return root, water_release.cycle(root, start="2026-09-30T00:00:00Z", end="2026-09-30T18:00:00Z", owner=OWNER,
+                                     valid_days=7, now=now, acquire=lambda *_: acquire(), **options)
+
+
+def snapshot(root, package_id):
+    return json.loads((root / "release/candidates/hydrology" / package_id.split(":")[1] / "snapshot.json").read_text())
+
+
+def test_cycle_runs_capture_to_decision_without_activating(tmp_path):
+    root, result = cycle(tmp_path)
+    assert (result["outcome"], result["staged_hosted"], result["activated"], result["rollback_target"]) == ("DECIDED", False, False, None)
+    decision = json.loads((root / result["decision_path"]).read_text())
+    assert (decision["package_id"], decision["policy_ref"], decision["reviewer"]) == (result["package_id"], "kfm://adr/0044", OWNER)
+    assert snapshot(root, result["package_id"])["manifest"]["candidate_id"] == result["candidate_id"]
+    assert not (root / "release/active").exists()
+
+
+def test_cycle_binds_the_site_active_package_and_stages_there(tmp_path, monkeypatch):
+    monkeypatch.setenv("KFM_WATER_WORKER_TOKEN", "t" * 40)
+    active = "sha256:" + "a" * 64
+    opener = SiteOpener(active)
+    root, result = cycle(tmp_path, site_url="https://kfm.example.test", opener=opener)
+    assert (result["outcome"], result["staged_hosted"], result["activated"]) == ("STAGED_HOSTED", True, False)
+    assert result["next"] == "https://kfm.example.test/governed/water-release"
+    assert snapshot(root, result["package_id"])["manifest"]["rollback_target"] == active == result["rollback_target"]
+    assert [(r.get_method(), r.full_url.rsplit("/", 1)[1]) for r in opener.requests] == [("GET", "status"), ("POST", "stage")]
+
+
+def test_cycle_checks_the_site_before_capturing(tmp_path, monkeypatch):
+    captured = []
+    monkeypatch.delenv("KFM_WATER_WORKER_TOKEN", raising=False)
+    with pytest.raises(ValueError, match="WATER_WORKER_TOKEN_REQUIRED"):
+        cycle(tmp_path, acquire=lambda: captured.append(1), site_url="https://kfm.example.test", opener=SiteOpener(None))
+    monkeypatch.setenv("KFM_WATER_WORKER_TOKEN", "t" * 40)
+    bad = SiteOpener("not-a-digest")
+    with pytest.raises(ValueError, match="HOSTED_UNEXPECTED_RESPONSE"):
+        cycle(tmp_path, acquire=lambda: captured.append(1), site_url="https://kfm.example.test", opener=bad)
+    assert captured == []
+
+
+def test_cycle_stops_at_a_quarantined_capture(tmp_path):
+    def conflicting(records):
+        other = dict(records[0], properties={**records[0]["properties"], "value": "99"})
+        return [*records, other]
+    with pytest.raises(ValueError, match="CAPTURE_NOT_READY"):
+        cycle(tmp_path, acquire=lambda: acquired(conflicting))
+    assert not (tmp_path / "store/release").exists()
+
+
+def test_cycle_refuses_conflicting_rollback_sources(tmp_path):
+    with pytest.raises(ValueError, match="ROLLBACK_TARGET_FROM_SITE"):
+        cycle(tmp_path, site_url="https://kfm.example.test", rollback_target="sha256:" + "a" * 64)
+    with pytest.raises(ValueError, match="ROLLBACK_TARGET_INVALID"):
+        cycle(tmp_path, rollback_target="active")
+
+
+def test_a_second_cycle_replaces_the_first_through_compare_and_swap(tmp_path, capsys):
+    # Activation checks decisions against the real clock, so decide a minute ago.
+    decided_at = datetime.now(timezone.utc) - timedelta(minutes=1)
+    root, first = cycle(tmp_path, now=decided_at)
+    second = water_release.cycle(root, start="2026-09-30T00:00:00Z", end="2026-09-30T18:00:00Z", owner=OWNER, valid_days=7,
+                                 now=decided_at + timedelta(seconds=30), rollback_target=first["package_id"],
+                                 acquire=lambda *_: acquired())
+    serving = tmp_path / "serving"
+    for result in (first, second):
+        code, _ = run(capsys, "stage", "--root", root, "--store", serving, "--package-id", result["package_id"], "--actor", OWNER)
+        assert code == 0
+        expected = result["rollback_target"] or "none"
+        code, active = run(capsys, "activate", "--root", root, "--store", serving, "--decision", result["decision_path"],
+                           "--expected-active", expected)
+        assert (code, active["package_id"]) == (0, result["package_id"])
+    assert active["revision"] == 2
+
+
+def test_cycle_cli_rejects_a_plain_http_site_before_any_network(tmp_path, capsys, monkeypatch):
+    monkeypatch.setattr(water_release, "capture", lambda *_: pytest.fail("captured before checking the Site"))
+    code, refused = run(capsys, "cycle", "--root", tmp_path / "store", "--start", "2026-09-30T00:00:00Z",
+                        "--end", "2026-09-30T18:00:00Z", "--owner", OWNER, "--site-url", "http://kfm.example.test")
+    assert (code, refused) == (1, {"outcome": "ERROR", "reason_code": "SITE_URL_INVALID"})
+
+
+def test_cycle_cli_defaults_to_the_24_hours_before_the_current_hour(tmp_path, capsys, monkeypatch):
+    windows = []
+    monkeypatch.setattr(water_release, "capture", lambda start, end: windows.append((start, end)) or acquired())
+    code, result = run(capsys, "cycle", "--root", tmp_path / "store", "--owner", OWNER)
+    assert (code, result["outcome"], result["activated"]) == (0, "DECIDED", False)
+    [(start, end)] = windows
+    assert end.endswith(":00:00Z") and (result["start"], result["end"]) == (start, end)
+    parse = lambda value: datetime.strptime(value, "%Y-%m-%dT%H:%M:%SZ")
+    assert parse(end) - parse(start) == timedelta(hours=24)
