@@ -353,12 +353,13 @@ jobs:
           python tools/validators/domains/atmosphere/validate_catalog_matrix.py --fixtures
           python tools/validators/domains/atmosphere/validate_schema.py
           python tools/validators/domains/atmosphere/validate_source_descriptor.py --fixtures
-          # Proposed GHCN-Daily pilot source: schema-valid, not admitted until the owner approves it.
+          # Admitted GHCN-Daily pilot source (ADR-0045): must stay schema-valid.
           python tools/validators/domains/atmosphere/validate_source_descriptor.py \
             data/registry/sources/atmosphere/noaa_ghcnd.yaml
           python -m pytest -q \
             tests/domains/atmosphere/test_ghcnd_daily_candidate.py \
-            tests/tools/test_ghcnd_daily_pilot.py
+            tests/tools/test_ghcnd_daily_pilot.py \
+            tests/tools/test_weather_release.py
           python -m pytest -q \
             tests/validators/domains/atmosphere/test_atmosphere_catalog_matrix_validator_entrypoint.py \
             tests/validators/domains/atmosphere/test_domain_schema_validator.py \

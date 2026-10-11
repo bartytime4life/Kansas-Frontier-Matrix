@@ -14,21 +14,30 @@ REF = re.compile(r"^kfm://[A-Za-z0-9._~:/-]{1,240}$")
 SELF_RELEASE_LICENSES = frozenset({
     "U.S. Public Domain (USGS-authored data, 17 U.S.C. 105); provisional data subject to revision",
 })
+# ADR-0045: the admitted GHCN-Daily license, used only by the weather gate. Kept
+# separate so admitting a weather source never widens water self-release.
+WEATHER_SELF_RELEASE_LICENSES = frozenset({
+    "U.S. Public Domain (NOAA federal station data, 17 U.S.C. 105); preliminary data subject to revision",
+})
+WATER_DECISION_PROFILE = "kfm.water-release-decision/v1"
+WEATHER_DECISION_PROFILE = "kfm.weather-release-decision/v1"
 
 
-def _self_release_eligible(evidence: dict) -> bool:
+def _self_release_eligible(evidence: dict, licenses=SELF_RELEASE_LICENSES) -> bool:
     entries = evidence["entries"]
     return bool(entries) and all(entry["bundle"]["sensitivity"]["level"] == "public"
-                                 and entry["bundle"]["rights"]["license"] in SELF_RELEASE_LICENSES
+                                 and entry["bundle"]["rights"]["license"] in licenses
                                  for entry in entries)
 
 
-def serving_gate(manifest: dict, evidence: dict, decision: dict | None, *, now: str) -> str:
+def serving_gate(manifest: dict, evidence: dict, decision: dict | None, *, now: str,
+                 decision_profile: str = WATER_DECISION_PROFILE, licenses=SELF_RELEASE_LICENSES) -> str:
+    """Water by default; the weather gate passes WEATHER_DECISION_PROFILE and WEATHER_SELF_RELEASE_LICENSES."""
     if decision is None:
         return "REVIEW_REQUIRED"
     if not isinstance(decision, dict) or set(decision) != DECISION_KEYS:
         return "RELEASE_METADATA_INVALID"
-    if decision["profile"] != "kfm.water-release-decision/v1" or decision["package_id"] != manifest["package_id"]:
+    if decision["profile"] != decision_profile or decision["package_id"] != manifest["package_id"]:
         return "RELEASE_BINDING_MISMATCH"
     if decision["correction_state"] != "ACTIVE":
         return "CORRECTION_HOLD"
@@ -38,7 +47,7 @@ def serving_gate(manifest: dict, evidence: dict, decision: dict | None, *, now: 
         return "REVIEW_REFERENCE_MISSING"
     if any(not isinstance(decision[k], str) or not 1 <= len(decision[k]) <= 128 for k in ("reviewer", "releaser")):
         return "INDEPENDENT_REVIEW_REQUIRED"
-    if decision["reviewer"] == decision["releaser"] and not _self_release_eligible(evidence):
+    if decision["reviewer"] == decision["releaser"] and not _self_release_eligible(evidence, licenses):
         return "INDEPENDENT_REVIEW_REQUIRED"
     try:
         if not utc_time(manifest["created_at"]) <= utc_time(decision["reviewed_at"]) <= utc_time(decision["released_at"]) <= utc_time(now) < utc_time(decision["expires_at"]):
