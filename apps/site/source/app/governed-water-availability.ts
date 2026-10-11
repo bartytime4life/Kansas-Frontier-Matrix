@@ -2,8 +2,10 @@ import type { WaterResponse } from "./governed-water";
 
 export type WaterBrowserState = "not-checked" | "checking" | "received" | "no-release" | "withheld" | "unavailable";
 
-/** Classify the response observed by this browser; never infer a release from a transport failure. */
-export function waterBrowserStateForResponse(value: WaterResponse | null, httpOk: boolean): WaterBrowserState {
+/** Classify the response observed by this browser; never infer a release from a transport failure.
+ *  Shared by the water and weather layers, whose responses have the same envelope and data shape. */
+type ReleasedResponse = { envelope?: { outcome: string; reason_code: string }; data?: { stations?: unknown; observations?: unknown } };
+export function waterBrowserStateForResponse(value: ReleasedResponse | null, httpOk: boolean): WaterBrowserState {
   if (!httpOk || !value?.envelope) return "unavailable";
   if (value.envelope.outcome === "ANSWER") {
     return Array.isArray(value.data?.stations) && Array.isArray(value.data?.observations) ? "received" : "withheld";

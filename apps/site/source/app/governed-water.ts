@@ -9,11 +9,11 @@ type WaterCandidate = { candidate_id: string; start: string; end: string; retrie
 type Ref = { ref: string; kind: string; bundle_ref: string };
 type Bundle = { bundle_id: string; evidence_refs: Ref[]; rights: { license: string }; sensitivity: { level: string }; spec_hash: { value: string }; checksums: Obj; source_records: string[]; citations: string[] } & Obj;
 type History = { subject_ref: string; spec_hash: string; events: ({ event_id: string; event_type: string; state: string; effective_at: string; recorded_at: string; relates_to_event_id?: string } & Obj)[] } & Obj;
-type Entry = { station_id: string; evidence_ref: Ref; bundle: Bundle; verification_history: History };
+export type Entry = { station_id: string; evidence_ref: Ref; bundle: Bundle; verification_history: History };
 export type WaterPackage = { manifest: Obj & { package_id: string; candidate_id: string; start: string; end: string; created_at: string; rollback_target: string | null }; candidate: WaterCandidate; evidence: { entries: Entry[] }; validation: Obj };
 export type WaterResponse = { envelope: Obj & { outcome: string; reason_code: string }; data?: Obj & { stations?: WaterStation[]; observations?: WaterObservation[]; entries?: Entry[] } };
 export function object(value: unknown): Obj { if (!value || typeof value !== "object" || Array.isArray(value)) throw new Error("OBJECT_REQUIRED"); return value as Obj; }
-const without = (value: Obj, key: string) => Object.fromEntries(Object.entries(value).filter(([name]) => name !== key));
+export const without = (value: Obj, key: string) => Object.fromEntries(Object.entries(value).filter(([name]) => name !== key));
 export function canonical(value: unknown): string {
   if (value === null || typeof value === "string" || typeof value === "boolean" || typeof value === "number" && Number.isFinite(value)) return JSON.stringify(value);
   if (Array.isArray(value)) return `[${value.map(canonical).join(",")}]`;
@@ -21,7 +21,7 @@ export function canonical(value: unknown): string {
   return `{${Object.keys(source).sort().map(key => `${JSON.stringify(key)}:${canonical(source[key])}`).join(",")}}`;
 }
 export async function digest(text: string): Promise<string> { return "sha256:" + Array.from(new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text))), b => b.toString(16).padStart(2, "0")).join(""); }
-function time(value: unknown): number {
+export function time(value: unknown): number {
   const match = typeof value === "string" && /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(?:\.\d{1,6})?Z$/.exec(value);
   if (!match || Number(match[1]) === 0) throw new Error("TIME_INVALID");
   const instant = Date.parse(value as string);
@@ -41,7 +41,7 @@ export function approvalRemainingMs(expiry: unknown, nowMs: number): number {
     return 0;
   }
 }
-function same(a: unknown, b: unknown) { return canonical(a) === canonical(b); }
+export function same(a: unknown, b: unknown) { return canonical(a) === canonical(b); }
 export function parseWaterJson(text: string): unknown {
   // Linear duplicate-key/depth guard, followed by the platform JSON grammar.
   const stack: { keys: Set<string> | null; key: boolean }[] = [];
@@ -93,16 +93,21 @@ const REF_KEYS = ["source_admission_ref", "rights_ref", "sensitivity_ref", "poli
 // ADR-0044: licenses of admitted public sources whose owner may review and release the same package.
 // Must match SELF_RELEASE_LICENSES in packages/policy-runtime/src/policy_runtime/core.py.
 export const SELF_RELEASE_LICENSES: readonly string[] = ["U.S. Public Domain (USGS-authored data, 17 U.S.C. 105); provisional data subject to revision"];
-const selfReleaseEligible = (pkg: WaterPackage) => pkg.evidence.entries.length > 0 && pkg.evidence.entries.every(e => e.bundle.sensitivity.level === "public" && SELF_RELEASE_LICENSES.includes(e.bundle.rights.license));
+type GatePackage = { manifest: { package_id: string; created_at: string }; evidence: { entries: { bundle: { rights: { license: string }; sensitivity: { level: string } } }[] } };
+const selfReleaseEligible = (pkg: GatePackage, licenses: readonly string[]) => pkg.evidence.entries.length > 0 && pkg.evidence.entries.every(e => e.bundle.sensitivity.level === "public" && licenses.includes(e.bundle.rights.license));
 export function waterGate(pkg: WaterPackage, decision: Obj | null, now: string): string {
+  return releaseGate(pkg, decision, now, "kfm.water-release-decision/v1", SELF_RELEASE_LICENSES);
+}
+// The shared gate body; each family names its decision profile and its own self-release license list.
+export function releaseGate(pkg: GatePackage, decision: Obj | null, now: string, profile: string, licenses: readonly string[]): string {
   if (!decision) return "REVIEW_REQUIRED";
   if (!same(Object.keys(decision).sort(), ["profile", "package_id", "decision", "reviewed_at", "released_at", "expires_at", "correction_state", "correction_ref", "reviewer", "releaser", ...REF_KEYS].sort())) return "RELEASE_METADATA_INVALID";
-  if (decision.profile !== "kfm.water-release-decision/v1" || decision.package_id !== pkg.manifest.package_id) return "RELEASE_BINDING_MISMATCH";
+  if (decision.profile !== profile || decision.package_id !== pkg.manifest.package_id) return "RELEASE_BINDING_MISMATCH";
   if (decision.correction_state !== "ACTIVE") return "CORRECTION_HOLD";
   if (decision.correction_ref !== null || decision.decision !== "APPROVED") return "RELEASE_NOT_APPROVED";
   if (REF_KEYS.some(k => typeof decision[k] !== "string" || !/^kfm:\/\/[A-Za-z0-9._~:/-]{1,240}$/.test(decision[k] as string))) return "REVIEW_REFERENCE_MISSING";
   if (["reviewer", "releaser"].some(k => typeof decision[k] !== "string" || !(decision[k] as string).length || (decision[k] as string).length > 128)) return "INDEPENDENT_REVIEW_REQUIRED";
-  if (decision.reviewer === decision.releaser && !selfReleaseEligible(pkg)) return "INDEPENDENT_REVIEW_REQUIRED";
+  if (decision.reviewer === decision.releaser && !selfReleaseEligible(pkg, licenses)) return "INDEPENDENT_REVIEW_REQUIRED";
   try { if (!(time(pkg.manifest.created_at) <= time(decision.reviewed_at) && time(decision.reviewed_at) <= time(decision.released_at) && time(decision.released_at) <= time(now) && time(now) < time(decision.expires_at))) return "RELEASE_TIME_INVALID"; } catch { return "RELEASE_TIME_INVALID"; }
   if (pkg.evidence.entries.some(e => e.bundle.sensitivity.level !== "public" || e.bundle.rights.license.toLowerCase().includes("review required"))) return "RIGHTS_OR_SENSITIVITY_HOLD";
   return "ELIGIBLE";
@@ -111,7 +116,7 @@ export async function waterNegative(reason: string, now: string, outcome = "ABST
   const envelope = { id: "water:" + reason.toLowerCase(), version: "kfm-water-v1", issued_at: now, outcome, reason_code: reason, evidence_refs: [], policy_state: "withheld", freshness: "unknown", correction_state: "unknown" };
   return { envelope: { ...envelope, spec_hash: await digest(canonical(envelope)) } };
 }
-async function verified(entry: Entry, now: string) {
+export async function verified(entry: Entry, now: string) {
   const history = entry.verification_history, events = history.events;
   if (await digest(canonical(without(entry.bundle, "spec_hash"))) !== entry.bundle.spec_hash.value || await digest(canonical(without(history, "spec_hash"))) !== history.spec_hash || !Array.isArray(events) || events.length < 1 || events.length > 128) return false;
   let state = "UNKNOWN", previous = "", effective = -Infinity, recorded = -Infinity;
