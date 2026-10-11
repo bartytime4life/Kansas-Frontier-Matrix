@@ -172,7 +172,7 @@ def test_preparation_is_deterministic(tmp_path):
     assert canonical_bytes(json.loads(path.read_text())) == path.read_bytes()
 
 
-def test_decide_replays_evidence_and_refuses_a_rehashed_package_with_stale_bundles(tmp_path):
+def test_decide_refuses_a_rehashed_package_with_stale_bundles(tmp_path):
     root, preparation = prepared(tmp_path, admitted=True)
     snapshot = json.loads(snapshot_path(root, preparation["package_id"]).read_text())
     evidence = json.loads(snapshot["artifacts"]["evidence.json"])
@@ -182,7 +182,8 @@ def test_decide_replays_evidence_and_refuses_a_rehashed_package_with_stale_bundl
     forged = snapshot_path(root, package_id)
     forged.parent.mkdir(parents=True)
     forged.write_bytes(raw)
-    with pytest.raises(ValueError, match="EVIDENCE_DIGEST_MISMATCH"):
+    # Refused before replay: the package is not what the trusted builder makes.
+    with pytest.raises(ValueError, match="PACKAGE_NOT_REPRODUCIBLE"):
         soil_release.decide(root, package_id, reviewer=OWNER, releaser=OWNER, valid_days=7, now=NOW)
     assert not (root / "release/decisions").exists()
 
@@ -240,3 +241,62 @@ def test_decide_refuses_a_package_whose_receipt_differs_from_revalidation(tmp_pa
     path.write_bytes(canonical_bytes(snapshot))
     with pytest.raises(ValueError, match="VALIDATION_RECEIPT_MISMATCH"):
         soil_release.decide(root, package_id, reviewer=OWNER, releaser=OWNER, valid_days=7, now=NOW)
+
+
+def test_decide_requires_the_candidate_to_match_its_stored_capture(tmp_path):
+    # A token and its value are changed consistently and every identity, receipt, bundle and
+    # outer hash is rebuilt by the normal package builder; only the stored capture disagrees.
+    from pipelines.domains.soil import uscrn_daily_package
+    root, preparation = prepared(tmp_path, admitted=True)
+    _, values = soil_release._snapshot(root, preparation["package_id"])
+    candidate = values["candidate.json"]
+    record = next(r for r in candidate["observations"] if r["variable"] == "SOIL_MOISTURE" and r["value"] is not None)
+    record["value"] = round(record["value"] + 0.001, 3)
+    record["source_token"] = f"{record['value']:.3f}"
+    record["record_digest"] = digest_bytes(canonical_bytes({k: v for k, v in record.items() if k != "record_digest"}))
+    candidate["candidate_id"] = digest_bytes(canonical_bytes({k: v for k, v in candidate.items() if k != "candidate_id"}))
+    snapshot = uscrn_daily_package.prepare_soil_package(candidate, admission=uscrn_daily_admission.load_admission())
+    package_id = snapshot["manifest"]["package_id"]
+    path = snapshot_path(root, package_id)
+    path.parent.mkdir(parents=True)
+    path.write_bytes(canonical_bytes(snapshot))
+    with pytest.raises(ValueError, match="CANDIDATE_CAPTURE_MISMATCH"):
+        soil_release.decide(root, package_id, reviewer=OWNER, releaser=OWNER, valid_days=7, now=NOW)
+    assert not (root / "release/decisions").exists()
+
+
+def test_decide_refuses_a_package_whose_capture_is_not_in_the_store(tmp_path):
+    import shutil
+    root, preparation = prepared(tmp_path, admitted=True)
+    runs = root / "data/quarantine" / uscrn_daily_pilot.LANE / "runs"
+    for manifest in runs.glob("*/manifest.json"):
+        manifest.unlink()  # the run directory remains
+    with pytest.raises(ValueError, match="CAPTURE_NOT_IN_STORE"):
+        soil_release.decide(root, preparation["package_id"], reviewer=OWNER, releaser=OWNER, valid_days=7, now=NOW)
+    shutil.rmtree(runs)  # a store that never held the capture
+    with pytest.raises(ValueError, match="CAPTURE_NOT_IN_STORE"):
+        soil_release.decide(root, preparation["package_id"], reviewer=OWNER, releaser=OWNER, valid_days=7, now=NOW)
+
+
+def test_a_held_package_resealed_as_admitted_cannot_be_self_released(tmp_path):
+    # Genuine candidate and receipt; only the bundles' rights and sensitivity are rewritten and rehashed.
+    root, preparation = prepared(tmp_path, admitted=False)
+    snapshot = json.loads(snapshot_path(root, preparation["package_id"]).read_text())
+    evidence = json.loads(snapshot["artifacts"]["evidence.json"])
+    license_text = uscrn_daily_admission.load_admission()["license"]
+    for entry in evidence["entries"]:
+        bundle = entry["bundle"]
+        bundle["rights"] = {"license": license_text}
+        bundle["sensitivity"] = {**bundle["sensitivity"], "level": "public", "reason": "forged"}
+        bundle["spec_hash"] = {"value": compute_spec_hash({k: v for k, v in bundle.items() if k != "spec_hash"})}
+    raw = reseal(snapshot, evidence)
+    package_id = snapshot["manifest"]["package_id"]
+    manifest, values = validate_snapshot(raw, profile=SOIL)  # the carrier checks alone accept it
+    decision = soil_release.build_decision(package_id, reviewer=OWNER, releaser=OWNER, now=NOW, valid_days=7)
+    assert serving_gate(manifest, values["evidence.json"], decision, now=decision["released_at"], **SOIL_GATE) == "ELIGIBLE"
+    path = snapshot_path(root, package_id)
+    path.parent.mkdir(parents=True)
+    path.write_bytes(raw)
+    with pytest.raises(ValueError, match="PACKAGE_NOT_REPRODUCIBLE"):
+        soil_release.decide(root, package_id, reviewer=OWNER, releaser=OWNER, valid_days=7, now=NOW)
+    assert not (root / "release/decisions").exists()
