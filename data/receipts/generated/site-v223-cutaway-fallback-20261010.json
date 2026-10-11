@@ -4691,7 +4691,7 @@
   "site_version": 223,
   "status": "REVIEW_ONLY",
   "validation": {
-    "browser_smoke": "Hosted v222 tab reached High Plains cutaway with 28 plotted columns, 50 records, one aquifer overlap, partial-coverage disclosure, and high-detail surface ready. Hosted v223 tab reached Underground and selected the High Plains example, but accessibility/screenshot inspection timed out during rendering; v223 visual and keyboard acceptance remain open.",
+    "browser_smoke": "Hosted v222 tab reached High Plains cutaway with 28 plotted columns, 50 records, one aquifer overlap, partial-coverage disclosure, and high-detail surface ready. Hosted v223 and local v223 tabs reached Underground and selected the High Plains example, but accessibility/screenshot inspection timed out during rendering; v223 visual and keyboard acceptance remain open.",
     "build": "PASS",
     "data_activation": false,
     "focused_tests": 8,
@@ -4699,7 +4699,7 @@
     "full_tests_passed": 1008,
     "full_tests_skipped": 0,
     "lint": "PASS: zero errors, 64 inherited warnings",
-    "local_installation": "The existing local v222 installation was not replaced by this follow-up. Source and repository mirror are v223 candidates.",
+    "local_installation": "A new v223 installation has 928 tracked source files and 427 build files byte-matched to the exact v223 Site checkout. The local alias selects it; kfm-explorer-local.service is active with its process rooted there and port 4173 returned HTTP 200. The v222 installation and original persistent state remain available; no storage migration occurred.",
     "typecheck": "PASS"
   }
 }
