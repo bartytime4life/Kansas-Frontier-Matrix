@@ -205,6 +205,8 @@ test('appearance controls reuse the captured surface without marking its unchang
  const h=await harness(),image={width:4096,height:3437};h.session.onSnapshot({volume,image});await h.render();
  const [plane]=mappedPlanes(h),texture=plane.material.map,version=texture.version,camera=h.renders.at(-1).camera;
  const input=label=>findNode(h.tree,n=>n.props?.['aria-label']===label);
+ assert.equal(input('Basemap opacity').props.value,65,'the initial map leaves recorded columns visible');
+ assert.equal(plane.material.opacity,.65,'the texture and control start at the same opacity');
  for(let i=1;i<=20;i++){input('Basemap opacity').props.onChange({target:{value:String(i*5)}});await h.render();assert.equal(plane.material.opacity,i/20);}
  input('Aquifer opacity').props.onChange({target:{value:'40'}});await h.render();
  input('Cutaway vertical scale').props.onChange({target:{value:'50'}});await h.render();

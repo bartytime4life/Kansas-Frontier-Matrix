@@ -5,11 +5,13 @@
 The 3D cutaway renders the selected basemap and copied display layers in a
 separate MapLibre canvas. It requests detail for the visible portion of the
 accepted geographic slice after camera movement settles (200 ms). The default
-maximum dimension is 2048 pixels by default; the opt-in Maximum choice uses 4096. The renderer uses
+maximum dimension is 2048 pixels; the opt-in Maximum choice uses 4096. The renderer uses
 one disposable context, a 96-tile cache, and actual provider tiles. During loading,
 available detail appears at most once per second as an explicitly partial preview;
 a slow optional overlay cannot hold back the basemap until global map load. Crisp image
-sampling and full surface opacity are the defaults. The selector screenshot
+sampling and 65% surface opacity are the defaults, leaving the independently
+recorded columns visible beneath the map. The full 0–100% opacity range remains
+available; opacity changes appearance only. The selector screenshot
 is no longer the detail source as the user zooms in.
 
 Surface map mode offers an independent interactive map within the same fixed

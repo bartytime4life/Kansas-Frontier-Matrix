@@ -31,7 +31,8 @@ export default function AquiferVolumeView({basemap,onBasemap,onLayers,active=tru
   const [navigation,setNavigation]=useState<"orbit"|"pan">("orbit");
   const areaSession=useRef<{prepare:()=>void}|null>(null),onAreaRef=useRef(onArea);
   useEffect(()=>{onAreaRef.current=onArea;},[onArea]);
-  const [surface,setSurface]=useState(1),[water,setWater]=useState(.22),[scale,setScale]=useState(25),[logs,setLogs]=useState(true),[smooth,setSmooth]=useState(false);
+  // Leave the mapped surface legible while showing recorded columns beneath it.
+  const [surface,setSurface]=useState(.65),[water,setWater]=useState(.22),[scale,setScale]=useState(25),[logs,setLogs]=useState(true),[smooth,setSmooth]=useState(false);
   const [failure,setFailure]=useState(""),[selection,setSelection]=useState<string|null>(null);
   const [pickedLog,setPickedLog]=useState<{label:string;recordId:string}|null>(null);
   const host=useRef<HTMLDivElement>(null),api=useRef<{camera:(action:CameraAction)=>void;update:(v:Settings)=>void;setSurface:(image:HTMLCanvasElement|null)=>void;setDetail:(frame:SurfaceDetailFrame|null)=>boolean;highlightRecord:(id:string|null)=>void;focusRecord:(id:string)=>void}|null>(null);
