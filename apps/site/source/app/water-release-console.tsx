@@ -1,25 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
+import { expiryText, expiryWarning } from "./water-release-expiry";
 
-type Status = { active_package_id: string | null; previous_package_id: string | null; revision: number; decision_expires_at: string | null; checked_at: number };
-
-const REFRESH_WARNING_MS = 2 * 24 * 60 * 60 * 1000;
-
-function expiryText(status: Status | null) {
-  if (!status?.active_package_id || !status.decision_expires_at) return "–";
-  const remaining = Date.parse(status.decision_expires_at) - status.checked_at;
-  if (remaining <= 0) return `${status.decision_expires_at} (expired; the layer is not serving)`;
-  const hours = Math.floor(remaining / 3_600_000);
-  return `${status.decision_expires_at} (in ${hours >= 48 ? `${Math.floor(hours / 24)} days` : `${hours} hours`})`;
-}
-
-function statusMessage(status: Status) {
-  if (!status.active_package_id) return "No water package is active yet.";
-  const remaining = status.decision_expires_at ? Date.parse(status.decision_expires_at) - status.checked_at : Infinity;
-  if (remaining <= 0) return "The active decision has expired, so the layer is not serving. Run water_release.py cycle and activate the new package.";
-  if (remaining <= REFRESH_WARNING_MS) return "The active decision expires soon. Run water_release.py cycle and activate the new package before it does.";
-  return "A water package is active.";
-}
+type Status = { active_package_id: string | null; previous_package_id: string | null; revision: number; decision_expires_at: string | null };
 type Result = { outcome: string; reason_code?: string; package_id?: string; revision?: number };
 
 const reasonText: Record<string, string> = {
@@ -37,8 +20,7 @@ async function fetchStatus(): Promise<{ status: Status | null; message: string }
   const response = await fetch("/api/governed/water-admin/status", { cache: "no-store" });
   const body = await response.json();
   if (!response.ok) return { status: null, message: reasonText[body.reason_code] ?? `Status unavailable (${body.reason_code}).` };
-  const status: Status = { ...body, checked_at: Date.now() };
-  return { status, message: statusMessage(status) };
+  return { status: body, message: body.active_package_id ? "A water package is active." : "No water package is active yet." };
 }
 
 export default function WaterReleaseConsole() {
@@ -46,11 +28,14 @@ export default function WaterReleaseConsole() {
   const [decisionText, setDecisionText] = useState("");
   const [message, setMessage] = useState("Loading the active package…");
   const [busy, setBusy] = useState(false);
+  const [now, setNow] = useState(() => Date.now());
 
   useEffect(() => {
     let live = true;
     void fetchStatus().then((loaded) => { if (live) { setStatus(loaded.status); setMessage(loaded.message); } });
-    return () => { live = false; };
+    // Advance the expiry wording while the page stays open.
+    const tick = setInterval(() => setNow(Date.now()), 60_000);
+    return () => { live = false; clearInterval(tick); };
   }, []);
 
   let decision: Record<string, unknown> | null = null;
@@ -64,6 +49,7 @@ export default function WaterReleaseConsole() {
       const result: Result = await response.json();
       setMessage(response.ok ? `${done} Revision ${result.revision ?? "–"}.` : reasonText[result.reason_code ?? ""] ?? `Refused: ${result.reason_code}.`);
       setStatus((await fetchStatus()).status);
+      setNow(Date.now());
     } finally { setBusy(false); }
   }
 
@@ -79,7 +65,7 @@ export default function WaterReleaseConsole() {
       <dt>Active</dt><dd style={{ margin: 0, overflowWrap: "anywhere" }}><code>{status?.active_package_id ?? "none"}</code></dd>
       <dt>Previous</dt><dd style={{ margin: 0, overflowWrap: "anywhere" }}><code>{status?.previous_package_id ?? "none"}</code></dd>
       <dt>Revision</dt><dd style={{ margin: 0 }}>{status?.revision ?? "–"}</dd>
-      <dt>Decision expires</dt><dd style={{ margin: 0 }}>{expiryText(status)}</dd>
+      <dt>Decision expires</dt><dd style={{ margin: 0 }}>{expiryText(status, now)}</dd>
     </dl>
     <label htmlFor="water-decision" style={{ fontWeight: 600 }}>Release decision (paste the file written by <code>water_release.py decide</code>)</label>
     <textarea id="water-decision" rows={10} value={decisionText} onChange={(event) => setDecisionText(event.target.value)}
@@ -91,5 +77,6 @@ export default function WaterReleaseConsole() {
       <button type="button" disabled={busy || !status?.active_package_id} onClick={() => void withdraw()}>Withdraw active package</button>
     </div>
     <p role="status" aria-live="polite" style={{ margin: 0 }}>{message}</p>
+    {expiryWarning(status, now) && <p role="alert" style={{ margin: 0, fontWeight: 600 }}>{expiryWarning(status, now)}</p>}
   </section>;
 }

@@ -1806,9 +1806,13 @@
       "state": "identical"
     },
     "app/water-release-console.tsx": {
-      "mirror_sha256": "f87143ecbdff2bb1eafa8578ea97e7a47fc6f215e8acb99d92825409a92e1835",
+      "mirror_sha256": "3f4e84efc11bf592167bd34208f63f48872411cfb6f09b05341586ec37f65f28",
       "site_sha256": "7efb34b32c0ff92ab865ab9a40f9c9e57f376a634936980dfd1127661123d409",
       "state": "inherited_repository_overlay"
+    },
+    "app/water-release-expiry.ts": {
+      "mirror_sha256": "010e88c057683dfaadbf5f81d87f6d04df92154f9255b5ac729c956764ab5e71",
+      "state": "repository_only_overlay"
     },
     "app/water-terrain-profile.tsx": {
       "mirror_sha256": "e8b9a08319dccf1935506926d20c5aa497ff4a35bec5700b992db4d4f09a67d7",
@@ -4610,6 +4614,10 @@
       "site_sha256": "4f6883158decd8c917dfa2f8acc051eba9242a904bf640a25ef166cdad9b4d92",
       "state": "identical"
     },
+    "tests/water-release-expiry.test.mjs": {
+      "mirror_sha256": "c0786b54dca89368233ce5e15b2ea3dfc3e3534451748c417d5f80146b82d6e7",
+      "state": "repository_only_overlay"
+    },
     "tests/webgl-support.test.mjs": {
       "mirror_sha256": "a61d3236d6ceb91af0e8bd97db0c8c0cc7db8115ba965c2c1710e838a80123dd",
       "site_sha256": "a61d3236d6ceb91af0e8bd97db0c8c0cc7db8115ba965c2c1710e838a80123dd",
@@ -4651,13 +4659,14 @@
     "identical": 921,
     "inherited_repository_overlay": 5,
     "missing": 0,
-    "source_paths": 928,
+    "repository_only_overlay": 2,
+    "source_paths": 930,
     "unexpected_difference": 0
   },
   "destination": "apps/site/source",
-  "followup_scope": "Repository-only overlay ahead of the next Site version: the water-admin status route also reports the active decision's expires_at, and /governed/water-release shows it and warns two days before it lapses (an expired decision stops the reviewed-water layer from answering). Builds on the three water-status overlay files already recorded against v226. Site v226 source and deployment are unchanged.",
+  "followup_scope": "Repository-only overlay ahead of the next Site version: the water-admin status route also reports the active decision's expires_at, and /governed/water-release shows it and warns two days before it lapses (an expired decision stops the reviewed-water layer from answering). Builds on the three water-status overlay files already recorded against v226. Site v226 source and deployment are unchanged. The page judges expiry against a clock that advances every minute, so a page left open moves to the warning and expired states on time.",
   "inventory_digest_basis": "UTF-8 JSON of comparison, sorted keys, separators comma and colon, no trailing newline",
-  "inventory_sha256": "bf1f035af1b879d9cb6168e8251789f5390b672b2ac48d207f330dd722452923",
+  "inventory_sha256": "030e3cc277132000d62435fc09623f8541d80839e43a483d5d8810cc53985e5d",
   "overlay": {
     "changed_paths": [
       {
@@ -4675,7 +4684,7 @@
         "site_sha256": "7f7a0fc61d78b360254574d943e92a13ff1c3a978d23ba7a0635fbf9a2afdf00"
       },
       {
-        "mirror_sha256": "f87143ecbdff2bb1eafa8578ea97e7a47fc6f215e8acb99d92825409a92e1835",
+        "mirror_sha256": "3f4e84efc11bf592167bd34208f63f48872411cfb6f09b05341586ec37f65f28",
         "path": "app/water-release-console.tsx",
         "previous_mirror_sha256": "7efb34b32c0ff92ab865ab9a40f9c9e57f376a634936980dfd1127661123d409",
         "previous_state": "identical",
@@ -4696,7 +4705,17 @@
         "site_sha256": "7787ccc810b51e0addf7937571cafa602e5b6d8b5760211bdf2cdaee69e6b45c"
       }
     ],
-    "reconciliation": "Carry these five files into the next Site version; the receipt for that version records them as identical.",
+    "new_paths": [
+      {
+        "mirror_sha256": "010e88c057683dfaadbf5f81d87f6d04df92154f9255b5ac729c956764ab5e71",
+        "path": "app/water-release-expiry.ts"
+      },
+      {
+        "mirror_sha256": "c0786b54dca89368233ce5e15b2ea3dfc3e3534451748c417d5f80146b82d6e7",
+        "path": "tests/water-release-expiry.test.mjs"
+      }
+    ],
+    "reconciliation": "Carry these seven files into the next Site version; the receipt for that version records them as identical.",
     "site_version_unchanged": 226
   },
   "predecessor_receipt": "site-v226-water-status-overlay-reconciled-20261011.json",
@@ -4739,8 +4758,8 @@
     "hosted_equivalence": false,
     "python_release_and_mirror_tests": "32 passed (tests/qa/test_site_mirror.py, tests/tools/test_water_release.py)",
     "repository_topology": "PASS: 0 invariant, 0 new drift, 113 baselined warnings",
-    "site_admin_tests": "9 passed (node --test tests/governed-water-admin.test.mjs)",
-    "site_full_suite": "npm test: build PASS; 1015 tests, 1013 passed, 2 skipped, 0 failed",
+    "site_admin_tests": "11 passed (tests/governed-water-admin.test.mjs, tests/water-release-expiry.test.mjs)",
+    "site_full_suite": "npm test: build PASS; 1017 tests, 1015 passed, 2 skipped (installer refuses root), 0 failed",
     "site_lint_changed_files": "PASS",
     "site_typecheck": "PASS"
   }
