@@ -45,16 +45,16 @@ truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_pos
 [![lifecycle: RAW%20%E2%86%92%20PUBLISHED](https://img.shields.io/badge/lifecycle-RAW%E2%86%92PUBLISHED-555)](#)
 [![ADR: 0001 schema home](https://img.shields.io/badge/ADR-0001%20schema%20home-purple)](#)
 [![conformance: RFC 2119](https://img.shields.io/badge/conformance-RFC%202119-555)](#)
-[![last updated: 2026--05--29](https://img.shields.io/badge/last%20updated-2026--05--29-informational)](#)
+[![last updated: 2026--10--11](https://img.shields.io/badge/last%20updated-2026--10--11-informational)](#)
 
 | Field | Value |
 |---|---|
-| **Status** | `draft` · v1.1 · placement rules CONFIRMED · quoted paths PROPOSED |
+| **Status** | `draft` · v1.2 · placement rules CONFIRMED · quoted paths PROPOSED |
 | **Pinned contract** | `CONTRACT_VERSION = "3.0.0"` (per `ai-build-operating-contract.md` §1.3 / §8, §37) |
 | **Owners** | `TODO` — Docs steward + Archaeology domain steward (CODEOWNERS) |
 | **Required additional reviewer (§23.2)** | Tribal/cultural reviewer · rights-holder representative |
 | **Authority** | Placement rules **CONFIRMED** (Directory Rules §12; `[CONTRACT v3.0]` §11). Quoted paths **PROPOSED** until mounted-repo inspection. |
-| **Last updated** | 2026-05-29 |
+| **Last updated** | 2026-10-11 |
 
 > [!CAUTION]
 > This document specializes placement for a **sensitive lane**. Per `ai-build-operating-contract.md` §23.2 (sensitive-domain decision matrix), archaeology site locations **default to `DENY` exact coordinates · generalize to county/region · tribal/cultural reviewer + rights-holder rep required · `RedactionReceipt` + `PolicyDecision` + `MapReleaseManifest` required**. The §23.2 matrix is **PROPOSED** as of v3.0 (steward ratification pending); until ratified, the **most restrictive applicable row applies**, which only strengthens the gate. **No path in this document authorizes a release**; this doc only governs *where files belong*, not whether they should exist or be published.

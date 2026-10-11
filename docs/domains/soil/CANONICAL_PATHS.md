@@ -17,7 +17,7 @@ related:
   - data/raw/README.md
   - data/raw/soil/README.md
   - docs/domains/soil/README.md
-  - docs/adr/ADR-0001-schema-home.md
+  - docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md
   - docs/registers/DRIFT_REGISTER.md
   - docs/registers/VERIFICATION_BACKLOG.md
   - docs/atlases/kfm-domains-v1.1-pass23-32-consolidated-atlas.md
@@ -35,7 +35,7 @@ notes:
 
 [![status: draft](https://img.shields.io/badge/status-draft-blue)](#status)
 [![doctrine: directory-rules §12](https://img.shields.io/badge/doctrine-directory--rules%20%C2%A712-informational)](../../doctrine/directory-rules.md)
-[![schema home: schemas%2Fcontracts%2Fv1](https://img.shields.io/badge/schema--home-schemas%2Fcontracts%2Fv1%2F-success)](../../adr/ADR-0001-schema-home.md)
+[![schema home: schemas%2Fcontracts%2Fv1](https://img.shields.io/badge/schema--home-schemas%2Fcontracts%2Fv1%2F-success)](../../adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md)
 [![lifecycle: RAW→PUBLISHED](https://img.shields.io/badge/lifecycle-RAW%E2%86%92WORK%E2%86%92PROCESSED%E2%86%92CATALOG%E2%86%92PUBLISHED-orange)](../../doctrine/lifecycle-law.md)
 [![support-type separation: mandatory](https://img.shields.io/badge/support--type%20separation-mandatory-critical)](#9-sensitivity-rights-and-publication-posture)
 [![paths: PROPOSED until repo-verified](https://img.shields.io/badge/paths-PROPOSED%20until%20repo--verified-yellow)](#13-open-questions-and-verification-backlog)
@@ -203,7 +203,7 @@ Each responsibility root below is **CONFIRMED** as a canonical or compatibility 
 | Authority class | Canonical ([DIRRULES] §5). Pairs with `schemas/` — `contracts/` is **meaning**, `schemas/` is **shape**. |
 | What belongs | Markdown definitions, semantic constraints, source-role notes, temporal-handling notes, cross-lane relation constraints. |
 | What does **not** belong | JSON Schema files (→ `schemas/contracts/v1/domains/soil/`); policy rules; tests. |
-| Naming variance | Atlas §24.13 crosswalk lists `contracts/soil/` (flat); Directory Rules §12 lists `contracts/domains/soil/` (segmented). Resolve per `docs/adr/ADR-0001-schema-home.md` and per-root README in `contracts/`. See [§11 OPEN-SOIL-01](#11-anti-patterns-specific-to-soil). |
+| Naming variance | Atlas §24.13 crosswalk lists `contracts/soil/` (flat); Directory Rules §12 lists `contracts/domains/soil/` (segmented). Resolve per `docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md` and per-root README in `contracts/`. See [§11 OPEN-SOIL-01](#11-anti-patterns-specific-to-soil). |
 
 ### 4.3 `schemas/contracts/v1/domains/soil/` — machine shape
 
@@ -532,7 +532,7 @@ Adapt the Directory Rules §16 reviewer checklist for soil-shaped PRs. A reviewe
 - `docs/doctrine/truth-posture.md` — cite-or-abstain doctrine — **NEEDS VERIFICATION** in mounted repo
 - `docs/doctrine/authority-ladder.md` — authority ladder — **NEEDS VERIFICATION** in mounted repo
 - `docs/domains/soil/README.md` — soil lane README — **PROPOSED**
-- `docs/adr/ADR-0001-schema-home.md` — schema-home rule — **NEEDS VERIFICATION** that the exact filename exists
+- `docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md` — schema-home rule — **NEEDS VERIFICATION** that the exact filename exists
 - `docs/atlases/kfm-domains-v1.1-pass23-32-consolidated-atlas.md` — Domains Atlas Ch. 5 (Soil) — **NEEDS VERIFICATION**
 - `docs/registers/DRIFT_REGISTER.md` — placement-drift register
 - `docs/registers/VERIFICATION_BACKLOG.md` — verification backlog (this doc's open questions belong here)

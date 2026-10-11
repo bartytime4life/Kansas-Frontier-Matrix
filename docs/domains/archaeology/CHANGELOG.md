@@ -138,6 +138,15 @@ The documents this changelog tracks, with versions read from their current metad
 
 Entries are newest-first. Each names the document, version delta, §37 type, and reason. KFM casing and terminology are preserved.
 
+### 2026-10-11 — Header sync and ledger evidence correction — PATCH
+
+Follow-up to the RAW placement reconciliation below, from review of that change.
+
+| Document | Version delta | §37 type | Change |
+|---|---|---|---|
+| `MISSING_OR_PLANNED_FILES.md` | v1.2.1 → v1.2.2 | PATCH | The `data/raw/archaeology/README.md` row is back to `🟡 PLANNED` / `❓` / `NEEDS VERIFICATION` (authored on `main` in #5040), because this ledger's evidence rules forbid `🟢 PRESENT` without a mounted-repo verification pass. The version badge now matches the metadata. |
+| `API_CONTRACTS.md`, `ARCHITECTURE.md`, `CANONICAL_PATHS.md`, `SOURCE_REGISTRY.md`, `README.md` | none (same edition) | PATCH | Visible badges, status rows, and "Last updated" fields now match the metadata-block version and `updated` date from the reconciliation. |
+
 ### 2026-10-11 — RAW placement reconciliation (lane-wide) — PATCH / MINOR
 
 Aligned RAW placement wording to accepted Directory Rules `DIR-SOURCE-001`–`004` (`docs/doctrine/directory-rules.md` §12.3): RAW capture identity is source-first under a `source_id` registered once in `data/registry/sources/`; one capture may support several domains without duplicated RAW bytes. Physical source-first RAW placement is **HOLD** (no accepted placement decision), and `data/raw/archaeology/` is a compatibility/reference lane (`data/raw/archaeology/README.md` v0.2.0) that receives no payloads. Connector rules now read "emit only to the accepted source-first RAW home or QUARANTINE; never to processed, catalog, or published." Every deny-by-default, exact-location, sovereignty, cultural-review, and consent rule is preserved unchanged. Documentation only; no payload, path, writer, policy, or release state changed.

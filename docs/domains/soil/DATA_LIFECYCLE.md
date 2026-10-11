@@ -1,5 +1,5 @@
 <!-- [KFM_META_BLOCK_V2]
-doc_id: kfm://doc/soil-continuity-inventory
+doc_id: kfm://doc/soil-data-lifecycle
 title: Soil Domain — Continuity Inventory
 type: standard
 version: v1.0.1
@@ -17,7 +17,7 @@ related:
   - docs/registers/DRIFT_REGISTER.md
   - docs/registers/VERIFICATION_BACKLOG.md
   - docs/atlases/KFM_Domains_Culmination_Atlas_v1_1.pdf
-  - directory-rules.md
+  - docs/doctrine/directory-rules.md
   - data/raw/README.md
   - data/raw/soil/README.md
 tags: [kfm, domain, soil, continuity, inventory, register]

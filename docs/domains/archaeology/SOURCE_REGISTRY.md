@@ -66,7 +66,7 @@ truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_pos
 <!-- Top-of-file impact block -->
 
 [![status: draft](https://img.shields.io/badge/status-draft-lightgrey.svg)](#1-purpose)
-[![version: v0.2](https://img.shields.io/badge/version-v0.2-informational.svg)](#changelog-v01--v02)
+[![version: v0.2.1](https://img.shields.io/badge/version-v0.2.1-informational.svg)](#changelog-v01--v02)
 [![contract: 3.0.0](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-informational.svg)](../../doctrine/ai-build-operating-contract.md)
 [![doc type: standard](https://img.shields.io/badge/doc_type-standard-blue.svg)](#)
 [![lane: archaeology](https://img.shields.io/badge/lane-archaeology-7a3e3e.svg)](./README.md)
@@ -77,7 +77,7 @@ truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_pos
 [![watcher: non-publisher](https://img.shields.io/badge/watcher-non--publisher-purple.svg)](#9-admission-flow--sourceactivationdecision)
 [![cultural review: required](https://img.shields.io/badge/cultural_review-required-9933cc.svg)](#7-sensitivity-register)
 [![registry home: PROPOSED](https://img.shields.io/badge/registry_home-PROPOSED-yellow.svg)](#3-repo-fit)
-[![last updated](https://img.shields.io/badge/last__updated-2026--05--28-lightgrey.svg)](#)
+[![last updated](https://img.shields.io/badge/last__updated-2026--10--11-lightgrey.svg)](#)
 
 **Status:** `draft` · **Version:** `v0.2.1` · **Owners:** archaeology source steward · archaeology domain steward · sensitivity reviewer · rights-holder representative · release authority · docs steward *(placeholders — confirm via CODEOWNERS)* · **Last updated:** 2026-10-11
 **`CONTRACT_VERSION = "3.0.0"`** _(per [`docs/doctrine/ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md))._
