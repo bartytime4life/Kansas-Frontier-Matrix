@@ -52,6 +52,9 @@ def app(environ, start_response):
         # Compatibility routes do not need the optional water serving package.
         from governed_api import water
         return water.respond(environ, start_response, _RELEASE_STORE)
+    if path in {"/v1/weather/bootstrap", "/v1/weather/layers", "/v1/weather/evidence"}:
+        from governed_api import weather
+        return weather.respond(environ, start_response, _RELEASE_STORE)
     method = environ.get("REQUEST_METHOD", "GET")
 
     if path in ROUTES and method != "GET":

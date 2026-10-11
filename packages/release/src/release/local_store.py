@@ -12,6 +12,20 @@ from urllib.parse import quote
 from connectors_core.captured_json import decode_object
 from .core import MAX_PACKAGE_BYTES
 
+# Release families share one private store but never a table or object path.
+# Names come only from this allowlist, never from input.
+FAMILIES = {
+    "water": {"packages": "water_packages", "active": "water_active", "events": "water_activation_events", "objects": "objects"},
+    "weather": {"packages": "weather_packages", "active": "weather_active", "events": "weather_activation_events", "objects": "weather-objects"},
+}
+
+
+def family_names(family: str) -> dict:
+    try:
+        return FAMILIES[family]
+    except (KeyError, TypeError):
+        raise ValueError("RELEASE_FAMILY_INVALID") from None
+
 
 def regular_bytes(path: Path, limit: int) -> bytes:
     import stat
@@ -39,13 +53,20 @@ class LocalReleaseStore:
             raise ValueError("RELEASE_STORE_NOT_PRIVATE")
         self.root = path
 
-    def active(self):
+    def active(self, family: str = "water"):
+        names = family_names(family)
         database = self.root / "activation.sqlite"
         # Reject symlinks/special files before SQLite opens the trusted database.
         regular_bytes(database, 16 * 1024 * 1024)
         with sqlite3.connect("file:" + quote(str(database), safe="/") + "?mode=ro", uri=True, timeout=1) as connection:
             connection.execute("PRAGMA query_only=ON")
-            row = connection.execute("SELECT a.package_id, a.decision_json, p.state FROM water_active a LEFT JOIN water_packages p ON p.package_id=a.package_id WHERE a.singleton=1").fetchone()
+            try:
+                row = connection.execute(f"SELECT a.package_id, a.decision_json, p.state FROM {names['active']} a "
+                                         f"LEFT JOIN {names['packages']} p ON p.package_id=a.package_id WHERE a.singleton=1").fetchone()
+            except sqlite3.OperationalError:
+                if family == "water":
+                    raise
+                return None  # a store initialized before this family existed has nothing active for it
         if row is None:
             return None
         package_id, text, state = row
@@ -54,7 +75,7 @@ class LocalReleaseStore:
         if not re.fullmatch(r"sha256:[a-f0-9]{64}", package_id) or not isinstance(text, str):
             raise ValueError("ACTIVE_METADATA_INVALID")
         decision = decode_object(text.encode(), limit=8192)
-        raw = regular_bytes(self.root / "objects" / (package_id.split(":")[1] + ".json"), MAX_PACKAGE_BYTES)
+        raw = regular_bytes(self.root / names["objects"] / (package_id.split(":")[1] + ".json"), MAX_PACKAGE_BYTES)
         if decision.get("package_id") != package_id:
             raise ValueError("ACTIVE_BINDING_MISMATCH")
         return raw, decision
