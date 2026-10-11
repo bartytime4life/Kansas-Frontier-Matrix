@@ -1,0 +1,60 @@
+{
+  "receipt_id": "kfm:generated:representation-fitness-use-specific:20261011",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "fixtures/contracts/v1/evidence/representation_fitness_assessment/valid/huc12_operational_decision_unknown.json",
+    "tests/evidence/test_representation_fitness_assessment.py"
+  ],
+  "artifact_hashes": {
+    "fixtures/contracts/v1/evidence/representation_fitness_assessment/valid/huc12_operational_decision_unknown.json": "sha256:a6b6061c612ef8375bfd74a3d898967c1f3d6e2f03f65dbdffc42564408aaec6",
+    "tests/evidence/test_representation_fitness_assessment.py": "sha256:0e75f5f050e78de7ff6fb6892d7c6486b1d38a89770b47af0751855b9105063f"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-6; exact build unavailable"
+  },
+  "prompt_or_contract": "sha256:b320bc127e94c0e80a32c873035b1961029f157da4c9b9d42668de8ead8f7a26",
+  "parameters": {
+    "tools_enabled": [
+      "GitHub connector",
+      "Python standard library"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "bartytime4life/Kansas-Frontier-Matrix@ff0298a643e69fe6d225f96a011965a2f867e4b3:contracts/evidence/representation_fitness_assessment.md",
+      "bartytime4life/Kansas-Frontier-Matrix@ff0298a643e69fe6d225f96a011965a2f867e4b3:schemas/contracts/v1/evidence/representation_fitness_assessment.schema.json",
+      "bartytime4life/Kansas-Frontier-Matrix@ff0298a643e69fe6d225f96a011965a2f867e4b3:tools/validators/evidence/validate_representation_fitness_assessment.py"
+    ]
+  },
+  "truth_labels": {
+    "fixtures/contracts/v1/evidence/representation_fitness_assessment/valid/huc12_operational_decision_unknown.json": "PROPOSED",
+    "tests/evidence/test_representation_fitness_assessment.py": "NEEDS VERIFICATION"
+  },
+  "validation_gates": [
+    {
+      "gate": "Local JSON parsing, canonical spec_hash replay, derived outcome, Python AST syntax",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Focused pytest and fixture validator",
+      "outcome": "SKIPPED",
+      "reason": "jsonschema and pytest unavailable; package index unreachable from this environment"
+    },
+    {
+      "gate": "Exact-head hosted CI",
+      "outcome": "SKIPPED",
+      "reason": "Pending draft PR creation"
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": []
+  },
+  "created_at": "2026-10-11T04:49:02Z",
+  "emitter": "Codex",
+  "notes": "Synthetic fixture and test only. Validator PASS means local declaration coherence, not evidence resolution, scientific fitness, rights clearance, policy permission, review, release, or public answer. No lifecycle or public write."
+}

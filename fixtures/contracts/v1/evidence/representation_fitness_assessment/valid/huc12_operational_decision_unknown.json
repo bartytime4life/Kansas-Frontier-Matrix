@@ -1,0 +1,84 @@
+{
+  "object_type": "RepresentationFitnessAssessment",
+  "schema_version": "1.0.0",
+  "assessment_id": "kfm:representation-fitness:huc12-operational-unknown:v1",
+  "subject": {
+    "artifact_ref": "kfm:artifact:huc12:ks:2026-08",
+    "representation_kind": "VECTOR",
+    "source_role": "OBSERVED",
+    "crs": "EPSG:5070",
+    "spatial_support": {
+      "support_kind": "POLYGON",
+      "nominal_resolution_m": 10.0,
+      "source_scale_denominator": 24000,
+      "declared_precision_m": 10.0,
+      "generalized": false,
+      "geometry_version_ref": "kfm:geometry:wbd-huc12:2026-08"
+    },
+    "temporal_support_ref": "kfm:temporal-support:huc12:2026-08"
+  },
+  "intended_use": {
+    "use_case_id": "synthetic-operational-watershed-decision",
+    "use_class": "OPERATIONAL_DECISION",
+    "consequence_level": "HIGH"
+  },
+  "dimensions": {
+    "positional": {
+      "outcome": "SUPPORTED",
+      "evidence_refs": [
+        "kfm:evidence:huc12-positional"
+      ],
+      "notes": ""
+    },
+    "thematic": {
+      "outcome": "SUPPORTED",
+      "evidence_refs": [
+        "kfm:evidence:huc12-thematic"
+      ],
+      "notes": ""
+    },
+    "temporal": {
+      "outcome": "UNKNOWN",
+      "evidence_refs": [
+        "kfm:evidence:huc12-temporal"
+      ],
+      "notes": "Synthetic case: temporal support for this declared use has not been established."
+    },
+    "completeness": {
+      "outcome": "SUPPORTED",
+      "evidence_refs": [
+        "kfm:evidence:huc12-completeness"
+      ],
+      "notes": ""
+    },
+    "lineage": {
+      "outcome": "SUPPORTED",
+      "evidence_refs": [
+        "kfm:evidence:huc12-lineage"
+      ],
+      "notes": ""
+    }
+  },
+  "overall_outcome": "UNKNOWN",
+  "reason_codes": [
+    "TEMPORAL_SUPPORT_UNRESOLVED_FOR_USE"
+  ],
+  "obligations": [],
+  "evidence_bundle_refs": [
+    "kfm:evidence-bundle:huc12:2026-08"
+  ],
+  "policy_decision_refs": [],
+  "review_state": "DRAFT",
+  "evaluated_at": "2026-08-07T23:00:00Z",
+  "expires_at": "2027-08-07T23:00:00Z",
+  "governance": {
+    "fixture_only": true,
+    "lifecycle_write": false,
+    "truth_authority": false,
+    "policy_authority": false,
+    "review_authority": false,
+    "release_authority": false,
+    "publication_authority": false
+  },
+  "spec_hash": "sha256:df9592bc7495d9feec551589bceac92928526e76bfddb0789891bca374fbbb86"
+}
