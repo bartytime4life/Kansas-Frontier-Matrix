@@ -162,8 +162,8 @@ test('cutaway exposes detailed basemaps and layer controls without reselecting g
  const select=findNode(h.tree,n=>n.props?.['aria-label']==='Cutaway basemap');assert.ok(select);
  select.props.onChange({target:{value:'kansas-aerial'}});button(h.tree,'Choose map layers').props.onClick();
  assert.deepEqual(changes,['kansas-aerial','layers']);assert.equal(h.prepares,0);
- const quality=findNode(h.tree,n=>n.props?.['aria-label']==='Cutaway surface resolution');assert.equal(quality.props.value,4096);
- quality.props.onChange({target:{value:'2048'}});await h.render();assert.equal(findNode(h.tree,n=>n.props?.['aria-label']==='Cutaway surface resolution').props.value,2048);
+ const quality=findNode(h.tree,n=>n.props?.['aria-label']==='Cutaway surface resolution');assert.equal(quality.props.value,2048);
+ quality.props.onChange({target:{value:'4096'}});await h.render();assert.equal(findNode(h.tree,n=>n.props?.['aria-label']==='Cutaway surface resolution').props.value,4096);
  assert.match(text(h.tree),/Display context, not KFM evidence/);assert.ok(button(h.tree,'Exact pixels'));h.h.dispose();
 });
 
