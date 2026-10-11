@@ -101,3 +101,30 @@ update keeps the previous complete surface visible, but does not prevent a
 later successfully settled capture from replacing it. Errors in the new
 attempt still withhold replacement. The tile cache, exact source values,
 geographic bounds and 2048/4096 resolution choices are preserved.
+
+### Committed area dispatch · 2026-10-11
+
+Show this area (including the High Plains example) dispatches its bounded source
+query on the next event-loop turn, without the 140 ms filter debounce. Changing
+year/source filters and probe positions retains that debounce. Repeated commits
+cancel unsent requests; stale responses and mismatched bounds still cannot
+replace the latest selection. Record limits, verified asset digests, source
+values, partial coverage and the 2048/4096 detail choices remain unchanged.
+
+The same follow-up reconciles the seven water-status/decision-expiry application
+files from merged repository PR #5028 into the authoritative Site. It preserves
+the existing owner/staging-token checks and activation duties; it performs no
+data activation, review approval or storage migration. Revert this follow-up
+or restore retained Site v227 to roll back.
+
+Opening Underground also warms its bounded local manifest while the user frames
+an area. It requests no borehole tiles or external data until a query is
+committed. A superseding query cancels unfinished metadata preparation, and
+metadata cannot replace records. SHA-256 verification and malformed-source
+rejection remain on the tile path.
+
+The selected cutaway also prepares the Three.js and OrbitControls modules while
+the user chooses an area. It allocates no WebGL context or geometry in this
+step, remains outside the initial main-map bundle, and retries a failed module
+preparation when a scene is requested. This moves code preparation off the
+committed-area path; it does not remove detail or change source membership.

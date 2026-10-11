@@ -44,19 +44,19 @@ test('core inventory remains an envelope and original interval identity survives
   assert.equal(materials.materialFor(core.intervals[0],core.kind),'inventory');
 });
 
-async function panelHarness(initialContext=null,{failWorker=false,map=null,skipArea=false}={}){
-  const messages=[],inspections=[],contexts=[],timers=new Map(),frames=new Map(),focusCalls=[];let timerSerial=0,frameSerial=0;const worker={postMessage:message=>messages.push(message),terminate(){}};
+async function panelHarness(initialContext=null,{failWorker=false,failPrepare=false,map=null,skipArea=false}={}){
+  const messages=[],inspections=[],contexts=[],timers=new Map(),frames=new Map(),focusCalls=[];let timerSerial=0,frameSerial=0;const worker={postMessage:message=>{if(failPrepare&&message.kind==='prepare')throw new Error('failed');messages.push(message);},terminate(){this.terminated=true;}};
   const h=await componentHarness('app/underground-panel.tsx',{'./subsurface-model':model,'./subsurface-materials':materials,'./subsurface-slice':slices,'./subsurface.module.css':{default:style},'./subsurface-workers':{startSubsurfaceWorker:()=>{if(failWorker)throw new Error("unavailable");return worker;}},'./cutaway-locator':locatorPlacement},{
     matchMedia:()=>({matches:true,addEventListener(){},removeEventListener(){}}),document:{hidden:false,addEventListener(){},removeEventListener(){}},window:{addEventListener(){},removeEventListener(){}},ResizeObserver:class{observe(){}disconnect(){}},requestAnimationFrame:fn=>{const id=++frameSerial;frames.set(id,fn);return id;},cancelAnimationFrame:id=>frames.delete(id),queueMicrotask,performance,
-    fetch:async()=>({ok:true,json:async()=>({version:1,surveys:[]})}),setTimeout:callback=>{const id=++timerSerial;timers.set(id,callback);return id;},clearTimeout:id=>timers.delete(id),
+    fetch:async()=>({ok:true,json:async()=>({version:1,surveys:[]})}),setTimeout:(callback,delay)=>{const id=++timerSerial;timers.set(id,{callback,delay});return id;},clearTimeout:id=>timers.delete(id),
   });
   const props={map,initialContext,year:2026,redacted:false,onFlatMap(){},onTerrain(){},readElevation(){return null;},isDrawing(){return false;},onDraw(){},readTransect(){return[];},onContext:context=>contexts.push(context),onInspect:value=>inspections.push(value),onClose(){},onSave(){},onReport(){}};
-  let tree;const render=()=>{tree=h.render(h.exports.default,props);const destination=findNode(tree,node=>node.props?.['aria-label']==='Slice a recorded column');if(destination)destination.props.ref.current={focus:options=>focusCalls.push(options)};h.commit();return tree;};render();const flushTimers=()=>{for(const [id,fn] of [...timers]){timers.delete(id);fn();}};flushTimers();
+  let tree;const render=()=>{tree=h.render(h.exports.default,props);const destination=findNode(tree,node=>node.props?.['aria-label']==='Slice a recorded column');if(destination)destination.props.ref.current={focus:options=>focusCalls.push(options)};h.commit();return tree;};render();const flushTimers=()=>{for(const [id,{callback}] of [...timers]){timers.delete(id);callback();}};flushTimers();
   if (!skipArea&&(!initialContext || initialContext.display === 'aquifer')) { findNode(tree,node=>node.props?.onArea).props.onArea([-100.7,38.3,-100.3,38.7]);render();flushTimers(); }
   const load=(records=[record,other,empty])=>{worker.onmessage({data:{id:messages.at(-1).id,bounds:messages.at(-1).bounds,manifest:{sources:[],totals:{},counties:[]},columns:records.map(record=>({record,distanceMeters:0,alongMeters:0,offsetMeters:0})),coverage:'loaded'}});return render();};if(!failWorker&&!skipArea)load();
   const aquifer=()=>findNode(tree,node=>node.props?.sliceEntry);
   const viewer=()=>findNode(tree,node=>node.props?.onSlice);
-  return{h,render,load,aquifer,viewer,inspections,contexts,focusCalls,messages,worker,flushTimers,flushFrames(){for(const [id,fn] of [...frames]){frames.delete(id);fn();}},props,get tree(){return tree;}};
+  return{h,render,load,aquifer,viewer,inspections,contexts,focusCalls,messages,worker,flushTimers,pendingDelays:()=>[...timers.values()].map(timer=>timer.delay),flushFrames(){for(const [id,fn] of [...frames]){frames.delete(id);fn();}},props,get tree(){return tree;}};
 }
 test('fresh cutaway fits Kansas after locator placement and tool round trips keep the moved map',async()=>{
   const fitted=[],mapEvents={isEnabled:()=>true,disable(){},enable(){}},style={setProperty(){},removeProperty(){}};
@@ -200,4 +200,37 @@ test('record-worker startup or terminal failure remains recoverable after applyi
   const before=p.messages.length;p.aquifer().props.onArea([-100.7,38.3,-100.3,38.7]);p.render();p.flushTimers();p.render();assert.equal(p.aquifer().props.recordsLoading,false);assert.match(p.aquifer().props.recordStatus,/Close and reopen Underground/);assert.equal(p.aquifer().props.records.length,0);
   p.props.year=1900;p.render();p.flushTimers();p.render();assert.equal(p.aquifer().props.recordsLoading,false);assert.equal(p.messages.length,before);p.h.dispose();
  }
+});
+
+// Exercise the real parent effect, including timer cleanup and response identity.
+test('explicit area commits dispatch immediately; changed filters retain their debounce',async()=>{
+ const p=await panelHarness(null,{skipArea:true}),bounds=[-100.7,38.3,-100.3,38.7];
+ p.aquifer().props.onArea(bounds);p.render();same(p.pendingDelays(),[0]);p.flushTimers();p.load([record]);
+ const first=p.messages.at(-1);p.props.year=1990;p.render();
+ same(p.pendingDelays(),[140]);assert.equal(p.aquifer().props.records.length,0,'old rows are withheld during filter delay');
+ p.flushTimers();const filtered=p.messages.at(-1);assert.equal(filtered.year,1990);assert.notEqual(filtered.id,first.id);
+ p.worker.onmessage({data:{id:first.id,bounds,columns:[{record}],coverage:'old'}});p.render();assert.equal(p.aquifer().props.records.length,0);
+ p.aquifer().props.onArea(bounds);p.render();same(p.pendingDelays(),[0]);p.h.dispose();same(p.pendingDelays(),[]);
+});
+test('rapid committed selections cancel unsent work and keep only the last exact area',async()=>{
+ const p=await panelHarness(null,{skipArea:true}),before=p.messages.length;
+ p.aquifer().props.onArea([-100.7,38.3,-100.3,38.7]);p.render();
+ const final=[-99.8,38.2,-99.4,38.7];p.aquifer().props.onArea(final);p.render();
+ same(p.pendingDelays(),[0]);p.flushTimers();assert.equal(p.messages.length,before+1);same(p.messages.at(-1).bounds,final);
+ p.load([other]);assert.equal(p.aquifer().props.records[0],other);p.h.dispose();
+});
+
+test('opening the tool prepares metadata without committing geography or displaying records',async()=>{
+ const p=await panelHarness(null,{skipArea:true});same(p.messages,[{id:0,kind:'prepare'}]);
+ p.worker.onmessage({data:{id:0,prepared:true,manifest:{sources:[],totals:{},counties:[]}}});p.render();
+ assert.equal(p.aquifer().props.records.length,0);assert.equal(p.messages.length,1);
+ p.aquifer().props.onArea([-100.7,38.3,-100.3,38.7]);p.render();p.flushTimers();p.load([record]);
+ p.worker.onmessage({data:{id:0,prepared:true,manifest:{sources:[],totals:{},counties:[]}}});p.render();
+ assert.equal(p.aquifer().props.records[0],record,'metadata never clears or replaces records');p.h.dispose();
+});
+
+test('failed preparation dispatch releases the worker and keeps records withheld',async()=>{
+ const p=await panelHarness(null,{skipArea:true,failPrepare:true});await settle();p.render();
+ assert.equal(p.worker.terminated,true);assert.equal(p.worker.onmessage,null);assert.equal(p.messages.length,0);
+ assert.equal(p.aquifer().props.records.length,0);assert.match(text(p.tree),/Background data loading is unavailable/);p.h.dispose();
 });

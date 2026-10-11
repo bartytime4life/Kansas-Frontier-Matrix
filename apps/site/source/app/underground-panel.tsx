@@ -21,7 +21,7 @@ type Props = {
   onContext: (context: SubsurfaceContext) => void; onInspect: (inspection: SubsurfaceInspection) => void;
   onClose: () => void; onSave: () => void; onReport: () => void;
 };
-type WorkerResult = { id: number; bounds?: AreaBounds; manifest?: SubsurfaceManifest; columns?: SectionRecord[]; total?: number; partial?: boolean; coverage?: string; failures?: string[]; error?: string; matches?: [string, string, Position, string][] };
+type WorkerResult = { id: number; prepared?: boolean; bounds?: AreaBounds; manifest?: SubsurfaceManifest; columns?: SectionRecord[]; total?: number; partial?: boolean; coverage?: string; failures?: string[]; error?: string; matches?: [string, string, Position, string][] };
 const EMPTY_ROUTE: Position[] = [];
 const EMPTY_COLUMNS: SectionRecord[] = [];
 const download = (name: string, value: string | null, type: string) => {
@@ -40,6 +40,7 @@ export default function UndergroundPanel(props: Props) {
   const [manifest, setManifest] = useState<SubsurfaceManifest | null>(null);
   const [appliedArea, setAppliedArea] = useState<AreaBounds|null>(null), [areaRevision,setAreaRevision] = useState(0);
   const expectedArea = useRef<AreaBounds|null>(null);
+  const dispatchedAreaRevision = useRef<number|null>(null);
   const areaCenter = useMemo<Position|null>(()=>appliedArea?[(appliedArea[0]+appliedArea[2])/2,(appliedArea[1]+appliedArea[3])/2]:null,[appliedArea]);
   const areaMode = display === "aquifer" || (display === "3d" && appliedArea !== null);
   const queryAnchor = areaMode && areaCenter ? areaCenter : anchor, queryRoute = areaMode ? EMPTY_ROUTE : route;
@@ -139,15 +140,19 @@ export default function UndergroundPanel(props: Props) {
     try {
       const w = startSubsurfaceWorker(); worker.current = w;
       w.onmessage = (event: MessageEvent<WorkerResult>) => {
-        const r = event.data; if (r.id !== serial.current) return;
+        const r = event.data;
+        if (r.prepared && r.id === 0) { if (r.manifest) setManifest(r.manifest); return; }
+        if (r.id !== serial.current) return;
         if (!r.matches && !r.error && expectedArea.current && (!r.bounds || r.bounds.some((value,index)=>value!==expectedArea.current![index]))) { setLoading(false); setResponseKey(expectedQueryKey.current); setColumns([]); setCoverage("Source response did not match the selected area; show the area again."); return; }
         setLoading(false); if (r.manifest) setManifest(r.manifest);
         if (r.matches) { setMatches(r.matches); return; }
         setResponseKey(expectedQueryKey.current); setColumns(r.columns ?? []); setPartial(Boolean(r.partial)); setCoverage(r.error ?? r.coverage ?? "No available data.");
       };
       w.onerror = () => { worker.current=null;w.onmessage=null;w.terminate();setWorkerFailure("Source worker unavailable");setLoading(false); setResponseKey(expectedQueryKey.current); setColumns([]); setCoverage("Source loading failed. Close and reopen Underground to retry; no underground conditions are inferred."); };
+      // Metadata can load while the user frames an area. Tiles remain on demand.
+      w.postMessage({ id: 0, kind: "prepare" });
       return () => { w.onmessage = null; w.terminate(); worker.current = null; };
-    } catch { queueMicrotask(() => { setWorkerFailure("Source worker unavailable");setLoading(false); setResponseKey(expectedQueryKey.current); setCoverage("Background data loading is unavailable. Close and reopen Underground to retry."); }); }
+    } catch { if (worker.current) { worker.current.onmessage=null; worker.current.terminate(); worker.current=null; } queueMicrotask(() => { setWorkerFailure("Source worker unavailable");setLoading(false); setResponseKey(expectedQueryKey.current); setCoverage("Background data loading is unavailable. Close and reopen Underground to retry."); }); }
   }, []);
   const applyArea = useCallback((bounds: AreaBounds | null) => {
     if (bounds && !validAreaBounds(bounds)) bounds = null;
@@ -161,12 +166,16 @@ export default function UndergroundPanel(props: Props) {
     const id = ++serial.current;
     expectedArea.current = areaMode ? appliedArea : null;
     expectedQueryKey.current = queryKey;
+    // Explicit Show this area commits need no filter debounce. Consume the revision
+    // only when dispatching; cleanup can still cancel a superseded selection.
+    const committedArea = areaMode && appliedArea !== null && dispatchedAreaRevision.current !== areaRevision;
     const timer = setTimeout(() => {
       setColumns([]);
       if (areaMode && !appliedArea) { setLoading(false); setResponseKey(queryKey); setCoverage("Frame a local area in the selector, then choose Show this area."); return; }
       setLoading(true);
+      if (areaMode) dispatchedAreaRevision.current = areaRevision;
       try{worker.current?.postMessage({ id, kind: areaMode ? "area" : "probe", ...(areaMode ? {bounds:appliedArea} : {}), anchor:queryAnchor, route:queryRoute, sources, year });}catch{worker.current?.terminate();worker.current=null;setWorkerFailure("Source worker unavailable");setLoading(false);setCoverage("Source loading failed. Close and reopen Underground to retry.");}
-    }, 140);
+    }, committedArea ? 0 : 140);
     return () => clearTimeout(timer);
   }, [areaMode, appliedArea, areaRevision, queryAnchor, queryRoute, sources, year, queryKey]);
   useEffect(() => {

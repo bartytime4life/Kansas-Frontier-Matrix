@@ -78,7 +78,7 @@ test("activation is compare-and-swap, gate-checked and logged", async () => {
   const active = await admin.activateWaterPackage(s, { package_id: id, decision: owner, expected_active: null }, NOW);
   assert.deepEqual([active.outcome, active.revision, active.previous_package_id], ["ACTIVATED", 1, null]);
   await rejects(admin.activateWaterPackage(s, { package_id: id, decision: owner, expected_active: null }, NOW), "ACTIVATION_CONFLICT");
-  assert.deepEqual(await admin.waterAdminStatus(s), { active_package_id: id, previous_package_id: null, revision: 1 });
+  assert.deepEqual(await admin.waterAdminStatus(s), { active_package_id: id, previous_package_id: null, revision: 1, decision_expires_at: owner.expires_at });
   assert.equal(s.sqlite.prepare("SELECT COUNT(*) AS n FROM water_activation_events WHERE action = 'ACTIVATE'").get().n, 1);
 
   // A second package must have been prepared against the current active package.
@@ -146,9 +146,18 @@ test("status answers the owner or the staging token, and nobody else", async () 
   assert.equal((await get({ Authorization: "Bearer wrong" })).status, 403);
   globalThis.__waterAdmin.owner = false;
   const byToken = await get({ Authorization: "Bearer staging-secret" });
-  assert.deepEqual([byToken.status, await byToken.json()], [200, { active_package_id: owner.package_id, previous_package_id: null, revision: 1 }]);
+  assert.deepEqual([byToken.status, await byToken.json()], [200, { active_package_id: owner.package_id, previous_package_id: null, revision: 1, decision_expires_at: owner.expires_at }]);
   globalThis.__waterAdmin.owner = true;
   assert.equal((await (await get({})).json()).active_package_id, owner.package_id);
+});
+
+test("status reports no expiry when nothing is active or the stored decision is unreadable", async () => {
+  const s = await store(), owner = JSON.parse(await fixture("owner-decision"));
+  assert.deepEqual(await admin.waterAdminStatus(s), { active_package_id: null, previous_package_id: null, revision: 0, decision_expires_at: null });
+  await admin.stageWaterPackage(s, await fixture("admitted-snapshot"), "staging-token", NOW);
+  await admin.activateWaterPackage(s, { package_id: owner.package_id, decision: owner, expected_active: null }, NOW);
+  s.sqlite.prepare("UPDATE water_active SET decision_json = 'not json' WHERE singleton = 1").run();
+  assert.equal((await admin.waterAdminStatus(s)).decision_expires_at, null);
 });
 
 test("a losing concurrent activation logs no event", async () => {

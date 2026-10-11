@@ -92,7 +92,17 @@ export async function withdrawWaterPackage(store: WaterAdminStore, body: unknown
   return { event_id: eventId, package_id: packageId, outcome: "WITHDRAWN" };
 }
 
+// The decision's expiry is already public on the layers route while it answers; the owner page
+// shows it so a refresh can be activated before the layer stops serving.
+function decisionExpiry(decisionJson: string | undefined): string | null {
+  try {
+    const expires = (JSON.parse(decisionJson ?? "null") as { expires_at?: unknown } | null)?.expires_at;
+    return typeof expires === "string" && !Number.isNaN(Date.parse(expires)) ? expires : null;
+  } catch { return null; }
+}
+
 export async function waterAdminStatus(store: WaterAdminStore) {
-  const active = await currentActive(store);
-  return { active_package_id: active?.package_id ?? null, previous_package_id: active?.previous_package_id ?? null, revision: active?.revision ?? 0 };
+  const active = await store.db.prepare("SELECT package_id, previous_package_id, revision, decision_json FROM water_active WHERE singleton = 1").first<Active & { decision_json: string }>();
+  return { active_package_id: active?.package_id ?? null, previous_package_id: active?.previous_package_id ?? null, revision: active?.revision ?? 0,
+    decision_expires_at: decisionExpiry(active?.decision_json) };
 }
