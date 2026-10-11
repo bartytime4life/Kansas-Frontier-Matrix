@@ -2,7 +2,7 @@
 doc_id: kfm://doc/archaeology/SOURCE_REGISTRY
 title: Archaeology Source Registry — Human Guide
 type: standard
-version: v0.2.2
+version: v0.2.3
 status: draft
 owners: <archaeology-source-steward> · <archaeology-domain-steward> · <sensitivity-reviewer> · <rights-holder-representative> · <release-authority> · <docs-steward>   # NEEDS VERIFICATION — assign via CODEOWNERS / control_plane/source_authority_register.yaml before promotion
 created: 2026-05-15
@@ -42,6 +42,7 @@ related:
   - control_plane/source_authority_register.yaml
 tags: [kfm, archaeology, registry, sources, governance, evidence, sensitivity, doctrine, admission]
 notes:
+  - "2026-10-11 (v0.2.3): the placement warning now separates the CONFIRMED canonical registry home from the still-PROPOSED implementation paths, and records the completed descriptor migration."
   - "2026-10-11: source-registry paths aligned to accepted DIR-SOURCE-002..004: data/registry/sources/archaeology/ is the canonical SourceDescriptor writer; data/registry/archaeology/sources/ is a read-only compatibility view, never an independent writer."
   - CONTRACT_VERSION pinned to "3.0.0".
   - Companion doc; machine truth lives in data/registry/sources/archaeology/*.yaml.
@@ -67,7 +68,7 @@ truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_pos
 <!-- Top-of-file impact block -->
 
 [![status: draft](https://img.shields.io/badge/status-draft-lightgrey.svg)](#1-purpose)
-[![version: v0.2.2](https://img.shields.io/badge/version-v0.2.2-informational.svg)](#changelog-v01--v02)
+[![version: v0.2.3](https://img.shields.io/badge/version-v0.2.3-informational.svg)](#changelog-v01--v02)
 [![contract: 3.0.0](https://img.shields.io/badge/CONTRACT__VERSION-3.0.0-informational.svg)](../../doctrine/ai-build-operating-contract.md)
 [![doc type: standard](https://img.shields.io/badge/doc_type-standard-blue.svg)](#)
 [![lane: archaeology](https://img.shields.io/badge/lane-archaeology-7a3e3e.svg)](./README.md)
@@ -80,7 +81,7 @@ truth_posture: NEEDS VERIFICATION — owning_root, responsibility, and truth_pos
 [![registry home: PROPOSED](https://img.shields.io/badge/registry_home-PROPOSED-yellow.svg)](#3-repo-fit)
 [![last updated](https://img.shields.io/badge/last__updated-2026--10--11-lightgrey.svg)](#)
 
-**Status:** `draft` · **Version:** `v0.2.2` · **Owners:** archaeology source steward · archaeology domain steward · sensitivity reviewer · rights-holder representative · release authority · docs steward *(placeholders — confirm via CODEOWNERS)* · **Last updated:** 2026-10-11
+**Status:** `draft` · **Version:** `v0.2.3` · **Owners:** archaeology source steward · archaeology domain steward · sensitivity reviewer · rights-holder representative · release authority · docs steward *(placeholders — confirm via CODEOWNERS)* · **Last updated:** 2026-10-11
 **`CONTRACT_VERSION = "3.0.0"`** _(per [`docs/doctrine/ai-build-operating-contract.md`](../../doctrine/ai-build-operating-contract.md))._
 
 > [!IMPORTANT]
@@ -262,12 +263,18 @@ control_plane/source_authority_register.yaml   ← PROPOSED — source steward +
 - `apps/governed-api/` — citation, sensitivity badge, and release-state surfaces.
 
 > [!WARNING]
-> The repository is **not mounted** in this session. Every path above is
-> **PROPOSED** under Directory Rules §0 and §12, not asserted as present. Verify
-> against the mounted tree before merging. Two open ADR-class questions affect
-> placement: (a) `data/registry/sources/<domain>/` vs `data/registry/<domain>/sources/`
-> (OQ-ARCH-SR-08, **resolved 2026-10-11** by accepted `DIR-SOURCE-003`/`004`: the
-> subtype-first lane is canonical and the domain-first lane is a read-only compatibility view); (b) flat `policy/sensitivity/archaeology/` vs segmented
+> **Registry home: CONFIRMED.** Accepted `DIR-SOURCE-003`/`004` make
+> `data/registry/sources/archaeology/` the canonical descriptor home, and the
+> domain-first `data/registry/archaeology/sources/` path is a read-only
+> compatibility view (OQ-ARCH-SR-08, resolved 2026-10-11). Its three leftover
+> greenfield templates were migrated to the canonical lane on 2026-10-11; every
+> descriptor there is still a `PROPOSED` placeholder, not an admitted record.
+>
+> **Everything else above stays PROPOSED.** The connector, pipeline, policy,
+> validator, watcher, test, and API paths listed in this section are PROPOSED
+> under Directory Rules §0 and §12, not asserted as present. Verify them against
+> the mounted tree before relying on them. One ADR-class placement question
+> remains open: flat `policy/sensitivity/archaeology/` vs segmented
 > `policy/domains/archaeology/` (OQ-ARCH-SR-09, mirrored across all sibling docs).
 
 [↑ Back to top](#archaeology-source-registry--human-guide)
@@ -909,7 +916,7 @@ the sibling docs.
 
 **Machine truth**
 
-- [`data/registry/sources/archaeology/sources.yaml`](../../../data/registry/sources/archaeology/sources.yaml) — machine truth (PROPOSED)
+- [`data/registry/sources/archaeology/sources.yaml`](../../../data/registry/sources/archaeology/sources.yaml) — machine truth (path CONFIRMED canonical per `DIR-SOURCE-003`; contents are `PROPOSED` placeholders)
 - [`schemas/contracts/v1/source/source-descriptor.json`](../../../schemas/contracts/v1/source/source-descriptor.json) — descriptor schema (PROPOSED)
 - [`schemas/contracts/v1/source/source-activation-decision.json`](../../../schemas/contracts/v1/source/source-activation-decision.json) — `SourceActivationDecision` schema (PROPOSED)
 - [`control_plane/source_authority_register.yaml`](../../../control_plane/source_authority_register.yaml) — source steward + reviewer register (PROPOSED)
@@ -946,6 +953,7 @@ the sibling docs.
 | Refreshed badge row: added `version: v0.2`, `CONTRACT_VERSION`, `role: fixed at admission`, `watcher: non-publisher`; updated `last updated`. | housekeeping | Reflects new content; no doctrine change. |
 | **v0.2.1 (2026-10-11):** §9 admission flow node K now reads "Connector emits to source-first RAW (placement HOLD) or `data/quarantine/archaeology/`" instead of `data/raw/archaeology/`; added `data/raw/README.md` to `related` and §15. | reconciliation (PATCH) | Aligns with accepted Directory Rules `DIR-SOURCE-001`; no placement was accepted. `SourceActivationDecision` outcomes, fail-closed descriptor rules, sovereignty inheritance, and cultural/steward review are unchanged. Documentation only. |
 | **v0.2.2 (2026-10-11):** `OQ-ARCH-SR-08` marked resolved: `data/registry/sources/archaeology/` is the canonical YAML home and `data/registry/archaeology/sources/` a read-only compatibility view. | reconciliation (PATCH) | Accepted Directory Rules `DIR-SOURCE-002`–`004` (ADR-0029) make `data/registry/sources/` the canonical descriptor writer and allow `data/registry/<domain>/sources/` only as a generated view. Documentation only; no registry record moved. |
+| **v0.2.3 (2026-10-11):** the §6 placement warning separates the CONFIRMED canonical registry home (`DIR-SOURCE-003`/`004`) from the still-PROPOSED implementation paths, leaves only `OQ-ARCH-SR-09` open, and records the migration of the three compatibility-view descriptors; `OQ-ARCH-SR-08` notes the migration; the machine-truth link labels the path confirmed and its contents placeholders. | correction (PATCH) | Post-merge review of #5047 found the warning gave conflicting status for the registry path. Documentation only. |
 
 > **Backward compatibility.** All §1–§15 anchors are **preserved exactly**.
 > New material is added either inside existing sections (§§1–13 strengthened in
@@ -973,4 +981,4 @@ This document is done enough to enter the repository when:
 
 ---
 
-**Last updated:** 2026-10-11 · **Version:** `v0.2.2 (draft)` · **`CONTRACT_VERSION = "3.0.0"`** · **Doc class:** standard companion guide · **Authority:** human-facing admission contract; machine truth lives in `data/registry/sources/archaeology/*.yaml`; canonical source-family catalogue is [`SOURCES.md`](./SOURCES.md) · [↑ Back to top](#archaeology-source-registry--human-guide)
+**Last updated:** 2026-10-11 · **Version:** `v0.2.3 (draft)` · **`CONTRACT_VERSION = "3.0.0"`** · **Doc class:** standard companion guide · **Authority:** human-facing admission contract; machine truth lives in `data/registry/sources/archaeology/*.yaml`; canonical source-family catalogue is [`SOURCES.md`](./SOURCES.md) · [↑ Back to top](#archaeology-source-registry--human-guide)
