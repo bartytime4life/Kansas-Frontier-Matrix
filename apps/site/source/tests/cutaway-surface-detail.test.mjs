@@ -83,6 +83,20 @@ test('same-area manual refresh retains the previous surface until replacement ti
  assert.match(h.statuses.at(-1),/Surface detail ready/);
  controller.dispose();assert.equal(controller.refresh(),false);
 });
+test('an initial render preview is not promoted to a complete refresh fallback',async()=>{
+ const h=harness(),controller=h.start();await Promise.resolve();const map=h.maps[0];
+ map.emit('style.load');map.emit('render');assert.equal(h.frames.length,1);
+ assert.match(h.statuses.at(-1),/partial preview/);
+ assert.equal(controller.refresh(),true);
+ assert.doesNotMatch(h.statuses.at(-1),/previous surface remains visible/i);
+ assert.match(h.statuses.at(-1),/preview may be incomplete/i);
+ map.emit('error');map.emit('style.load');map.emit('render');
+ assert.equal(h.frames.length,2,'a second explicitly partial preview may replace the first');
+ map.emit('idle');assert.match(h.statuses.at(-1),/Partial surface detail/);
+ assert.equal(controller.refresh(),true);
+ assert.doesNotMatch(h.statuses.at(-1),/previous surface remains visible/i);
+ controller.dispose();
+});
 
 test('continuous camera movement cannot postpone the pending detail request and uses the latest footprint',async()=>{
  const h=harness(),controller=h.start();await Promise.resolve();const map=h.maps[0];map.emit('load');map.emit('idle');

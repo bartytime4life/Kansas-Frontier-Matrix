@@ -29,7 +29,7 @@ export function startCutawaySurfaceDetail(options: {
   capture: SurfaceCapture; pixels: number; onFrame: (frame: SurfaceDetailFrame) => void; onStatus: (status: string) => void;
 }) {
   let disposed = false, map: GLMap | null = null, timer: ReturnType<typeof setTimeout> | undefined, timeout: ReturnType<typeof setTimeout> | undefined, previewTimer: ReturnType<typeof setTimeout> | undefined;
-  let requested = options.capture.bounds, key = "", pending = true, partial = false, ready = false, hasFrame = false, refreshing = false;
+  let requested = options.capture.bounds, key = "", pending = true, partial = false, ready = false, displayedFrameComplete = false, refreshing = false;
   const container = document.createElement("div");
   container.setAttribute("aria-hidden", "true"); container.style.cssText = "position:fixed;left:-10000px;top:0;pointer-events:none;contain:strict;";
   document.body.append(container);
@@ -74,7 +74,9 @@ export function startCutawaySurfaceDetail(options: {
         const b = view.getBounds();
         if (settled) { pending = false; clearTimeout(timeout); clearTimeout(previewTimer); previewTimer = undefined; }
         options.onFrame({ image, bounds: [b.getWest(), b.getSouth(), b.getEast(), b.getNorth()], zoom: view.getZoom() });
-        hasFrame = true; refreshing = false;
+        // A render preview or a settled frame with tile errors is visible, but
+        // neither can be promised as a complete fallback for the next refresh.
+        displayedFrameComplete = settled && !partial; refreshing = false;
         options.onStatus(`${!settled ? "Loading surface detail · partial preview" : partial ? "Partial surface detail" : "Surface detail ready"} · ${image.width} × ${image.height} pixels · map zoom ${view.getZoom().toFixed(1)}. Provider resolution and dates still apply.${!settled ? " Unfinished tiles are unknown." : ""}`);
       } catch { pending = false; options.onStatus("Surface detail could not be drawn. The selector preview and source records remain available."); }
     };
@@ -98,13 +100,13 @@ export function startCutawaySurfaceDetail(options: {
       if (disposed || !map) return false;
       if (!ready) { options.onStatus("Surface tiles are already preparing. The current cutaway remains available."); return true; }
       clearTimeout(timer); timer = undefined; clearTimeout(timeout); clearTimeout(previewTimer); previewTimer = undefined;
-      key = ""; pending = true; partial = false; ready = false; refreshing = hasFrame;
-      options.onStatus(refreshing ? "Refreshing surface tiles… Previous surface remains visible until a replacement is drawn." : "Refreshing surface tiles…");
+      key = ""; pending = true; partial = false; ready = false; refreshing = displayedFrameComplete;
+      options.onStatus(refreshing ? "Refreshing surface tiles… Previous surface remains visible until a replacement is drawn." : "Refreshing surface tiles… Existing preview may be incomplete; missing tiles are unknown.");
       timeout = setTimeout(() => { if (!disposed && pending) options.onStatus(refreshing ? "Surface refresh is taking longer. The previous surface remains visible; new coverage is unconfirmed." : "Surface tiles are taking longer to load. Coverage is unconfirmed; retry or choose another basemap."); }, 12000);
       try { map.setStyle(detailStyle(), { diff: false }); }
       catch {
         ready = true; pending = false; clearTimeout(timeout);
-        options.onStatus(hasFrame ? "Surface refresh unavailable. The previous surface remains visible; retry or choose another basemap." : "Surface refresh unavailable. Retry or choose another basemap.");
+        options.onStatus(displayedFrameComplete ? "Surface refresh unavailable. The previous surface remains visible; retry or choose another basemap." : "Surface refresh unavailable. Existing preview may be incomplete; retry or choose another basemap.");
       }
       return true;
     },
