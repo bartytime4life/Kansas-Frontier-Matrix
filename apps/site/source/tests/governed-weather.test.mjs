@@ -74,6 +74,27 @@ test("the Site and Python weather license lists agree", async () => {
   assert.ok(block); assert.deepEqual([...weather.WEATHER_SELF_RELEASE_LICENSES], [block[1]]);
 });
 
+test("inner provenance digests are recomputed from the artifact text", async () => {
+  const shared = await import(waterUrl);
+  // Rehash the outer artifact and package digests around an edited inner artifact, as a forger would.
+  const forge = async (name, edit) => {
+    const snapshot = await fixture("admitted-snapshot");
+    snapshot.artifacts[name] = edit(snapshot.artifacts[name]);
+    snapshot.manifest.artifacts[name] = await shared.digest(snapshot.artifacts[name]);
+    snapshot.manifest.package_id = await shared.digest(shared.canonical(shared.without(snapshot.manifest, "package_id")));
+    return JSON.stringify(snapshot);
+  };
+  const renamed = await forge("candidate.json", text => text.replace("WICHITA DWIGHT D EISENHOWER NA", "WICHITA RENAMED"));
+  await assert.rejects(weather.parseWeatherPackage(renamed), /CANDIDATE_IDENTITY_MISMATCH/);
+  const receipt = await forge("validation.json", text => text.replace(/"receipt_digest":"sha256:[0-9a-f]{64}"/, `"receipt_digest":"sha256:${"0".repeat(64)}"`));
+  await assert.rejects(weather.parseWeatherPackage(receipt), /VALIDATION_RECEIPT_INVALID/);
+  // Only the top-level member is removed; escaped quotes and nested keys of the same name are kept.
+  const text = '{"a":"x\\",\\"candidate_id\\":1","candidate_id":"z","n":{"candidate_id":[2,{"b":"}"}]}}';
+  assert.equal(await weather.digestWithout(text, "candidate_id"), await shared.digest('{"a":"x\\",\\"candidate_id\\":1","n":{"candidate_id":[2,{"b":"}"}]}}'));
+  await assert.rejects(weather.digestWithout('{"a":1}', "candidate_id"), /CANONICAL_MEMBER_INVALID/);
+  await assert.rejects(weather.digestWithout("[1]", "candidate_id"), /CANONICAL_OBJECT_REQUIRED/);
+});
+
 test("the Site and Python station-local offsets agree", async () => {
   const python = await read("../../../../packages/release/src/release/weather_projection.py");
   const block = /STANDARD_OFFSET_HOURS = (\{[^}]+\})/.exec(python);

@@ -947,7 +947,7 @@
       "state": "repository_only_overlay"
     },
     "app/governed-weather.ts": {
-      "mirror_sha256": "08f4992e4b15b5b09621c856dea8efe9bc0abeaea1ab9159f289cf5b98ba7738",
+      "mirror_sha256": "a3fde049550be7c0f745809bffedc85eed6ecf7cd225e00414eb33ffd3346b32",
       "state": "repository_only_overlay"
     },
     "app/governed/water-release/page.tsx": {
@@ -4093,23 +4093,23 @@
       "state": "identical"
     },
     "tests/fixtures/governed-weather/admitted-snapshot.json": {
-      "mirror_sha256": "3e764d3283491fbe37559475114a390885067137b1a22e3e118c92bcc5fed20e",
+      "mirror_sha256": "f96e4966e9a18f8f7a9660080d3c0a984bc93df604c732719d44dcf538bd1bfa",
       "state": "repository_only_overlay"
     },
     "tests/fixtures/governed-weather/bootstrap.json": {
-      "mirror_sha256": "3398183a380585ff5f1f6cf9c19a5f161b0298ba975f47faea56f57dd48c8f48",
+      "mirror_sha256": "cc9acc37a2952e0ba7f62ac926b6538ca046bdf7077ef588b826e1274cd39b42",
       "state": "repository_only_overlay"
     },
     "tests/fixtures/governed-weather/evidence.json": {
-      "mirror_sha256": "525719c8814e1dfbe1202f0e404b68f972132e6fd8f89259c2311cdc6b12d5e7",
+      "mirror_sha256": "122a82aa33e17933f170ce1928430e306ac180a5add4257646c1139f19415cc3",
       "state": "repository_only_overlay"
     },
     "tests/fixtures/governed-weather/layers.json": {
-      "mirror_sha256": "f787b3347bba07542a941267f97f14c811656a8b70744ce8b2e5d12bdbce1aeb",
+      "mirror_sha256": "f8af7c622228f2a794b84717212e84af71f7b68a1d9e43e5a067a123bb164611",
       "state": "repository_only_overlay"
     },
     "tests/fixtures/governed-weather/owner-decision.json": {
-      "mirror_sha256": "6dc1df050ad14cc087703dac407caae547dc074002f015dbafcdd860127af2b3",
+      "mirror_sha256": "d5b25604cea839af4d6a1e3bfb43e9f9755ff987c4de9d64d1383ed9a5120417",
       "state": "repository_only_overlay"
     },
     "tests/fixtures/lightning/goes16-20180501t180000.nc": {
@@ -4201,7 +4201,7 @@
       "state": "repository_only_overlay"
     },
     "tests/governed-weather.test.mjs": {
-      "mirror_sha256": "fee8e93785c107d4c5d0a08de097c7cca710c2ecbd6a3d59309fe7c773898989",
+      "mirror_sha256": "a41ce4804531aa75c0dd4167011b5c0ebc40c7140dc8be354e65c6df6ff649c5",
       "state": "repository_only_overlay"
     },
     "tests/historical-topo-overlay.test.mjs": {
@@ -4752,7 +4752,7 @@
   "destination": "apps/site/source",
   "followup_scope": "Repository-only overlay ahead of the next Site version: the reviewed daily weather layer (NOAA GHCN-Daily, ADR-0045). Adds the weather snapshot parser, gate and projection (Python-generated parity fixtures), the read route /api/governed/weather/v1/*, owner admin routes /api/governed/weather-admin/{stage,status,activate,withdraw}, additive D1 migration 0006 (weather_* tables) and R2 prefix governed-weather/v1/objects/, the /governed/weather-release page and the Reviewed daily weather map control. The water admin and release console are parameterized by layer family with water behaviour unchanged. Site v229 source and deployment are unchanged.",
   "inventory_digest_basis": "UTF-8 JSON of comparison, sorted keys, separators comma and colon, no trailing newline",
-  "inventory_sha256": "34e85308dde9993dc4054473f78927ae37b334e9ade8ed3ab6cc8394ec8f96ae",
+  "inventory_sha256": "75e064963d02d8d5dd67ca5255b544bd8b9dceb4ffc1035d53cfecd3ee951731",
   "overlay": {
     "changed_paths": [
       {
@@ -4829,7 +4829,7 @@
         "previous_state": null
       },
       {
-        "mirror_sha256": "08f4992e4b15b5b09621c856dea8efe9bc0abeaea1ab9159f289cf5b98ba7738",
+        "mirror_sha256": "a3fde049550be7c0f745809bffedc85eed6ecf7cd225e00414eb33ffd3346b32",
         "path": "app/governed-weather.ts",
         "previous_state": null
       },
@@ -4877,27 +4877,27 @@
         "site_sha256": "5136ed625eccef3f448150e40e6191802bcd553a1e04ce46c1a92272913079cd"
       },
       {
-        "mirror_sha256": "3e764d3283491fbe37559475114a390885067137b1a22e3e118c92bcc5fed20e",
+        "mirror_sha256": "f96e4966e9a18f8f7a9660080d3c0a984bc93df604c732719d44dcf538bd1bfa",
         "path": "tests/fixtures/governed-weather/admitted-snapshot.json",
         "previous_state": null
       },
       {
-        "mirror_sha256": "3398183a380585ff5f1f6cf9c19a5f161b0298ba975f47faea56f57dd48c8f48",
+        "mirror_sha256": "cc9acc37a2952e0ba7f62ac926b6538ca046bdf7077ef588b826e1274cd39b42",
         "path": "tests/fixtures/governed-weather/bootstrap.json",
         "previous_state": null
       },
       {
-        "mirror_sha256": "525719c8814e1dfbe1202f0e404b68f972132e6fd8f89259c2311cdc6b12d5e7",
+        "mirror_sha256": "122a82aa33e17933f170ce1928430e306ac180a5add4257646c1139f19415cc3",
         "path": "tests/fixtures/governed-weather/evidence.json",
         "previous_state": null
       },
       {
-        "mirror_sha256": "f787b3347bba07542a941267f97f14c811656a8b70744ce8b2e5d12bdbce1aeb",
+        "mirror_sha256": "f8af7c622228f2a794b84717212e84af71f7b68a1d9e43e5a067a123bb164611",
         "path": "tests/fixtures/governed-weather/layers.json",
         "previous_state": null
       },
       {
-        "mirror_sha256": "6dc1df050ad14cc087703dac407caae547dc074002f015dbafcdd860127af2b3",
+        "mirror_sha256": "d5b25604cea839af4d6a1e3bfb43e9f9755ff987c4de9d64d1383ed9a5120417",
         "path": "tests/fixtures/governed-weather/owner-decision.json",
         "previous_state": null
       },
@@ -4912,7 +4912,7 @@
         "previous_state": null
       },
       {
-        "mirror_sha256": "fee8e93785c107d4c5d0a08de097c7cca710c2ecbd6a3d59309fe7c773898989",
+        "mirror_sha256": "a41ce4804531aa75c0dd4167011b5c0ebc40c7140dc8be354e65c6df6ff649c5",
         "path": "tests/governed-weather.test.mjs",
         "previous_state": null
       },
@@ -4963,10 +4963,12 @@
     "data_activation": false,
     "hosted_equivalence": false,
     "python_release_tests": "141 passed (release, governed API, water/weather release, serving, hosted, site mirror)",
-    "python_weather_parity": "tools/fixtures/weather_site_fixtures.py PASS (no drift)",
+    "python_weather_parity": "tools/fixtures/weather_site_fixtures.py PASS on Python 3.11 and 3.13 (stored-block gzip makes fixture digests interpreter-independent)",
     "repository_topology": "PASS",
-    "site_full_suite": "npm test: build PASS; 1041 tests, 1039 passed, 2 skipped (installer refuses root), 0 failed",
-    "site_lint_changed_files": "PASS",
+    "site_full_suite": "npm test: build PASS; 1043 tests, 1041 passed, 2 skipped (installer refuses root), 0 failed",
+    "site_inner_provenance": "Site parser recomputes candidate_id and the validation receipt digest from the canonical artifact text, matching release/core.py",
+    "site_lint": "npm run lint PASS (0 errors; no warnings in changed files)",
+    "site_local_smoke": "apps/site/smoke-local.sh PASS: 76 checks across 59 routes, including the weather read and admin routes",
     "site_station_local_freshness": "Site projection compares each station's latest day with its local standard time day, matching weather_projection.py (parity test on the offsets)",
     "site_typecheck": "PASS"
   }
