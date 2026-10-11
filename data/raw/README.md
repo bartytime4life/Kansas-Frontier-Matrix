@@ -2,12 +2,12 @@
 doc_id: kfm://data/raw/readme
 title: data/raw/ — Immutable Source Capture
 type: data-lifecycle-readme
-version: v0.2.3
-prior_version: v0.2.2
+version: v0.2.4
+prior_version: v0.2.3
 status: repository-grounded draft; source-first identity required; physical placement and payload/runtime enforcement unverified
 owners: NEEDS VERIFICATION — source and data stewards
 created: 2025-09-17
-updated: 2026-09-24
+updated: 2026-10-11
 supersedes: prior README at the same path; no payload, lifecycle, release, runtime, or publication state
 prepared_under_prompt: KFM Markdown Engineering, Modernization & GitHub Documentation Implementation Agent v5.0.0
 policy_label: "restricted-review; no-direct-public-path; release-gated"
@@ -15,31 +15,24 @@ current_path: data/raw/README.md
 owning_root: data/
 responsibility: Own the canonical RAW lifecycle boundary while requiring one source-first capture identity, preventing duplicated domain-scoped RAW bytes, and leaving exact physical capture placement and legacy domain-lane disposition to an accepted migration decision.
 review_packet_id: kfm-data-parent-wave-20260724
-truth_posture: >
-  CONFIRMED exact path, accepted Directory Rules rule DIR-SOURCE-001 requiring
-  source-first capture identity, parent data-root contract, and current tracked
-  domain-lane topology / CONFIRMED a domain directory does not authorize a second
-  physical capture / PROPOSED same-path correction of the prior domain-first
-  operating example / HOLD exact physical source-first placement and legacy
-  domain-lane migration or reference contracts / UNKNOWN recursive payloads,
-  active writers/consumers, runtime, release, hosting, and public effects / NEEDS
-  VERIFICATION owners, enforcement, retention, correction propagation, cache
-  invalidation, and rollback drills
-evidence_snapshot:
-  repository: bartytime4life/Kansas-Frontier-Matrix
-  base_commit: b125a21e83f727c45a2d36709bbb594d38a904ad
-  review_branch: agent/modernize-data-readme-20260724-v3
-  parent_commit: 0cfcb790ee461e16a4e2cebb30c37dc588bd0c2f
-  prior_blob: 771a4684341622aa684a3724f0c1a95b900f7335
-  directory_rules_blob: 2affb080e6f0043867c64c7f06c1ca52030fbd55
-  method: exact parent README read plus carried-forward child/path evidence; no recursive clone or runtime inspection
-reconciliation_snapshot:
-  base_commit: 8739edbfecabbde6367a2084740b6c94f07a0425
-  target_prior_blob: 46dd82857f5e881452f39580ffa73bfc9a43b7c8
-  directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
-  adr_0029_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
-  scope: "Same-path correction of the RAW operating contract and domain-lane interpretation only; no path, payload, writer, descriptor, lifecycle object, runtime, or public state changes."
+truth_posture: CONFIRMED exact path, accepted Directory Rules rule DIR-SOURCE-001 requiring source-first capture identity, parent data-root contract, and tracked documentation-only topology (52 README files and 6 .gitkeep markers, no payload files at main@9e8bf3e6) / CONFIRMED a domain directory does not authorize a second physical capture / CONFIRMED child READMEs reconciled to the source-first contract on 2026-10-11 / HOLD exact physical source-first placement and legacy domain-lane migration or reference contracts / UNKNOWN external or untracked payloads, active writers/consumers, runtime, release, hosting, and public effects / NEEDS VERIFICATION owners, enforcement, retention, correction propagation, cache invalidation, and rollback drills
+evidence_snapshot_repository: bartytime4life/Kansas-Frontier-Matrix
+evidence_snapshot_base_commit: b125a21e83f727c45a2d36709bbb594d38a904ad
+evidence_snapshot_review_branch: agent/modernize-data-readme-20260724-v3
+evidence_snapshot_parent_commit: 0cfcb790ee461e16a4e2cebb30c37dc588bd0c2f
+evidence_snapshot_prior_blob: 771a4684341622aa684a3724f0c1a95b900f7335
+evidence_snapshot_directory_rules_blob: 2affb080e6f0043867c64c7f06c1ca52030fbd55
+evidence_snapshot_method: exact parent README read plus carried-forward child/path evidence; no recursive clone or runtime inspection
+reconciliation_snapshot_base_commit: 8739edbfecabbde6367a2084740b6c94f07a0425
+reconciliation_snapshot_target_prior_blob: 46dd82857f5e881452f39580ffa73bfc9a43b7c8
+reconciliation_snapshot_directory_rules_blob: fd49a0b83e55cef52c1124281f093e263526898d
+reconciliation_snapshot_adr_0029_blob: a4de0d7a96b78da59cfc499d1025e1508afd8dd9
+reconciliation_snapshot_scope: "Same-path correction of the RAW operating contract and domain-lane interpretation only; no path, payload, writer, descriptor, lifecycle object, runtime, or public state changes."
+subtree_refresh_base_commit: 9e8bf3e62bf4b1f4c2e9e30570195132ec7a9475
+subtree_refresh_prior_blob: 570ad3c66878ea618f43c13c077ff53776d1cbdb
+subtree_refresh_method: recursive tracked-file inventory of data/raw plus required meta-block and link checks over every README in the subtree; no external store, runtime, or writer inspection
 notes:
+  - "The 2026-10-11 subtree refresh reconciles every child README to the source-first contract, normalizes all subtree metadata to the required meta-block profile, records the tracked documentation-only inventory, and links the full child-lane index; it does not select a physical RAW home, admit a source, or move, add, or delete payloads."
   - "The 2026-09-24 readback adds the exact-schema quarantine-only owner decision and corrects the displayed version; it does not authorize RAW placement or promotion."
   - "The 2026-09-21 readback distinguishes the external local-data QUARANTINE capture from this repository's held RAW placement; it does not admit a source or select a physical RAW home."
   - "The first twelve H2 sections follow Directory Rules section 15 exactly."
@@ -84,10 +77,11 @@ Accepted Directory Rules rule `DIR-SOURCE-001` governs capture identity: one sou
 | Field | Bounded result |
 |---|---|
 | Path | `data/raw/` |
-| Version | `v0.2.3` |
-| Prior blob | `771a4684341622aa684a3724f0c1a95b900f7335` |
-| Evidence base | Original v0.2.0 snapshot retained in metadata; source-first reconciliation at `main@8739edbfecabbde6367a2084740b6c94f07a0425`; external quarantine decision readback at `main@bb08d3e9b9` |
-| Recursive payload inventory | `UNKNOWN` |
+| Version | `v0.2.4` |
+| Prior blob | `570ad3c66878ea618f43c13c077ff53776d1cbdb` (v0.2.3) |
+| Evidence base | Original v0.2.0 snapshot retained in metadata; source-first reconciliation at `main@8739edbfecabbde6367a2084740b6c94f07a0425`; external quarantine decision readback at `main@bb08d3e9b9`; subtree refresh at `main@9e8bf3e62bf4b1f4c2e9e30570195132ec7a9475` |
+| Tracked subtree inventory | `CONFIRMED` documentation only: 52 `README.md` files and 6 `.gitkeep` markers; no tracked payload files at `main@9e8bf3e6` |
+| External, untracked, or LFS payload inventory | `UNKNOWN` |
 | Active writers/consumers | `UNKNOWN` |
 | Public readiness | `DENY BY DEFAULT` |
 
@@ -144,6 +138,11 @@ Focused documentation checks from the repository root:
 python tools/validators/docs/link-check/check_links.py data/raw/README.md
 python tools/validators/docs/meta-block/check_meta_blocks.py \
   --profile required data/raw/README.md
+
+# whole subtree (every child README)
+python tools/validators/docs/meta-block/check_meta_blocks.py \
+  --profile required data/raw
+git ls-files data/raw | grep -Ev '(README\.md|\.gitkeep)$'   # expect no output while placement is HOLD
 ```
 
 These commands do not select a physical RAW path, inspect external or restricted payloads, admit a source, exercise a writer, or authorize release or publication.
@@ -166,10 +165,10 @@ Relevant proposed decisions include ADR-0001 (schema home), ADR-0011 (receipt/pr
 
 ## Last reviewed
 
-- **Date:** 2026-07-24
-- **Evidence boundary:** `main@b125a21e83f727c45a2d36709bbb594d38a904ad` and parent branch `0cfcb790ee461e16a4e2cebb30c37dc588bd0c2f`
-- **Review type:** exact parent README plus Directory Rules and carried-forward child/path evidence
-- **Recursive payload/runtime inspection:** not performed
+- **Date:** 2026-10-11
+- **Evidence boundary:** `main@9e8bf3e62bf4b1f4c2e9e30570195132ec7a9475`
+- **Review type:** recursive tracked-file inventory of `data/raw/`, every child README read and reconciled, required meta-block and link checks over the subtree
+- **External payload/runtime inspection:** not performed
 - **Owners, independent review, retention, and operational rollback:** needs verification
 
 Re-review on authority/topology, writer, policy, release, public-consumer, correction, or rollback changes—or within six months.
@@ -192,30 +191,50 @@ Every transition must preserve immutable input identity, source role, rights/sen
 
 The child directories below are tracked topology, not default physical capture homes. Until an accepted source-first placement and migration decision says otherwise, treat domain lanes as compatibility/reference projections or unresolved legacy paths. Do not create domain-scoped copies of cross-domain captures.
 
-| Child lane | Bounded posture |
+As of the 2026-10-11 subtree refresh, every child README below states that compatibility/reference role and passes the required meta-block profile. A tracked README does not show that payloads, SourceDescriptors, writers, receipts, or enforcement exist.
+
+| Child lane | Tracked sub-lanes | Bounded posture |
+|---|---|---|
+| [`agriculture/`](agriculture/README.md) | [`usda-nass/`](agriculture/usda-nass/README.md) | Compatibility/reference index; documentation only; payloads and enforcement unverified. |
+| [`archaeology/`](archaeology/README.md) | — | Compatibility/reference index; sensitive site-location protections preserved; payloads and enforcement unverified. |
+| [`atmosphere/`](atmosphere/README.md) | [`administrative/`](atmosphere/administrative/README.md) · [`aggregate/`](atmosphere/aggregate/README.md) · [`modeled/`](atmosphere/modeled/README.md) ([`cams/`](atmosphere/modeled/cams/README.md), [`hrrr-smoke/`](atmosphere/modeled/hrrr-smoke/README.md)) · [`observed/`](atmosphere/observed/README.md) ([`goes-abi/`](atmosphere/observed/goes-abi/README.md), [`hms/`](atmosphere/observed/hms/README.md), [`viirs/`](atmosphere/observed/viirs/README.md)) · `regulatory/` (`.gitkeep` only) | Source-role compatibility/reference index; documentation only; payloads and enforcement unverified. |
+| [`fauna/`](fauna/README.md) | [`ebird/`](fauna/ebird/README.md) · [`eddmaps/`](fauna/eddmaps/README.md) · [`gbif/`](fauna/gbif/README.md) · [`inaturalist/`](fauna/inaturalist/README.md) · [`natureserve/`](fauna/natureserve/README.md) · [`usfws_ecos/`](fauna/usfws_ecos/README.md) | Compatibility/reference index; documentation only; payloads and enforcement unverified. |
+| [`flora/`](flora/README.md) | `gbif/` · `inaturalist/` · `natureserve/` · `usfws_ecos/` (`.gitkeep` only) | Source-first-safe compatibility/reference hold; payloads absent and physical capture placement unresolved. |
+| [`geology/`](geology/README.md) | — | Compatibility/reference index; exact subsurface protections preserved; payloads and enforcement unverified. |
+| [`habitat/`](habitat/README.md) | [`ecoregions/`](habitat/ecoregions/README.md) · [`gap-landfire/`](habitat/gap-landfire/README.md) · [`kdwp/`](habitat/kdwp/README.md) · [`natureserve/`](habitat/natureserve/README.md) · [`nlcd/`](habitat/nlcd/README.md) · [`nwi/`](habitat/nwi/README.md) · [`occurrence-context/`](habitat/occurrence-context/README.md) · [`pad-us/`](habitat/pad-us/README.md) · [`usfws-ecos/`](habitat/usfws-ecos/README.md) | Compatibility/reference index; documentation only; payloads and enforcement unverified. |
+| [`hazards/`](hazards/README.md) | [`fema/`](hazards/fema/README.md) · [`firms/`](hazards/firms/README.md) · [`nfhl/`](hazards/nfhl/README.md) | Compatibility/reference index; documentation only; payloads and enforcement unverified. |
+| [`hydrology/`](hydrology/README.md) | [`fema_nfhl/`](hydrology/fema_nfhl/README.md) · [`usgs_3dep/`](hydrology/usgs_3dep/README.md) · [`usgs_nhdplus_hr/`](hydrology/usgs_nhdplus_hr/README.md) · [`usgs_water_data/`](hydrology/usgs_water_data/README.md) · [`usgs_wbd/`](hydrology/usgs_wbd/README.md) | Compatibility/reference index; documentation only; payloads and enforcement unverified. |
+| [`people/`](people/README.md) | [`dna/`](people/dna/README.md) | Compatibility lane; consent, privacy, and living-person protections preserved; payloads and enforcement unverified. |
+| [`people-dna-land/`](people-dna-land/README.md) | [`land-ownership/`](people-dna-land/land-ownership/README.md) | Compatibility/reference index; documentation only; payloads and enforcement unverified. |
+| [`roads-rail-trade/`](roads-rail-trade/README.md) | — | Compatibility/reference index; documentation only; payloads and enforcement unverified. |
+| [`settlement/`](settlement/README.md) | — | Compatibility lane; documentation only; payloads and enforcement unverified. |
+| [`settlements-infrastructure/`](settlements-infrastructure/README.md) | — | Compatibility/reference index; documentation only; payloads and enforcement unverified. |
+| [`soil/`](soil/README.md) | — | Compatibility/reference index; documentation only; payloads and enforcement unverified. |
+| [`usda-nass/`](usda-nass/README.md) | — | Top-level source-family compatibility lane; documentation only; payloads and enforcement unverified. |
+
+### Overlapping lanes that must share one capture
+
+Several tracked lanes document the same upstream source from different domains. Under `DIR-SOURCE-001` each pair or group resolves to **one** registered `source_id` and **one** source-first capture; the lanes may reference it but must never hold separate copies.
+
+| Upstream source | Overlapping lanes |
 |---|---|
-| `agriculture/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
-| `archaeology/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
-| `atmosphere/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
-| `fauna/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
-| `flora/` | Source-first-safe compatibility/reference hold; payloads absent and physical capture placement unresolved. |
-| `geology/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
-| `habitat/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
-| `hazards/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
-| `hydrology/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
-| `people/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
-| `people-dna-land/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
-| `roads-rail-trade/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
-| `settlement/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
-| `settlements-infrastructure/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
-| `soil/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
-| `usda-nass/` | Carried forward from prior parent evidence; payloads and enforcement unverified. |
+| USDA NASS | [`usda-nass/`](usda-nass/README.md) · [`agriculture/usda-nass/`](agriculture/usda-nass/README.md) |
+| FEMA NFHL | [`hazards/nfhl/`](hazards/nfhl/README.md) · [`hydrology/fema_nfhl/`](hydrology/fema_nfhl/README.md) |
+| NatureServe | [`fauna/natureserve/`](fauna/natureserve/README.md) · [`habitat/natureserve/`](habitat/natureserve/README.md) · `flora/natureserve/` |
+| USFWS ECOS | [`fauna/usfws_ecos/`](fauna/usfws_ecos/README.md) · [`habitat/usfws-ecos/`](habitat/usfws-ecos/README.md) · `flora/usfws_ecos/` |
+| GBIF / iNaturalist occurrences | [`fauna/gbif/`](fauna/gbif/README.md) · [`fauna/inaturalist/`](fauna/inaturalist/README.md) · `flora/gbif/` · `flora/inaturalist/` · [`habitat/occurrence-context/`](habitat/occurrence-context/README.md) |
+| Settlement sources | [`settlement/`](settlement/README.md) · [`settlements-infrastructure/`](settlements-infrastructure/README.md) |
+| People / DNA / land sources | [`people/`](people/README.md) · [`people-dna-land/`](people-dna-land/README.md) |
+
+Which lane names survive, and how references are shaped, remains part of the **HOLD** placement and migration decision.
 
 ## Open verification register
 
 | Item | Status | Required evidence |
 |---|---:|---|
-| Recursive subtree/payload inventory | `NEEDS VERIFICATION` | Pinned tree, payload families, LFS/external stores, rights/sensitivity, owners |
+| Tracked subtree inventory | `CONFIRMED` 2026-10-11 | 52 READMEs plus 6 `.gitkeep` markers, no tracked payloads, at `main@9e8bf3e6`; re-run on any new file under `data/raw/` |
+| External, untracked, or LFS payload inventory | `NEEDS VERIFICATION` | Payload families, LFS/external stores, rights/sensitivity, owners |
+| Owner placeholders across child READMEs | `NEEDS VERIFICATION` | Named stewards replacing `<...-steward>` placeholders; do not invent owners |
 | Source-first physical placement and child-lane disposition | `HOLD` | Accepted path/contract decision, reference shape, migration, deduplication, readback, and rollback |
 | Writers and consumers | `UNKNOWN` | Connector, pipeline, tool, runtime, API/UI, workflow, deployed consumer inventory |
 | Contract/schema/policy enforcement | `UNKNOWN` | Accepted versions, fixtures, validators, decisions, CI and negative cases |
@@ -230,13 +249,26 @@ Unknowns narrow claims and block higher-risk transitions; they do not invite pla
 |---|---|
 | Stable path/document identity | Preserved |
 | Core lifecycle or compatibility role | Preserved; source-first identity clarified and domain-first path prescription removed |
-| Child-lane index | Preserved where present; omission is not retirement |
+| Child-lane index | Preserved; expanded to link every tracked sub-lane and the overlapping-lane groups; omission is not retirement |
+| Child README domain content | Preserved; capture-home wording reframed as compatibility/reference wording in the 2026-10-11 refresh |
 | Trust membrane and anti-collapse rules | Preserved and strengthened |
 | Rights, sensitivity, evidence, policy, release, correction, rollback controls | Preserved |
 | Prior blob and rollback target | Recorded |
 | Payload, move, deletion, redirect, migration, or public-state change | None |
 
 ### Change history
+
+#### v0.2.4 — 2026-10-11
+
+- reconciled every child README under `data/raw/` to the source-first contract: domain and source-family lanes now describe compatibility/reference roles rather than physical capture homes;
+- normalized all 52 subtree READMEs to the required meta-block profile (`title`, `owning_root`, `responsibility`, single-token `type`, one-line `truth_posture`, no nested mappings);
+- recorded the tracked documentation-only inventory, linked every child and sub-lane, and added an overlapping-lane table for sources documented in more than one domain;
+- changed documentation only; physical placement, writers, payloads, runtime, release, and publication remain on hold.
+
+#### v0.2.3 — 2026-09-24
+
+- added the exact-schema, quarantine-only owner decision ([#4613](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4613)) and corrected the displayed version;
+- changed documentation only.
 
 #### v0.2.2 — 2026-09-21
 
