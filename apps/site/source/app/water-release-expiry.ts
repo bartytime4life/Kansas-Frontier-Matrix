@@ -1,4 +1,4 @@
-// Pure expiry wording for the water and weather release pages; callers pass the current time so the
+// Pure expiry wording for the water, weather and soil release pages; callers pass the current time so the
 // warning and expired states advance while the page stays open.
 export const REFRESH_WARNING_MS = 2 * 24 * 60 * 60 * 1000;
 
