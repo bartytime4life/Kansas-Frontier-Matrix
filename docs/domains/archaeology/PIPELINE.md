@@ -19,17 +19,17 @@ related:
   - docs/doctrine/ai-build-operating-contract.md
   - docs/doctrine/directory-rules.md
   - data/raw/README.md
-  - docs/domains/archaeology/README.md         # PROPOSED
+  - docs/domains/archaeology/README.md
   - docs/domains/archaeology/OBJECT_FAMILIES.md
-  - docs/domains/archaeology/SENSITIVITY.md    # PROPOSED
-  - pipelines/domains/archaeology/             # PROPOSED — executable code
-  - pipeline_specs/archaeology/                # PROPOSED — declarative specs
-  - schemas/contracts/v1/archaeology/          # PROPOSED — Atlas v1.1 §2.1
-  - policy/sensitivity/archaeology/            # PROPOSED — Atlas v1.1 §2.1
-  - policy/release/archaeology/                # PROPOSED
-  - data/registry/archaeology/                 # PROPOSED — source ledger
+  - docs/domains/archaeology/SENSITIVITY.md
+  - pipelines/domains/archaeology/
+  - pipeline_specs/archaeology/
+  - schemas/contracts/v1/archaeology/
+  - policy/sensitivity/archaeology/
+  - data/registry/archaeology/
 tags: [kfm, domain, archaeology, pipeline, lifecycle, gates, sensitivity, doctrine]
 notes:
+  - "2026-10-11: removed policy/release/archaeology/ from related because no tracked target exists yet; inline status comments were dropped from related entries so each entry resolves as a path."
   - CONTRACT_VERSION pinned to "3.0.0"
   - Sensitive-domain doc; archaeology default tier is T4 (DENY)
   - All repo-state and path claims are PROPOSED until repo is mounted

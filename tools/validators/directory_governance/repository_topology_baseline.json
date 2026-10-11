@@ -647,13 +647,6 @@
       "subject": "artifacts/qa/lint/mypy.txt"
     },
     {
-      "evidence_sha256": "sha256:dee729e98f0f6a4ba92145b86efce5049431e2bb1af4c3611a64867f6b814e2e",
-      "evidence_zlib_base64": "eNpLyU8u1k/Jz03MzCvWL87PzNF39vcL8fQL9QyJjPf0C3P1C/EPitTLTWFIwVDp4hjiGO/j6ebqHOns4wpUAwAUEBn7",
-      "fingerprint": "sha256:d53a1d9921c322ec3d706dded8cf64b9a5228eeb24188354ceeef839909334f7",
-      "rule_id": "KFM-TOPO-016",
-      "subject": "doc-id:kfm://doc/soil-continuity-inventory"
-    },
-    {
       "evidence_sha256": "sha256:a3822fae229baf56a632b3d2684362716502b109ceba777cc44f936fb0461444",
       "evidence_zlib_base64": "eNpLSSxJ1C8pSkxJ1S3KLy1JLdYPcnV08XXVy00BAIvDCYU=",
       "fingerprint": "sha256:d65d7d4784ae5b7cb1fb498f77016ef96e5ca2ac2729722afdc9b1fc8403e904",

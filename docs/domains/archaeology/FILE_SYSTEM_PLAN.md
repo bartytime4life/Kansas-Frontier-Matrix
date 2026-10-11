@@ -17,7 +17,6 @@ related:
   - docs/doctrine/directory-rules.md
   - data/raw/README.md
   - docs/doctrine/authority-ladder.md
-  - docs/architecture/maplibre-3d.md
   - docs/domains/archaeology/README.md
   - docs/domains/archaeology/MISSING_OR_PLANNED_FILES.md
   - docs/domains/archaeology/MAP_UI_CONTRACTS.md
@@ -25,12 +24,12 @@ related:
   - docs/domains/archaeology/EXPANSION_BACKLOG.md
   - schemas/contracts/v1/domains/archaeology/
   - schemas/contracts/v1/receipts/
-  - schemas/contracts/v1/3d/
   - policy/domains/archaeology/
   - tests/domains/archaeology/
   - release/candidates/archaeology/
 tags: [kfm, domain, archaeology, directory-rules, lane-plan, doctrine-adjacent]
 notes:
+  - "2026-10-11: removed docs/architecture/maplibre-3d.md and schemas/contracts/v1/3d/ from related because no tracked target exists yet; both remain PROPOSED paths in the body."
   - "CONTRACT_VERSION = \"3.0.0\" — pinned per ai-build-operating-contract.md §0 / §37."
   - PROPOSED paths until verified against mounted-repo evidence.
   - Sensitivity posture is doctrine-grounded; implementation maturity is UNKNOWN.

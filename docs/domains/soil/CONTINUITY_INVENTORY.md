@@ -17,7 +17,7 @@ related:
   - docs/registers/DRIFT_REGISTER.md
   - docs/registers/VERIFICATION_BACKLOG.md
   - docs/atlases/KFM_Domains_Culmination_Atlas_v1_1.pdf
-  - directory-rules.md
+  - docs/doctrine/directory-rules.md
   - data/raw/README.md
   - data/raw/soil/README.md
 tags: [kfm, domain, soil, continuity, inventory, register]

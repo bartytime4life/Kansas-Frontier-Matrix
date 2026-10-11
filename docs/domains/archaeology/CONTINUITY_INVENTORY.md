@@ -12,27 +12,28 @@ owning_root: docs/
 responsibility: "Register what Archaeology lane doctrine carries forward, extends, or retires for human readers; not evidence, policy, release, or publication authority."
 truth_posture: "Mixed: CONFIRMED doctrine citations; PROPOSED lane application and paths; RAW physical placement HOLD; implementation UNKNOWN unless separately verified."
 related:
-  - docs/doctrine/ai-build-operating-contract.md     # CONFIRMED authority; pins CONTRACT_VERSION = "3.0.0"
-  - docs/doctrine/directory-rules.md                 # PROPOSED canonical home
-  - data/raw/README.md                                # source-first RAW contract; placement HOLD
-  - docs/doctrine/authority-ladder.md                # PROPOSED
-  - docs/doctrine/lifecycle-law.md                   # PROPOSED
-  - docs/doctrine/truth-posture.md                   # PROPOSED
-  - docs/domains/archaeology/README.md               # PROPOSED
-  - docs/domains/archaeology/ARCHITECTURE.md         # PROPOSED — sibling (see OQ-CI-02)
-  - docs/domains/archaeology/CANONICAL_PATHS.md      # PROPOSED — sibling (path-namespace authority for this lane)
-  - docs/domains/archaeology/CROSS_DOMAIN.md         # PROPOSED — sibling (cross-lane boundary register)
-  - docs/domains/README.md                           # PROPOSED
-  - docs/registers/VERIFICATION_BACKLOG.md           # PROPOSED
-  - docs/registers/DRIFT_REGISTER.md                 # PROPOSED
-  - docs/registers/CANONICAL_LINEAGE_EXPLORATORY.md  # PROPOSED
-  - docs/architecture/ui/CONTINUITY_NOTES.md         # PROPOSED — sibling pattern
+  - docs/doctrine/ai-build-operating-contract.md
+  - docs/doctrine/directory-rules.md
+  - data/raw/README.md
+  - docs/doctrine/authority-ladder.md
+  - docs/doctrine/lifecycle-law.md
+  - docs/doctrine/truth-posture.md
+  - docs/domains/archaeology/README.md
+  - docs/domains/archaeology/ARCHITECTURE.md
+  - docs/domains/archaeology/CANONICAL_PATHS.md
+  - docs/domains/archaeology/CROSS_DOMAIN.md
+  - docs/domains/README.md
+  - docs/registers/VERIFICATION_BACKLOG.md
+  - docs/registers/DRIFT_REGISTER.md
+  - docs/registers/CANONICAL_LINEAGE_EXPLORATORY.md
+  - docs/architecture/ui/CONTINUITY_NOTES.md
   - docs/architecture/governed-ai/CONTINUITY_NOTES.md# PROPOSED — sibling pattern
-  - policy/domains/archaeology/README.md             # PROPOSED
-  - policy/sensitivity/archaeology/                  # PROPOSED — §23.2 enforcement home (ENCY §7.13)
-  - schemas/contracts/v1/domains/archaeology/        # PROPOSED — schema home (ADR-0001)
+  - policy/domains/archaeology/README.md
+  - policy/sensitivity/archaeology/
+  - schemas/contracts/v1/domains/archaeology/
 tags: [kfm, archaeology, continuity, governance, evidence, sensitivity, doctrine-adjacent]
 notes:
+  - "2026-10-11: inline status comments were dropped from related entries so each entry resolves as a repository path; every target exists on main."
   - "Pinned to CONTRACT_VERSION = \"3.0.0\" per ai-build-operating-contract.md §1.3 / §8 (truth labels) and §37 (versioning + CONTRACT_VERSION pinning convention)."
   - "All file-path-shaped claims are PROPOSED until verified against a mounted repository ([CONTRACT v3.0] §7 current-session evidence limit)."
   - "Path namespace contracts/domains/archaeology/ is consistent with CANONICAL_PATHS.md v1.1 §2.4 resolution (Directory Rules §12 form). Atlas v1.1 §24.13 shorthand (contracts/archaeology/) and ENCY §7.13 (schemas/contracts/v1/archaeology/) kept as LINEAGE."
