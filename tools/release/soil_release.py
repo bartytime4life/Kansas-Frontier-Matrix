@@ -22,8 +22,10 @@ from pipelines.domains.soil.uscrn_daily_validate import validate_candidate
 from policy_runtime.core import SOIL_DECISION_PROFILE, SOIL_SELF_RELEASE_LICENSES, serving_gate
 from release.core import DIGEST, SOIL, validate_snapshot
 from release.water_projection import replay_evidence
+from pipelines.domains.soil.uscrn_daily_normalize import normalize_capture
 from tools.local_data.file_io import read_regular
 from tools.local_data.manage import external_root, store_lock
+from tools.local_data import uscrn_daily_pilot
 from tools.local_data.uscrn_daily_pilot import LANE
 from tools.local_data.water_pilot import immutable
 
@@ -69,6 +71,17 @@ def _snapshot(root: Path, package_id: str) -> tuple[dict, dict]:
     # pass the domain validator and carry exactly the receipt it produces.
     if validate_candidate(values["candidate.json"]) != values["validation.json"]:
         raise ValueError("VALIDATION_RECEIPT_MISMATCH")
+    # Provenance: the candidate must be exactly what the immutable capture it names normalizes to.
+    try:
+        capture = uscrn_daily_pilot.load_capture(root, values["candidate.json"]["capture_id"])
+    except FileNotFoundError:
+        raise ValueError("CAPTURE_NOT_IN_STORE") from None
+    except ValueError as exc:
+        if str(exc) == "DIRECTORY_MISSING":
+            raise ValueError("CAPTURE_NOT_IN_STORE") from None
+        raise
+    if normalize_capture(capture.manifest, capture.objects) != values["candidate.json"]:
+        raise ValueError("CANDIDATE_CAPTURE_MISMATCH")
     return manifest, values
 
 

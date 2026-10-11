@@ -161,3 +161,23 @@ def test_decide_revalidates_the_candidate_and_refuses_a_resealed_semantic_change
     with pytest.raises(ValueError, match="COVERAGE_OR_FRESHNESS_MISMATCH"):
         weather_release.decide(root, package_id, reviewer=OWNER, releaser=OWNER, valid_days=7, now=NOW)
     assert not (root / "release/decisions").exists()
+
+
+def test_decide_requires_the_candidate_to_match_its_stored_capture(tmp_path):
+    from connectors_core.captured_json import digest_bytes
+    from pipelines.domains.atmosphere import ghcnd_daily_package
+    root, preparation = prepared(tmp_path, admitted=True)
+    _, values = weather_release._snapshot(root, preparation["package_id"])
+    candidate = values["candidate.json"]
+    record = next(r for r in candidate["observations"] if r["element"] == "TMAX" and r["value"] is not None)
+    record["raw_value"] += 10
+    record["value"] = record["raw_value"] / 10
+    record["record_digest"] = digest_bytes(canonical_bytes({k: v for k, v in record.items() if k != "record_digest"}))
+    candidate["candidate_id"] = digest_bytes(canonical_bytes({k: v for k, v in candidate.items() if k != "candidate_id"}))
+    snapshot = ghcnd_daily_package.prepare_weather_package(candidate, admission=ghcnd_daily_admission.load_admission())
+    package_id = snapshot["manifest"]["package_id"]
+    path = root / "release/candidates/atmosphere" / package_id.split(":")[1] / "snapshot.json"
+    path.parent.mkdir(parents=True)
+    path.write_bytes(canonical_bytes(snapshot))
+    with pytest.raises(ValueError, match="CANDIDATE_CAPTURE_MISMATCH"):
+        weather_release.decide(root, package_id, reviewer=OWNER, releaser=OWNER, valid_days=7, now=NOW)
