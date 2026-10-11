@@ -25,8 +25,10 @@ export type WaterFlowStatus = Readonly<{
   cells: number;
   failedCells: number;
   truncatedCells: number;
+  availableReaches: number;
+  drawingLimited: boolean;
 }>;
-const OFF: WaterFlowStatus = Object.freeze({ state: "off", reaches: 0, gaugedReaches: 0, cells: 0, failedCells: 0, truncatedCells: 0 });
+const OFF: WaterFlowStatus = Object.freeze({ state: "off", reaches: 0, gaugedReaches: 0, cells: 0, failedCells: 0, truncatedCells: 0, availableReaches: 0, drawingLimited: false });
 
 type CellState = { state: "loading"; controller: AbortController } | { state: "ready"; payload: FlowlineCellPayload } | { state: "failed"; at: number };
 type FlowState = {
@@ -103,19 +105,22 @@ const rebuild = (map: MapLibreMap, state: FlowState) => {
   const ready = state.wanted.flatMap((key) => { const cell = state.cache.get(key); return cell?.state === "ready" ? [cell.payload] : []; });
   const cues = gaugeCues(map, state);
   const key = JSON.stringify([ready.map((payload) => flowlineCellKey(payload.cell)), cues]);
+  let metrics = state.status;
   if (key !== state.geometryKey) {
     state.geometryKey = key;
     const reaches: FlowReach[] = ready.flatMap((payload) => payload.reaches);
     const geometry = buildFlowGeometry(reaches, cues);
     layer.setGeometry(geometry.count ? geometry : null);
-    state.status = { ...state.status, reaches: geometry.reaches, gaugedReaches: geometry.gauged };
+    metrics = { ...state.status, reaches: geometry.reaches, gaugedReaches: geometry.gauged,
+      availableReaches: geometry.availableReaches, drawingLimited: geometry.truncated };
   }
   const failed = state.wanted.filter((cellKey) => state.cache.get(cellKey)?.state === "failed").length;
   const loading = state.wanted.filter((cellKey) => state.cache.get(cellKey)?.state === "loading").length;
   setStatus(state, {
-    state: loading ? "loading" : failed === state.wanted.length && failed > 0 ? "unavailable" : failed || ready.some((payload) => payload.truncated) ? "partial" : "ready",
-    reaches: state.status.reaches, gaugedReaches: state.status.gaugedReaches,
+    state: loading ? "loading" : failed === state.wanted.length && failed > 0 ? "unavailable" : failed || metrics.drawingLimited || ready.some((payload) => payload.truncated) ? "partial" : "ready",
+    reaches: metrics.reaches, gaugedReaches: metrics.gaugedReaches,
     cells: ready.length, failedCells: failed, truncatedCells: ready.filter((payload) => payload.truncated).length,
+    availableReaches: metrics.availableReaches, drawingLimited: metrics.drawingLimited,
   });
 };
 
@@ -267,7 +272,9 @@ export function waterFlowReading(status: WaterFlowStatus): string | null {
     default: {
       const reaches = `${status.reaches.toLocaleString("en-US")} reach${status.reaches === 1 ? "" : "es"} with a USGS flow direction`;
       const gauged = status.gaugedReaches ? ` · ${status.gaugedReaches} lit by a gauge reading` : "";
-      const partial = status.state === "partial" ? " · some areas incomplete" : "";
+      const partial = status.drawingLimited
+        ? ` · drawing limit: ${status.availableReaches.toLocaleString("en-US")} loaded reaches; some geometry omitted`
+        : status.state === "partial" ? " · some areas incomplete" : "";
       return status.reaches ? `${reaches}${gauged}${partial}` : `No mapped flow direction in view${partial}`;
     }
   }

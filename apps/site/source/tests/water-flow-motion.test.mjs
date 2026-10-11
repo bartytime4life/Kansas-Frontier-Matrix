@@ -156,3 +156,35 @@ test("the flow layer has a globe shader path, bounded widths and palettes for ev
   assert.equal(layer.segmentCount, 0);
   assert.doesNotThrow(() => layer.render({}, {}), "render before onAdd is a no-op");
 });
+
+test("drawing budget reports only represented reaches and gauge cues, with omitted geometry explicit", () => {
+  const reaches = Array.from({length: 400}, (_, i) => ({ id: `C${i}`, coordinates: Array.from({length: 501}, (_, j) => [-97 + i * .0001 + j * .000001, 38]), sequence: null, downstream: null, levelpath: null, name: null, featureType: 1 }));
+  const omittedGauge = flow.gaugeCue({ value: 100, readingState: "measured" }, reaches[399].coordinates[0]);
+  const geometry = flow.buildFlowGeometry(reaches, [omittedGauge]);
+  assert.equal(geometry.count, flow.MAX_FLOW_SEGMENTS);
+  assert.equal(geometry.reaches, 120, "only 120 reaches have any drawn segments");
+  assert.equal(geometry.availableReaches, 400);
+  assert.equal(geometry.gauged, 0, "a gauge on omitted geometry is not reported as drawn");
+  assert.equal(geometry.truncated, true);
+});
+
+test("nearest-first terrain queue preserves exact order while calculating each distance once", async t => {
+  const layer = await import(await compile("app/water-flow-layer.ts"));
+  const vertices = Array.from({length: 60000}, (_, i) => ({lng: -97 + Math.sin(i * 17.1) * .3, lat: 38 + Math.cos(i * 13.7) * .2, slots: []}));
+  const center = {lng: -97.15, lat: 38.1};
+  let beforeCalls = 0;
+  const before = () => vertices.map((_, i) => i).sort((a, b) => {
+    beforeCalls += 2;
+    return Math.hypot(vertices[a].lng - center.lng, vertices[a].lat - center.lat) - Math.hypot(vertices[b].lng - center.lng, vertices[b].lat - center.lat);
+  });
+  const expected = before();
+  assert.deepEqual(layer.orderedFlowVertices(vertices, center), expected);
+  const times = {before: [], after: []};
+  for (let i = 0; i < 7; i++) for (const kind of i % 2 ? ["after", "before"] : ["before", "after"]) {
+    const start = performance.now();
+    (kind === "before" ? before : () => layer.orderedFlowVertices(vertices, center))();
+    times[kind].push(performance.now() - start);
+  }
+  const median = values => values.sort((a,b) => a-b)[3];
+  t.diagnostic(JSON.stringify({scenario: "synthetic-60000-vertex-order", runs: 7, beforeMedianMs: median(times.before), afterMedianMs: median(times.after), beforeDistanceCalls: beforeCalls / 8, afterDistanceCalls: vertices.length, exactOrder: true}));
+});

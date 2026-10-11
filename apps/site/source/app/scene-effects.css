@@ -346,6 +346,17 @@
 .scene-studio-details .scene-look-presets { margin-bottom: 8px; }
 .scene-look-presets button[aria-pressed="true"] { border-color: #e0ba6d; background: #e0ba6d22; }
 .scene-effects-controls > p { color: #a8becc; font-size: 10px; line-height: 1.45; }
+/* Quiet cards keep effect choices, source readings and availability distinct. */
+.scene-effects-switches { gap: 8px; }
+.scene-effects-switches > label { min-height: 64px; padding: 10px; border: 1px solid #7799a53d; border-radius: 8px; background: #05121c66; align-items: start; opacity: 1; }
+.scene-effects-switches > label:not([data-here]) { opacity: 1; }
+.scene-effects-switches > label[data-enabled="true"] { border-color: #8accd266; background: linear-gradient(120deg, #8accd20d, #05121c66); }
+.scene-effects-switches > label input { margin-top: 3px; flex-shrink: 0; }
+.scene-effects-switches > label strong { font-size: 12px; line-height: 1.4; }
+.scene-effects-switches > label small { font-size: 11px; line-height: 1.45; }
+.scene-effects-switches > label > span > b { display: block; width: fit-content; max-width: 100%; padding: 3px 6px; border-radius: 4px; background: #7799a51a; color: #c3d7e1; font-size: 10px; line-height: 1.4; }
+.scene-effects-switches > label[data-held] b { color: #eed49d; background: #e0ba6d16; }
+.scene-effects-switches > label[data-enabled="false"] b { color: #b7c7d0; }
 .scene-effects-controls :is(button, input, summary):focus-visible { outline: 2px solid #f4dfae; outline-offset: 3px; }
 .scene-panel-body { max-height: calc(100dvh - 166px); overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: #536776 #0a1927; background: #091928f5; }
 .scene-panel-trigger { gap: 0; align-content: center; line-height: 1; }

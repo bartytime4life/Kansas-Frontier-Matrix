@@ -22,7 +22,8 @@ export function HistoricalTopoControl({ map, styleReady, locationPrivate, flatMa
   const [scale, setScale] = useState<TopoSearch["scale"]>("all");
   const [name, setName] = useState("");
   const [search, setSearch] = useState<TopoSearch>(() => {
-    const center = map?.getCenter();
+    // A held request must not retain a private center for a later privacy reset.
+    const center = locationPrivate ? null : map?.getCenter();
     return { lng: center?.lng ?? -98.4, lat: center?.lat ?? 38.5, from: 1930, through: 1960, scale: "all", name: "", offset: 0 };
   });
   const [rows, setRows] = useState<TopoSheet[]>([]);

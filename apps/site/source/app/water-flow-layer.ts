@@ -161,6 +161,12 @@ export type WaterFlowLayer = CustomLayerInterface & {
 /** Terrain samples per frame; the rest keep their last height until reached. */
 const SAMPLES_PER_FRAME = 1500;
 
+/** Nearest-first sampling, with one distance calculation per vertex. */
+export function orderedFlowVertices(vertices: FlowGeometry["vertices"], center: Readonly<{ lng: number; lat: number }>): number[] {
+  const distances = vertices.map(vertex => Math.hypot(vertex.lng - center.lng, vertex.lat - center.lat));
+  return vertices.map((_, index) => index).sort((a, b) => distances[a] - distances[b]);
+}
+
 export function createWaterFlowLayer(options: WaterFlowLayerOptions): WaterFlowLayer {
   type Program = { program: WebGLProgram; vao: WebGLVertexArrayObject; uniforms: Record<string, WebGLUniformLocation | null> };
   let map: MapLibreMap | null = null;
@@ -179,11 +185,7 @@ export function createWaterFlowLayer(options: WaterFlowLayerOptions): WaterFlowL
     if (!geometry || !map) { sampleQueue = []; return; }
     const center = map.getCenter();
     // Nearest vertices first, so the foreground settles onto the terrain first.
-    sampleQueue = geometry.vertices.map((_, index) => index)
-      .sort((a, b) => {
-        const va = geometry!.vertices[a], vb = geometry!.vertices[b];
-        return Math.hypot(va.lng - center.lng, va.lat - center.lat) - Math.hypot(vb.lng - center.lng, vb.lat - center.lat);
-      });
+    sampleQueue = orderedFlowVertices(geometry.vertices, center);
     sampleCursor = 0;
   };
   const markDirty = () => queueTerrainSamples();
