@@ -1,0 +1,142 @@
+import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
+import test from "node:test";
+import vm from "node:vm";
+import ts from "typescript";
+
+const read = path => readFile(new URL(path, import.meta.url), "utf8");
+const compiled = text => ts.transpileModule(text, { compilerOptions: {
+  module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022, jsx: ts.JsxEmit.ReactJSX,
+} }).outputText;
+const load = async path => { const exports = {}; vm.runInNewContext(compiled(await read(path)), { exports }); return exports; };
+const waterHelpers = await load("../app/governed-water-availability.ts");
+const helpers = await load("../app/governed-storm-events-availability.ts");
+const source = await read("../app/governed-storm-events-control.tsx");
+const fixture = async name => JSON.parse(await read(`./fixtures/governed-storm-events/${name}.json`));
+const full = await fixture("layers"), allEvidence = await fixture("evidence"), mayLayers = await fixture("layers-may");
+const MAY = 5;
+const month = (m, layers = mayLayers, evidence = allEvidence) => {
+  const l = structuredClone(layers), e = structuredClone(evidence);
+  e.data.entries = e.data.entries.filter(x => x.month === m);
+  for (const response of [l, e]) response.data.approval_expires_at = "2099-01-01T00:00:00Z";
+  return { layers: l, evidence: e };
+};
+
+test("evidence binds every part of the selected month to its records in the same release", () => {
+  const { layers, evidence } = month(MAY);
+  assert.equal(helpers.stormEvidenceMatchesSelection(mayLayers, evidence, MAY), false, "approval expiry differs");
+  assert.equal(helpers.stormEvidenceMatchesSelection(layers, evidence, MAY), true);
+  assert.equal(helpers.stormExportMatchesSelection(layers, evidence, MAY), true);
+  assert.equal(helpers.stormEvidenceMatchesSelection(layers, evidence, 4), false);
+  const swapped = structuredClone(evidence); swapped.data.package_id = "sha256:" + "0".repeat(64);
+  assert.equal(helpers.stormEvidenceMatchesSelection(layers, swapped, MAY), false);
+  const dropped = structuredClone(layers); dropped.data.observations.pop();
+  assert.equal(helpers.stormEvidenceMatchesSelection(dropped, evidence, MAY), false);
+  const noParts = structuredClone(evidence); noParts.data.entries = [];
+  assert.equal(helpers.stormEvidenceMatchesSelection(layers, noParts, MAY), false);
+  const relabeled = structuredClone(evidence); relabeled.data.entries[0].part = 2;
+  assert.equal(helpers.stormEvidenceMatchesSelection(layers, relabeled, MAY), false);
+  const measured = structuredClone(evidence); measured.data.entries[0].bundle.evidence_refs[1].kind = "measurement";
+  assert.equal(helpers.stormEvidenceMatchesSelection(layers, measured, MAY), false);
+  const soil = structuredClone(evidence); soil.data.entries[0].evidence_ref.ref = "kfm://soil/station/53974/x";
+  assert.equal(helpers.stormEvidenceMatchesSelection(layers, soil, MAY), false);
+  // The full-year layer carries other months, so it can never pass as one month's export.
+  const year = { ...full, data: { ...full.data, approval_expires_at: "2099-01-01T00:00:00Z" } };
+  assert.equal(helpers.stormExportMatchesSelection(year, evidence, MAY), false);
+});
+
+test("responses classify without stations, and damage is never shown as zero when unreported", () => {
+  assert.equal(helpers.stormBrowserStateForResponse(full, true), "received");
+  assert.equal(helpers.stormBrowserStateForResponse({ envelope: { outcome: "ANSWER" }, data: { months: [5] } }, true), "received");
+  assert.equal(helpers.stormBrowserStateForResponse({ envelope: { outcome: "ABSTAIN", reason_code: "NO_APPROVED_SNAPSHOT" } }, true), "no-release");
+  assert.equal(helpers.stormBrowserStateForResponse(full, false), "unavailable");
+  assert.equal(helpers.stormDamageText(null, ""), "Not reported");
+  assert.equal(helpers.stormDamageText(250000, "250.00K"), "$250,000 (NCEI 250.00K, nominal)");
+  assert.equal(helpers.stormDamageText(0, "0.00K"), "$0 (NCEI 0.00K, nominal)");
+  // Zone-only events (no begin point) are listed but never drawn.
+  const points = helpers.stormEventPoints(full.data.observations);
+  assert.equal(points.length, full.data.observations.filter(r => r.begin_lat !== null).length);
+  assert.ok(points.length < full.data.observations.length);
+});
+
+function harness(initial) {
+  const requests = [], downloads = [], statuses = [];
+  let stateIndex = 0;
+  const hooks = {
+    useState(value) {
+      const index = stateIndex++;
+      const preset = { 0: initial, 6: MAY, 10: [1, 4, 5, 6, 7, 8] };
+      return [index in preset ? preset[index] : typeof value === "function" ? value() : value, next => { if (index === 9) statuses.push(next); }];
+    },
+    useRef: current => ({ current }), useCallback: fn => fn, useEffect() {},
+  };
+  const jsx = (type, props) => ({ type, props });
+  const exports = {};
+  vm.runInNewContext(compiled(source), {
+    exports,
+    require(name) {
+      if (name === "react") return hooks;
+      if (name === "react/jsx-runtime") return { jsx, jsxs: jsx, Fragment: "fragment" };
+      if (name === "./governed-water-availability") return waterHelpers;
+      if (name === "./governed-storm-events-availability") return helpers;
+      if (name === "./governed-water") return { approvalRemainingMs: expiry => Date.parse(expiry) - Date.now() };
+      if (name === "./bounded-json") return { readBoundedJson: async response => response };
+      throw new Error(`Unexpected import ${name}`);
+    },
+    fetch: url => new Promise(resolve => requests.push({ url, resolve })),
+    AbortController, AbortSignal, Blob, Date, setTimeout: () => 0, clearTimeout() {},
+    URL: { createObjectURL: () => "blob:test", revokeObjectURL() {} },
+    document: { createElement: () => ({ click() { downloads.push(this.download); } }) },
+  });
+  const tree = exports.GovernedStormEventsControl({ mapRef: { current: null }, styleReady: false });
+  const text = [];
+  function find(node, predicate) {
+    if (typeof node === "string" || typeof node === "number") text.push(String(node));
+    if (!node || typeof node !== "object") return;
+    if (predicate(node)) return node;
+    for (const child of [node.props?.children].flat(Infinity)) { const result = find(child, predicate); if (result) return result; }
+  }
+  const select = find(tree, node => node.type === "select");
+  const button = find(tree, node => node.type === "button" && node.props.children === "Export selected month with evidence");
+  find(tree, () => false);
+  const request = pattern => requests.find(r => pattern.test(r.url));
+  return { requests, request, downloads, statuses, text: text.join(" "),
+    choose: m => select.props.onChange({ target: { value: String(m) } }), start: () => button.props.onClick() };
+}
+const settle = async () => { for (let i = 0; i < 10; i++) await Promise.resolve(); };
+
+test("the control lists the month's reports as historical, and exports one month's evidence from the storm events routes", async () => {
+  const { layers, evidence } = month(MAY);
+  const h = harness(layers);
+  assert.match(h.text, /Historical event reports, not warnings/);
+  assert.match(h.text, /Hail/);
+  assert.match(h.text, /Not reported/, "blank damage is unreported");
+  assert.doesNotMatch(h.text, /Synthetic narrative/);
+  h.start();
+  assert.match(h.requests[0].url, /^\/api\/governed\/storm-events\/v1\/layers\?month=5$/);
+  h.requests[0].resolve(layers); await settle();
+  assert.match(h.requests[1].url, /^\/api\/governed\/storm-events\/v1\/evidence\?month=5$/);
+  h.requests[1].resolve(evidence); await settle();
+  assert.deepEqual(h.downloads, ["kfm-reviewed-storm-events-2025-05.json"]);
+  assert.match(h.statuses.at(-1), /^Export includes/);
+});
+
+test("changing month during an export withholds the download", async () => {
+  const { layers, evidence } = month(MAY);
+  const h = harness(layers); h.start();
+  h.choose(4); h.choose(MAY);
+  h.request(/layers\?month=5$/).resolve(layers); await settle();
+  h.request(/evidence\?month=5$/).resolve(evidence); await settle();
+  assert.deepEqual(h.downloads, []);
+  assert.match(h.statuses.at(-1), /^Export withheld:/);
+});
+
+test("a full-year response cannot be exported as one month", async () => {
+  const { evidence } = month(MAY);
+  const year = { ...full, data: { ...full.data, approval_expires_at: "2099-01-01T00:00:00Z" } };
+  const h = harness(year); h.start();
+  h.requests[0].resolve(year); await settle();
+  h.requests[1].resolve(evidence); await settle();
+  assert.deepEqual(h.downloads, []);
+  assert.match(h.statuses.at(-1), /^Export withheld:/);
+});
