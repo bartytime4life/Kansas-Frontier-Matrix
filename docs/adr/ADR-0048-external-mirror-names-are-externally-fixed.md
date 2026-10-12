@@ -3,7 +3,7 @@ doc_id: kfm://adr/ADR-0048
 adr_id: ADR-0048
 title: "ADR-0048 — Names in a receipt-pinned external byte mirror count as externally fixed under Directory Rules §13.2"
 type: adr
-version: v2.3
+version: v2.4
 status: accepted
 effective_decision_status: accepted
 accepted_on: 2026-10-12
@@ -93,7 +93,7 @@ PR #5057 mirrored three upstream files with uppercase names, which broke the top
 
 - The exemption rests on an accepted decision rather than a root README.
 - Repository-only overlays cannot use the mirror to bypass the lowercase grammar.
-- When a mirror sync replaces the pinned receipt, the register's `receipt_path` must follow it. A test asserts that it matches `site_mirror.py`.
+- When a mirror sync replaces the pinned receipt, only the parity check changes. The validator derives the receipt from the parity check's single `RECEIPT = ROOT / "data/receipts/generated/<name>.json"` assignment, so the register keeps no copy that could go stale.
 - **Re-pinning cost at the next doctrine revision.** The Directory Rules digest `sha256:44f7e943…` (blob `fd49a0b8…`) is pinned in:
   - five validators: `validate_root_registry.py`, `validate_repository_topology.py`, `validate_domain_lane_register.py`, `validate_cross_domain_seam_register.py` and `path_alias_model.py`;
   - `control_plane/root_registry.yaml`;
@@ -120,7 +120,8 @@ PR #5057 mirrored three upstream files with uppercase names, which broke the top
 - The topology validator raises on a malformed register, or one not bound to the adopted doctrine digest.
 - It relaxes nothing when the register's `decision_ref` is not `ADR-0048`, or when this ADR is missing or its leading `KFM_META_BLOCK_V2` block no longer records `adr_id: ADR-0048` and `status` and `effective_decision_status` as accepted, each exactly once. Lines elsewhere in the file do not count. It also relaxes nothing for an absent register, a `RETIRED` entry, or an untracked receipt or parity check.
 - Within an entry, only receipt records in an upstream-backed state (`identical`, `inherited_repository_overlay`, `merged_water_overlay`) with a well-formed upstream digest qualify. Repository-only states never do.
-- The tests cover each of these cases, plus a live check that the register's `receipt_path` equals `site_mirror.py`'s pinned receipt.
+- It also relaxes nothing when the parity check does not pin exactly one receipt in that canonical form, or when the pinned receipt is untracked. The parity check is parsed as Python: `RECEIPT` must be bound exactly once anywhere in the module, by any construct, and that binding must be the module-level canonical assignment. A legacy `receipt_path` field in the register is ignored.
+- The tests cover each of these cases, plus a live check that the receipt derived from `site_mirror.py` exists.
 - The doctrine revision that adds the §4 text must re-pin every digest reference and keep the topology, root-registry, path-alias, domain-lane, cross-domain-seam and governance-parity checks green.
 
 ## 7. Rollback and supersession
@@ -143,6 +144,7 @@ Supersede this ADR with a new accepted decision. Removing the exemption would th
 | v2.1 | 2026-10-12 | Topology execution context v3 records `external_mirror_register` among its indexed governance inputs (successor receipt `genrec-topology-mirror-register-context-20261012`). |
 | v2.2 | 2026-10-12 | §6: the validator now relaxes nothing unless the register's `decision_ref` is ADR-0048 and this ADR remains accepted, and requires an upstream-backed receipt state and a well-formed upstream digest (review on #5065). |
 | v2.3 | 2026-10-12 | §6: acceptance is read only from this file's leading metadata block. Topology execution context v4 records this ADR as the `external_mirror_decision` indexed input (successor receipt `genrec-topology-mirror-decision-context-20261012`; review on #5071). |
+| v2.4 | 2026-10-12 | §4 and §6: the validator derives the pinned receipt from the parity check's `RECEIPT` constant, and the register drops its `receipt_path` copy, so a mirror sync can no longer leave the register stale (as after #5066). The parity check is parsed, so a second binding at any depth fails closed (review on #5076). |
 | v2.0 | 2026-10-12 | Accepted by @bartytime4life as the operative interpretation of §13.2, in response to review on #5064. Scope narrowed to upstream-backed receipt entries, and the receipt described as content-pinned (`REVIEW_ONLY`), not human-reviewed. |
 
 <p align="right"><a href="#top">Back to top</a></p>

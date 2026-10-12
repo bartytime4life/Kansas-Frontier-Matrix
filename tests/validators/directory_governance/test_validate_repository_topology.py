@@ -70,11 +70,19 @@ SITE_MIRROR = {
     "mirror_id": "mirror.apps-site-source",
     "status": "ACTIVE",
     "path_prefix": "apps/site/source/",
-    "receipt_path": "data/receipts/generated/site-mirror.json",
     "parity_check": "tools/qa/site_mirror.py",
     "relaxed_rules": ["path-grammar:uppercase"],
 }
-SITE_MIRROR_EVIDENCE = (SITE_MIRROR["receipt_path"], SITE_MIRROR["parity_check"])
+MIRROR_RECEIPT_PATH = "data/receipts/generated/site-mirror.json"
+SITE_MIRROR_EVIDENCE = (MIRROR_RECEIPT_PATH, SITE_MIRROR["parity_check"])
+
+
+def _parity_check(*receipt_lines: str) -> bytes:
+    lines = ("ROOT = Path(__file__).resolve().parents[2]",) + receipt_lines
+    return ("\n".join(lines) + "\n").encode("utf-8")
+
+
+PARITY_CHECK = _parity_check(f'RECEIPT = ROOT / "{MIRROR_RECEIPT_PATH}"')
 
 
 def _mirror_receipt(upstream: tuple[str, ...], repository_only: tuple[str, ...] = ()) -> bytes:
@@ -324,7 +332,8 @@ class RepositoryTopologyTests(unittest.TestCase):
             ),
             module.EXTERNAL_MIRROR_REGISTER: _mirror_register(SITE_MIRROR),
             module.EXTERNAL_MIRROR_DECISION_PATH: ACCEPTED_MIRROR_DECISION,
-            SITE_MIRROR["receipt_path"]: _mirror_receipt(
+            SITE_MIRROR["parity_check"]: PARITY_CHECK,
+            MIRROR_RECEIPT_PATH: _mirror_receipt(
                 tuple(path.removeprefix("apps/site/source/") for path in paths[:3])
             ),
         }
@@ -351,7 +360,10 @@ class RepositoryTopologyTests(unittest.TestCase):
             )
         )
 
-    def _uppercase_members(self, paths, register=None, receipt=None, decision=ACCEPTED_MIRROR_DECISION):
+    def _uppercase_members(
+        self, paths, register=None, receipt=None, decision=ACCEPTED_MIRROR_DECISION,
+        parity_check=PARITY_CHECK,
+    ):
         modes = {path: "100644" for path in paths}
         blobs = {
             "control_plane/root_registry.yaml": _root_registry(
@@ -362,8 +374,10 @@ class RepositoryTopologyTests(unittest.TestCase):
             blobs[module.EXTERNAL_MIRROR_DECISION_PATH] = decision
         if register is not None:
             blobs[module.EXTERNAL_MIRROR_REGISTER] = register
+        if parity_check is not None:
+            blobs[SITE_MIRROR["parity_check"]] = parity_check
         if receipt is not None:
-            blobs[SITE_MIRROR["receipt_path"]] = receipt
+            blobs[MIRROR_RECEIPT_PATH] = receipt
         object_ids = {path: "a" * 40 for path in paths}
         findings = module._path_findings(paths, modes, object_ids, blobs)
         for finding in findings:
@@ -459,18 +473,69 @@ class RepositoryTopologyTests(unittest.TestCase):
         }
         self.assertTrue(module._external_mirror_decision_accepted(blobs))
 
-    def test_registered_receipt_matches_site_mirror_check(self) -> None:
+    def test_live_receipt_is_derived_from_the_site_mirror_check(self) -> None:
         register = json.loads(
-            (REPO_ROOT / "control_plane/external_mirror_register.yaml").read_text(encoding="utf-8")
+            (REPO_ROOT / module.EXTERNAL_MIRROR_REGISTER).read_text(encoding="utf-8")
         )
-        site_mirror = (REPO_ROOT / "tools/qa/site_mirror.py").read_text(encoding="utf-8")
         for entry in register["mirrors"]:
             if entry["mirror_id"] == "mirror.apps-site-source":
-                self.assertIn(f'RECEIPT = ROOT / "{entry["receipt_path"]}"', site_mirror)
-                self.assertTrue((REPO_ROOT / entry["receipt_path"]).is_file())
+                # The register keeps no receipt copy that a mirror sync could leave stale.
+                self.assertNotIn("receipt_path", entry)
+                check = entry["parity_check"]
+                receipt = module._mirror_pinned_receipt(
+                    {check: (REPO_ROOT / check).read_bytes()}, check
+                )
+                self.assertIsNotNone(receipt)
+                self.assertTrue((REPO_ROOT / receipt).is_file())
                 break
         else:
             self.fail("mirror.apps-site-source is not registered")
+
+    def test_mirror_receipt_must_be_pinned_once_by_the_parity_check(self) -> None:
+        mirrored = "apps/site/source/AGENTS.md"
+        paths = (mirrored,) + SITE_MIRROR_EVIDENCE
+        receipt = _mirror_receipt(("AGENTS.md",))
+        register = _mirror_register(SITE_MIRROR)
+        pinned = f'RECEIPT = ROOT / "{MIRROR_RECEIPT_PATH}"'
+        self.assertEqual((), self._uppercase_members(paths, register, receipt))
+        # Formatting of the canonical assignment does not matter once parsed.
+        spaced = _parity_check(f'RECEIPT=ROOT/"{MIRROR_RECEIPT_PATH}"  # pinned')
+        self.assertEqual((), self._uppercase_members(paths, register, receipt, parity_check=spaced))
+        for check in (
+            None,
+            _parity_check(),
+            _parity_check(pinned, 'RECEIPT = ROOT / "data/receipts/generated/other.json"'),
+            _parity_check(pinned, "RECEIPT = Path('/tmp/other.json')"),
+            _parity_check(f'RECEIPT = ROOT / "../{MIRROR_RECEIPT_PATH}"'),
+            _parity_check('RECEIPT = ROOT / "docs/site-mirror.json"'),
+            # Any further binding of RECEIPT, at any depth or by any construct.
+            _parity_check(pinned, "if True:", '    RECEIPT = ROOT / "data/receipts/generated/other.json"'),
+            _parity_check(pinned, "def use():", "    global RECEIPT", "    RECEIPT = None"),
+            _parity_check(pinned, "for RECEIPT in ():", "    pass"),
+            _parity_check(pinned, "(RECEIPT := None)"),
+            _parity_check(pinned, "from json import loads as RECEIPT"),
+            _parity_check(pinned, "from os.path import *"),
+            _parity_check(pinned, "RECEIPT += ''"),
+            _parity_check(pinned, "del RECEIPT"),
+            # The single binding must be the module-level canonical assignment.
+            _parity_check("if True:", f"    {pinned}"),
+            _parity_check(f'RECEIPT: Path = ROOT / "{MIRROR_RECEIPT_PATH}"'),
+            _parity_check(f'RECEIPT = Path("/repo") / "{MIRROR_RECEIPT_PATH}"'),
+            _parity_check(f'RECEIPT, OTHER = ROOT / "{MIRROR_RECEIPT_PATH}", None'),
+            # Unparseable source.
+            _parity_check(pinned, "def broken(:"),
+        ):
+            with self.subTest(check=check):
+                self.assertEqual(
+                    (mirrored,), self._uppercase_members(paths, register, receipt, parity_check=check)
+                )
+
+    def test_legacy_register_receipt_path_is_ignored(self) -> None:
+        mirrored = "apps/site/source/AGENTS.md"
+        paths = (mirrored,) + SITE_MIRROR_EVIDENCE
+        stale = dict(SITE_MIRROR, receipt_path="data/receipts/generated/stale.json")
+        receipt = _mirror_receipt(("AGENTS.md",))
+        self.assertEqual((), self._uppercase_members(paths, _mirror_register(stale), receipt))
 
     def test_mirror_exception_fails_closed_without_register_or_evidence(self) -> None:
         mirrored = "apps/site/source/AGENTS.md"

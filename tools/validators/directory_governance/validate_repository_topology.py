@@ -10,6 +10,7 @@ migration, authorize deletion, or grant release or publication status.
 from __future__ import annotations
 
 import argparse
+import ast
 import base64
 import binascii
 import hashlib
@@ -541,12 +542,16 @@ EXTERNAL_MIRROR_DECISION_PATH = "docs/adr/ADR-0048-external-mirror-names-are-ext
 UPSTREAM_BACKED_MIRROR_STATES = frozenset(
     {"identical", "inherited_repository_overlay", "merged_water_overlay"}
 )
+# The parity check is the single source for its pinned receipt; the register
+# keeps no copy that a mirror sync could leave stale.
+MIRROR_RECEIPT_NAME = "RECEIPT"
+MIRROR_RECEIPT_PATH_RE = re.compile(r"data/receipts/generated/[A-Za-z0-9._-]+\.json")
 
 
 def _external_mirror_entries(
     blobs: Mapping[str, bytes], rule: str
-) -> tuple[tuple[str, str, str], ...]:
-    """Return ``(path_prefix, receipt_path, parity_check)`` for mirrors relaxing ``rule``.
+) -> tuple[tuple[str, str], ...]:
+    """Return ``(path_prefix, parity_check)`` for mirrors relaxing ``rule``.
 
     ``control_plane/external_mirror_register.yaml`` projects ADR-0048: a file
     name inside a registered byte mirror of an external source is externally
@@ -555,6 +560,8 @@ def _external_mirror_entries(
     and nonportable path checks always apply. An absent register, or one whose
     ``decision_ref`` is not ADR-0048, relaxes nothing (so a base tree with an
     older register still scans); a malformed or digest-unbound register raises.
+    The pinned receipt is derived from the parity check (see
+    ``_mirror_pinned_receipt``); a legacy ``receipt_path`` field is ignored.
     """
     if EXTERNAL_MIRROR_REGISTER not in blobs:
         return ()
@@ -571,7 +578,7 @@ def _external_mirror_entries(
     mirrors = register.get("mirrors")
     if not isinstance(mirrors, list):
         raise TopologyError("external mirror register has no mirrors array")
-    entries: list[tuple[str, str, str]] = []
+    entries: list[tuple[str, str]] = []
     seen: set[str] = set()
     for entry in mirrors:
         if not isinstance(entry, dict):
@@ -592,13 +599,12 @@ def _external_mirror_entries(
             or not isinstance(relaxed, list)
             or not relaxed
             or not set(relaxed) <= RELAXABLE_MIRROR_RULES
-            or not isinstance(entry.get("receipt_path"), str)
             or not isinstance(entry.get("parity_check"), str)
         ):
             raise TopologyError("external mirror register entry is malformed")
         seen.add(mirror_id)
         if entry["status"] == "ACTIVE" and rule in relaxed:
-            entries.append((prefix, entry["receipt_path"], entry["parity_check"]))
+            entries.append((prefix, entry["parity_check"]))
     if register.get("decision_ref") != EXTERNAL_MIRROR_DECISION:
         return ()
     return tuple(sorted(entries))
@@ -635,22 +641,76 @@ def _external_mirror_decision_accepted(blobs: Mapping[str, bytes]) -> bool:
     )
 
 
+def _binds_mirror_receipt(node: ast.AST) -> bool:
+    """True when ``node`` binds or may bind the ``RECEIPT`` name anywhere."""
+    if isinstance(node, ast.Name):
+        return node.id == MIRROR_RECEIPT_NAME and isinstance(node.ctx, (ast.Store, ast.Del))
+    if isinstance(node, ast.alias):
+        bound = node.asname or node.name.split(".", 1)[0]
+        return bound in {MIRROR_RECEIPT_NAME, "*"}
+    if isinstance(node, (ast.Global, ast.Nonlocal)):
+        return MIRROR_RECEIPT_NAME in node.names
+    return getattr(node, "name", None) == MIRROR_RECEIPT_NAME
+
+
+def _mirror_pinned_receipt(blobs: Mapping[str, bytes], parity_check: str) -> str | None:
+    """The receipt the parity check pins, or None unless pinned exactly once.
+
+    The parity check is parsed, not pattern-matched: ``RECEIPT`` must be bound
+    exactly once in the whole module, at any depth and by any construct, and
+    that binding must be the module-level statement
+    ``RECEIPT = ROOT / "data/receipts/generated/<name>.json"``.
+    """
+    raw = blobs.get(parity_check)
+    if raw is None:
+        return None
+    try:
+        tree = ast.parse(raw, filename=parity_check)
+    except (SyntaxError, ValueError):
+        return None
+    if sum(_binds_mirror_receipt(node) for node in ast.walk(tree)) != 1:
+        return None
+    for statement in tree.body:
+        if (
+            isinstance(statement, ast.Assign)
+            and len(statement.targets) == 1
+            and isinstance(statement.targets[0], ast.Name)
+            and statement.targets[0].id == MIRROR_RECEIPT_NAME
+        ):
+            value = statement.value
+            if (
+                isinstance(value, ast.BinOp)
+                and isinstance(value.op, ast.Div)
+                and isinstance(value.left, ast.Name)
+                and value.left.id == "ROOT"
+                and isinstance(value.right, ast.Constant)
+                and isinstance(value.right.value, str)
+                and MIRROR_RECEIPT_PATH_RE.fullmatch(value.right.value)
+            ):
+                return value.right.value
+            return None
+    return None
+
+
 def _external_mirror_exempt_paths(
     blobs: Mapping[str, bytes], path_set: set[str], rule: str
 ) -> frozenset[str]:
     """Tracked mirror paths whose upstream-fixed names may skip ``rule``.
 
     Nothing is relaxed unless ADR-0048 is tracked and still accepted. An entry
-    applies only while its receipt and parity check are tracked (fail closed
-    otherwise). Within it, only receipt comparison entries in an upstream-backed
+    applies only while its parity check is tracked, pins exactly one receipt,
+    and that receipt is tracked (fail closed otherwise). Within it, only receipt comparison entries in an upstream-backed
     state that carry a well-formed upstream digest (``site_sha256``) qualify:
     repository-only entries keep the default grammar (ADR-0048).
     """
     if not _external_mirror_decision_accepted(blobs):
         return frozenset()
     exempt: set[str] = set()
-    for prefix, receipt_path, parity_check in _external_mirror_entries(blobs, rule):
-        if receipt_path not in path_set or parity_check not in path_set:
+    for prefix, parity_check in _external_mirror_entries(blobs, rule):
+        if parity_check not in path_set:
+            continue
+        receipt_path = _mirror_pinned_receipt(blobs, parity_check)
+        if receipt_path is None or receipt_path not in path_set:
             continue
         comparison = _blob_json(blobs, receipt_path).get("comparison")
         if not isinstance(comparison, dict):
@@ -1078,16 +1138,19 @@ def _content_findings(paths: Sequence[str], blobs: Mapping[str, bytes]) -> list[
     return findings
 
 
-def _external_mirror_receipt_paths(
+def _external_mirror_evidence_paths(
     repo_root: Path, object_ids: Mapping[str, str]
 ) -> set[str]:
-    """Receipt paths named by the mirror register, so their blobs are indexed."""
+    """Parity checks named by the mirror register and the receipts they pin."""
     blobs = _index_blobs(repo_root, object_ids, {EXTERNAL_MIRROR_REGISTER})
     try:
         entries = _external_mirror_entries(blobs, "path-grammar:uppercase")
     except TopologyError:
         return set()  # _path_findings re-reads the register and raises there.
-    return {receipt for _, receipt, _ in entries}
+    checks = {parity_check for _, parity_check in entries}
+    check_blobs = _index_blobs(repo_root, object_ids, checks)
+    receipts = {_mirror_pinned_receipt(check_blobs, check) for check in checks}
+    return checks | {receipt for receipt in receipts if receipt is not None}
 
 
 def scan(repo_root: Path) -> tuple[tuple[Finding, ...], int]:
@@ -1107,7 +1170,7 @@ def scan(repo_root: Path) -> tuple[tuple[Finding, ...], int]:
         or _is_app_text_path(path)
         or path.startswith("artifacts/")
     } | fixed
-    content_paths |= _external_mirror_receipt_paths(root, object_ids)
+    content_paths |= _external_mirror_evidence_paths(root, object_ids)
     blobs = _index_blobs(root, object_ids, content_paths)
     findings = _path_findings(paths, modes, object_ids, blobs) + _content_findings(paths, blobs)
     unique = tuple(sorted(set(findings)))
