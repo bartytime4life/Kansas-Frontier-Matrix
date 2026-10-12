@@ -40,7 +40,8 @@ The uppercase path-grammar check exempts numbered `docs/adr/ADR-NNNN-*.md`
 files and, under accepted ADR-0048, upstream-backed entries of external byte
 mirrors registered in `control_plane/external_mirror_register.yaml` (currently
 `apps/site/source/`). Nothing is relaxed unless the register's `decision_ref`
-is `ADR-0048` and that ADR's tracked metadata still records it as accepted. An
+is `ADR-0048` and the leading metadata block of that ADR's tracked file still
+records it as accepted; `status:` lines elsewhere in the file do not count. An
 entry applies only while it is `ACTIVE` and its pinned receipt and parity check
 are tracked, and only to receipt entries in an upstream-backed state
 (`identical`, `inherited_repository_overlay`, `merged_water_overlay`) with a
@@ -99,14 +100,18 @@ run ID, attempt and event fields are included when present; absent values are
 explicitly null. No branch/trusted-base ref, arbitrary environment value, file
 content, evidence member or per-finding evidence digest is emitted.
 
-Context version `kfm.topology-execution-context.v3` additionally binds five
+Context version `kfm.topology-execution-context.v4` additionally binds six
 fixed governance inputs from the **Git index**, not their working-file copies:
 `root_registry` (`control_plane/root_registry.yaml`), `path_alias_register`
 (`control_plane/path_alias_register.yaml`), `directory_rules`
 (`docs/doctrine/directory-rules.md`), `directory_adoption`
-(`docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md`), and
-`external_mirror_register` (`control_plane/external_mirror_register.yaml`).
-v3 (2026-10-12) adds the mirror register; v2 bound only the first four. Each fixed label
+(`docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md`),
+`external_mirror_register` (`control_plane/external_mirror_register.yaml`), and
+`external_mirror_decision`
+(`docs/adr/ADR-0048-external-mirror-names-are-externally-fixed.md`), whose
+metadata block decides whether the mirror exemption applies. v4 (2026-10-12)
+adds the mirror decision, v3 added the mirror register, and v2 bound only the
+first four. Each fixed label
 records its Git blob ID, byte count and SHA-256. Blob framing is independently
 rehashed against the index ID before the entry is included. Missing, duplicate,
 unmerged, non-regular, oversized or mismatched objects make context unavailable;
@@ -121,11 +126,12 @@ No governance text, alias inventory or source path is added to the log payload.
 This follows the scanner's indexed-input boundary: an unstaged edit is not the
 scanned governance input. A staged change changes the corresponding blob entry
 and the whole-index digest; a change across begin/end is non-comparable. These
-four entries complement the existing on-disk validator/diagnostic/baseline
+indexed entries complement the existing on-disk validator/diagnostic/baseline
 hashes. They are not a complete captured report, proof of source authority,
 attestation of loaded code, or diagnosis of the disputed September 11 log.
-Consumers requiring these entries must require context v2; retained v1 logs
-lack that coverage and must not be upgraded by inference. `main()` and the
+Consumers requiring these entries must require the context version that
+introduced them (v2 for the first four, v3 for the register, v4 for the
+decision); older logs lack that coverage and must not be upgraded by inference. `main()` and the
 ratchet's native exit and findings interface are unchanged.
 
 The end marker repeats the binding ID only when the before/after observations
@@ -140,7 +146,7 @@ loaded-bytecode attestation, authentication of runner metadata, or an atomic
 filesystem snapshot. The staged-index digest is not a Git tree ID. File reads
 are limited to 4 MiB regular files inside the checkout; symlinks are rejected.
 The index payload is checked against 32 MiB after the existing bounded-time Git
-helper returns. Each of the four blob reads is size-checked before retrieval
+helper returns. Each indexed blob read is size-checked before retrieval
 and checked again on return, using the same 4 MiB limit and bounded-time Git
 helper. The return check is not a streaming memory cap on a malicious Git
 process. Unrelated working files and transient/concurrent filesystem

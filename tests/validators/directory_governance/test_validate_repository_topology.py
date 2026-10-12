@@ -432,6 +432,16 @@ class RepositoryTopologyTests(unittest.TestCase):
             _mirror_decision(status="proposed"),
             _mirror_decision(effective="proposed"),
             _mirror_decision().replace(b"ADR-0048", b"ADR-0049"),
+            # Accepted lines quoted in the body do not count; only the leading block does.
+            _mirror_decision(status="superseded", effective="superseded")
+            + b"\n```yaml\nadr_id: ADR-0048\nstatus: accepted\neffective_decision_status: accepted\n```\n",
+            # The metadata block must lead the file.
+            b"# ADR-0048\n\n" + _mirror_decision(),
+            # Each field must appear exactly once, at top level.
+            _mirror_decision().replace(b"status: accepted\neff", b"status: accepted\nstatus: proposed\neff"),
+            _mirror_decision(status="proposed").replace(
+                b"status: proposed\n", b"status: proposed\nnotes:\n  status: accepted\n"
+            ),
         ):
             with self.subTest(decision=decision):
                 self.assertEqual((mirrored,), self._uppercase_members(paths, register, receipt, decision))

@@ -604,16 +604,34 @@ def _external_mirror_entries(
     return tuple(sorted(entries))
 
 
+_META_BLOCK = re.compile(
+    r"\A<!-- \[KFM_META_BLOCK_V2\]\n(?P<body>.*?)\n\[/KFM_META_BLOCK_V2\] -->", re.S
+)
+
+
 def _external_mirror_decision_accepted(blobs: Mapping[str, bytes]) -> bool:
-    """True only while the tracked ADR-0048 metadata records an accepted decision."""
+    """True only while ADR-0048's leading metadata block records an accepted decision.
+
+    Only the single ``KFM_META_BLOCK_V2`` envelope at the top of the file is
+    read, so ``status:`` lines quoted in the ADR body cannot keep the exemption
+    active. Each field must occur exactly once at top level.
+    """
     try:
-        head = blobs[EXTERNAL_MIRROR_DECISION_PATH].decode("utf-8")[:12_000]
+        text = blobs[EXTERNAL_MIRROR_DECISION_PATH].decode("utf-8")
     except (KeyError, UnicodeError):
         return False
-    return bool(
-        re.search(rf"(?m)^adr_id:\s*{EXTERNAL_MIRROR_DECISION}\s*$", head)
-        and re.search(r"(?m)^status:\s*accepted\s*$", head)
-        and re.search(r"(?m)^effective_decision_status:\s*accepted\s*$", head)
+    match = _META_BLOCK.match(text)
+    if match is None or "KFM_META_BLOCK_V2" in match.group("body"):
+        return False
+    fields: dict[str, list[str]] = {}
+    for line in match.group("body").splitlines():
+        key, sep, value = line.partition(":")
+        if sep and key and not key[0].isspace():
+            fields.setdefault(key, []).append(value.strip())
+    return (
+        fields.get("adr_id") == [EXTERNAL_MIRROR_DECISION]
+        and fields.get("status") == ["accepted"]
+        and fields.get("effective_decision_status") == ["accepted"]
     )
 
 
