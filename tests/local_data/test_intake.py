@@ -572,12 +572,12 @@ class ServiceTests(unittest.TestCase):
             self.desk.thread.join(5)
         self.temporary.cleanup()
 
-    def request(self, method, path, body=None, headers=None, raw=False):
-        Handler = intake_service.handler(self.desk)
+    def request(self, method, path, body=None, headers=None, raw=False, port=8771):
+        Handler = intake_service.handler(self.desk, port=port)
         h = Handler.__new__(Handler)
         encoded = json.dumps({} if body is None else body).encode()
         h.headers = Message()
-        values = {"Host": "127.0.0.1:8771", "Origin": "http://127.0.0.1:8771", "X-KFM-Session": self.desk.token,
+        values = {"Host": f"127.0.0.1:{port}", "Origin": f"http://127.0.0.1:{port}", "X-KFM-Session": self.desk.token,
                   "Content-Type": "application/json", "Content-Length": str(len(encoded))}
         values.update(headers or {})
         for key, value in values.items():
