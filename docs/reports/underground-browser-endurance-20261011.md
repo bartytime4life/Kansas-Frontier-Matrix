@@ -13,7 +13,10 @@ acceptance.
   `appgprj_6aa0b1c41bc08191bfd86003920f1631~appgver_696cc1170b188191a7d1248360c71f0d`.
 - Successful deployment: `appgdep_6acc24279f1481918759bdbba682ac9d`;
   one owner, no editors or external visitors, environment revision 5.
-- Repository base: `e960d6d47e5c43813b25e7aa6f1a9c7100469e89`.
+- Initial repository base: `e960d6d47e5c43813b25e7aa6f1a9c7100469e89`.
+  Main advanced to `9196163527b79787192d04b163e29b40ec5c5221` during
+  validation; its six non-Site files were merged without conflict. The Site
+  application content and its successful browser/build checks did not change.
 - The primary PC repository was fast-forwarded from merged #5029 to that main
   commit with a clean checkout. Other worktrees were preserved.
 - The PC Site now uses `KFM-Explorer-Site-browser-checked-20261011-v246` through
@@ -81,7 +84,8 @@ introduced.
 - Focused Underground contracts, cleanup, camera, worker, and detail checks:
   115 passed.
 - Reconciled mirror build and TypeScript: PASS; 1,129 tests passed.
-- Mirror/release Python checks: 32 passed.
+- Initial mirror/release Python checks: 32 passed. After the main update,
+  mirror, water-release, and weather-hosted checks: 43 passed.
 - Mirror content check: PASS with explicitly retained overlays.
 - Hosted exact-head CI is reported separately on the accompanying PR; local
   execution does not establish its result.
