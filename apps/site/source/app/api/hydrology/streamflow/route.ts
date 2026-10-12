@@ -1,3 +1,4 @@
+import { encodeStreamflowTransport } from "../../../streamflow-transport";
 import { env } from "cloudflare:workers";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -36,6 +37,7 @@ type CollectionName = keyof typeof COLLECTION_PATHS;
 
 type ParsedQuery = Readonly<{
   mode: Mode;
+  encoding: "columns-v1" | null;
   range: Range;
   parameterCode: ParameterCode;
   stationId: string | null;
@@ -111,7 +113,7 @@ class StationNotFoundError extends Error {}
 class NetworkBudgetExceeded extends Error {}
 type NetworkBudget = { deadline: number; remainingBytes: number; exhausted: boolean };
 let networkInFlight = false;
-let networkCache: { body: string; expiresAt: number } | null = null;
+let networkCache: { body: string; compactBody?: string; expiresAt: number } | null = null;
 
 const isRecord = (value: unknown): value is JsonRecord => (
   Boolean(value) && typeof value === "object" && !Array.isArray(value)
@@ -568,11 +570,13 @@ const singleQueryValue = (request: NextRequest, name: string, required: boolean)
 };
 
 const parseQuery = (request: NextRequest): ParsedQuery => {
-  const allowed = new Set(["mode", "range", "station", "parameter", "end", "resolution"]);
+  const allowed = new Set(["mode", "range", "station", "parameter", "end", "resolution", "encoding"]);
   for (const key of request.nextUrl.searchParams.keys()) {
     if (!allowed.has(key)) throw new QueryError("The request contained an unsupported query parameter.");
   }
   const mode = singleQueryValue(request, "mode", true);
+  const encoding = singleQueryValue(request, "encoding", false);
+  if (encoding !== null && (encoding !== "columns-v1" || mode !== "network")) throw new QueryError("encoding=columns-v1 is supported only for the statewide network.");
   const range = singleQueryValue(request, "range", true);
   const archiveEnd = singleQueryValue(request, "end", false);
   const resolution = singleQueryValue(request, "resolution", false) ?? (range === "1y" ? "daily" : "continuous");
@@ -590,7 +594,7 @@ const parseQuery = (request: NextRequest): ParsedQuery => {
       throw new QueryError("Network mode supports only range=24h and parameter 00060, without a station.");
     }
     if (resolution !== "continuous") throw new QueryError("Network mode uses continuous observations.");
-    return { mode, range, parameterCode: "00060", stationId: null, stationNumber: null, archiveEnd: null, resolution };
+    return { mode, encoding, range, parameterCode: "00060", stationId: null, stationNumber: null, archiveEnd: null, resolution };
   }
 
   const stationId = singleQueryValue(request, "station", true);
@@ -600,6 +604,7 @@ const parseQuery = (request: NextRequest): ParsedQuery => {
   if (!parameter || !PARAMETER_PATTERN.test(parameter)) throw new QueryError("parameter must be 00060 or 00065.");
   return {
     mode,
+    encoding: null,
     range,
     parameterCode: parameter as ParameterCode,
     stationId,
@@ -837,7 +842,8 @@ export async function GET(request: NextRequest) {
   try {
     const query = parseQuery(request);
     if (query.mode === "network" && networkCache && Date.now() < networkCache.expiresAt) {
-      return new Response(networkCache.body, { headers: { "Content-Type": "application/json", "Cache-Control": "no-store", "X-KFM-Network-Cache": "HIT" } });
+      if (query.encoding && !networkCache.compactBody) networkCache.compactBody = JSON.stringify(encodeStreamflowTransport(JSON.parse(networkCache.body)));
+      return new Response(query.encoding ? networkCache.compactBody! : networkCache.body, { headers: { "Content-Type": "application/json", "Cache-Control": "no-store", "X-KFM-Network-Cache": "HIT" } });
     }
     if (Date.now() < upstreamRetryAt) throw new UsgsRateLimitError();
     const queryEndDate = query.archiveEnd ? new Date(query.archiveEnd) : new Date();
@@ -847,15 +853,18 @@ export async function GET(request: NextRequest) {
       return errorResponse(429, "USGS_STREAMFLOW_NETWORK_BUSY", "A statewide network request is already running on this worker; retry after it completes.");
     }
     let bundle;
+    let compactBody: string | undefined;
     if (query.mode === "network") {
       networkInFlight = true;
       try {
         bundle = await networkBundle(query, queryStart, queryEnd);
         const body = JSON.stringify(bundle);
-        if (body.length <= 24 * 1024 * 1024) networkCache = { body, expiresAt: Date.now() + 15 * 60_000 };
+        if (query.encoding) compactBody = JSON.stringify(encodeStreamflowTransport(bundle));
+        if (body.length <= 24 * 1024 * 1024) networkCache = { body, compactBody, expiresAt: Date.now() + 15 * 60_000 };
       }
       finally { networkInFlight = false; }
     } else bundle = await stationBundle(query, queryStart, queryEnd);
+    if (compactBody) return new Response(compactBody, { headers: { ...successfulHeaders(cacheSeconds(query)), "Content-Type": "application/json" } });
     return NextResponse.json(bundle, {
       status: 200,
       headers: successfulHeaders(cacheSeconds(query)),

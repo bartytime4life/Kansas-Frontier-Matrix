@@ -326,3 +326,8 @@ test('saved station locations survive reload without retaining readings or enabl
  assert.equal(streamflow.restoreStreamflowLocations('not json',now),null);
  assert.equal(streamflow.restoreStreamflowLocations('x'.repeat(1024*1024+1),now),null);
 });
+
+test('River Pulse archive day rejects future, impossible and pre-adapter dates without clamping', () => {
+  for (const day of ['2026-11-11', '2026-02-30', '2024-02-30', '1799-12-31', 'not a date']) assert.equal(streamflow.validStreamflowArchiveDay(day, '2026-10-11'), false);
+  for (const day of ['1800-01-01', '2024-02-29', '2026-10-11']) assert.equal(streamflow.validStreamflowArchiveDay(day, '2026-10-11'), true);
+});

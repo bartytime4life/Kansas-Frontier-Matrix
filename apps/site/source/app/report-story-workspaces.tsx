@@ -386,7 +386,7 @@ export default function ReportStoryWorkspaces({
         <aside className="report-evidence-column" aria-label="Evidence inclusion and report readiness">
           <section className="readiness-card">
             <div><span>Draft completeness</span><strong>{readiness}%</strong></div>
-            <progress max="100" value={readiness}>{readiness}%</progress>
+            <progress aria-label="Draft completeness" max="100" value={readiness}>{readiness}%</progress>
             <p>Completeness measures fields and citations, not factual approval.</p>
           </section>
           <section className="evidence-inclusion" aria-labelledby="evidence-inclusion-title">

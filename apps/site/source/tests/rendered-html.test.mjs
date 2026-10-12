@@ -1152,7 +1152,7 @@ test("binds a governed temporal sweep to map filters, live-source holds, compari
   assert.match(page, /officialContextIdForSelection/);
   assert.match(page, /data-committed=\{step === temporalQuery\.frame\}/);
   assert.match(page, /aria-label="Preview time before committing; every year from 1800 is selectable"/);
-  assert.match(runtime, /map\.setFilter\(renderer\.id, filter \?\? null\)/);
+  assert.match(runtime, /setRegistryFilter\(map, renderer\.id, filter\)/);
   assert.match(liveContext, /OFFICIAL_CONTEXT_TEMPORAL_SUPPORT/);
   assert.match(liveContext, /supportedFrames\.includes\(frame\)/);
   assert.match(exportCenter, /sweepMode: input\.temporalSweep\.mode/);

@@ -112,3 +112,18 @@
 .layer-panel .official-context-catalog { display: block; margin: 0; }
 .appearance-quick-looks { display: flex; flex-wrap: wrap; gap: 6px; }
 .appearance-quick-looks button { flex: 1 1 110px; min-height: 44px; padding: 8px; border: 1px solid #45586a; border-radius: 5px; background: #192b3a; color: #cbdce7; font-size: 11px; }
+
+/* Keep acquisition and inspection controls comfortable on compact maps. */
+@media (max-width: 980px) {
+  .layer-panel[data-panel-mode="layers"] .catalog-search { height: auto; min-height: 48px; padding: 0 8px; }
+  .layer-panel[data-panel-mode="layers"] .catalog-search input { min-height: 44px; }
+  .layer-panel[data-panel-mode="layers"] .catalog-search button { min-width: 44px; min-height: 44px; }
+  .layer-panel[data-panel-mode="layers"] .layer-source-switch button,
+  .layer-panel[data-panel-mode="layers"] .layer-browse-context select,
+  .layer-panel[data-panel-mode="layers"] .layer-map-time button,
+  .layer-panel[data-panel-mode="layers"] .official-context-row summary,
+  .layer-panel[data-panel-mode="layers"] .official-context-row .source-time-actions :is(input, select, button, a),
+  .layer-panel[data-panel-mode="layers"] .official-context-row .opacity-control input,
+  .layer-panel[data-panel-mode="layers"] .official-context-row input[type="range"] { min-height: 44px; }
+  .layer-panel[data-panel-mode="layers"] .official-context-row .official-context-actions :is(button, a) { display: inline-flex; align-items: center; min-height: 44px; }
+}
