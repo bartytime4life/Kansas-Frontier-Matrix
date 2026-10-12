@@ -10,6 +10,7 @@ migration, authorize deletion, or grant release or publication status.
 from __future__ import annotations
 
 import argparse
+import ast
 import base64
 import binascii
 import hashlib
@@ -543,10 +544,8 @@ UPSTREAM_BACKED_MIRROR_STATES = frozenset(
 )
 # The parity check is the single source for its pinned receipt; the register
 # keeps no copy that a mirror sync could leave stale.
-MIRROR_RECEIPT_ASSIGNMENT = re.compile(rb"(?m)^RECEIPT\s*=")
-MIRROR_RECEIPT_BINDING = re.compile(
-    rb'(?m)^RECEIPT = ROOT / "(data/receipts/generated/[A-Za-z0-9._-]+\.json)"$'
-)
+MIRROR_RECEIPT_NAME = "RECEIPT"
+MIRROR_RECEIPT_PATH_RE = re.compile(r"data/receipts/generated/[A-Za-z0-9._-]+\.json")
 
 
 def _external_mirror_entries(
@@ -642,17 +641,55 @@ def _external_mirror_decision_accepted(blobs: Mapping[str, bytes]) -> bool:
     )
 
 
+def _binds_mirror_receipt(node: ast.AST) -> bool:
+    """True when ``node`` binds or may bind the ``RECEIPT`` name anywhere."""
+    if isinstance(node, ast.Name):
+        return node.id == MIRROR_RECEIPT_NAME and isinstance(node.ctx, (ast.Store, ast.Del))
+    if isinstance(node, ast.alias):
+        bound = node.asname or node.name.split(".", 1)[0]
+        return bound in {MIRROR_RECEIPT_NAME, "*"}
+    if isinstance(node, (ast.Global, ast.Nonlocal)):
+        return MIRROR_RECEIPT_NAME in node.names
+    return getattr(node, "name", None) == MIRROR_RECEIPT_NAME
+
+
 def _mirror_pinned_receipt(blobs: Mapping[str, bytes], parity_check: str) -> str | None:
     """The receipt the parity check pins, or None unless pinned exactly once.
 
-    The parity check must assign ``RECEIPT`` exactly once, in the canonical
-    ``RECEIPT = ROOT / "data/receipts/generated/<name>.json"`` form.
+    The parity check is parsed, not pattern-matched: ``RECEIPT`` must be bound
+    exactly once in the whole module, at any depth and by any construct, and
+    that binding must be the module-level statement
+    ``RECEIPT = ROOT / "data/receipts/generated/<name>.json"``.
     """
     raw = blobs.get(parity_check)
-    if raw is None or len(MIRROR_RECEIPT_ASSIGNMENT.findall(raw)) != 1:
+    if raw is None:
         return None
-    matches = MIRROR_RECEIPT_BINDING.findall(raw)
-    return matches[0].decode("ascii") if len(matches) == 1 else None
+    try:
+        tree = ast.parse(raw, filename=parity_check)
+    except (SyntaxError, ValueError):
+        return None
+    if sum(_binds_mirror_receipt(node) for node in ast.walk(tree)) != 1:
+        return None
+    for statement in tree.body:
+        if (
+            isinstance(statement, ast.Assign)
+            and len(statement.targets) == 1
+            and isinstance(statement.targets[0], ast.Name)
+            and statement.targets[0].id == MIRROR_RECEIPT_NAME
+        ):
+            value = statement.value
+            if (
+                isinstance(value, ast.BinOp)
+                and isinstance(value.op, ast.Div)
+                and isinstance(value.left, ast.Name)
+                and value.left.id == "ROOT"
+                and isinstance(value.right, ast.Constant)
+                and isinstance(value.right.value, str)
+                and MIRROR_RECEIPT_PATH_RE.fullmatch(value.right.value)
+            ):
+                return value.right.value
+            return None
+    return None
 
 
 def _external_mirror_exempt_paths(

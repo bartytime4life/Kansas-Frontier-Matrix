@@ -498,6 +498,9 @@ class RepositoryTopologyTests(unittest.TestCase):
         register = _mirror_register(SITE_MIRROR)
         pinned = f'RECEIPT = ROOT / "{MIRROR_RECEIPT_PATH}"'
         self.assertEqual((), self._uppercase_members(paths, register, receipt))
+        # Formatting of the canonical assignment does not matter once parsed.
+        spaced = _parity_check(f'RECEIPT=ROOT/"{MIRROR_RECEIPT_PATH}"  # pinned')
+        self.assertEqual((), self._uppercase_members(paths, register, receipt, parity_check=spaced))
         for check in (
             None,
             _parity_check(),
@@ -505,6 +508,22 @@ class RepositoryTopologyTests(unittest.TestCase):
             _parity_check(pinned, "RECEIPT = Path('/tmp/other.json')"),
             _parity_check(f'RECEIPT = ROOT / "../{MIRROR_RECEIPT_PATH}"'),
             _parity_check('RECEIPT = ROOT / "docs/site-mirror.json"'),
+            # Any further binding of RECEIPT, at any depth or by any construct.
+            _parity_check(pinned, "if True:", '    RECEIPT = ROOT / "data/receipts/generated/other.json"'),
+            _parity_check(pinned, "def use():", "    global RECEIPT", "    RECEIPT = None"),
+            _parity_check(pinned, "for RECEIPT in ():", "    pass"),
+            _parity_check(pinned, "(RECEIPT := None)"),
+            _parity_check(pinned, "from json import loads as RECEIPT"),
+            _parity_check(pinned, "from os.path import *"),
+            _parity_check(pinned, "RECEIPT += ''"),
+            _parity_check(pinned, "del RECEIPT"),
+            # The single binding must be the module-level canonical assignment.
+            _parity_check("if True:", f"    {pinned}"),
+            _parity_check(f'RECEIPT: Path = ROOT / "{MIRROR_RECEIPT_PATH}"'),
+            _parity_check(f'RECEIPT = Path("/repo") / "{MIRROR_RECEIPT_PATH}"'),
+            _parity_check(f'RECEIPT, OTHER = ROOT / "{MIRROR_RECEIPT_PATH}", None'),
+            # Unparseable source.
+            _parity_check(pinned, "def broken(:"),
         ):
             with self.subTest(check=check):
                 self.assertEqual(
