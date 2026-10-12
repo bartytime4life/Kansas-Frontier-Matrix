@@ -650,6 +650,11 @@ def _binds_mirror_receipt(node: ast.AST) -> bool:
         return bound in {MIRROR_RECEIPT_NAME, "*"}
     if isinstance(node, (ast.Global, ast.Nonlocal)):
         return MIRROR_RECEIPT_NAME in node.names
+    if isinstance(node, ast.arg):
+        return node.arg == MIRROR_RECEIPT_NAME
+    if isinstance(node, ast.MatchMapping):
+        return node.rest == MIRROR_RECEIPT_NAME
+    # def/class names, except handlers, match captures and type parameters.
     return getattr(node, "name", None) == MIRROR_RECEIPT_NAME
 
 
