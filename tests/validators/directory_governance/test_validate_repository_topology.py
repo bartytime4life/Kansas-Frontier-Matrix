@@ -517,6 +517,11 @@ class RepositoryTopologyTests(unittest.TestCase):
             _parity_check(pinned, "from os.path import *"),
             _parity_check(pinned, "RECEIPT += ''"),
             _parity_check(pinned, "del RECEIPT"),
+            _parity_check(pinned, "def helper(RECEIPT):", "    return RECEIPT"),
+            _parity_check(pinned, "helper = lambda *, RECEIPT=None: RECEIPT"),
+            _parity_check(pinned, "match {}:", "    case {**RECEIPT}:", "        pass"),
+            _parity_check(pinned, "match None:", "    case [*RECEIPT]:", "        pass"),
+            _parity_check(pinned, "try:", "    pass", "except OSError as RECEIPT:", "    pass"),
             # The single binding must be the module-level canonical assignment.
             _parity_check("if True:", f"    {pinned}"),
             _parity_check(f'RECEIPT: Path = ROOT / "{MIRROR_RECEIPT_PATH}"'),
