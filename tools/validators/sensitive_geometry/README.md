@@ -2,11 +2,11 @@
 doc_id: kfm://doc/tools-validators-sensitive-geometry-readme
 title: tools/validators/sensitive_geometry README
 type: README
-version: v0.1
+version: v0.2
 status: draft
 owner: TODO-tooling-qa-owner-plus-sensitive-geometry-steward-plus-geoprivacy-steward-plus-redaction-steward-plus-policy-steward-plus-evidence-steward-plus-release-steward
 created: 2026-07-08
-updated: 2026-07-08
+updated: 2026-10-12
 policy_label: repository-facing; sensitive-geometry-validator-index; exact-location-deny-default; geoprivacy-aware; redaction-aware; generalization-aware; aggregation-aware; receipt-aware; most-restrictive-wins; fail-closed; release-gated; non-authoritative
 owning_root: tools/
 responsibility: parent sensitive-geometry validator routing README under tools/validators; documents validation expectations for exact/internal geometry separation, sensitive-location denial, public-safe geometry posture, redaction/generalization/aggregation receipt linkage, geometry carrier checks, CRS/precision/role posture, reverse-engineerable derivative checks, side-channel exposure checks, most-restrictive policy propagation, EvidenceRef and EvidenceBundle linkage, policy/review/release posture, correction/rollback propagation, schema/fixture/test routing, and finite outcomes while deferring geometry semantics, domain meaning, geoprivacy policy parameters, redaction transforms, evidence records, receipts, lifecycle data, release records, public runtime code, and release authority to their owning roots
@@ -40,7 +40,7 @@ related:
   - ../../../fixtures/
   - ../../../tests/
 notes:
-  - "This README replaces an empty placeholder at tools/validators/sensitive_geometry/README.md. It does not confirm executable sensitive-geometry validators, registry wiring, policy bundles, transform implementation, receipt emission, or CI behavior."
+  - "This README replaces an empty placeholder at tools/validators/sensitive_geometry/README.md. validate_public_fixture_geometry.py is a confirmed fixture-lint validator with its own CI workflow; it does not confirm registry wiring, policy bundles, transform implementation, or receipt emission."
   - "Sensitive geometry validation is a routing/checking lane. It must not store exact geometry, publish public geometry, define redaction parameters, create receipts, decide policy, approve release, or authorize public surfaces."
   - "No exact coordinates, restricted identifiers, redaction radii, grid sizes, geohash precision, reconstruction thresholds, hidden policy values, or other reverse-engineering hints belong in this README or in repository-facing validator documentation."
   - "Public-safe geometry must be produced upstream by governed transforms and supported by receipts, policy, review, evidence, release, correction, and rollback posture before public use."
@@ -81,12 +81,13 @@ The answer should be a deterministic validation result or routing decision. This
 | Surface | Status | Notes |
 |---|---|---|
 | `tools/validators/sensitive_geometry/README.md` | **CONFIRMED README** | This README replaces the previous empty placeholder. |
+| `tools/validators/sensitive_geometry/validate_public_fixture_geometry.py` | **CONFIRMED validator** | Fails closed when a positive fixture under `fixtures/` carries precise coordinates without an explicit non-public declaration. See [Public fixture precise-geometry check](#public-fixture-precise-geometry-check). |
 | `tools/validators/geoprivacy/README.md` | **CONFIRMED README / executable behavior NEEDS VERIFICATION** | Broad geoprivacy validator routing index for sensitive-location, public-safe geometry, reverse-engineerable derivative, most-restrictive-policy, receipt, evidence, policy, release, correction, rollback, and public-surface denial checks. |
 | `tools/validators/geometry/README.md` | **CONFIRMED README / executable behavior NEEDS VERIFICATION** | Shared geometry-carrier validator lane for common geometry shape, CRS, precision bucket, geometry role, validity/topology, sensitivity/geoprivacy, evidence, policy, release, correction, rollback, and public-surface denial. |
 | `docs/standards/REDACTION_PROFILES.md` | **CONFIRMED standard / implementation NEEDS VERIFICATION** | Redaction profiles are named, versioned, deterministic, receipt-bearing policy artifacts; missing profiles fail closed. |
 | `docs/architecture/sensitive-domain-fail-closed.md` | **CONFIRMED architecture doc / implementation NEEDS VERIFICATION** | Sensitive lanes fail closed by default; public derivatives require explicit, evidenced, receipted, reviewed, and policy-allowed transforms. |
 | `tools/validators/geology/public_safe_geometry/README.md` | **CONFIRMED domain example / executable behavior NEEDS VERIFICATION** | Domain-specific public-safe geometry lane that separates exact/internal geometry from public-safe geometry and defers policy/release authority. |
-| Executable sensitive-geometry scripts, registry wiring, schema bindings, policy bundles, redaction profiles, fixture coverage, report destinations, receipt emission, runtime behavior, and CI wiring | **NEEDS VERIFICATION** | This README is documentation only. |
+| Further sensitive-geometry scripts, registry wiring, schema bindings, policy bundles, redaction profiles, fixture coverage, report destinations, receipt emission, runtime behavior, and CI wiring | **NEEDS VERIFICATION** | This README is documentation only. |
 
 [Back to top](#top)
 
@@ -277,6 +278,34 @@ Good fits for `tools/validators/sensitive_geometry/` include:
 
 ---
 
+## Public fixture precise-geometry check
+
+`validate_public_fixture_geometry.py` is a deterministic, no-network fixture lint. Tests: `tests/validators/test_validate_public_fixture_geometry.py`. CI: `.github/workflows/public-fixture-precise-geometry.yml`.
+
+```bash
+python tools/validators/sensitive_geometry/validate_public_fixture_geometry.py            # scans fixtures/
+python tools/validators/sensitive_geometry/validate_public_fixture_geometry.py path/to/dir  # scans given paths
+```
+
+| Aspect | Behavior |
+|---|---|
+| Inputs | Positive `*.json` and `*.geojson` fixtures. Expected-negative lanes (`invalid`, `*_invalid`, `invalid_*`, `negative`, `deny`, `*_deny`) are skipped because they deliberately carry defects. |
+| Locations detected | GeoJSON `coordinates` and `bbox` arrays, latitude/longitude field pairs (including Darwin Core `decimalLatitude`/`decimalLongitude`), WKT strings, and JSON documents embedded in string values. |
+| Precise | An axis literal carries more decimal places than the precision floor defined in the validator module. Coarse synthetic coordinates pass. |
+| Passes | A precise location whose enclosing record (or that record's `governance` object) declares `public_use_allowed: false` or an `INTERNAL*`, `RESTRICTED`, `STEWARD_ONLY`, or `WITHHELD` `coordinate_exposure`/`geometry_exposure`. |
+| `PRECISE_GEOMETRY_WITHOUT_NON_PUBLIC_DECLARATION` | A precise location has no enclosing non-public declaration. |
+| `PRECISE_GEOMETRY_DECLARED_PUBLIC` | An enclosing record declares `public_use_allowed: true` or a `PUBLIC*` exposure, even if another record declares non-public. |
+| `FIXTURE_JSON_INVALID` / `FIXTURE_TOO_LARGE` | A positive fixture cannot be decoded safely. |
+| `EXEMPTION_STALE` | A reviewed exemption no longer exists or no longer carries precise geometry. |
+| Exemptions | `EXEMPTIONS` in the module lists reviewed source-native inputs whose wire format cannot carry a posture field. Each entry needs a reason and is re-checked on every run. |
+| Output | One JSON line per finding naming file, code, and JSON path, then a summary line. Coordinate values are never echoed. Exit `0` pass, `1` findings, `2` usage error. |
+
+This check is fixture hygiene only. It does not evaluate policy, perform redaction, resolve receipts, or grant review, promotion, release, or publication authority.
+
+[Back to top](#top)
+
+---
+
 ## Minimal future layout
 
 Future implementation should remain small and reversible:
@@ -284,6 +313,7 @@ Future implementation should remain small and reversible:
 ```text
 tools/validators/sensitive_geometry/
 ├── README.md
+├── validate_public_fixture_geometry.py  # CONFIRMED; fixture precise-geometry lint
 ├── validate_sensitive_geometry.py       # PROPOSED; not confirmed
 ├── validate_public_safe_geometry.py     # PROPOSED; not confirmed
 ├── validate_reconstruction_risk.py      # PROPOSED; not confirmed
@@ -326,3 +356,4 @@ Future implementation is not complete until:
 | Date | Change | Status |
 |---|---|---|
 | 2026-07-08 | Replaced empty placeholder with sensitive-geometry validator parent README. | **CONFIRMED README / implementation NEEDS VERIFICATION** |
+| 2026-10-12 | Added `validate_public_fixture_geometry.py`, its tests, and CI workflow. | **CONFIRMED validator** |
