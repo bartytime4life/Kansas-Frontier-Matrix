@@ -1,0 +1,77 @@
+# Fail closed when a positive fixture carries precise coordinates without an
+# explicit non-public declaration.
+name: public-fixture-precise-geometry
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/public-fixture-precise-geometry.yml"
+      - "fixtures/**"
+      - "tools/validators/sensitive_geometry/**"
+      - "tests/validators/test_validate_public_fixture_geometry.py"
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/public-fixture-precise-geometry.yml"
+      - "fixtures/**"
+      - "tools/validators/sensitive_geometry/**"
+      - "tests/validators/test_validate_public_fixture_geometry.py"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: public-fixture-precise-geometry-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate:
+    name: validate-public-fixture-precise-geometry
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+
+      - name: Run focused deterministic tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest tests.validators.test_validate_public_fixture_geometry --verbose
+
+      - name: Scan repository fixtures
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/validators/sensitive_geometry/validate_public_fixture_geometry.py
+
+      - name: Record trust boundary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "### Public fixture precise geometry"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: positive JSON/GeoJSON fixtures under fixtures/; GeoJSON coordinates and bbox, latitude/longitude pairs, WKT strings, and embedded JSON strings."
+            echo "- Boundary: findings name files and JSON paths only; no coordinates, policy evaluation, redaction, review, promotion, release, or publication authority."
+          } >> "$GITHUB_STEP_SUMMARY"
