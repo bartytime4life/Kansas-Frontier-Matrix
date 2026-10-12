@@ -94,3 +94,58 @@ water/weather isolation), `tests/tools/test_weather_serving.py` (stage,
 activate and loopback `/v1/weather/*`), `tests/tools/test_weather_hosted.py`
 (hosted staging and `cycle`), and the Site's `tests/governed-weather*.test.mjs`
 (parser, gate, Python parity, D1/R2 admin, read route and map control).
+
+## Private archive review from an existing capture
+
+The operator [`ghcnd_archive_review.py`](../../../tools/local_data/ghcnd_archive_review.py)
+reuses the five immutable objects of a staged fixed-cohort capture. It performs
+no network request. Unlike the 30-day pilot, it retains every available
+PRCP/TMAX/TMIN record in those four captured station files, preserving raw
+tenths, normalized units, dates, flags, missing/withheld values, trace status,
+source-page digests and deterministic record identities. Full captured history
+does not establish statewide coverage or a complete calendar series. Current
+station coordinates do not establish historical location stability.
+
+```bash
+PYTHONPATH=packages/connectors-core/src:packages/hashing/src:packages/policy-runtime/src:packages/evidence-resolver/src:packages/release/src \
+  .venv/bin/python tools/local_data/ghcnd_archive_review.py \
+  --root /absolute/private/KFM-data --capture-id sha256:CAPTURE
+```
+
+The external, initialized owner-private store remains mandatory. This operator
+belongs to `tools/` under Directory Rules §7.2; its negative and recovery tests
+belong to `tests/`. Review data belongs to the existing external WORK lane, not
+repository history or the rebuildable code-distribution lane. Outputs are
+`data/work/atmosphere/noaa-ghcnd-archive-review/<review-id>/observations.csv`,
+station/year/element coverage, current-provider station metadata, a manifest
+and a deterministic ZIP. Receipts use the existing
+`data/receipts/curation/noaa-ghcnd-archive-review/<review-id>/` lane. Identity binds
+the capture, operator/normalizer source hashes, cohort and selected byte cap.
+
+The default maximum is 512 MiB for each output, with a two-million selected-row
+limit and the canonical parser's 128 MiB expansion limit for each station.
+The operator checks free space for two selected byte caps plus a 1 GiB reserve,
+takes the existing nonblocking store lock and rejects static filesystem links.
+Owner-controlled directory ancestry remains a prerequisite; these helpers do
+not sandbox a hostile process replacing ancestors. No ZIP is extracted.
+
+A completed replay rehashes the source objects and exact output members, checks
+pending review/unreleased flags, and validates ZIP member sizes, digests and CRC.
+A changed output, missing receipt, extra member, collision, busy writer or
+incomplete run is held. Partial outputs and failure receipts remain inspectable;
+they are not overwritten or automatically repaired. A changed generator or
+byte cap produces a new identity, leaving the previous review untouched.
+
+`usable` in the count tables means unwithheld by the retained missing/quality
+flag policy. It is not scientific validity or proof of station homogeneity.
+The review package remains WORK/PENDING, does not replace the pilot candidate,
+and is not accepted by the weather release operator as a pilot candidate.
+Its false authority fields describe this package, not the current source
+registry. Existing source admission or ADR-0045 does not authorize uploading,
+serving, activating or releasing this separate full-history package. Current
+rights, sensitivity, source-role and release review remain independent.
+
+Validate with `tests/local_data/test_ghcnd_archive_review.py`, which covers
+historical records outside the pilot window, missing/QC/trace semantics,
+duplicate identities, changed input bytes, damaged outputs/receipts, unsafe ZIP
+members, links, busy writers, insufficient space and retained partial failures.

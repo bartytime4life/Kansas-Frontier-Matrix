@@ -76,6 +76,13 @@ storage cap and 100 GiB free-space reserve. See the
 [GHCN Daily runbook](../../docs/runbooks/noaa-ghcnd-local-capture.md). These are
 unreviewed local captures, not an activated map layer.
 
+`ghcnd_archive_review.py` reuses an existing fixed-cohort GHCN-Daily capture to
+prepare a private full-history CSV/coverage/ZIP review package without another
+download. It retains missing values and flags, verifies exact source/output
+bytes, and preserves partial failures. See the
+[archive-review procedure](../../docs/runbooks/atmosphere/ghcnd-daily-pilot.md#private-archive-review-from-an-existing-capture).
+This separate WORK package is not a pilot release candidate or an activated layer.
+
 The offline `manage.py` and filesystem helpers prepare a local checkout and preserve
 explicitly selected, already downloaded files in a private external QUARANTINE
 store. That offline importer does not download, interpret, extract, normalize, activate, promote,
