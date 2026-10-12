@@ -115,5 +115,12 @@ if [[ -z "$fallback" ]]; then
 fi
 
 printf 'Starting wrangler dev (%s); its proxy can return a stray 500 after a rejected request.\n' "$fallback" >&2
+# Only the direct runtime binds the private daily-archive access file. Keep its
+# tokens out of argv and out of Wrangler's .dev.vars/.env loading, and say so
+# rather than leave the browser and capture runner with unexplained 401s.
+archive_access="${HOME:-}/.config/kfm/daily-archive-access"
+if [[ -n "${HOME:-}" && ( -e "$archive_access" || -L "$archive_access" ) ]]; then
+  printf 'Daily archive local access is not loaded by wrangler dev; archive requests will return 401. Use the direct runtime (loopback host, Node 22.x, no .env or .dev.vars files) for archive work.\n' >&2
+fi
 exec "$wrangler" dev --config "$config" --local \
   --persist-to "$local_state" --ip "$host" --port "$port"
