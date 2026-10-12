@@ -39,9 +39,12 @@ extensions fail. These diagnostics do not authorize a new bootstrap or waiver.
 The uppercase path-grammar check exempts numbered `docs/adr/ADR-NNNN-*.md`
 files and, under accepted ADR-0048, upstream-backed entries of external byte
 mirrors registered in `control_plane/external_mirror_register.yaml` (currently
-`apps/site/source/`). An entry applies only while it is `ACTIVE` and its pinned
-receipt and parity check are tracked, and only to receipt entries that carry an
-upstream digest. Repository-only overlays keep the default grammar.
+`apps/site/source/`). Nothing is relaxed unless the register's `decision_ref`
+is `ADR-0048` and that ADR's tracked metadata still records it as accepted. An
+entry applies only while it is `ACTIVE` and its pinned receipt and parity check
+are tracked, and only to receipt entries in an upstream-backed state
+(`identical`, `inherited_repository_overlay`, `merged_water_overlay`) with a
+well-formed upstream digest. Repository-only entries keep the default grammar.
 Nonportable-punctuation and unsafe-path checks always apply. The register is a
 fixed scanner input and an indexed context input.
 

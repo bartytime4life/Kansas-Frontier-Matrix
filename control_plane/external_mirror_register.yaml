@@ -46,5 +46,7 @@
       "receipt_rule": "must equal the RECEIPT pinned by tools/qa/site_mirror.py; update both in the same mirror-sync change"
     }
   ],
-  "decision_ref": "docs/adr/ADR-0048-external-mirror-names-are-externally-fixed.md (accepted 2026-10-12)"
+  "decision_ref": "ADR-0048",
+  "decision_path": "docs/adr/ADR-0048-external-mirror-names-are-externally-fixed.md",
+  "decision_rule": "the validator relaxes nothing unless decision_ref is ADR-0048 and that ADR's metadata records status and effective_decision_status accepted"
 }

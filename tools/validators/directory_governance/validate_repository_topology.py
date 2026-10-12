@@ -534,6 +534,13 @@ def _is_conventional_uppercase_path(path: str) -> bool:
 
 EXTERNAL_MIRROR_REGISTER = "control_plane/external_mirror_register.yaml"
 RELAXABLE_MIRROR_RULES = frozenset({"path-grammar:uppercase"})
+EXTERNAL_MIRROR_DECISION = "ADR-0048"
+EXTERNAL_MIRROR_DECISION_PATH = "docs/adr/ADR-0048-external-mirror-names-are-externally-fixed.md"
+# Receipt states whose path exists upstream (tools/qa/site_mirror.py states);
+# repository-only states never qualify, whatever digests they carry.
+UPSTREAM_BACKED_MIRROR_STATES = frozenset(
+    {"identical", "inherited_repository_overlay", "merged_water_overlay"}
+)
 
 
 def _external_mirror_entries(
@@ -558,6 +565,7 @@ def _external_mirror_entries(
         or not isinstance(doctrine, dict)
         or doctrine.get("sha256") != f"sha256:{ADOPTED_SHA256}"
         or doctrine.get("decision_ref") != "ADR-0029"
+        or register.get("decision_ref") != EXTERNAL_MIRROR_DECISION
     ):
         raise TopologyError("external mirror register binding is invalid")
     mirrors = register.get("mirrors")
@@ -594,16 +602,32 @@ def _external_mirror_entries(
     return tuple(sorted(entries))
 
 
+def _external_mirror_decision_accepted(blobs: Mapping[str, bytes]) -> bool:
+    """True only while the tracked ADR-0048 metadata records an accepted decision."""
+    try:
+        head = blobs[EXTERNAL_MIRROR_DECISION_PATH].decode("utf-8")[:12_000]
+    except (KeyError, UnicodeError):
+        return False
+    return bool(
+        re.search(rf"(?m)^adr_id:\s*{EXTERNAL_MIRROR_DECISION}\s*$", head)
+        and re.search(r"(?m)^status:\s*accepted\s*$", head)
+        and re.search(r"(?m)^effective_decision_status:\s*accepted\s*$", head)
+    )
+
+
 def _external_mirror_exempt_paths(
     blobs: Mapping[str, bytes], path_set: set[str], rule: str
 ) -> frozenset[str]:
     """Tracked mirror paths whose upstream-fixed names may skip ``rule``.
 
-    An entry applies only while its receipt and parity check are tracked
-    (fail closed otherwise). Within it, only receipt comparison entries that
-    carry an upstream digest (``site_sha256``) qualify: repository-only overlays
-    have no upstream name and keep the default grammar (ADR-0048).
+    Nothing is relaxed unless ADR-0048 is tracked and still accepted. An entry
+    applies only while its receipt and parity check are tracked (fail closed
+    otherwise). Within it, only receipt comparison entries in an upstream-backed
+    state that carry a well-formed upstream digest (``site_sha256``) qualify:
+    repository-only entries keep the default grammar (ADR-0048).
     """
+    if not _external_mirror_decision_accepted(blobs):
+        return frozenset()
     exempt: set[str] = set()
     for prefix, receipt_path, parity_check in _external_mirror_entries(blobs, rule):
         if receipt_path not in path_set or parity_check not in path_set:
@@ -615,8 +639,9 @@ def _external_mirror_exempt_paths(
             if (
                 isinstance(name, str)
                 and isinstance(record, dict)
+                and record.get("state") in UPSTREAM_BACKED_MIRROR_STATES
                 and isinstance(record.get("site_sha256"), str)
-                and record["site_sha256"]
+                and re.fullmatch(r"[0-9a-f]{64}", record["site_sha256"])
                 and prefix + name in path_set
             ):
                 exempt.add(prefix + name)
