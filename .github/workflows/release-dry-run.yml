@@ -260,8 +260,11 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python - <<'PY'
+          # Isolated mode keeps the untrusted checkout off sys.path so a
+          # repository-root module cannot shadow hashlib or other stdlib imports.
+          python -I - <<'PY'
           from pathlib import Path
+          import hashlib
           import json
           import subprocess
           import sys
@@ -328,21 +331,53 @@ jobs:
               "the root RollbackCard entrypoint delegation call changed"
           )
 
-          rollback_helper_text = rollback_helper.read_text(encoding="utf-8")
-          assert "greenfield placeholder" not in rollback_helper_text, (
-              "rollback_apply.py regressed to an unimplemented placeholder"
+          # The rehearsal unittest subprocess below runs with the checkout first
+          # on sys.path; refuse repository-root modules that would shadow stdlib.
+          shadow_names = set(sys.stdlib_module_names) | {
+              "sitecustomize",
+              "usercustomize",
+          }
+          stdlib_shadows = sorted(
+              path.name
+              for path in Path(".").iterdir()
+              if path.name.split(".")[0] in shadow_names
+              and (path.is_file() or (path / "__init__.py").exists())
           )
-          helper_markers = [
-              ".kfm-synthetic-rollback-rehearsal",
-              "NON_SYNTHETIC_INPUT_DENIED",
-              '"public_state_mutated": False',
+          assert not stdlib_shadows, (
+              "repository-root modules shadow the standard library for the "
+              f"rehearsal test run: {stdlib_shadows}"
+          )
+          # unittest imports tests.release as namespace packages; an added
+          # __init__.py would run unpinned code before the pinned test module.
+          package_inits = [
+              path.as_posix()
+              for path in (Path("tests/__init__.py"), Path("tests/release/__init__.py"))
+              if path.exists()
           ]
-          missing_helper_markers = [
-              marker for marker in helper_markers if marker not in rollback_helper_text
-          ]
-          assert not missing_helper_markers, (
-              "rollback_apply.py no longer exposes the confirmed synthetic-only guards: "
-              f"{missing_helper_markers}"
+          assert not package_inits, (
+              "unpinned package initializers would run before the rehearsal tests: "
+              f"{package_inits}"
+          )
+
+          # Exact digests of the reviewed synthetic helper and its behavioral
+          # tests (which build their fixtures in temporary roots). Any drift fails
+          # closed and must be reviewed before these pins are deliberately updated.
+          expected_rehearsal_digests = {
+              rollback_helper.as_posix(): (
+                  "6969b626bda6a6d2279a1e0b0e4beb7f266980b450d63dce87982071a20521e1"
+              ),
+              rehearsal_test.as_posix(): (
+                  "0a233ea6002bd25c490726e4f6763d3f14c830d727eb8529461aa1eee678aca0"
+              ),
+          }
+          rehearsal_digests = {
+              path: hashlib.sha256(Path(path).read_bytes()).hexdigest()
+              for path in sorted(expected_rehearsal_digests)
+          }
+          assert rehearsal_digests == expected_rehearsal_digests, (
+              "the reviewed synthetic rollback helper or its behavioral tests "
+              "changed; review the complete diff and deliberately update the "
+              "pinned digests: " + json.dumps(rehearsal_digests, indent=2)
           )
 
           fixture_result = subprocess.run(
@@ -422,7 +457,7 @@ jobs:
           print("CONFIRMED: RollbackCard schema remains PROPOSED while pointing to a bounded local validator and fixture lane.")
           print("CONFIRMED: the root RollbackCard compatibility entrypoint delegates to the canonical validator with byte-identical fixture output.")
           print("CONFIRMED: rollback-card valid/invalid fixtures passed the implemented bounded validator profile.")
-          print("CONFIRMED: rollback_apply.py remains marker-protected, synthetic-only, and non-authoritative.")
+          print("CONFIRMED: rollback_apply.py and its synthetic rehearsal tests match their reviewed SHA-256 digests.")
           print("CONFIRMED: the non-vacuous synthetic rollback rehearsal test profile passed in isolated temporary roots.")
           print("CONFIRMED: two root JSON cards remain PROPOSED documentation placeholders without id.")
           print("WORKFLOW_HOLD: no production rollback, release mutation, or publication authority was created.")
@@ -436,7 +471,7 @@ jobs:
             echo "### Rollback-card presence"
             echo
             echo "- RollbackCard remains PROPOSED while declaring a bounded local validator and fixture lane; this job proves the implemented fixture profile still passes."
-            echo "- The historical root validator entrypoint delegates to the schema-declared canonical validator and must produce byte-identical fixture output; rollback_apply.py remains a marker-protected synthetic-only rehearsal verified through isolated temporary-root tests."
+            echo "- The historical root validator entrypoint delegates to the schema-declared canonical validator and must produce byte-identical fixture output; rollback_apply.py remains a digest-pinned synthetic-only rehearsal whose pinned tests run in isolated temporary roots."
             echo "- The helper denies non-synthetic inputs, incomplete invalidation sets, missing targets, digest mismatches, and missing markers without touching production state."
             echo "- The two root JSON cards remain PROPOSED documentation-inventory placeholders without the schema-required id; they are inventory evidence, not executable rollback authority."
             echo "- Result: ${{ job.status }}. No production rollback, mutation, release decision, or publication authority was created."
