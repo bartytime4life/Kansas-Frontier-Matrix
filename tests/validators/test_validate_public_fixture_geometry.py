@@ -191,10 +191,11 @@ class PublicFixtureGeometryFileTests(unittest.TestCase):
             ],
         )
 
-    def test_hydrology_metadata_does_not_exempt_precise_geometry(self):
+    def test_hydrology_exception_does_not_cover_undeclared_or_other_lanes(self):
         for lane in ("hydrology", "hydrology-extra"):
             for name, metadata in (
                 ("omitted", {}),
+                ("unknown", {"sensitivity": "UNKNOWN"}),
                 ("public_safe", {"sensitivity": "PUBLIC_SAFE"}),
                 ("synthetic", {"knowledge_character": "SYNTHETIC_TEST"}),
             ):
@@ -203,11 +204,20 @@ class PublicFixtureGeometryFileTests(unittest.TestCase):
                     {"geometry": PRECISE_POINT, **metadata},
                 )
         scanned, findings = self._validate()
-        self.assertEqual(scanned, 6)
-        self.assertEqual(len(findings), 6)
+        self.assertEqual(scanned, 8)
         self.assertEqual(
-            {finding.code for finding in findings},
-            {"PRECISE_GEOMETRY_WITHOUT_NON_PUBLIC_DECLARATION"},
+            {(finding.file, finding.code) for finding in findings},
+            {
+                (
+                    f"fixtures/domains/{lane}/valid/{name}.json",
+                    "PRECISE_GEOMETRY_WITHOUT_NON_PUBLIC_DECLARATION",
+                )
+                for lane, names in (
+                    ("hydrology", ("omitted", "unknown")),
+                    ("hydrology-extra", ("omitted", "unknown", "public_safe", "synthetic")),
+                )
+                for name in names
+            },
         )
 
     def test_fixture_lane_classification_is_portable(self):
