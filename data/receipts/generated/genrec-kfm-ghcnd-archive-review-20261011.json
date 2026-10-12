@@ -1,0 +1,105 @@
+{
+  "artifact_hashes": {
+    "tools/local_data/ghcnd_archive_review.py": "sha256:8477b4720d07f3855d8431cdd94d24711c4ad8d241abe8ded8502ef2eb659ae9",
+    "tests/local_data/test_ghcnd_archive_review.py": "sha256:f88853f36402282979c92047529a39ed4d2f81a6bbe439310b0728bcc72134ab",
+    "docs/runbooks/atmosphere/ghcnd-daily-pilot.md": "sha256:f25e8facdfc023f91bc4c91fe32fc746845bd799b77eeb1f2a200c0a1bf4b2ac",
+    "tools/local_data/README.md": "sha256:badd5d154a0c5df47c2a2a864cf82b3f0a7b7d2036aa68704acc1e1e94b1fdc5"
+  },
+  "artifact_paths": [
+    "tools/local_data/ghcnd_archive_review.py",
+    "tests/local_data/test_ghcnd_archive_review.py",
+    "docs/runbooks/atmosphere/ghcnd-daily-pilot.md",
+    "tools/local_data/README.md"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "docs/doctrine/directory-rules.md",
+      "id": "Adopted Directory Rules",
+      "validated": true
+    },
+    {
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "id": "Accepted ADR-0029",
+      "validated": true
+    },
+    {
+      "evidence_ref": "https://docs.github.com/en/repositories/creating-and-managing-repositories/repository-limits",
+      "id": "GitHub repository limits",
+      "validated": true
+    },
+    {
+      "evidence_ref": "https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases",
+      "id": "GitHub release limits",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-10-12T03:54:56.137366+00:00",
+  "emitter": "Codex owning conversation",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "main@096ffd7200f92f30ff90cf9fa6f4bba5c9586ed4",
+      "pipelines/domains/atmosphere/ghcnd_daily_normalize.py",
+      "tools/local_data/ghcnd_daily_pilot.py",
+      "docs/doctrine/directory-rules.md",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "model_identity": {
+    "model": "GPT-6 Codex agent",
+    "provider": "OpenAI",
+    "version": "Runtime build identifier not exposed"
+  },
+  "notes": "Private WORK full-history review operator only. No source admission, release, activation, data upload, or public serving. Current registry/ADR decisions are separate from this package. Originals and pilot candidate are retained. Source-authoring receipt remains pending independent human review.",
+  "override_record": null,
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "policy_decisions": [],
+  "prompt_or_contract": "sha256:b5f6c9afe537e3d04ccdf376432eadecf1db375385c1b42aa3ee12e1066c41df",
+  "receipt_id": "genrec-kfm-ghcnd-archive-review-20261011",
+  "truth_labels": {
+    "tools/local_data/ghcnd_archive_review.py": "CONFIRMED",
+    "tests/local_data/test_ghcnd_archive_review.py": "CONFIRMED",
+    "docs/runbooks/atmosphere/ghcnd-daily-pilot.md": "NEEDS VERIFICATION",
+    "tools/local_data/README.md": "NEEDS VERIFICATION"
+  },
+  "validation_gates": [
+    {
+      "gate": "GHCN changed-area and supporting offline tests",
+      "outcome": "PASS",
+      "reason": "58 passed: 15 new archive-review cases, plus pilot/candidate and existing GHCN source tests."
+    },
+    {
+      "gate": "documentation metadata, present profile",
+      "outcome": "PASS",
+      "reason": "2 documents; 1 valid block and 1 inherited absent block; no failures or warnings."
+    },
+    {
+      "gate": "local Markdown links",
+      "outcome": "PASS",
+      "reason": "17 local targets; 1 external link classified unverified by offline checker."
+    },
+    {
+      "gate": "Git diff whitespace",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Codex Security delta review",
+      "outcome": "SKIPPED",
+      "reason": "Exact frozen diff scan pending; not claimed passing."
+    },
+    {
+      "gate": "data admission and public release",
+      "outcome": "SKIPPED",
+      "reason": "Independent governed transitions are not authorized by this tool change."
+    }
+  ]
+}
