@@ -6,15 +6,21 @@ version: v0.1
 status: draft
 owners: OWNER_TBD  # NEEDS VERIFICATION: observability steward + infra owner + sensitivity reviewer
 created: 2026-05-26
-updated: 2026-05-26
+updated: 2026-10-12
 policy_label: internal
+owning_root: docs/
+responsibility: Specify the telemetry contract health dashboard comparing emitted telemetry with expected contracts; specification only, not runtime, policy, or release authority.
+truth_posture: PROPOSED specification; source card KFM-P20-FEAT-0007 PROPOSED; implementation NEEDS VERIFICATION
 related:
   - kfm://doc/dashboards-observability-readme
-  - kfm://doc/standard-opentelemetry           # PROPOSED: docs/standards/OPENTELEMETRY.md (OPEN-DASH-OBS-08)
-  - kfm://doc/standard-openlineage             # PROPOSED: docs/standards/OPENLINEAGE.md (OPEN-DR-05)
-  - kfm://card/p20-feat-0007                   # PROPOSED card: telemetry contract health
+  - docs/dashboards/observability/OPENTELEMETRY_STACK.md
+related_unresolved:
+  - "kfm://doc/standard-opentelemetry           # PROPOSED: docs/standards/OPENTELEMETRY.md (OPEN-DASH-OBS-08)"
+  - "kfm://doc/standard-openlineage             # PROPOSED: docs/standards/OPENLINEAGE.md (OPEN-DR-05)"
+  - "kfm://card/p20-feat-0007                   # PROPOSED card: telemetry contract health"
 tags: [kfm, dashboards, observability, telemetry, contract, conformance]
 notes:
+  - "2026-10-12: links to merged redirect stubs repointed to their canonical files (owner-directed duplicate removal follow-up); required owning_root, responsibility, and truth_posture added; kfm ids with no in-repo target moved to related_unresolved"
   - Source card KFM-P20-FEAT-0007 is PROPOSED in the corpus.
   - Sensitive-content posture defaults to T1 internal; T2+ spans MUST be redacted at emission.
   - Specification only; implementation lives in apps/admin/observability/ and runtime/observability/.
@@ -114,7 +120,7 @@ notes:
 - **Governance dashboards consuming this signal:** `docs/dashboards/governance/evidence-and-source.md` *(consumes `required_keys_present` to confirm receipts carry trace IDs)*
 - **Per-domain breakdown:** N/A — this dashboard is whole-stack only.
 - **Release-lifecycle view:** `docs/dashboards/release/telemetry-conformance-by-release.md` *(PROPOSED sibling)*
-- **Related observability spec:** `opentelemetry-stack.md` (stack health), `energy-carbon-footprint.md` (energy/carbon detail; OPEN-DASH-OBS-07 may merge).
+- **Related observability spec:** `OPENTELEMETRY_STACK.md` (stack health), `energy-carbon-footprint.md` (energy/carbon detail; OPEN-DASH-OBS-07 may merge).
 
 [↑ back to top](#top)
 

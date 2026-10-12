@@ -10,7 +10,7 @@ owners:
   - "@bartytime4life — verified GitHub review route only"
 owner_status: "Accountable geology, bedrock, source, rights, sensitivity, evidence, spatial, validation, policy, release, correction, rollback, and independent-review assignments remain NEEDS VERIFICATION."
 created: 2026-08-25
-updated: 2026-08-25
+updated: 2026-10-12
 policy_label: public; no sensitive source payloads; no exact restricted point locations
 current_path: docs/runbooks/geology/BEDROCK_REVIEW.md
 owning_root: docs/
@@ -45,7 +45,6 @@ related:
   - docs/runbooks/geology/SOURCE_REFRESH_RUNBOOK.md
   - docs/domains/geology/README.md
   - docs/domains/geology/SUBLANE-BEDROCK.md
-  - docs/domains/geology/sublanes/bedrock.md
   - docs/domains/geology/sublanes/bedrock_geology.md
   - contracts/domains/geology/GeologicUnit.md
   - schemas/contracts/v1/domains/geology/geologic_unit.schema.json
@@ -64,6 +63,7 @@ related:
   - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
 tags: [kfm, runbook, geology, bedrock, geologic-unit, review, evidence, source-role, geometry, scale, uncertainty, rights, sensitivity, correction, rollback]
 notes:
+  - "2026-10-12: links to merged redirect stubs repointed to their canonical files (owner-directed duplicate removal follow-up)"
   - "This same-path update replaces a 762-byte PROPOSED scaffold with a repository-grounded review procedure."
   - "The runbook records current implementation gaps rather than converting planning documents, README depth, placeholders, or fixture presence into operational maturity."
   - "The default current disposition is HOLD unless a named immutable candidate packet and every applicable authority-bearing prerequisite are independently verified."
@@ -210,7 +210,7 @@ The table below is pinned to `main@a125b5b949627898f5a0b0f52a0a09f53b0c0483`. It
 | Surface | CONFIRMED current evidence | Review consequence |
 |---|---|---|
 | This file | Prior blob `b748f87...` was a 762-byte `PROPOSED scaffold` | Same-path modernization is justified |
-| Bedrock scope docs | `SUBLANE-BEDROCK.md`, `sublanes/bedrock.md`, and `sublanes/bedrock_geology.md` all exist as authority-looking drafts | Bedrock documentation identity is `CONFLICTED`; this runbook applies shared noncontroversial boundaries and does not declare a winner |
+| Bedrock scope docs | `SUBLANE-BEDROCK.md` and `sublanes/bedrock_geology.md` exist as authority-looking drafts; `sublanes/bedrock.md` was merged into `SUBLANE-BEDROCK.md` on 2026-10-12 and is a redirect stub | Bedrock documentation identity is still `CONFLICTED` between the two remaining drafts; this runbook applies shared noncontroversial boundaries and does not declare a winner |
 | Semantic contract | `contracts/domains/geology/GeologicUnit.md` is a substantive draft contract | Useful semantic guidance exists; it is not an accepted machine contract or release decision |
 | Machine schema | `geologic_unit.schema.json` exists, but has no defined properties and allows arbitrary additional properties | Schema presence does not validate a candidate's fields |
 | KGS bedrock descriptor | `data/registry/geology/sources/ksgs_bedrock.yaml` is a greenfield template with role, authority, license, redistribution, sensitivity, cadence, access, and citation fields still `TBD` | No admitted KGS bedrock source is established by that file |
@@ -1282,7 +1282,7 @@ Refuse any request or implementation that:
 
 | ID | Status | Verification item | Why it blocks or limits use | Owning route |
 |---|---|---|---|---|
-| `BEDROCK-OPEN-001` | `CONFLICTED` | Reconcile `SUBLANE-BEDROCK.md`, `sublanes/bedrock.md`, and `sublanes/bedrock_geology.md` | Multiple draft authority-looking bedrock docs can drift | Geology + docs governance |
+| `BEDROCK-OPEN-001` | `CONFLICTED` | Reconcile `SUBLANE-BEDROCK.md` and `sublanes/bedrock_geology.md` (`sublanes/bedrock.md` was merged into `SUBLANE-BEDROCK.md` on 2026-10-12) | Multiple draft authority-looking bedrock docs can drift | Geology + docs governance |
 | `BEDROCK-OPEN-002` | `NEEDS VERIFICATION` | Assign accountable geology, bedrock, source, rights, sensitivity, evidence, spatial, validation, policy, release, correction, rollback, and independent-review roles | CODEOWNERS is only a GitHub route | Project owner / governance |
 | `BEDROCK-OPEN-003` | `HOLD` | Admit a product-level KGS bedrock SourceDescriptor with rights, role, cadence, sensitivity, access, and citation resolved | Current descriptor is all-TBD template | Source + rights + geology |
 | `BEDROCK-OPEN-004` | `CONFLICTED` | Resolve KGS path/package/slug/product-dispatch topology and compatibility migration | Current connector surfaces disagree | Connector + Directory Rules/ADR route |

@@ -8,7 +8,7 @@ owners:
   - "@bartytime4life"
 owner_status: "CONFIRMED GitHub review route through the repository default CODEOWNERS rule; dashboard, observability, domain, and independent-review stewardship assignments remain NEEDS VERIFICATION"
 created: 2026-05-20
-updated: 2026-08-21
+updated: 2026-10-12
 policy_label: repository-facing
 truth_posture: cite-or-abstain
 owning_root: docs/
@@ -50,6 +50,7 @@ related:
   - data/receipts/generated/README.md
 tags: [kfm, docs, dashboards, specifications, governance-health, operational-health, domain-health, observability, cite-or-abstain]
 notes:
+  - "2026-10-12: links to merged redirect stubs repointed to their canonical files (owner-directed duplicate removal follow-up)"
   - "v1.0 is a same-path repository reconciliation. It replaces the 2026-05 evidence boundary with a pinned current-tree inventory and adopted Directory Rules v2 posture."
   - "v1.0.1 reconciles the parent inventory to the current 33-spec catalog and thirteen-spec domain lane after removal of the air sensor-review path; it changes no catalog, runtime, policy, release, deployment, or publication authority."
   - "The current dashboards subtree contains 33 specification files and seven lane/catalog navigation files, for 40 Markdown files total at the pinned base."
@@ -249,7 +250,7 @@ docs/dashboards/
 
 ### Current conflict to preserve
 
-`observability/` contains both `OPENTELEMETRY_STACK.md` and `opentelemetry-stack.md`. Their simultaneous presence is **CONFIRMED**; identity, precedence, consumers, and migration disposition are **NEEDS VERIFICATION**. Do not delete, merge, rename, or declare either canonical from this README.
+`observability/` contains both `OPENTELEMETRY_STACK.md` and `opentelemetry-stack.md`. **Resolved 2026-10-12 (owner-directed duplicate removal):** `OPENTELEMETRY_STACK.md` is canonical, its sibling's unique content was merged into it, and `opentelemetry-stack.md` is a redirect stub kept so existing links resolve. Link to `OPENTELEMETRY_STACK.md`.
 
 [↑ Back to top](#top)
 

@@ -7,7 +7,7 @@ status: "active; repository-grounded; mixed-maturity"
 owners:
   - "@bartytime4life"
 created: 2026-05-08
-updated: 2026-08-14
+updated: 2026-10-12
 policy_label: repository-facing
 owning_root: docs/
 responsibility: "Define the human-readable standards and interoperability-guidance lane, disclose its current inventory and evidence limits, and route semantic, machine-shape, policy, validation, source, and release authority to their owning responsibility roots."
@@ -27,6 +27,7 @@ related:
   - tests/README.md
   - .github/CODEOWNERS
 notes:
+  - "2026-10-12: links to merged redirect stubs repointed to their canonical files (owner-directed duplicate removal follow-up)"
   - "v1.1 replaces proposal-era inventory claims with a current, exact 52-entry direct-child map."
   - "The update distinguishes path presence, upstream-standard currentness, KFM adoption/profile state, implementation/validation state, and release/publication state."
   - "No child file, standard, profile, contract, schema, policy rule, source, validator, release object, runtime, or public surface is adopted, renamed, consolidated, retired, activated, or published by this README."
@@ -188,7 +189,7 @@ docs/standards/
 ├── STAC_KFM_TRUST_EXTENSION.md        # KFM STAC trust-extension guidance
 ├── TELEMETRY_MINIMUMS.md              # telemetry-minimum guidance
 ├── WMTS.md                            # Web Map Tile Service guidance
-├── canonicalization.md                # lowercase canonicalization guidance
+├── canonicalization.md                # redirect stub → CANONICALIZATION.md (merged 2026-10-12)
 ├── connector-rate-limits.md           # connector rate-limit guidance
 ├── iiif.md                            # lowercase IIIF guidance
 ├── oai-pmh.md                         # lowercase OAI-PMH guidance
@@ -248,7 +249,7 @@ The groups below are navigation aids, not adoption categories. A file can partic
 | Biodiversity and data-use profiles | `Darwin_Core.md`, `STAC-DwC.md`, `STAC_DWC_PROFILE.md`, `stac-dwc-hybrid.md`, `DUO_MAPPING.md`, `DUO_PROFILE.md` | Paths confirmed; profile relationship, rights posture, and adoption require review |
 | Trust, integrity, and publication support | `EVIDENCE_BUNDLE.md`, `MAP_TRUST_STATES.md`, `SIGNING.md`, `RUN_RECEIPT.md`, `RELEASE_MANIFEST.md`, `STAC_KFM_TRUST_EXTENSION.md` | Human guidance exists; canonical meaning, machine shape, policy, proof, and release authority remain elsewhere |
 | Sensitivity, privacy, and redaction | `CONSENT_TOKENS.md`, `DP_BUDGETS.md`, `REDACTION_DETERMINISM.md`, `REDACTION_PROFILES.md`, `SENSITIVITY_RUBRIC.md` | Fail-closed review required; documents do not authorize sensitive-data handling |
-| Operational conventions | `DEBOUNCE_WINDOWS.md`, `SMART_SYNC.md`, `TELEMETRY_MINIMUMS.md`, `connector-rate-limits.md`, `CANONICALIZATION.md`, `canonicalization.md` | Guidance exists; implementation and enforcement require exact-revision evidence |
+| Operational conventions | `DEBOUNCE_WINDOWS.md`, `SMART_SYNC.md`, `TELEMETRY_MINIMUMS.md`, `connector-rate-limits.md`, `CANONICALIZATION.md` (`canonicalization.md` is a redirect stub) | Guidance exists; implementation and enforcement require exact-revision evidence |
 
 ### What the inventory does not prove
 
@@ -536,7 +537,7 @@ This README records current evidence without deciding authority that belongs els
 
 | ID | CONFIRMED observation | Status | Required disposition |
 |---|---|---|---|
-| `STD-DRIFT-001` | Both `CANONICALIZATION.md` and `canonicalization.md` exist | `CONFLICTED / HOLD` | Compare identity, content, inbound links, generators, and consumers; choose migration only through reviewed authority |
+| `STD-DRIFT-001` | Both `CANONICALIZATION.md` and `canonicalization.md` exist | `RESOLVED (identity) / HOLD (case collision)` | 2026-10-12, owner-directed: content merged into `CANONICALIZATION.md`, the lowercase path kept as a redirect stub, and inbound links repointed. Removing the case-only path collision remains `CANON-Q11`. |
 | `STD-DRIFT-002` | Both `IIIF.md` and `iiif.md` exist | `CONFLICTED / HOLD` | Reconcile case-only paths with cross-filesystem migration and compatibility evidence |
 | `STD-DRIFT-003` | Both `OAI-PMH.md` and `oai-pmh.md` exist | `CONFLICTED / HOLD` | Reconcile identity, content, links, and consumers |
 | `STD-DRIFT-004` | Both `STAC.md` and `stac.md` exist | `CONFLICTED / HOLD` | Determine reference/profile roles before any rename or consolidation |
