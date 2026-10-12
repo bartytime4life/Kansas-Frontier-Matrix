@@ -289,13 +289,40 @@ class RepositoryTopologyTests(unittest.TestCase):
             ("apps/site/source/app/api/unsafe/[bad-name!]/route.ts", "docs/[id].md"),
             punctuation.evidence_members,
         )
+        # Mirrored external site paths keep upstream casing (see
+        # test_external_site_mirror_is_an_explicit_uppercase_exception).
+        self.assertFalse(
+            any(
+                (finding.rule_id, finding.subject)
+                == ("KFM-TOPO-001", "path-grammar:uppercase")
+                for finding in findings
+            )
+        )
+
+    def test_external_site_mirror_is_an_explicit_uppercase_exception(self) -> None:
+        paths = (
+            "apps/site/source/docs/RIVER_DELIVERY_2026-10-11.md",
+            "apps/site/source/AGENTS.md",
+            "apps/siteextra/SHOUT.md",
+            "docs/SHOUT.md",
+        )
+        modes = {path: "100644" for path in paths}
+        blobs = {
+            "control_plane/root_registry.yaml": _root_registry(
+                {"path": "apps/"}, {"path": "docs/"}
+            )
+        }
+        object_ids = {path: "a" * 40 for path in paths}
+
+        findings = module._path_findings(paths, modes, object_ids, blobs)
         uppercase = next(
             finding
             for finding in findings
             if (finding.rule_id, finding.subject)
             == ("KFM-TOPO-001", "path-grammar:uppercase")
         )
-        self.assertEqual((paths[1],), uppercase.evidence_members)
+
+        self.assertEqual(("apps/siteextra/SHOUT.md", "docs/SHOUT.md"), uppercase.evidence_members)
 
     def test_conventional_readme_does_not_expand_populated_alias_drift(
         self,

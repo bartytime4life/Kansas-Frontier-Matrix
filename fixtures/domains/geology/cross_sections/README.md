@@ -40,7 +40,7 @@ The root fixture README states that fixtures are operational/runtime examples, n
 - `../../../../docs/domains/geology/API_CONTRACTS.md`
 - `../../../../docs/domains/geology/sublanes/stratigraphy.md`
 - `../../../../docs/domains/geology/SUBLANE-BEDROCK.md`
-- `../../../../docs/domains/geology/sublanes/surficial.md`
+- `../../../../docs/domains/geology/surficial.md`
 - `../../../../docs/domains/geology/sublanes/boreholes-wells.md`
 - `../../../../pipelines/domains/geology/cross_sections/README.md`
 - `../../../../pipeline_specs/geology/cross_sections.yaml`

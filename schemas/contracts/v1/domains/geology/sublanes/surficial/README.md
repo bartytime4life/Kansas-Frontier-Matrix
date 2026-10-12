@@ -13,7 +13,7 @@ owners:
   - <contract-steward>
   - <validation-steward>
   - <docs-steward>
-updated: 2026-07-03
+updated: 2026-10-12
 tags: [kfm, schemas, contracts, v1, domains, geology, sublanes, surficial, quaternary, map-units, json-schema]
 [/KFM_META_BLOCK_V2] -->
 
@@ -92,9 +92,9 @@ contracts/
 docs/
 └── domains/
     └── geology/
-        ├── surficial.md
+        ├── surficial.md                # canonical surficial doctrine
         └── sublanes/
-            └── surficial.md
+            └── surficial.md            # redirect stub → ../surficial.md (merged 2026-10-12)
 
 pipelines/
 └── domains/
@@ -115,8 +115,8 @@ release/
 | Directory Rules | Confirms machine shape belongs under `schemas/`; parallel homes require ADR review. |
 | `schemas/contracts/v1/domains/geology/README.md` | Existing parent Geology schema scaffold; status PROPOSED. |
 | Search for Geology surficial surfaces | Found surficial docs, a surficial-units pipeline, and Geology semantic contracts. |
-| `docs/domains/geology/sublanes/surficial.md` | Surficial doctrine; confirms the scope and says the `sublanes/` segment remains PROPOSED / NEEDS VERIFICATION. |
-| `docs/domains/geology/surficial.md` | Flat surficial doctrine file; confirms SurficialUnit, mostly public-safe posture, and object-family naming drift. |
+| `docs/domains/geology/sublanes/surficial.md` | Redirect stub since 2026-10-12; its content (scope, and the `sublanes/` segment remaining PROPOSED / NEEDS VERIFICATION) was merged into the flat file below. |
+| `docs/domains/geology/surficial.md` | Canonical flat surficial doctrine file (absorbed the `sublanes/` copy on 2026-10-12); confirms SurficialUnit, mostly public-safe posture, and object-family naming drift. |
 | `contracts/domains/geology/GeologicUnit.md` | Semantic contract; exact paired schema path was not found and adjacent-domain boundaries remain explicit. |
 
 This README does not verify complete schema fields, schema registry entries, fixture coverage, validator wiring, CI behavior, source-registry behavior, policy behavior, release integration, runtime behavior, public API behavior, or map rendering behavior.
