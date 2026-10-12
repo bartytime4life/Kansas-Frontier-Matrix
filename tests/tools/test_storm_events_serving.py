@@ -95,6 +95,11 @@ def test_the_storm_events_layer_answers_once_released(served):
     assert status == 200 and [(e["month"], e["part"]) for e in may["data"]["entries"]] == [(5, 1)]
     status, may_layers = get(port, "/v1/storm-events/layers?month=5")
     assert [r["event_id"] for r in may_layers["data"]["observations"]] == [9000102]
+    # The year summary is labeled as such; the selection describes exactly the returned records.
+    assert (may_layers["data"]["dataset"]["scope"], may_layers["data"]["dataset"]["observation_count"]) == ("data_year", 6)
+    assert may_layers["data"]["selection"] == {"months": [5], "observation_count": 1, "event_types": {"Hail": 1},
+                                               "latest_event_date": "2025-05-19"}
+    assert data["selection"]["observation_count"] == 6 and data["selection"]["months"] == [1, 4, 5, 6, 7, 8]
     status, boot = get(port, "/v1/storm-events/bootstrap")
     assert (boot["data"]["layers"][0]["id"], boot["data"]["months"]) == ("noaa-storm-events-ks", [1, 4, 5, 6, 7, 8])
 

@@ -7,6 +7,7 @@ forecast zone, never warnings; evidence is one bundle per month part, and a
 month filter selects every part of that month. Freshness is the age of the NCEI
 file vintage, the only clock a historical file has.
 """
+from collections import Counter
 from datetime import date
 
 from connectors_core.captured_json import utc_time
@@ -74,7 +75,13 @@ def project(raw: bytes, decision: dict | None, *, view: str, now: str, month: in
         data = {**common, "layers": [{"id": "noaa-storm-events-ks", "title": "Reviewed NOAA Storm Events, Kansas", "evidence_eligible": True}],
                 "observation_count": len(observations), "months": sorted(months)}
     elif view == "layers":
-        data = {**common, "dataset": catalog["dataset"], "observations": observations}
+        # The catalog summary always describes the whole data year; ``selection`` describes
+        # exactly the records returned, so a month filter never reports year-level counts as its own.
+        selection = {"months": sorted(months), "observation_count": len(observations),
+                     "event_types": dict(sorted(Counter(r["event_type"] for r in observations).items())),
+                     "latest_event_date": max((r["begin_local"][:10] for r in observations), default=None)}
+        data = {**common, "dataset": {**catalog["dataset"], "scope": "data_year"}, "selection": selection,
+                "observations": observations}
     else:
         data = {**common, "entries": [{k: e[k] for k in ("month", "part", "evidence_ref", "bundle", "verification_history")} for e in selected]}
     return {"envelope": envelope, "data": data}
