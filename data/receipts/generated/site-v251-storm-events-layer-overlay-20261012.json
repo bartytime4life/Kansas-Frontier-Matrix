@@ -1062,7 +1062,7 @@
       "state": "repository_only_overlay"
     },
     "app/governed/storm-events-release/page.tsx": {
-      "mirror_sha256": "c13286096d97f6ac83127016ccf0c2160823b072872afa72d0c5c3fe521ea2b9",
+      "mirror_sha256": "c9a0789b5dac5dd95fe630940f9097950b007bf12243baad739dd0f5a29182b9",
       "state": "repository_only_overlay"
     },
     "app/governed/water-release/page.tsx": {
@@ -5113,7 +5113,7 @@
   "destination": "apps/site/source",
   "followup_scope": "Repository-only overlay ahead of the next Site version: the reviewed NOAA Storm Events layer (ADR-0047). app/governed-storm-events.ts parses kfm.storm-events-snapshot/v1 packages with the Python candidate validator's rules (closed record schema, captured digests and identities, exact damage re-parse, local/UTC times, flags, withheld counts, file vintage, freshness and the exact receipt), rebuilds the catalog, and requires one evidence bundle per month part. Storm events family routes, release page, additive D1 migration 0008_governed_storm_events.sql and the 'Reviewed storm event reports' map control. The v251 Site identity is unchanged.",
   "inventory_digest_basis": "UTF-8 JSON of comparison, sorted keys, separators comma and colon, no trailing newline",
-  "inventory_sha256": "9281fda406940a9c6fe46e2fd28c1de6c079b25a0b7c9ff5d684221de874ccb0",
+  "inventory_sha256": "899abcbbb616994fa6ed3faaeafa120087dbbcb37a4af5c066a8305e36cfe90a",
   "overlay": {
     "changed_paths": [
       {
@@ -5191,7 +5191,7 @@
         "site_sha256": "085d1290adf1bb3b8b6372983e64601ae46a08037bfe6dc603d1879a02b670d0"
       },
       {
-        "mirror_sha256": "c13286096d97f6ac83127016ccf0c2160823b072872afa72d0c5c3fe521ea2b9",
+        "mirror_sha256": "c9a0789b5dac5dd95fe630940f9097950b007bf12243baad739dd0f5a29182b9",
         "path": "app/governed/storm-events-release/page.tsx",
         "previous_state": "unrecorded",
         "state": "repository_only_overlay"
