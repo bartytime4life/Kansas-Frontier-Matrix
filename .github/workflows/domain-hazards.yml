@@ -132,7 +132,10 @@ jobs:
             tests/domains/hazards/test_earthquake_candidate.py \
             tests/tools/test_earthquake_pilot.py \
             tests/tools/test_earthquake_release.py \
-            tests/tools/test_earthquake_serving.py
+            tests/tools/test_earthquake_serving.py \
+            tests/tools/test_earthquake_hosted.py
+          # The Site's earthquake fixtures must still be what the Python release code produces.
+          python tools/fixtures/earthquake_site_fixtures.py
 
       - name: Record Hazards validation scope
         if: always()
@@ -145,7 +148,7 @@ jobs:
             echo "- Executed commands: \`python -m unittest -v tests.domains.hazards.test_hazards_smoke\`, \`make hazards-validate\`, and \`python -m unittest tests.domains.hazards.test_domain_hazards_workflow_binding -v\`."
             echo "- Covered surface: deterministic, no-network drought-family schema/fixture polarity; USDM material-change unit tests and exact synthetic fixture polarity; and the hosted trigger, environment, command, proof-hold, and release-hold workflow bindings."
             echo "- Storm Events pilot: \`tests/domains/hazards/test_storm_events_candidate.py\` and \`tests/tools/test_storm_events_pilot.py\` on synthetic NCEI details-file fixtures with no network, \`tests/tools/test_storm_events_release.py\` (ADR-0047 packages and release decisions in a temporary store), \`tests/tools/test_storm_events_serving.py\` (loopback /v1/storm-events/* from a temporary serving store), \`tests/tools/test_storm_events_hosted.py\` (hosted staging and cycle against a fake Site), the Site fixture parity check \`tools/fixtures/storm_events_site_fixtures.py\`, plus validation of the admitted \`data/registry/sources/hazards/noaa.storm_events.yaml\` descriptor. Nothing is staged, activated or published."
-            echo "- USGS earthquake pilot: \`tests/domains/hazards/test_earthquake_candidate.py\` and \`tests/tools/test_earthquake_pilot.py\` on synthetic ComCat month pages with no network, \`tests/tools/test_earthquake_release.py\` (ADR-0049 packages and release decisions in a temporary store), \`tests/tools/test_earthquake_serving.py\` (loopback /v1/earthquakes/* from a temporary serving store), plus validation of the admitted \`data/registry/sources/hazards/usgs.earthquakes.yaml\` descriptor. Nothing is staged, activated or published."
+            echo "- USGS earthquake pilot: \`tests/domains/hazards/test_earthquake_candidate.py\` and \`tests/tools/test_earthquake_pilot.py\` on synthetic ComCat month pages with no network, \`tests/tools/test_earthquake_release.py\` (ADR-0049 packages and release decisions in a temporary store), \`tests/tools/test_earthquake_serving.py\` (loopback /v1/earthquakes/* from a temporary serving store), \`tests/tools/test_earthquake_hosted.py\` (hosted staging and cycle against a fake Site), the Site fixture parity check \`tools/fixtures/earthquake_site_fixtures.py\`, plus validation of the admitted \`data/registry/sources/hazards/usgs.earthquakes.yaml\` descriptor. Nothing is staged, activated or published."
             echo "- Remaining scope: other Hazards validator families, live-source retrieval, source admission, evidence resolution, policy evaluation, proof construction, release assembly, deployment, and publication remain outside this job."
             echo "- Life-safety boundary: a green result does not establish current hazard conditions, warning validity, regulatory status, source freshness, EvidenceBundle closure, emergency authority, release readiness, or public-use safety."
           } >> "$GITHUB_STEP_SUMMARY"

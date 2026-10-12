@@ -36,7 +36,7 @@ def selection_summary(months: set, observations: list) -> dict:
     """Describes exactly the returned records, never the whole data year."""
     magnitudes = [r["magnitude"] for r in observations if r["magnitude"] is not None]
     return {"months": sorted(months), "observation_count": len(observations),
-            "review_status": dict(sorted(Counter(str(r["review_status"]) for r in observations).items())),
+            "review_status": dict(sorted(Counter(r["review_status"] or "unknown" for r in observations).items())),
             "context_margin_count": sum(1 for r in observations if "CONTEXT_MARGIN" in r["flags"]),
             "magnitude_range": [min(magnitudes), max(magnitudes)] if magnitudes else None,
             "latest_event_date": max((r["origin_utc"][:10] for r in observations), default=None)}

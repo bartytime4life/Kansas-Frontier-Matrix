@@ -18,7 +18,7 @@
 > them. [Local operation and recovery](docs/local-pc-consolidation.md)
 > records the physical data path separately from the current source alias.
 > [Governed water](docs/governed-water.md), [reviewed daily weather](docs/governed-weather.md),
-> [reviewed soil moisture](docs/governed-soil.md) and [reviewed storm event reports](docs/governed-storm-events.md) remain subject to package review and activation even when the application is deployed. Dated sections below retain
+> [reviewed soil moisture](docs/governed-soil.md), [reviewed storm event reports](docs/governed-storm-events.md) and [reviewed earthquakes](docs/governed-earthquakes.md) remain subject to package review and activation even when the application is deployed. Dated sections below retain
 > their original scope and are not current runtime or dependency-audit results.
 
 # Kansas Frontier Matrix Explorer

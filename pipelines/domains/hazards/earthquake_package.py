@@ -41,7 +41,7 @@ def earthquake_catalog(candidate: dict, validation: dict, start: str) -> dict:
                "data_year": candidate["data_year"], "observation_count": len(observations),
                "withheld_counts": candidate["withheld_counts"],
                "context_margin_count": sum(1 for r in observations if "CONTEXT_MARGIN" in r["flags"]),
-               "review_status": dict(sorted(Counter(str(r["review_status"]) for r in observations).items())),
+               "review_status": dict(sorted(Counter(r["review_status"] or "unknown" for r in observations).items())),
                "magnitude_range": [min(magnitudes), max(magnitudes)] if magnitudes else None,
                "latest_event_date": candidate["latest_event_date"], "year_state": candidate["year_state"],
                "coverage": candidate["coverage"],
