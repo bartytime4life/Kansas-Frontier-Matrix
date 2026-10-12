@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import subprocess
 import sys
 import tempfile
@@ -118,6 +119,20 @@ class RepositoryGovernanceParityTests(unittest.TestCase):
         self.assertEqual(1, result.returncode)
         self.assertNotIn(marker, result.stdout + result.stderr)
         self.assertIn("SCHEMA_INVALID", result.stdout)
+
+    def test_cli_rejects_an_unresolvable_trusted_base(self) -> None:
+        environment = os.environ.copy()
+        environment["KFM_TRUSTED_BASE_REF"] = "0" * 40
+        result = subprocess.run(
+            [sys.executable, str(Path(parity.__file__))],
+            cwd=parity.REPO_ROOT,
+            env=environment,
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+        self.assertEqual(1, result.returncode)
+        self.assertIn('"profile_integrity_outcome":"ERROR"', result.stdout)
 
     def test_report_has_constant_non_authority_boundary(self) -> None:
         report = parity._report([], {"repository-topology": "HOLD_INHERITED"}, {})
