@@ -67,6 +67,14 @@ EXEMPTIONS: dict[str, str] = {
         "Synthetic GBIF Darwin Core source-native input; the normalizer emits "
         "the derived candidate as INTERNAL_EXACT with public_use_allowed false."
     ),
+    "fixtures/domains/hazards/earthquakes/2025-01.geojson": (
+        "Synthetic USGS ComCat FDSN event page in source-native GeoJSON with "
+        "invented epicenters; the feed format has no posture field."
+    ),
+    "fixtures/domains/hazards/earthquakes/2025-05.geojson": (
+        "Synthetic USGS ComCat FDSN event page in source-native GeoJSON with "
+        "invented epicenters; the feed format has no posture field."
+    ),
 }
 
 
