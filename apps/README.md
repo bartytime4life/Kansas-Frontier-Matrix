@@ -3,12 +3,12 @@ doc_id: kfm://doc/apps-readme
 title: apps/ - Deployable Applications
 type: root-readme
 subtype: canonical-root-landing-page
-version: v0.9
-prior_version: v0.8
+version: v0.10
+prior_version: v0.9
 status: historical snapshot; current app placement noted below
 owner: "NEEDS VERIFICATION — CODEOWNERS routes repository review to @bartytime4life and explicitly covers apps/governed-api/; no accepted application-steward assignment, required independent-review rule, or release authority was verified"
 created: 2026-05-10
-updated: 2026-09-25
+updated: 2026-10-12
 policy_label: public
 current_path: apps/README.md
 owning_root: apps/
@@ -67,6 +67,7 @@ related:
   - ../tests/README.md
 tags: [kfm, apps, deployables, trust-membrane, governed-api, explorer-web, finite-outcomes, mixed-maturity]
 notes:
+  - "v0.10 records the apps/ root naming decision that apps/site/source/ keeps upstream file names (Directory Rules §2.3 root naming decision; §13.2 externally fixed names); documentation only."
   - "v0.9 records the dependency-closed Sites repair: both Explorer compositions use NullMapRuntime through the accepted package seam, while full Sites renderer capabilities remain held."
   - "The attached KFM manuals, Drive Atlas, and Notion reconciliation are read-only design and coordination inputs; they do not establish repository behavior, source admission, review, release, deployment, promotion, or publication."
   - "Exact maplibre-gl 6.6.0, the package-owned adapter, and Vite worker seam are implemented; full consumer capabilities, broader runtime proof, and public release remain held or separately governed."
@@ -441,6 +442,19 @@ Source-derived ideas advance only through the normal sequence: classify the clai
 | App deployment and observability are unproved. | UNKNOWN | DEFERRED | Verify from deployed infrastructure, logs, health checks, and audit sinks; repository prose is insufficient. |
 | App-specific ADR status is mixed: ADR-0006 is accepted while ADR-0004, ADR-0005, ADR-0019, and ADR-0025 remain draft or proposed. | CONFIRMED | MIXED | Apply ADR-0006's accepted seam without treating the remaining proposals as adopted behavior or release authority. |
 
+## Root naming decision: external site mirror
+
+**Decision (2026-10-12, owner-directed; root naming decision under Directory Rules §2.3):** files under `apps/site/source/` keep the names they have in the external site source, including uppercase names. That directory is a byte mirror: its file set and digests are pinned by the reviewed mirror receipt and checked by `tools/qa/site_mirror.py --check`. A KFM-side rename would break mirror parity and the receipt's `identical` claims. These names count as *externally fixed* under Directory Rules §13.2.
+
+| Aspect | Rule |
+|---|---|
+| Scope | `apps/site/source/**` only. Every other path under `apps/` follows the default lowercase grammar. |
+| What is relaxed | The uppercase path-grammar check alone (`_is_external_site_mirror_path` in `tools/validators/directory_governance/validate_repository_topology.py`). |
+| What still applies | Unsafe-path checks (control characters, non-NFC, symlinks, trailing dots or spaces, Windows reserved names) and the nonportable-punctuation check. |
+| How names change | Rename upstream in the site source, then bring the new names in through a reviewed mirror sync with a fresh receipt. Never rename a mirrored file in place. |
+| Baseline effect | The `path-grammar:uppercase` topology waiver shrank by the ten mirror paths it held. No waiver was added (#5060). |
+| Authority limit | This is a naming decision inside one root. It does not amend Directory Rules, change root classification, or grant the mirror any source, release, or publication authority. |
+
 ## Safe change pattern
 
 1. Pin the base commit and inspect the target app, parent README, related contracts, schemas, policy, tests, workflows, and open work.
@@ -468,6 +482,7 @@ The root is not complete while child lanes are placeholders. For a declared app 
 
 | Version | Date | Change | Runtime effect |
 |---|---|---|---|
+| v0.10 | 2026-10-12 | Recorded the root naming decision that `apps/site/source/` keeps upstream file names, matching the topology validator's site-mirror exemption. | None; documentation only. |
 | v0.9 | 2026-08-29 | Recorded package-root NullMapRuntime conformance for the Sites-derived app and the held full renderer capability migration. | Fail-closed shell only; no source, release, deployment, promotion, or publication authority. |
 | v0.3 | 2026-07-22 | Reconciled the root contract with the seven app lanes and mixed implementation maturity. | None; documentation and receipt only. |
 | v0.4 | 2026-07-23 | Repinned the evidence snapshot, clarified review routing versus stewardship, recorded the then-unresolved Directory Rules duplicate, and added an evidence ledger. | None; documentation and receipt only. |
