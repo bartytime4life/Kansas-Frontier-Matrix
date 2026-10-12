@@ -1,0 +1,168 @@
+{
+  "receipt_id": "genrec-geoparquet-pyarrow-patch-delta-20260826",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/standards/GEOPARQUET.md"
+  ],
+  "artifact_hashes": {
+    "docs/standards/GEOPARQUET.md": "sha256:da781cafecfe1c7aaf7cd169816a75b94a9a0ab69d1bf61a3b6be623ec118731"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-26"
+  },
+  "prompt_or_contract": "sha256:d64f04ce0da4f35b3a46ed94ed2742c730ed708e8890cc3ee226e7bb73ff4677",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector read/write",
+      "official upstream web verification",
+      "local Git and deterministic repository validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:060b20d6e28197faa8a9034ccb5a29b63621f73ebdeea1d2d77d31b23c2149e0",
+      "sha256:d00ca5c7e0ffd7589644ef4ae15e3aff811544f72be0ff67330aef84cfa65225"
+    ],
+    "attached_docs": [
+      "docs/doctrine/ai-build-operating-contract.md@7115f5c046d0660c65befef65f20964de79c5f2b",
+      "docs/doctrine/directory-rules.md@7115f5c046d0660c65befef65f20964de79c5f2b",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@7115f5c046d0660c65befef65f20964de79c5f2b",
+      "docs/adr/ADR-0033-geoparquet-version-readiness.md@7115f5c046d0660c65befef65f20964de79c5f2b"
+    ],
+    "evidence_refs": [
+      "github:repo:bartytime4life/Kansas-Frontier-Matrix@7115f5c046d0660c65befef65f20964de79c5f2b",
+      "github:issue:bartytime4life/Kansas-Frontier-Matrix#2907",
+      "repo:contracts/release/geoparquet_2_rc_compatibility_assessment.md@7115f5c046d0660c65befef65f20964de79c5f2b",
+      "repo:contracts/release/geoparquet_2_rc_pyarrow_carrier_probe.md@7115f5c046d0660c65befef65f20964de79c5f2b",
+      "repo:contracts/release/geoparquet_2_rc_gdal_consumer_probe.md@7115f5c046d0660c65befef65f20964de79c5f2b",
+      "repo:data/receipts/generated/genrec-geoparquet-2-rc-pinned-toolchain-matrix-20260818.json@7115f5c046d0660c65befef65f20964de79c5f2b",
+      "github:pull:bartytime4life/Kansas-Frontier-Matrix#3156",
+      "github:pull:bartytime4life/Kansas-Frontier-Matrix#3221@b30ea55b799eb9d52060038f906f2a83fd564b3d",
+      "github:actions:run:32512703447",
+      "github:actions:artifact:9457628534",
+      "github:actions:run:32512703769",
+      "github:actions:artifact:9457643570",
+      "upstream:apache/arrow/25.0.1@beccec0d0c451b7aa3e4530416ac431b3c035c69",
+      "https://arrow.apache.org/release/25.0.1.html",
+      "https://pypi.org/project/pyarrow/25.0.1/"
+    ]
+  },
+  "truth_labels": {
+    "docs/standards/GEOPARQUET.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "exact-main-authority-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Issue #2907, current main@7115f5c046d0660c65befef65f20964de79c5f2b, retained 25.0.0 profiles and receipts, and the open pull-request queue were inspected; no overlapping open GeoParquet pull request was found."
+    },
+    {
+      "gate": "historical-25-0-0-lineage-preservation",
+      "outcome": "PASS",
+      "reason": "No existing contract, schema, lock, generator, validator, workflow, test, receipt, manifest, carrier identity, or digest was changed; this packet binds only the documentation reconciliation."
+    },
+    {
+      "gate": "official-25-0-1-version-delta",
+      "outcome": "PASS",
+      "reason": "Apache Arrow release notes, the source commit, and PyPI file metadata were checked. The exact CPython 3.12 manylinux x86-64 candidate hash is recorded, with no GeoParquet-conformance or aarch64 execution claim."
+    },
+    {
+      "gate": "scoped-document-metadata",
+      "outcome": "PASS",
+      "reason": "The bounded metadata validator passed the edited GeoParquet document with one valid block and zero findings when run without the already-drifting repository registry."
+    },
+    {
+      "gate": "focused-geoparquet-tests",
+      "outcome": "PASS",
+      "reason": "Ten focused GeoParquet 2.0-RC compatibility-assessment tests passed."
+    },
+    {
+      "gate": "synthetic-fixture-polarity",
+      "outcome": "PASS",
+      "reason": "Fourteen declared compatibility cases passed exact READY, HOLD, and ERROR outcome and reason-code polarity."
+    },
+    {
+      "gate": "tree-target-case-check",
+      "outcome": "PASS",
+      "reason": "The exact base Git tree contains docs/standards/STAC.md, the one target the macOS case-insensitive checkout could not distinguish from the pre-existing docs/standards/stac.md collision."
+    },
+    {
+      "gate": "repository-integrated-document-registry",
+      "outcome": "FAIL",
+      "reason": "The optional registry-integrated metadata invocation reproduced seven pre-existing control_plane/document_registry.yaml failures and reported this standards document as unregistered; the registry is outside this bounded slice."
+    },
+    {
+      "gate": "scoped-link-validator",
+      "outcome": "FAIL",
+      "reason": "The local macOS checkout cannot represent both existing STAC.md and stac.md Git-tree entries distinctly; the validator therefore reported the exact STAC.md target missing even though git cat-file confirmed it at the base tree. Hosted Linux validation remains required."
+    },
+    {
+      "gate": "pyarrow-25-0-1-successor-replay",
+      "outcome": "SKIPPED",
+      "reason": "The candidate is PROPOSED SUCCESSOR / HOLD. No wheel was admitted or installed, no carrier was generated, and no PyArrow-to-GDAL execution was authorized in this documentation-only slice."
+    },
+    {
+      "gate": "hosted-exact-pr-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks start only after the draft pull request opens and remain PR-head evidence, not exact-main proof."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Accountable human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "docs/adr/ADR-0033-geoparquet-version-readiness.md (proposed; not accepted by this change)"
+  ],
+  "citations": [
+    {
+      "id": "KFM-Issue-2907",
+      "validated": true,
+      "evidence_ref": "github:issue:bartytime4life/Kansas-Frontier-Matrix#2907"
+    },
+    {
+      "id": "KFM-exact-main",
+      "validated": true,
+      "evidence_ref": "github:repo:bartytime4life/Kansas-Frontier-Matrix@7115f5c046d0660c65befef65f20964de79c5f2b"
+    },
+    {
+      "id": "Apache-Arrow-25.0.1-release",
+      "validated": true,
+      "evidence_ref": "https://arrow.apache.org/release/25.0.1.html"
+    },
+    {
+      "id": "PyPI-PyArrow-25.0.1-files",
+      "validated": true,
+      "evidence_ref": "https://pypi.org/project/pyarrow/25.0.1/"
+    },
+    {
+      "id": "KFM-retained-pinned-toolchain-receipt",
+      "validated": true,
+      "evidence_ref": "repo:data/receipts/generated/genrec-geoparquet-2-rc-pinned-toolchain-matrix-20260818.json@7115f5c046d0660c65befef65f20964de79c5f2b"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-26T15:28:23Z",
+  "emitter": "OpenAI GPT-5 via Codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0033-geoparquet-version-readiness.md",
+    "drift_register_entry": null
+  },
+  "notes": "Documentation-only proposal record. No prompt-injection signal was detected in the inspected repository or official upstream evidence. PyArrow 25.0.1 is not selected, admitted, supported, installed, or substituted for 25.0.0. This receipt creates no source admission, rights approval, GeoParquet default change, ADR acceptance, policy authority, migration, release, deployment, promotion, publication, or public-use authority. The existing x86-64 proof cannot establish aarch64 fixes."
+}

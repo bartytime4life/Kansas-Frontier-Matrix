@@ -1,0 +1,116 @@
+{
+  "cases": [
+    {
+      "expected_outcome": "ALLOW",
+      "expected_reason_codes": [],
+      "flags": {
+        "require_manifest_ref": true,
+        "require_proof": true,
+        "strict_epoch": true
+      },
+      "id": "allow-matching-projection",
+      "manifest": "valid/manifest.single-source.match.json",
+      "style": "valid/style.single-source.valid.json"
+    },
+    {
+      "expected_outcome": "DENY",
+      "expected_reason_codes": [
+        "SOURCE_META_MISSING"
+      ],
+      "flags": {
+        "strict_epoch": true
+      },
+      "id": "deny-missing-meta",
+      "manifest": "valid/manifest.single-source.match.json",
+      "style": "invalid/style.missing-meta.json"
+    },
+    {
+      "expected_outcome": "DENY",
+      "expected_reason_codes": [
+        "SOURCE_DIGEST_MISSING"
+      ],
+      "flags": {
+        "strict_epoch": true
+      },
+      "id": "deny-missing-digest",
+      "manifest": "valid/manifest.single-source.match.json",
+      "style": "invalid/style.missing-digest.json"
+    },
+    {
+      "expected_outcome": "DENY",
+      "expected_reason_codes": [
+        "SOURCE_EPOCH_INVALID"
+      ],
+      "flags": {
+        "strict_epoch": true
+      },
+      "id": "deny-invalid-epoch",
+      "manifest": "valid/manifest.single-source.match.json",
+      "style": "invalid/style.invalid-epoch.json"
+    },
+    {
+      "expected_outcome": "DENY",
+      "expected_reason_codes": [
+        "SOURCE_DIGEST_MISMATCH"
+      ],
+      "flags": {
+        "strict_epoch": true
+      },
+      "id": "deny-style-digest-mismatch",
+      "manifest": "valid/manifest.single-source.match.json",
+      "style": "invalid/style.digest-mismatch.json"
+    },
+    {
+      "expected_outcome": "DENY",
+      "expected_reason_codes": [
+        "SOURCE_DIGEST_MISMATCH"
+      ],
+      "flags": {
+        "strict_epoch": true
+      },
+      "id": "deny-manifest-digest-mismatch",
+      "manifest": "invalid/manifest.single-source.mismatch.json",
+      "style": "valid/style.single-source.valid.json"
+    },
+    {
+      "expected_outcome": "DENY",
+      "expected_reason_codes": [
+        "SOURCE_PROOF_REF_REQUIRED"
+      ],
+      "flags": {
+        "require_proof": true,
+        "strict_epoch": true
+      },
+      "id": "deny-required-proof-missing",
+      "manifest": "valid/manifest.single-source.match.json",
+      "style": "invalid/style.missing-proof-ref.required.json"
+    },
+    {
+      "expected_outcome": "DENY",
+      "expected_reason_codes": [
+        "SOURCE_MANIFEST_REF_REQUIRED"
+      ],
+      "flags": {
+        "require_manifest_ref": true,
+        "strict_epoch": true
+      },
+      "id": "deny-required-manifest-ref-missing",
+      "manifest": "valid/manifest.single-source.match.json",
+      "style": "invalid/style.missing-manifest-ref.required.json"
+    },
+    {
+      "expected_outcome": "ABSTAIN",
+      "expected_reason_codes": [
+        "MANIFEST_SOURCE_UNMAPPED"
+      ],
+      "flags": {
+        "strict_epoch": true
+      },
+      "id": "abstain-manifest-source-unmapped",
+      "manifest": "edge/manifest.source-unmapped.json",
+      "style": "edge/style.manifest-supplied-source-unmapped.json"
+    }
+  ],
+  "manifest_version": "1.0.0",
+  "profile": "kfm-maplibre-source-metadata-projection/v1"
+}

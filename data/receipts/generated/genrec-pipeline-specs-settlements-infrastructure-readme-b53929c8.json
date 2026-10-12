@@ -1,0 +1,152 @@
+{
+  "receipt_id": "genrec-pipeline-specs-settlements-infrastructure-readme-b53929c8",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "pipeline_specs/settlements-infrastructure/README.md"
+  ],
+  "artifact_hashes": {
+    "pipeline_specs/settlements-infrastructure/README.md": "sha256:b53929c8dc8d8b9aea4242405a02c8419cc5504d90d64a5f45ab10c4ef579583"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-17"
+  },
+  "prompt_or_contract": "sha256:c0dec7ff91c5d7dff669495432d0c4d6cd6777c2780ce9327c0217a9331dd00e",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "repository code search",
+      "repository file reads",
+      "remote branch and contents writes",
+      "local deterministic content validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:c0dec7ff91c5d7dff669495432d0c4d6cd6777c2780ce9327c0217a9331dd00e"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/dd376c703b7b297f7cb62c729aec69fefafcb5b8",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/dd376c703b7b297f7cb62c729aec69fefafcb5b8/pipeline_specs/settlements-infrastructure/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f3271b9c525d88de74ee743301a50019e25e0558/pipeline_specs/settlements-infrastructure/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/dd376c703b7b297f7cb62c729aec69fefafcb5b8/pipeline_specs/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/dd376c703b7b297f7cb62c729aec69fefafcb5b8/pipeline_specs/settlement/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/dd376c703b7b297f7cb62c729aec69fefafcb5b8/pipeline_specs/settlements-infrastructure/ingest.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/dd376c703b7b297f7cb62c729aec69fefafcb5b8/pipeline_specs/settlements-infrastructure/normalize.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/dd376c703b7b297f7cb62c729aec69fefafcb5b8/pipeline_specs/settlements-infrastructure/validate.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/dd376c703b7b297f7cb62c729aec69fefafcb5b8/pipeline_specs/settlements-infrastructure/catalog.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/dd376c703b7b297f7cb62c729aec69fefafcb5b8/pipeline_specs/settlements-infrastructure/publish.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/dd376c703b7b297f7cb62c729aec69fefafcb5b8/pipelines/domains/settlements-infrastructure/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/dd376c703b7b297f7cb62c729aec69fefafcb5b8/contracts/domains/settlements-infrastructure/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/dd376c703b7b297f7cb62c729aec69fefafcb5b8/schemas/contracts/v1/domains/settlements-infrastructure/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/dd376c703b7b297f7cb62c729aec69fefafcb5b8/policy/domains/settlements-infrastructure/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/dd376c703b7b297f7cb62c729aec69fefafcb5b8/data/registry/sources/settlements-infrastructure/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/dd376c703b7b297f7cb62c729aec69fefafcb5b8/docs/domains/settlements-infrastructure/CANONICAL_PATHS.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/dd376c703b7b297f7cb62c729aec69fefafcb5b8/docs/architecture/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/dd376c703b7b297f7cb62c729aec69fefafcb5b8/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/dd376c703b7b297f7cb62c729aec69fefafcb5b8/docs/registers/DRIFT_REGISTER.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/dd376c703b7b297f7cb62c729aec69fefafcb5b8/.github/CODEOWNERS",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/dd376c703b7b297f7cb62c729aec69fefafcb5b8/.github/workflows/domain-settlements-infrastructure.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/dd376c703b7b297f7cb62c729aec69fefafcb5b8/data/receipts/generated/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/dd376c703b7b297f7cb62c729aec69fefafcb5b8/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    ]
+  },
+  "truth_labels": {
+    "pipeline_specs/settlements-infrastructure/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "task-contract-and-authority-preflight",
+      "outcome": "PASS",
+      "reason": "Repository, target path, current base, change budget, delivery route, and non-goals were resolved before mutation."
+    },
+    {
+      "gate": "base-drift-reconciliation",
+      "outcome": "PASS",
+      "reason": "Main advanced from 25be8016c3b221e427a4eb18568489b07a0a88c2 to dd376c703b7b297f7cb62c729aec69fefafcb5b8; the target blob remained cce8a5b42c1820bd14679cd3f532585d21611fcd."
+    },
+    {
+      "gate": "directory-adr-and-drift-preflight",
+      "outcome": "PASS",
+      "reason": "Both live Directory Rules copies, the domain canonical-path register, drift register, pipeline-spec root, alias lane, and adjacent contract/schema/policy/registry lanes were inspected; unresolved conflicts remain visible."
+    },
+    {
+      "gate": "repository-inventory",
+      "outcome": "PASS",
+      "reason": "The canonical lane was bounded to one README and five stage YAMLs; every checked YAML contained version: 1 and stages: []; triplets, rollback, watchers, and checked test/fixture README paths were absent."
+    },
+    {
+      "gate": "markdown-metadata-and-navigation",
+      "outcome": "PASS",
+      "reason": "One H1, parseable KFM Meta Block, unique heading slugs, balanced fences, valid internal anchors, final newline, and repository-relative links were verified. Four intentional Markdown hard-break markers remain in the evidence callout."
+    },
+    {
+      "gate": "security-rights-and-sensitive-content",
+      "outcome": "PASS",
+      "reason": "The artifact contains no credentials, private keys, source payloads, exact sensitive locations, private records, restricted facility details, or operational vulnerability data; examples remain abstract and fail closed."
+    },
+    {
+      "gate": "remote-readback-and-hash",
+      "outcome": "PASS",
+      "reason": "GitHub returned blob 3b0f9e2f8395eccfb62e8b1bf7e1c9577bcb3703 for the branch README. The prepared UTF-8 artifact has SHA-256 b53929c8dc8d8b9aea4242405a02c8419cc5504d90d64a5f45ab10c4ef579583."
+    },
+    {
+      "gate": "repository-native-execution",
+      "outcome": "SKIPPED",
+      "reason": "API-only execution profile; the repository was not cloned and repository-native tests were not run locally. Pull-request workflow outcomes remain separate evidence."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "current-user-request",
+      "validated": true,
+      "evidence_ref": "prompt://sha256/c0dec7ff91c5d7dff669495432d0c4d6cd6777c2780ce9327c0217a9331dd00e"
+    },
+    {
+      "id": "canonical-pipeline-spec-lane",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/dd376c703b7b297f7cb62c729aec69fefafcb5b8/pipeline_specs/settlements-infrastructure/README.md"
+    },
+    {
+      "id": "stage-scaffold-inventory",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/dd376c703b7b297f7cb62c729aec69fefafcb5b8/pipeline_specs/settlements-infrastructure/ingest.yaml"
+    },
+    {
+      "id": "settlement-compatibility-alias",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/dd376c703b7b297f7cb62c729aec69fefafcb5b8/pipeline_specs/settlement/README.md"
+    },
+    {
+      "id": "domain-canonical-path-register",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/dd376c703b7b297f7cb62c729aec69fefafcb5b8/docs/domains/settlements-infrastructure/CANONICAL_PATHS.md"
+    },
+    {
+      "id": "generated-receipt-machine-shape",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/dd376c703b7b297f7cb62c729aec69fefafcb5b8/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-17T18:35:26Z",
+  "emitter": "openai-chatgpt/gpt-5.6-thinking",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored documentation-only revision on a scoped review branch. This receipt records process provenance only; it is not factual proof, policy permission, human approval, release authority, or publication authority."
+}

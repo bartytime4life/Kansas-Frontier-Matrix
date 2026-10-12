@@ -1,0 +1,1 @@
+COUNTY_FIPS_INVALID	$.spatial_support.county_fips

@@ -1,0 +1,4 @@
+{
+  "note": "model_card_ref must be a non-empty string path.",
+  "model_card_ref": 42
+}

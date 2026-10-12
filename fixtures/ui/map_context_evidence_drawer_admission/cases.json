@@ -1,0 +1,89 @@
+{
+  "profile": "kfm.ui.map-context-evidence-drawer-admission.v1",
+  "cases": [
+    {
+      "case_id": "answer-aligned",
+      "map_context": "fixtures/ui/map_context_envelope/base_viewport.json",
+      "drawer_payload": "fixtures/ui/map_context_evidence_drawer_admission/payloads/answer-aligned.json",
+      "evaluated_at": "2026-08-06T21:05:00Z",
+      "allow_system_test": true,
+      "expected_outcome": "ANSWER",
+      "expected_reason_code": "SUPPORTED",
+      "expected_evidence_refs": [
+        "evidence:soil:mukey:123"
+      ]
+    },
+    {
+      "case_id": "abstain-stale-aligned",
+      "map_context": "fixtures/ui/map_context_envelope/base_viewport.json",
+      "drawer_payload": "fixtures/ui/map_context_evidence_drawer_admission/payloads/abstain-stale-aligned.json",
+      "evaluated_at": "2026-08-06T21:05:00Z",
+      "allow_system_test": true,
+      "expected_outcome": "ABSTAIN",
+      "expected_reason_code": "STALE_EVIDENCE",
+      "expected_evidence_refs": [
+        "evidence:soil:mukey:123"
+      ]
+    },
+    {
+      "case_id": "deny-sensitive",
+      "map_context": "fixtures/ui/map_context_envelope/base_viewport.json",
+      "drawer_payload": "fixtures/ui/evidence_drawer_payload/valid/deny-sensitive.json",
+      "evaluated_at": "2026-08-06T21:05:00Z",
+      "allow_system_test": true,
+      "expected_outcome": "DENY",
+      "expected_reason_code": "SENSITIVE_DETAIL_RESTRICTED",
+      "expected_evidence_refs": []
+    },
+    {
+      "case_id": "error-upstream",
+      "map_context": "fixtures/ui/map_context_envelope/base_viewport.json",
+      "drawer_payload": "fixtures/ui/evidence_drawer_payload/valid/error-upstream.json",
+      "evaluated_at": "2026-08-06T21:05:00Z",
+      "allow_system_test": true,
+      "expected_outcome": "ERROR",
+      "expected_reason_code": "UPSTREAM_ERROR",
+      "expected_evidence_refs": []
+    },
+    {
+      "case_id": "answer-outside-selection",
+      "map_context": "fixtures/ui/map_context_envelope/base_viewport.json",
+      "drawer_payload": "fixtures/ui/map_context_evidence_drawer_admission/payloads/answer-wrong-selection.json",
+      "evaluated_at": "2026-08-06T21:05:00Z",
+      "allow_system_test": true,
+      "expected_outcome": "ERROR",
+      "expected_reason_code": "DRAWER_EVIDENCE_OUTSIDE_SELECTION",
+      "expected_evidence_refs": []
+    },
+    {
+      "case_id": "context-expired",
+      "map_context": "fixtures/ui/map_context_envelope/base_viewport.json",
+      "drawer_payload": "fixtures/ui/map_context_evidence_drawer_admission/payloads/answer-aligned.json",
+      "evaluated_at": "2026-08-06T21:10:01Z",
+      "allow_system_test": true,
+      "expected_outcome": "ABSTAIN",
+      "expected_reason_code": "CONTEXT_EXPIRED",
+      "expected_evidence_refs": []
+    },
+    {
+      "case_id": "system-test-not-admitted",
+      "map_context": "fixtures/ui/map_context_envelope/base_viewport.json",
+      "drawer_payload": "fixtures/ui/map_context_evidence_drawer_admission/payloads/answer-aligned.json",
+      "evaluated_at": "2026-08-06T21:05:00Z",
+      "allow_system_test": false,
+      "expected_outcome": "DENY",
+      "expected_reason_code": "CALLER_ROLE_DENIED",
+      "expected_evidence_refs": []
+    },
+    {
+      "case_id": "selection-required",
+      "map_context": "fixtures/ui/map_context_envelope/base_geography.json",
+      "drawer_payload": "fixtures/ui/map_context_evidence_drawer_admission/payloads/answer-aligned.json",
+      "evaluated_at": "2026-08-06T21:05:00Z",
+      "allow_system_test": true,
+      "expected_outcome": "ABSTAIN",
+      "expected_reason_code": "SELECTION_REQUIRED",
+      "expected_evidence_refs": []
+    }
+  ]
+}

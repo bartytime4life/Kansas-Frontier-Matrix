@@ -1,0 +1,135 @@
+{
+  "receipt_id": "genrec-dependabot-config-bb88ad97",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/dependabot.yml"
+  ],
+  "artifact_hashes": {
+    ".github/dependabot.yml": "sha256:bb88ad97cca9627407a36b922092e206ed30e1b91f7f5e4f0a95028664eeeda3"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-17"
+  },
+  "prompt_or_contract": "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "repository evidence inspection",
+      "official GitHub Dependabot documentation",
+      "YAML and structural validation",
+      "remote repository verification"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "Pasted text(40).txt — KFM GitHub Repository Documentation Implementation Agent v3.1"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/ff16fe04bacb732561dbd5f557250b949a14673f",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ff16fe04bacb732561dbd5f557250b949a14673f/.github/dependabot.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ff16fe04bacb732561dbd5f557250b949a14673f/.github/CODEOWNERS",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ff16fe04bacb732561dbd5f557250b949a14673f/pyproject.toml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ff16fe04bacb732561dbd5f557250b949a14673f/package.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ff16fe04bacb732561dbd5f557250b949a14673f/apps/explorer-web/package.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ff16fe04bacb732561dbd5f557250b949a14673f/.pre-commit-config.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ff16fe04bacb732561dbd5f557250b949a14673f/infra/docker/Dockerfile.governed-api",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ff16fe04bacb732561dbd5f557250b949a14673f/infra/docker/Dockerfile.explorer-web",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ff16fe04bacb732561dbd5f557250b949a14673f/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "https://docs.github.com/en/code-security/reference/supply-chain-security/dependabot-options-reference",
+      "https://docs.github.com/en/code-security/how-tos/secure-your-supply-chain/secure-your-dependencies/configure-version-updates"
+    ]
+  },
+  "truth_labels": {
+    ".github/dependabot.yml": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-base-preflight",
+      "outcome": "PASS",
+      "reason": "Verified repository identity, default branch, immutable base commit ff16fe04bacb732561dbd5f557250b949a14673f, target blob, and absence of overlapping open pull requests or similarly named branches."
+    },
+    {
+      "gate": "yaml-and-required-shape",
+      "outcome": "PASS",
+      "reason": "Parsed the final YAML and verified version 2, four unique update entries, exactly one of directory/directories per entry, weekly schedules with valid days/times/timezone, positive PR limits, and supported group fields."
+    },
+    {
+      "gate": "monorepo-manifest-coverage",
+      "outcome": "PASS",
+      "reason": "Confirmed the root Python project, distributed pyproject.toml manifests under apps/packages/connectors, the root npm workspace declaration, GitHub Actions workflows, and root pre-commit configuration; Python directory globs are bounded to known responsibility roots."
+    },
+    {
+      "gate": "security-update-isolation-and-default-branch",
+      "outcome": "PASS",
+      "reason": "No target-branch is configured, and every group explicitly applies only to version-updates, leaving security updates isolated and default-branch based."
+    },
+    {
+      "gate": "review-routing-and-metadata-restraint",
+      "outcome": "PASS",
+      "reason": "The only assignee is verified repository admin bartytime4life. Labels and unverified teams are omitted; CODEOWNERS remains the review-routing surface."
+    },
+    {
+      "gate": "unsupported-or-unverified-ecosystem-restraint",
+      "outcome": "PASS",
+      "reason": "Docker monitoring was not activated because the repository currently uses custom Dockerfile.* greenfield placeholders and intended Dependabot discovery behavior was not verified strongly enough."
+    },
+    {
+      "gate": "remote-readback-and-hash",
+      "outcome": "PASS",
+      "reason": "GitHub returned blob SHA f1bb101082f7b9910c3ceef4c9d9f64024ccf1dd, matching the computed Git blob SHA; SHA-256 recomputed as bb88ad97cca9627407a36b922092e206ed30e1b91f7f5e4f0a95028664eeeda3."
+    },
+    {
+      "gate": "dependabot-default-branch-runtime-validation",
+      "outcome": "SKIPPED",
+      "reason": "Dependabot parses and executes the configuration from the default branch after merge. Job logs, dependency graph status, generated PR behavior, and repository security settings remain NEEDS VERIFICATION."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "current-dependabot-config",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ff16fe04bacb732561dbd5f557250b949a14673f/.github/dependabot.yml"
+    },
+    {
+      "id": "python-monorepo-manifests",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/search/pyproject.toml@ff16fe04bacb732561dbd5f557250b949a14673f"
+    },
+    {
+      "id": "root-npm-workspace",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ff16fe04bacb732561dbd5f557250b949a14673f/package.json"
+    },
+    {
+      "id": "dependabot-options-reference",
+      "validated": true,
+      "evidence_ref": "https://docs.github.com/en/code-security/reference/supply-chain-security/dependabot-options-reference"
+    },
+    {
+      "id": "dependabot-version-update-configuration",
+      "validated": true,
+      "evidence_ref": "https://docs.github.com/en/code-security/how-tos/secure-your-supply-chain/secure-your-dependencies/configure-version-updates"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-17T16:56:59Z",
+  "emitter": "openai/gpt-5.6-thinking",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored Dependabot configuration update on a scoped review branch. The file proposes version-update scheduling and review metadata only. It does not prove that Dependabot version updates, security updates, dependency graph processing, grouped PR creation, branch protection, required reviews, labels, or runtime compatibility checks are active or successful. Human review remains pending."
+}

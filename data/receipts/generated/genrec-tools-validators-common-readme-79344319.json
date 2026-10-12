@@ -1,0 +1,194 @@
+{
+  "receipt_id": "genrec-tools-validators-common-readme-79344319",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tools/validators/_common/README.md"
+  ],
+  "artifact_hashes": {
+    "tools/validators/_common/README.md": "sha256:7934431908f72a8f11c56307e6099ffd64aea544a129d982acb72f55e2af75e9"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-16-session"
+  },
+  "prompt_or_contract": "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "container validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM GitHub Repository Documentation Implementation Agent — Full Operating Prompt v3.1",
+      "Directory Rules.pdf",
+      "Kansas Frontier Matrix — AI Build Operating Contract.md"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/42e28cb1c17be943da70576f427563c7cbd27898",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/42e28cb1c17be943da70576f427563c7cbd27898/tools/validators/_common/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/42e28cb1c17be943da70576f427563c7cbd27898/tools/validators/_common/jsonschema_runner.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/42e28cb1c17be943da70576f427563c7cbd27898/tools/validators/_common/local_resolver.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/42e28cb1c17be943da70576f427563c7cbd27898/tools/validators/_common/run_all.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/42e28cb1c17be943da70576f427563c7cbd27898/tools/validators/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/42e28cb1c17be943da70576f427563c7cbd27898/tools/validators/validate_source_descriptor.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/42e28cb1c17be943da70576f427563c7cbd27898/tools/validators/validate_evidence_bundle.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/42e28cb1c17be943da70576f427563c7cbd27898/tools/validators/validate_runtime_response_envelope.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/42e28cb1c17be943da70576f427563c7cbd27898/tools/validators/validate_decision_envelope.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/42e28cb1c17be943da70576f427563c7cbd27898/tools/validators/validate_run_receipt.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/42e28cb1c17be943da70576f427563c7cbd27898/tests/schemas/test_common_contracts.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/42e28cb1c17be943da70576f427563c7cbd27898/Makefile",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/42e28cb1c17be943da70576f427563c7cbd27898/.github/workflows/schema-validation.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/42e28cb1c17be943da70576f427563c7cbd27898/.github/workflows/validator-suite.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/42e28cb1c17be943da70576f427563c7cbd27898/pyproject.toml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/42e28cb1c17be943da70576f427563c7cbd27898/packages/schema-registry/src/schema_registry/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/42e28cb1c17be943da70576f427563c7cbd27898/docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/42e28cb1c17be943da70576f427563c7cbd27898/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/42e28cb1c17be943da70576f427563c7cbd27898/.github/PULL_REQUEST_TEMPLATE.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/42e28cb1c17be943da70576f427563c7cbd27898/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "attached://Pasted text(32).txt"
+    ]
+  },
+  "truth_labels": {
+    "tools/validators/_common/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-preflight",
+      "outcome": "PASS",
+      "reason": "Repository identity, permissions, latest base, target blob, direct helper modules, entrypoint consumers, tests, Makefile, workflows, dependency metadata, package extraction candidate, Directory Rules, PR contract, and receipt schema were inspected."
+    },
+    {
+      "gate": "base-and-target-concurrency",
+      "outcome": "PASS",
+      "reason": "Main advanced during authoring from 7bf6f95e531300dd421a0e871fdba7a48f5485e6 to 42e28cb1c17be943da70576f427563c7cbd27898 through an unrelated tests/pipelines README change; the target blob remained 39eba24a5e5bfd5943c3f2f3ae69ca3102011b37 before mutation."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "The README remains under tools/validators/_common as shared validator implementation documentation and routes schemas, contracts, policy, fixtures, tests, evidence, receipts, release, and public serving to their owning roots."
+    },
+    {
+      "gate": "direct-implementation-inventory",
+      "outcome": "PASS",
+      "reason": "README.md, jsonschema_runner.py, local_resolver.py, and run_all.py were verified and classified by responsibility."
+    },
+    {
+      "gate": "consumer-and-ci-grounding",
+      "outcome": "PASS",
+      "reason": "A bounded exact-import search surfaced seventeen validator scripts and two test modules; Makefile schemas and both schema-validation workflows were inspected."
+    },
+    {
+      "gate": "behavioral-claim-review",
+      "outcome": "PASS",
+      "reason": "Registry scan, $id skip/duplicate behavior, Draft 2020-12 construction, file validation, fixture polarity, console output, exit codes, aggregate fail-fast behavior, working-directory assumptions, and known unreachable/output-conflict branches were derived directly from code."
+    },
+    {
+      "gate": "authority-and-anti-collapse",
+      "outcome": "PASS",
+      "reason": "Schema resolution and validation remain subordinate to semantic contracts, policy, evidence, review, release, correction, and rollback; no validator success is represented as public truth."
+    },
+    {
+      "gate": "schema-registry-extraction-conflict",
+      "outcome": "PASS",
+      "reason": "The working tools implementation and placeholder packages/schema-registry namespace are surfaced without creating dual implementation authority or selecting a migration by assertion."
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "One H1, balanced fenced blocks, 45 resolved internal links, tables, API contracts, known gaps, definition of done, verification register, maintenance, correction, migration, rollback, and evidence ledger were checked."
+    },
+    {
+      "gate": "secret-and-sensitive-content-review",
+      "outcome": "PASS",
+      "reason": "No private-key block or common GitHub, AWS, or OpenAI token pattern, credentials, private endpoint, exact sensitive location, living-person data, DNA material, infrastructure detail, or reconstruction hint was introduced."
+    },
+    {
+      "gate": "remote-readback",
+      "outcome": "PASS",
+      "reason": "GitHub returned README blob 12df3198498356b32bf309a314eb255604b37415, matching the locally computed Git blob for the validated content."
+    },
+    {
+      "gate": "workflow-trigger-preflight",
+      "outcome": "PASS",
+      "reason": "Only documentation and its provenance receipt change. No helper code, validator, schema, contract, policy, fixture, test, workflow, package, lifecycle object, release record, runtime, or public artifact is modified."
+    },
+    {
+      "gate": "generated-receipt-structure",
+      "outcome": "PASS",
+      "reason": "Required fields, allowed properties, hash patterns, truth-label and validation enums, human-review state, timestamps, citations, artifact path/hash closure, and notes length were checked against the fetched schema."
+    },
+    {
+      "gate": "runtime-and-executable-tests",
+      "outcome": "SKIPPED",
+      "reason": "Documentation-only change; no validator implementation, dependency, fixture, test, workflow, schema, or runtime behavior changed."
+    },
+    {
+      "gate": "repository-native-ci",
+      "outcome": "SKIPPED",
+      "reason": "Repository checks are observed after draft pull-request creation and were unavailable at receipt emission time."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "KFM-OPERATING-PROMPT-V3.1",
+      "validated": true,
+      "evidence_ref": "attached://Pasted text(32).txt"
+    },
+    {
+      "id": "KFM-DIRECTORY-RULES",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/42e28cb1c17be943da70576f427563c7cbd27898/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "COMMON-LOCAL-RESOLVER",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/42e28cb1c17be943da70576f427563c7cbd27898/tools/validators/_common/local_resolver.py"
+    },
+    {
+      "id": "COMMON-JSONSCHEMA-RUNNER",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/42e28cb1c17be943da70576f427563c7cbd27898/tools/validators/_common/jsonschema_runner.py"
+    },
+    {
+      "id": "COMMON-RUN-ALL",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/42e28cb1c17be943da70576f427563c7cbd27898/tools/validators/_common/run_all.py"
+    },
+    {
+      "id": "COMMON-SCHEMA-TESTS",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/42e28cb1c17be943da70576f427563c7cbd27898/tests/schemas/test_common_contracts.py"
+    },
+    {
+      "id": "SCHEMA-REGISTRY-EXTRACTION-BOUNDARY",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/42e28cb1c17be943da70576f427563c7cbd27898/packages/schema-registry/src/schema_registry/README.md"
+    },
+    {
+      "id": "GENERATED-RECEIPT-SCHEMA",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/42e28cb1c17be943da70576f427563c7cbd27898/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-16T17:09:28Z",
+  "emitter": "ai-builder/openai-gpt-5.6-thinking",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored documentation-only update on a scoped review branch. The shared validator README is reconciled with current executable resolver/runner/aggregate behavior, broad consumers, CI wiring, fixture semantics, known code gaps, security/resource posture, and the unresolved schema-registry package extraction. No validator code, schema, contract, policy, fixture, test, workflow, package, lifecycle object, release record, deployment, or public artifact is created or modified. Human review remains pending; this receipt is provenance evidence, not merge authorization."
+}

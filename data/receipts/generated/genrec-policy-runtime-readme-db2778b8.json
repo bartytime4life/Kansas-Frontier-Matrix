@@ -1,0 +1,185 @@
+{
+  "receipt_id": "genrec-policy-runtime-readme-db2778b8",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "policy/runtime/README.md"
+  ],
+  "artifact_hashes": {
+    "policy/runtime/README.md": "sha256:db2778b8b6f7735929557559c6354063f211a7479b2a87ea1a9dd827f2f68506"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5 Codex",
+    "version": "2026-08-12"
+  },
+  "prompt_or_contract": "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:bcd9ba1af3b73173b1950ae48cff759418d8266baa6f49af206d9e03afd98d8d",
+      "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb"
+    ],
+    "attached_docs": [
+      "Pasted text(20260813-032334).txt"
+    ],
+    "evidence_refs": [
+      "repo:commit@c249771a2dc002ab748d161ccef96ff402ae4ef2",
+      "repo:policy/runtime/README.md@c249771a2dc002ab748d161ccef96ff402ae4ef2",
+      "repo:policy/runtime/abstain_on_missing_evidence.rego@c249771a2dc002ab748d161ccef96ff402ae4ef2",
+      "repo:policy/runtime/deny_unpublished_public.rego@c249771a2dc002ab748d161ccef96ff402ae4ef2",
+      "repo:policy/runtime/evidence_required.rego@c249771a2dc002ab748d161ccef96ff402ae4ef2",
+      "repo:policy/runtime/run_receipt.rego@c249771a2dc002ab748d161ccef96ff402ae4ef2",
+      "repo:policy/runtime/archaeology/.gitkeep@c249771a2dc002ab748d161ccef96ff402ae4ef2",
+      "repo:policy/runtime/cross_lane/.gitkeep@c249771a2dc002ab748d161ccef96ff402ae4ef2",
+      "repo:policy/README.md@c249771a2dc002ab748d161ccef96ff402ae4ef2",
+      "repo:docs/doctrine/directory-rules.md@c249771a2dc002ab748d161ccef96ff402ae4ef2",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@c249771a2dc002ab748d161ccef96ff402ae4ef2",
+      "repo:docs/adr/ADR-0020-abstain-is-a-first-class-decision.md@c249771a2dc002ab748d161ccef96ff402ae4ef2",
+      "repo:docs/adr/ADR-0004-apps-governed-api-is-the-trust-membrane.md@c249771a2dc002ab748d161ccef96ff402ae4ef2",
+      "repo:.github/workflows/policy-test.yml@c249771a2dc002ab748d161ccef96ff402ae4ef2",
+      "repo:packages/policy-runtime/README.md@c249771a2dc002ab748d161ccef96ff402ae4ef2",
+      "repo:runtime/README.md@c249771a2dc002ab748d161ccef96ff402ae4ef2",
+      "repo:contracts/policy/policy_decision.md@c249771a2dc002ab748d161ccef96ff402ae4ef2",
+      "repo:contracts/runtime/decision_envelope.md@c249771a2dc002ab748d161ccef96ff402ae4ef2",
+      "repo:contracts/runtime/run_receipt.md@c249771a2dc002ab748d161ccef96ff402ae4ef2",
+      "repo:schemas/contracts/v1/runtime/run_receipt.schema.json@c249771a2dc002ab748d161ccef96ff402ae4ef2",
+      "repo:tools/validators/validate_run_receipt.py@c249771a2dc002ab748d161ccef96ff402ae4ef2",
+      "repo:tests/validators/test_validate_run_receipt.py@c249771a2dc002ab748d161ccef96ff402ae4ef2",
+      "repo:.github/workflows/schema-validation.yml@c249771a2dc002ab748d161ccef96ff402ae4ef2",
+      "repo:docs/domains/archaeology/CONTINUITY_INVENTORY.md@c249771a2dc002ab748d161ccef96ff402ae4ef2",
+      "repo:docs/domains/archaeology/CROSS_DOMAIN.md@c249771a2dc002ab748d161ccef96ff402ae4ef2",
+      "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@c249771a2dc002ab748d161ccef96ff402ae4ef2"
+    ]
+  },
+  "truth_labels": {
+    "policy/runtime/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-authority-preflight",
+      "outcome": "PASS",
+      "reason": "Current main, target bytes and history, complete direct-child tree, open pull requests, active branch name, accepted Directory Rules and ADR-0029, parent policy authority, root projection, CODEOWNERS, and directly related runtime, policy, receipt, archaeology, contract, schema, validator, test, and workflow evidence were inspected before authoring."
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "One H1, logical heading progression, balanced language-tagged fences, no tabs or trailing whitespace, UTF-8-compatible text, and a final newline were verified."
+    },
+    {
+      "gate": "local-links-and-fragments",
+      "outcome": "PASS",
+      "reason": "All 33 repository-relative targets were checked against the pinned base, and all 21 quick-navigation and back-to-top fragments resolve within the authored Markdown."
+    },
+    {
+      "gate": "inventory-and-claim-alignment",
+      "outcome": "PASS",
+      "reason": "The seven direct children, four Rego package/default surfaces, two .gitkeep-only directories, policy-test hold, placeholder policy-runtime package, proposed decision vocabularies, RunReceipt validation lane, governed-API boundary, and archaeology placement questions were reconciled against exact repository evidence."
+    },
+    {
+      "gate": "generated-receipt-schema-and-hash",
+      "outcome": "PASS",
+      "reason": "This receipt parses as JSON, conforms to the current GENERATED_RECEIPT schema and bounded cross-field rules, and binds the final README SHA-256 digest."
+    },
+    {
+      "gate": "sensitive-content-review",
+      "outcome": "PASS",
+      "reason": "The authored artifacts contain no credentials, provider secrets, private prompts, source payloads, personal data, protected cultural records, production endpoints, or exact sensitive locations."
+    },
+    {
+      "gate": "runtime-and-public-behavior",
+      "outcome": "SKIPPED",
+      "reason": "Documentation and provenance only; no Rego, directory payload, contract, schema, fixture, validator, test, workflow, evaluator, runtime, provider, API, receipt instance, lifecycle state, release object, or public artifact changes."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks require the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "The draft remains pending authorized human review; no policy activation, runtime authorization, receipt authority, release, or publication authority is created."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "docs/adr/ADR-0020-abstain-is-a-first-class-decision.md",
+    "docs/adr/ADR-0004-apps-governed-api-is-the-trust-membrane.md",
+    "policy/README.md"
+  ],
+  "citations": [
+    {
+      "id": "policy-runtime-parent-and-maturity",
+      "validated": true,
+      "evidence_ref": "repo:policy/README.md@c249771a2dc002ab748d161ccef96ff402ae4ef2"
+    },
+    {
+      "id": "policy-placement-and-readme-contract",
+      "validated": true,
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md@c249771a2dc002ab748d161ccef96ff402ae4ef2"
+    },
+    {
+      "id": "runtime-policy-stub-modules",
+      "validated": true,
+      "evidence_ref": "repo:policy/runtime/abstain_on_missing_evidence.rego@c249771a2dc002ab748d161ccef96ff402ae4ef2"
+    },
+    {
+      "id": "runtime-policy-readiness-hold",
+      "validated": true,
+      "evidence_ref": "repo:.github/workflows/policy-test.yml@c249771a2dc002ab748d161ccef96ff402ae4ef2"
+    },
+    {
+      "id": "policy-runtime-package-placeholder",
+      "validated": true,
+      "evidence_ref": "repo:packages/policy-runtime/README.md@c249771a2dc002ab748d161ccef96ff402ae4ef2"
+    },
+    {
+      "id": "run-receipt-policy-scaffold",
+      "validated": true,
+      "evidence_ref": "repo:policy/runtime/run_receipt.rego@c249771a2dc002ab748d161ccef96ff402ae4ef2"
+    },
+    {
+      "id": "run-receipt-shape-and-validator-lane",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/runtime/run_receipt.schema.json@c249771a2dc002ab748d161ccef96ff402ae4ef2"
+    },
+    {
+      "id": "first-class-abstention-proposed-decision",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0020-abstain-is-a-first-class-decision.md@c249771a2dc002ab748d161ccef96ff402ae4ef2"
+    },
+    {
+      "id": "cross-lane-placement-open-question",
+      "validated": true,
+      "evidence_ref": "repo:docs/domains/archaeology/CROSS_DOMAIN.md@c249771a2dc002ab748d161ccef96ff402ae4ef2"
+    },
+    {
+      "id": "generated-receipt-machine-shape",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@c249771a2dc002ab748d161ccef96ff402ae4ef2"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-13T04:02:46Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Documentation-only modernization of the mixed-placeholder policy/runtime boundary. The update changes no rule, evaluator, runtime invocation, provider, model, tool, API, receipt instance, evidence, lifecycle state, release, deployment, publication, or public behavior. Human review remains pending; the receipt is provenance, not approval or authority."
+}

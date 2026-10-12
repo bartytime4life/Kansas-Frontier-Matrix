@@ -1,0 +1,171 @@
+{
+  "receipt_id": "genrec-policy-rights-readme-8b3f98a9",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "policy/rights/README.md"
+  ],
+  "artifact_hashes": {
+    "policy/rights/README.md": "sha256:8b3f98a937876f5f6297cfc6d43bf669b2a8c3a1204b045d10bf617885d0ca4c"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5 Codex",
+    "version": "2026-08-13"
+  },
+  "prompt_or_contract": "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:cdcdb350cc12006c50159f3b417e956c017c48a939ffa68ecec1c88b04842ae0",
+      "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb"
+    ],
+    "attached_docs": [
+      "Pasted text(20260813-044012).txt"
+    ],
+    "evidence_refs": [
+      "repo:commit@f50e407026cef632f4d3f314b51884b29dfd9a45",
+      "repo:policy/rights/README.md@f50e407026cef632f4d3f314b51884b29dfd9a45",
+      "repo:policy/rights/attribution_required.rego@f50e407026cef632f4d3f314b51884b29dfd9a45",
+      "repo:policy/rights/license_compatibility.rego@f50e407026cef632f4d3f314b51884b29dfd9a45",
+      "repo:policy/rights/fauna/ebd_terms.yaml@f50e407026cef632f4d3f314b51884b29dfd9a45",
+      "repo:policy/rights/fauna/source_terms.yaml@f50e407026cef632f4d3f314b51884b29dfd9a45",
+      "repo:policy/rights/flora/gbif_license.md@f50e407026cef632f4d3f314b51884b29dfd9a45",
+      "repo:policy/rights/flora/inaturalist_usage.md@f50e407026cef632f4d3f314b51884b29dfd9a45",
+      "repo:policy/rights/flora/knhi_access.md@f50e407026cef632f4d3f314b51884b29dfd9a45",
+      "repo:policy/rights/flora/natureserve_explorer_pro.md@f50e407026cef632f4d3f314b51884b29dfd9a45",
+      "repo:policy/README.md@f50e407026cef632f4d3f314b51884b29dfd9a45",
+      "repo:policy/sensitivity/README.md@f50e407026cef632f4d3f314b51884b29dfd9a45",
+      "repo:contracts/source/source_descriptor.md@f50e407026cef632f4d3f314b51884b29dfd9a45",
+      "repo:schemas/contracts/v1/source/source_descriptor.schema.json@f50e407026cef632f4d3f314b51884b29dfd9a45",
+      "repo:contracts/source/source_rights_currentness_assessment.md@f50e407026cef632f4d3f314b51884b29dfd9a45",
+      "repo:tools/validators/source/validate_source_rights_currentness_assessment.py@f50e407026cef632f4d3f314b51884b29dfd9a45",
+      "repo:.github/workflows/source-rights-currentness-assessment.yml@f50e407026cef632f4d3f314b51884b29dfd9a45",
+      "repo:data/registry/rights/README.md@f50e407026cef632f4d3f314b51884b29dfd9a45",
+      "repo:tools/validators/rights/README.md@f50e407026cef632f4d3f314b51884b29dfd9a45",
+      "repo:.github/workflows/policy-test.yml@f50e407026cef632f4d3f314b51884b29dfd9a45",
+      "repo:.github/workflows/policy-boundary-guards.yml@f50e407026cef632f4d3f314b51884b29dfd9a45",
+      "repo:packages/policy-runtime/README.md@f50e407026cef632f4d3f314b51884b29dfd9a45",
+      "repo:docs/doctrine/directory-rules.md@f50e407026cef632f4d3f314b51884b29dfd9a45",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@f50e407026cef632f4d3f314b51884b29dfd9a45",
+      "repo:control_plane/root_registry.yaml@f50e407026cef632f4d3f314b51884b29dfd9a45",
+      "repo:.github/CODEOWNERS@f50e407026cef632f4d3f314b51884b29dfd9a45",
+      "repo:.github/PULL_REQUEST_TEMPLATE.md@f50e407026cef632f4d3f314b51884b29dfd9a45",
+      "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@f50e407026cef632f4d3f314b51884b29dfd9a45",
+      "repo:tools/validators/validate_generated_receipt.py@f50e407026cef632f4d3f314b51884b29dfd9a45"
+    ]
+  },
+  "truth_labels": {
+    "policy/rights/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-authority-preflight",
+      "outcome": "PASS",
+      "reason": "Current main, target bytes and history, complete recursive rights tree, exact-target pull-request overlap, planned branch name, accepted Directory Rules and ADR-0029, parent policy authority, root projection, CODEOWNERS, and directly related contract, schema, registry, validator, fixture, test, workflow, runtime, release, and policy evidence were inspected before authoring."
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "One H1, logical heading progression, one balanced language-tagged fence pair, no tabs or trailing whitespace, UTF-8-compatible text, and a final newline were verified."
+    },
+    {
+      "gate": "local-links-and-fragments",
+      "outcome": "PASS",
+      "reason": "All 36 unique repository-relative targets were checked against the complete pinned base tree, and all 19 unique local fragment targets resolve. No network link checks were required."
+    },
+    {
+      "gate": "inventory-and-claim-alignment",
+      "outcome": "PASS",
+      "reason": "All eight direct children, two default-only local Rego packages, six proposed domain terms scaffolds, three placeholder subtrees, the 173-file policy Rego corpus with one native test, package-name consumer searches, and adjacent fixture-only source-rights controls were reconciled without upgrading their authority."
+    },
+    {
+      "gate": "generated-receipt-schema-and-hash",
+      "outcome": "PASS",
+      "reason": "The receipt parses without duplicate keys, conforms to the current GENERATED_RECEIPT schema and cross-field rules, and the final README SHA-256 digest matches the declared artifact binding."
+    },
+    {
+      "gate": "sensitive-content-review",
+      "outcome": "PASS",
+      "reason": "The authored artifacts contain no credentials, private agreements, paywalled payloads, personal data, protected cultural records, exact sensitive locations, production endpoints, hidden reasoning, or legal conclusions."
+    },
+    {
+      "gate": "runtime-and-public-behavior",
+      "outcome": "SKIPPED",
+      "reason": "Documentation and provenance only; no Rego rule, contract, schema, registry record, fixture, validator, test, workflow, bundle, evaluator, package, source descriptor, terms record, runtime, release, deployment, publication, or public behavior changes."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks require the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "The draft remains pending authorized human review; no legal determination, rights clearance, policy acceptance, release, deployment, publication, or public-use authority is created."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "policy/README.md"
+  ],
+  "citations": [
+    {
+      "id": "rights-lane-inventory-and-rule-posture",
+      "validated": true,
+      "evidence_ref": "repo:policy/rights/README.md@f50e407026cef632f4d3f314b51884b29dfd9a45"
+    },
+    {
+      "id": "parent-policy-authority-and-maturity",
+      "validated": true,
+      "evidence_ref": "repo:policy/README.md@f50e407026cef632f4d3f314b51884b29dfd9a45"
+    },
+    {
+      "id": "source-descriptor-rights-shape",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/source/source_descriptor.schema.json@f50e407026cef632f4d3f314b51884b29dfd9a45"
+    },
+    {
+      "id": "fixture-only-source-rights-currentness",
+      "validated": true,
+      "evidence_ref": "repo:.github/workflows/source-rights-currentness-assessment.yml@f50e407026cef632f4d3f314b51884b29dfd9a45"
+    },
+    {
+      "id": "general-policy-test-limits",
+      "validated": true,
+      "evidence_ref": "repo:.github/workflows/policy-test.yml@f50e407026cef632f4d3f314b51884b29dfd9a45"
+    },
+    {
+      "id": "directory-placement-authority",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@f50e407026cef632f4d3f314b51884b29dfd9a45"
+    },
+    {
+      "id": "generated-receipt-machine-shape",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@f50e407026cef632f4d3f314b51884b29dfd9a45"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-13T05:14:13Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Documentation-only modernization of the placeholder policy/rights boundary. The update records actual mixed maturity, establishes a fail-closed authoring contract, and preserves separation among rights evidence, policy, sensitivity, consent, runtime, review, and release. It changes no Rego rule, legal or rights determination, contract, schema, registry record, fixture, validator, test, workflow, bundle, evaluator, runtime, release, deployment, publication, or public behavior. The receipt is provenance/process memory rather than approval, proof, legal authority, rights clearance, or release authority; authorized human review remains pending."
+}

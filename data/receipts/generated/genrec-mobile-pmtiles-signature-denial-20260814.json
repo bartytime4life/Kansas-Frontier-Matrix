@@ -1,0 +1,172 @@
+{
+  "receipt_id": "genrec-mobile-pmtiles-signature-denial-20260814",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/pmtiles-mobile-verification.yml",
+    "apps/explorer-web/src/features/map_runtime/MOBILE_PMTILES_VERIFICATION_FIXTURE.md",
+    "apps/explorer-web/src/features/map_runtime/mobile_pmtiles_verification.ts",
+    "apps/explorer-web/tests/browser/mobile-pmtiles-verification.fixture.ts",
+    "apps/explorer-web/tests/browser/mobile-pmtiles-verification.html",
+    "apps/explorer-web/tests/browser/mobile-pmtiles-verification.spec.ts",
+    "apps/explorer-web/tests/mobile-pmtiles-verification.test.ts",
+    "fixtures/pmtiles/mobile_verification/README.md",
+    "fixtures/pmtiles/mobile_verification/cases.json",
+    "tests/validators/test_pmtiles_mobile_verification_fixture.py",
+    "tools/validators/pmtiles/validate_mobile_verification_fixture.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/pmtiles-mobile-verification.yml": "sha256:2ba30619f1a596c5a2ab9b5c7878db895d6a1aae24aa2e02c7c2ff52ebab27cb",
+    "apps/explorer-web/src/features/map_runtime/MOBILE_PMTILES_VERIFICATION_FIXTURE.md": "sha256:dac412c80a3f1af4709b28971df8b5cd226efd5241fcec5d671a769dabb99715",
+    "apps/explorer-web/src/features/map_runtime/mobile_pmtiles_verification.ts": "sha256:b4b7545d98a5319df697519fc720d309ae04e52b91fc8270958528a9d3964a85",
+    "apps/explorer-web/tests/browser/mobile-pmtiles-verification.fixture.ts": "sha256:b86e04370d3c900ae0c9a013c74993e2fe09cae5d061643bb407b944e1636673",
+    "apps/explorer-web/tests/browser/mobile-pmtiles-verification.html": "sha256:a4e42b047bdd15819d5ae4476504b30dcd43f8a4c19f2b96764eec6192054912",
+    "apps/explorer-web/tests/browser/mobile-pmtiles-verification.spec.ts": "sha256:540ae9f6718e5880ac68a31106e15ff35d8b1628da3a51772739af11694c91cf",
+    "apps/explorer-web/tests/mobile-pmtiles-verification.test.ts": "sha256:572f20a3643cd3a0b4a33af75ce64a5d35eba051ec80168b399ddb144610882a",
+    "fixtures/pmtiles/mobile_verification/README.md": "sha256:924954d529910458e91d8c50fb4cfd5937f57bd470b478f52c449619c2d6252b",
+    "fixtures/pmtiles/mobile_verification/cases.json": "sha256:3c87ec671066c419d905961fecd68d6f33b884d4a0294b0b8b716d89c723388b",
+    "tests/validators/test_pmtiles_mobile_verification_fixture.py": "sha256:2d977cf5257ba0472352f0fd966aa2de0eb06f6188b114d680cdefc06ac0d5fb",
+    "tools/validators/pmtiles/validate_mobile_verification_fixture.py": "sha256:4487a8d627be270b963669613f949ae65450deb68dfc43dfa447e8519682a0e6"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5"
+  },
+  "prompt_or_contract": "sha256:67f4d6bcc0c7dc97529c2b9eb657e9a84c14fc06e650bcbb5143446f3353c77e",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector read/write",
+      "Google Drive connector read-only search",
+      "attached source files read-only",
+      "local Python deterministic validation",
+      "local Node.js TypeScript runtime replay"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:57e4b74255b52863f2a489595077741d7f45c2968a9740fe4837bac73778f780",
+      "sha256:e92500f9b40007e8b69d183ecaa6247c542ffec25857875ecd2dbd00709785b1"
+    ],
+    "attached_docs": [
+      "KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md",
+      "Unified Implementation Architecture Build Manual.md"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md#KFM-IDX-MAP-004",
+      "attachment:KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md#EXP-002",
+      "attachment:Unified Implementation Architecture Build Manual.md#12.3",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/5f838cfbd2362379f5adaf648b4ab9dc4870b8ff",
+      "github:data/receipts/generated/genrec-mobile-pmtiles-verification-20260808.json",
+      "github:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github:docs/doctrine/directory-rules.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/pmtiles-mobile-verification.yml": "PROPOSED",
+    "apps/explorer-web/src/features/map_runtime/MOBILE_PMTILES_VERIFICATION_FIXTURE.md": "PROPOSED",
+    "apps/explorer-web/src/features/map_runtime/mobile_pmtiles_verification.ts": "PROPOSED",
+    "apps/explorer-web/tests/browser/mobile-pmtiles-verification.fixture.ts": "NEEDS VERIFICATION",
+    "apps/explorer-web/tests/browser/mobile-pmtiles-verification.html": "NEEDS VERIFICATION",
+    "apps/explorer-web/tests/browser/mobile-pmtiles-verification.spec.ts": "NEEDS VERIFICATION",
+    "apps/explorer-web/tests/mobile-pmtiles-verification.test.ts": "NEEDS VERIFICATION",
+    "fixtures/pmtiles/mobile_verification/README.md": "PROPOSED",
+    "fixtures/pmtiles/mobile_verification/cases.json": "CONFIRMED",
+    "tests/validators/test_pmtiles_mobile_verification_fixture.py": "CONFIRMED",
+    "tools/validators/pmtiles/validate_mobile_verification_fixture.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "python-syntax-compilation",
+      "outcome": "PASS",
+      "reason": "The fixture validator and focused unittest module compile locally."
+    },
+    {
+      "gate": "focused-python-unittest-6",
+      "outcome": "PASS",
+      "reason": "Six standard-library tests passed, including distinct signature-carrier denial and no-network enforcement."
+    },
+    {
+      "gate": "fixture-polarity-1-pass-8-deny",
+      "outcome": "PASS",
+      "reason": "The compact base-plus-mutation manifest produced one positive and eight exact negative outcomes."
+    },
+    {
+      "gate": "typescript-signature-carrier-runtime-replay",
+      "outcome": "PASS",
+      "reason": "Node.js type stripping replayed the core TypeScript module and proved the rebound carrier mismatch returns MOBILE_PMTILES_SIGNATURE_HOLD_INVALID without invoking the renderer."
+    },
+    {
+      "gate": "repository-native-vitest",
+      "outcome": "SKIPPED",
+      "reason": "The local environment lacks the repository's locked dependency installation and runs Node.js 24 rather than the declared Node.js 22 lane; hosted exact-head CI is controlling."
+    },
+    {
+      "gate": "mobile-playwright-denied-state",
+      "outcome": "SKIPPED",
+      "reason": "The local environment lacks the locked Vite and Playwright dependency installation; hosted exact-head CI is controlling."
+    },
+    {
+      "gate": "repository-wide-ratchets",
+      "outcome": "PASS",
+      "reason": "make test passed 471 tests and 29 subtests; make schemas passed 10 registered validators; repository guardrails passed 19 workflow-security tests, 24 topology tests, and exact drift ratchets; boundary guards passed 18 tests."
+    },
+    {
+      "gate": "documentation-control-tests",
+      "outcome": "PASS",
+      "reason": "The no-network metadata and document-graph suites passed 24 and 27 tests respectively."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed draft pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Independent human semantic and security review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:pass20-map-004-exp-002",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md#KFM-IDX-MAP-004-and-EXP-002"
+    },
+    {
+      "id": "attachment:unified-manual-pmtiles-sidecar",
+      "validated": true,
+      "evidence_ref": "attachment:Unified Implementation Architecture Build Manual.md#12.3"
+    },
+    {
+      "id": "repository:directory-governance",
+      "validated": true,
+      "evidence_ref": "github:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "repository:prior-mobile-pmtiles-receipt",
+      "validated": true,
+      "evidence_ref": "github:data/receipts/generated/genrec-mobile-pmtiles-verification-20260808.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-14T14:32:43Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Successor authoring receipt for the 2026-08-08 synthetic mobile PMTiles fixture. This slice preserves that historical receipt, adds one signature-carrier mismatch case with an internally rebound PMSIG sidecar digest, and proves a distinct finite denial before decode/render plus a browser-visible denied state that clears prior pixels. It does not verify COSE, approve a key, install or boot MapLibre, activate a source, evaluate policy or release authority, deploy, publish, or grant public-use authority."
+}

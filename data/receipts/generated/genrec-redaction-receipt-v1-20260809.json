@@ -1,0 +1,119 @@
+{
+  "receipt_id": "genrec-redaction-receipt-v1-20260809",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/redaction-receipt.yml",
+    "docs/intake/exploratory/redaction-receipt-v1-source-map.md",
+    "fixtures/contracts/v1/receipts/redaction_receipt/cases.json",
+    "schemas/contracts/v1/receipts/redaction_receipt.schema.json",
+    "tests/validators/test_validate_redaction_receipt.py",
+    "tools/validators/receipts/validate_redaction_receipt.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/redaction-receipt.yml": "sha256:c46c164b718f7bca0f33260f3c09e5217536e2fa063b1de74ea4784530d79c02",
+    "docs/intake/exploratory/redaction-receipt-v1-source-map.md": "sha256:9f7f5a21c65dcdb5ec8c8986a12a104dde7bda201b1399435c22ef46032f7002",
+    "fixtures/contracts/v1/receipts/redaction_receipt/cases.json": "sha256:4ba5c7ea2fe6f57dcc3bd795f6c06bd9b8a1c93f3d1ee20164f6353c4f7ac360",
+    "schemas/contracts/v1/receipts/redaction_receipt.schema.json": "sha256:d9b0c067aeb50497775e4ba70143fdff06e7fdb796f3b690a093f056e1a123bf",
+    "tests/validators/test_validate_redaction_receipt.py": "sha256:4f361db72826987c911a9b7c8b345599659e82be2079adcca6215c23d518acc2",
+    "tools/validators/receipts/validate_redaction_receipt.py": "sha256:f977392a01a756077acb9a545f426308df495f2edcf8655d1d39a5625c2b7c0b"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-09"
+  },
+  "prompt_or_contract": "sha256:aeacb40b26a8518e04a60c03e23cd69292bdaed7996e3a4f9a68fe9e7319f92e",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "uploaded-file search",
+      "GitHub connector repository inspection and mutation",
+      "local deterministic Python validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM Unified Doctrine Synthesis.md",
+      "Kansas Frontier Matrix — AI Build Operating Contract.md"
+    ],
+    "evidence_refs": [
+      "attachment:KFM Unified Doctrine Synthesis.md#RedactionReceipt"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/redaction-receipt.yml": "CONFIRMED",
+    "docs/intake/exploratory/redaction-receipt-v1-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/receipts/redaction_receipt/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/receipts/redaction_receipt.schema.json": "PROPOSED",
+    "tests/validators/test_validate_redaction_receipt.py": "CONFIRMED",
+    "tools/validators/receipts/validate_redaction_receipt.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "python-syntax-compilation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "draft-2020-12-schema-meta-validation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "focused-unittest-suite",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "exact-fixture-replay",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "no-network-boundary",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending on draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "source-basis",
+      "validated": true,
+      "evidence_ref": "attachment:KFM Unified Doctrine Synthesis.md#RedactionReceipt"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/e2cbaf865f8e62dfec080db9d8933ee7590b7dc2/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-09T02:00:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only machine hardening of the existing RedactionReceipt schema scaffold. No restricted input is opened, no policy or review is executed, and no lifecycle, release, or publication state is changed."
+}

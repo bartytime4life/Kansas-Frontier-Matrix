@@ -1,0 +1,10 @@
+{
+  "decision_id": "pd1",
+  "outcome": "ABSTAIN",
+  "policy_family": "access",
+  "reasons": [
+    "none"
+  ],
+  "obligations": [],
+  "evaluated_at": "2026-05-09T00:00:00Z"
+}

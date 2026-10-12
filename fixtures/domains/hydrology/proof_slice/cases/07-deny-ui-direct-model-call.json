@@ -1,0 +1,8 @@
+{
+  "case_id": "07-deny-ui-direct-model-call",
+  "thin_slice_assertion": 7,
+  "description": "A browser request straight to a model bypasses the governed API and is denied.",
+  "overrides": {
+    "surface": "browser_direct_model"
+  }
+}

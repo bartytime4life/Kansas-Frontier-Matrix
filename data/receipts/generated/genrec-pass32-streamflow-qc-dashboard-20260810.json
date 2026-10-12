@@ -1,0 +1,199 @@
+{
+  "receipt_id": "genrec-pass32-streamflow-qc-dashboard-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/explorer-web/src/adapters/StreamflowQcDashboardProjection.ts",
+    "apps/explorer-web/src/features/streamflow_qc_dashboard/README.md",
+    "apps/explorer-web/src/features/streamflow_qc_dashboard/index.ts",
+    "apps/explorer-web/tests/browser/streamflow-qc-dashboard.fixture.ts",
+    "apps/explorer-web/tests/browser/streamflow-qc-dashboard.html",
+    "apps/explorer-web/tests/browser/streamflow-qc-dashboard.spec.ts",
+    "apps/explorer-web/tests/streamflow-qc-dashboard.test.ts",
+    "docs/intake/exploratory/pass-32-streamflow-qc-dashboard-source-map.md",
+    "fixtures/ui/streamflow_qc_dashboard_projection/README.md",
+    "fixtures/ui/streamflow_qc_dashboard_projection/invalid/extra-raw-flow-field.json",
+    "fixtures/ui/streamflow_qc_dashboard_projection/invalid/regional-with-integrity-concern.json",
+    "fixtures/ui/streamflow_qc_dashboard_projection/valid/denied.json",
+    "fixtures/ui/streamflow_qc_dashboard_projection/valid/error.json",
+    "fixtures/ui/streamflow_qc_dashboard_projection/valid/held.json",
+    "fixtures/ui/streamflow_qc_dashboard_projection/valid/local-review.json",
+    "fixtures/ui/streamflow_qc_dashboard_projection/valid/no-escalation.json",
+    "fixtures/ui/streamflow_qc_dashboard_projection/valid/regional-context.json"
+  ],
+  "artifact_hashes": {
+    "apps/explorer-web/src/adapters/StreamflowQcDashboardProjection.ts": "sha256:21b9ddef6f1abda29f8cad5ed6913c019f8cf705b3413381ef81836911f1b020",
+    "apps/explorer-web/src/features/streamflow_qc_dashboard/README.md": "sha256:2b8d5372214b43479b8dfffc48df6385684719c2e717e1bf8303cc29db699010",
+    "apps/explorer-web/src/features/streamflow_qc_dashboard/index.ts": "sha256:0486df318f5c11cebdb0c5faca43cde211ca33184371a59216e0b2acbe8b36d8",
+    "apps/explorer-web/tests/browser/streamflow-qc-dashboard.fixture.ts": "sha256:1557fbc9129c5ea6165acf14d366b9872ac61e1dd04ea337386417c74ff3b62a",
+    "apps/explorer-web/tests/browser/streamflow-qc-dashboard.html": "sha256:ca6584c640d5381f663c8bdd53190446238f557d41da96ff54b5bdc187d65ffc",
+    "apps/explorer-web/tests/browser/streamflow-qc-dashboard.spec.ts": "sha256:a2880372221120dd780ab90482ea5d1feec4eb3a9bfe961f39d8d745576d4ad2",
+    "apps/explorer-web/tests/streamflow-qc-dashboard.test.ts": "sha256:acc54cff8851e2544257f7896cc8917bf63017fd862a7270b4f5003e095c3587",
+    "docs/intake/exploratory/pass-32-streamflow-qc-dashboard-source-map.md": "sha256:7b397f67e4025bf8ba610e412d6e526b59ebac94a4695f6c199d8f3646802311",
+    "fixtures/ui/streamflow_qc_dashboard_projection/README.md": "sha256:fa1466b93ae9c71f99d9cf56220774f65bd3eca1bf39ca61496ce87a29ee6e4d",
+    "fixtures/ui/streamflow_qc_dashboard_projection/invalid/extra-raw-flow-field.json": "sha256:20334e78a851933f57529d3cf4bd14fe490c803d94a9ae3a6ee641018f92abd3",
+    "fixtures/ui/streamflow_qc_dashboard_projection/invalid/regional-with-integrity-concern.json": "sha256:51eb4da752ebd58f34097cc59d8b7693b570bee88cfb00781dc67501f2b3ff84",
+    "fixtures/ui/streamflow_qc_dashboard_projection/valid/denied.json": "sha256:f694dff1273517967c77c38f6c397aed8c127d2d08b46d944aa7d818ea028d9c",
+    "fixtures/ui/streamflow_qc_dashboard_projection/valid/error.json": "sha256:8ac5df45d749acc5df2fa16e003e52c1145e4a88b8530842a1e46e9660b1d900",
+    "fixtures/ui/streamflow_qc_dashboard_projection/valid/held.json": "sha256:45e23ffb4dab4a24f36edd43bd4ca8b9e1cc486e392946c8f4ec2f39dcb616a3",
+    "fixtures/ui/streamflow_qc_dashboard_projection/valid/local-review.json": "sha256:6d4fcd73b7995916ea4ab42e87ee8407130f93c81b3993f1bce49686844a85f4",
+    "fixtures/ui/streamflow_qc_dashboard_projection/valid/no-escalation.json": "sha256:ddcef1b35b7f0a0baa884edce9e095cb0dcc77dc63a1dfaf82462cbffee15529",
+    "fixtures/ui/streamflow_qc_dashboard_projection/valid/regional-context.json": "sha256:fdb89b8e10f05abf1e9277879fa13e6adc1883f1d82e6405bddc336ac4675118"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "2026-08-10"
+  },
+  "prompt_or_contract": "sha256:b1918f996e70f5ba901cf5e5979e2c2f00672e2486caa064ccbaf56f6fb0ae4b",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector",
+      "GitHub connector",
+      "TypeScript 7.0.2",
+      "Vitest 4.1.10",
+      "Playwright 1.62.1",
+      "Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:020a1207c2a6d193dc23defca40d24d429acd1273da17c2494582116ec8e9639"
+    ],
+    "attached_docs": [
+      "KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf",
+      "KFM_Full_Atlas_seed_cards"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#KFM-P32-FEAT-0001",
+      "gdrive:connected-pass32-atlas#KFM-P32-FEAT-0001",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@52675a800825c071ddc9df9476b543c49d73efd8",
+      "repo:contracts/domains/hydrology/streamflow_qc_context_assessment.md",
+      "repo:docs/intake/exploratory/pass-32-streamflow-qc-context-source-map.md",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "truth_labels": {
+    "apps/explorer-web/src/adapters/StreamflowQcDashboardProjection.ts": "PROPOSED",
+    "apps/explorer-web/src/features/streamflow_qc_dashboard/README.md": "PROPOSED",
+    "apps/explorer-web/src/features/streamflow_qc_dashboard/index.ts": "PROPOSED",
+    "apps/explorer-web/tests/browser/streamflow-qc-dashboard.fixture.ts": "PROPOSED",
+    "apps/explorer-web/tests/browser/streamflow-qc-dashboard.html": "PROPOSED",
+    "apps/explorer-web/tests/browser/streamflow-qc-dashboard.spec.ts": "PROPOSED",
+    "apps/explorer-web/tests/streamflow-qc-dashboard.test.ts": "PROPOSED",
+    "docs/intake/exploratory/pass-32-streamflow-qc-dashboard-source-map.md": "PROPOSED",
+    "fixtures/ui/streamflow_qc_dashboard_projection/README.md": "PROPOSED",
+    "fixtures/ui/streamflow_qc_dashboard_projection/invalid/extra-raw-flow-field.json": "PROPOSED",
+    "fixtures/ui/streamflow_qc_dashboard_projection/invalid/regional-with-integrity-concern.json": "PROPOSED",
+    "fixtures/ui/streamflow_qc_dashboard_projection/valid/denied.json": "PROPOSED",
+    "fixtures/ui/streamflow_qc_dashboard_projection/valid/error.json": "PROPOSED",
+    "fixtures/ui/streamflow_qc_dashboard_projection/valid/held.json": "PROPOSED",
+    "fixtures/ui/streamflow_qc_dashboard_projection/valid/local-review.json": "PROPOSED",
+    "fixtures/ui/streamflow_qc_dashboard_projection/valid/no-escalation.json": "PROPOSED",
+    "fixtures/ui/streamflow_qc_dashboard_projection/valid/regional-context.json": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-pr-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Current main, recently merged work, and open pull requests were reviewed for the selected card and changed-path overlap; no streamflow dashboard implementation collision was found."
+    },
+    {
+      "gate": "drive-source-reconciliation",
+      "outcome": "PASS",
+      "reason": "The connected Drive atlas corpus and supplied consolidated atlas expose the same streamflow dashboard card, source statement, and spec hash."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "Application code, synthetic fixtures, tests, exploratory source mapping, and authoring receipt remain in established responsibility roots under accepted ADR-0029."
+    },
+    {
+      "gate": "foundation-validator-suite",
+      "outcome": "PASS",
+      "reason": "All 8 existing streamflow QC context assessment validator tests passed."
+    },
+    {
+      "gate": "focused-explorer-unit-tests",
+      "outcome": "PASS",
+      "reason": "All 8 streamflow QC dashboard unit tests passed."
+    },
+    {
+      "gate": "explorer-production-build",
+      "outcome": "PASS",
+      "reason": "Explorer TypeScript checking and Vite production build completed locally. The workspace Node 24 runtime emitted the expected engine warning; hosted CI uses the repository-pinned Node 22 line."
+    },
+    {
+      "gate": "explorer-full-unit-suite",
+      "outcome": "PASS",
+      "reason": "All 182 Explorer unit tests passed across 24 files."
+    },
+    {
+      "gate": "browser-fixture-typecheck-and-collection",
+      "outcome": "PASS",
+      "reason": "The browser fixture and three Playwright cases passed isolated TypeScript no-emit checking and Playwright test discovery."
+    },
+    {
+      "gate": "documentation-qa",
+      "outcome": "PASS",
+      "reason": "All three new Markdown metadata blocks and their bounded local links passed repository validators."
+    },
+    {
+      "gate": "local-playwright-browser",
+      "outcome": "SKIPPED",
+      "reason": "No Chromium executable is installed and the sandbox returned a blocked zero-byte browser download; the existing ui-build workflow installs Chrome and must validate the pushed exact head."
+    },
+    {
+      "gate": "generated-receipt-integrity",
+      "outcome": "PASS",
+      "reason": "The repository generated-receipt validator confirmed exact artifact hashes and bounded receipt shape."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Hydrology, UI, evidence, and release review remain pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:pass32-streamflow-qc-dashboard",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#KFM-P32-FEAT-0001"
+    },
+    {
+      "id": "gdrive:pass32-streamflow-qc-dashboard",
+      "validated": true,
+      "evidence_ref": "gdrive:connected-pass32-atlas#KFM-P32-FEAT-0001"
+    },
+    {
+      "id": "repository:streamflow-qc-context",
+      "validated": true,
+      "evidence_ref": "repo:contracts/domains/hydrology/streamflow_qc_context_assessment.md"
+    },
+    {
+      "id": "repository:adr-0029-directory-rules-v2",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-10T18:10:49Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-first implementation of Pass 32 KFM-P32-FEAT-0001. The dashboard accepts only finite public-safe context and cannot fetch a source, expose raw flow, compute a percentile, invalidate a sensor, declare an event, mutate detector configuration, approve, release, deploy, publish, or authorize public use."
+}

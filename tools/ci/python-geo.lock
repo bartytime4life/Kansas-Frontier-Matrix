@@ -1,0 +1,24 @@
+# Fixed optional transforms for synthetic pipeline CI on Python 3.11/3.12.
+# pyproj version follows packages/geo/pyproject.toml; certifi matches the audit lock.
+# SHA-256 wheel hashes read from PyPI release metadata; no source builds.
+certifi==2026.7.22 \
+    --hash=sha256:62f22742b58a1a33014a2b6b706588a8d7e2a88ae7bd1a6ebe8c992928483775
+pyproj==3.7.2 \
+    --hash=sha256:0a9bb26a6356fb5b033433a6d1b4542158fb71e3c51de49b4c318a1dff3aeaab \
+    --hash=sha256:0b7cb633565129677b2a183c4d807c727d1c736fcb0568a12299383056e67433 \
+    --hash=sha256:11614a054cd86a2ed968a657d00987a86eeb91fdcbd9ad3310478685dc14a128 \
+    --hash=sha256:1edc34266c0c23ced85f95a1ee8b47c9035eae6aca5b6b340327250e8e281630 \
+    --hash=sha256:2514d61f24c4e0bb9913e2c51487ecdaeca5f8748d8313c933693416ca41d4d5 \
+    --hash=sha256:281cb92847814e8018010c48b4069ff858a30236638631c1a91dd7bfa68f8a8a \
+    --hash=sha256:38b08d85e3a38e455625b80e9eb9f78027c8e2649a21dec4df1f9c3525460c71 \
+    --hash=sha256:509a146d1398bafe4f53273398c3bb0b4732535065fa995270e52a9d3676bca3 \
+    --hash=sha256:567caa03021178861fad27fabde87500ec6d2ee173dd32f3e2d9871e40eebd68 \
+    --hash=sha256:5e26484d80fea56273ed1555abaea161e9661d81a6c07815d54b8e883d4ceb25 \
+    --hash=sha256:8693ca3892d82e70de077701ee76dd13d7bca4ae1c9d1e739d72004df015923a \
+    --hash=sha256:9c8577f0b7bb09118ec2e57e3babdc977127dd66326d6c5d755c76b063e6d9dc \
+    --hash=sha256:a23f59904fac3a5e7364b3aa44d288234af267ca041adb2c2b14a903cd5d3ac5 \
+    --hash=sha256:aa9f26c21bc0e2dc3d224cb1eb4020cf23e76af179a7c66fea49b828611e4260 \
+    --hash=sha256:b3d99ed57d319da042f175f4554fc7038aa4bcecc4ac89e217e350346b742c9d \
+    --hash=sha256:c203101d1dc3c038a56cff0447acc515dd29d6e14811406ac539c21eed422b2a \
+    --hash=sha256:f2af4ed34b2cf3e031a2d85b067a3ecbd38df073c567e04b52fa7a0202afde8a \
+    --hash=sha256:f9428b318530625cb389b9ddc9c51251e172808a4af79b82809376daaeabe5e9

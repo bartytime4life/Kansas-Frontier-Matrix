@@ -1,0 +1,247 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kansasfrontiermatrix.org/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+  "title": "GENERATED_RECEIPT",
+  "description": "Per-artifact provenance record for AI-authored work. See ai-build-operating-contract.md §34.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "receipt_id",
+    "contract_version",
+    "artifact_paths",
+    "artifact_hashes",
+    "model_identity",
+    "prompt_or_contract",
+    "parameters",
+    "inputs",
+    "truth_labels",
+    "validation_gates",
+    "policy_decisions",
+    "citations",
+    "human_review",
+    "created_at",
+    "emitter"
+  ],
+  "properties": {
+    "receipt_id": {
+      "type": "string",
+      "description": "Stable identifier for this receipt. ULID, UUIDv7, or content-derived hash.",
+      "pattern": "^[A-Za-z0-9_:.-]{8,128}$"
+    },
+    "contract_version": {
+      "type": "string",
+      "description": "Semantic version of the AI Build Operating Contract this receipt was emitted under.",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:-[A-Za-z0-9.+-]+)?$"
+    },
+    "artifact_paths": {
+      "type": "array",
+      "description": "Repo paths the AI authored or substantively modified.",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
+    },
+    "artifact_hashes": {
+      "type": "object",
+      "description": "Map of artifact_paths entries to their content hashes (BLAKE3 or SHA-256 prefix).",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "string",
+        "pattern": "^(blake3|sha256):[0-9a-f]{32,128}$"
+      }
+    },
+    "model_identity": {
+      "type": "object",
+      "description": "What model authored the artifacts.",
+      "additionalProperties": false,
+      "required": ["provider", "model", "version"],
+      "properties": {
+        "provider": { "type": "string", "minLength": 1 },
+        "model": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "minLength": 1 },
+        "parameter_hash": {
+          "type": "string",
+          "pattern": "^(blake3|sha256):[0-9a-f]{32,128}$"
+        }
+      }
+    },
+    "prompt_or_contract": {
+      "type": "string",
+      "description": "Hash of the prompt, system prompt, or contract that produced the artifact.",
+      "pattern": "^(blake3|sha256):[0-9a-f]{32,128}$"
+    },
+    "parameters": {
+      "type": "object",
+      "description": "Generation parameters at emit time.",
+      "additionalProperties": true,
+      "properties": {
+        "seed": { "type": ["integer", "null"] },
+        "temperature": { "type": ["number", "null"], "minimum": 0, "maximum": 2 },
+        "top_p": { "type": ["number", "null"], "minimum": 0, "maximum": 1 },
+        "max_tokens": { "type": ["integer", "null"], "minimum": 1 },
+        "tools_enabled": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "inputs": {
+      "type": "object",
+      "description": "What the model saw (hashes or named references).",
+      "additionalProperties": false,
+      "properties": {
+        "evidence_hashes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^(blake3|sha256):[0-9a-f]{32,128}$"
+          }
+        },
+        "attached_docs": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "evidence_refs": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "truth_labels": {
+      "type": "object",
+      "description": "Per-artifact truth label from the core four (§1.3).",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "string",
+        "enum": ["CONFIRMED", "PROPOSED", "UNKNOWN", "NEEDS VERIFICATION"]
+      }
+    },
+    "validation_gates": {
+      "type": "array",
+      "description": "Validation gates considered for this artifact set.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["gate", "outcome"],
+        "properties": {
+          "gate": { "type": "string", "minLength": 1 },
+          "outcome": {
+            "type": "string",
+            "enum": ["PASS", "FAIL", "SKIPPED"]
+          },
+          "reason": { "type": "string" }
+        }
+      }
+    },
+    "policy_decisions": {
+      "type": "array",
+      "description": "References to PolicyDecision records consulted during this generation.",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "citations": {
+      "type": "array",
+      "description": "Citation records and whether each was validated.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "validated"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "validated": { "type": "boolean" },
+          "evidence_ref": { "type": "string" }
+        }
+      }
+    },
+    "human_review": {
+      "type": "object",
+      "description": "Reviewer trail and review state.",
+      "additionalProperties": false,
+      "required": ["state"],
+      "properties": {
+        "reviewer_ids": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "state": {
+          "type": "string",
+          "enum": ["pending", "approved", "changes_requested", "rejected"]
+        },
+        "timestamp": {
+          "type": ["string", "null"],
+          "format": "date-time"
+        }
+      }
+    },
+    "override_record": {
+      "oneOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["reason", "approver", "scope"],
+          "properties": {
+            "reason": { "type": "string", "minLength": 1 },
+            "approver": { "type": "string", "minLength": 1 },
+            "scope": { "type": "string", "minLength": 1 },
+            "expires_at": {
+              "type": ["string", "null"],
+              "format": "date-time"
+            }
+          }
+        }
+      ]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO-8601 emission timestamp."
+    },
+    "emitter": {
+      "type": "string",
+      "description": "Identity of the agent that emitted this receipt.",
+      "minLength": 1
+    },
+    "links": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "pr_number": { "type": ["integer", "null"], "minimum": 1 },
+        "adr_link": { "type": ["string", "null"] },
+        "drift_register_entry": { "type": ["string", "null"] }
+      }
+    },
+    "notes": {
+      "type": "string",
+      "maxLength": 4096
+    }
+  },
+  "allOf": [
+    {
+      "$comment": "Mergeability invariant: human_review.state must be approved OR override_record must be non-null.",
+      "anyOf": [
+        {
+          "properties": {
+            "human_review": {
+              "properties": { "state": { "const": "approved" } },
+              "required": ["state"]
+            }
+          },
+          "required": ["human_review"]
+        },
+        {
+          "properties": { "override_record": { "type": "object" } },
+          "required": ["override_record"]
+        },
+        {
+          "$comment": "A pending receipt is well-formed but not mergeable; the mergeable check is separate.",
+          "properties": {
+            "human_review": {
+              "properties": {
+                "state": { "enum": ["pending", "changes_requested", "rejected"] }
+              }
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

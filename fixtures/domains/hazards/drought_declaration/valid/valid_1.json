@@ -1,0 +1,32 @@
+{
+  "_fixture_meta": {
+    "fixture_label": "valid_kwo_april_2026_drought_declaration",
+    "network_status": "no_network_required",
+    "sensitive_data": false,
+    "source_id": "src:kwo-drought-proclamation",
+    "notes": "Synthetic fixture only. Represents the Kansas Water Office April 30, 2026 proclamation placing all 105 counties in watch/warning/emergency status. Anti-collapse rule: declaration_stage is legal authority; it is not derived from USDM D0-D4 categories."
+  },
+  "object_type": "DroughtDeclaration",
+  "schema_version": "v1",
+  "declaration_id": "decl:kwo:2026-04-30:emergency",
+  "issuing_authority": "Kansas Water Office",
+  "legal_instrument_ref": "kfm://instrument/kwo/drought-proclamation-2026-04-30",
+  "legal_instrument_resolution_status": "bound",
+  "effective_at": "2026-04-30T00:00:00Z",
+  "rescinded_at": null,
+  "retrieved_at": "2026-08-03T12:00:00Z",
+  "source_ref": "src:kwo-drought-proclamation",
+  "source_resolution_status": "bound",
+  "county_scope": {
+    "all_105_counties": true,
+    "county_refs": null,
+    "county_scope_resolution_status": "bound"
+  },
+  "declaration_stage_vocabulary": "kansas_kwo_2016",
+  "declaration_stage": "emergency",
+  "predecessor_ref": null,
+  "successor_ref": null,
+  "correction_of": null,
+  "review_state": "needs_review",
+  "release_posture": "not_released"
+}

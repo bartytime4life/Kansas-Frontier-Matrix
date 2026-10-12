@@ -1,0 +1,139 @@
+{
+  "receipt_id": "genrec-focus-mode-county-build-plan-template-ab00fbc3417e",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/focus-mode/counties/_template/county-build-plan.md"
+  ],
+  "artifact_hashes": {
+    "docs/focus-mode/counties/_template/county-build-plan.md": "sha256:ab00fbc3417e6b074f29b9bc6330b28ac4a616e8e952fc539b0988349f1e353f"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5"
+  },
+  "prompt_or_contract": "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb"
+    ],
+    "attached_docs": [
+      "KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0 — current user-supplied task contract"
+    ],
+    "evidence_refs": [
+      "repo:commit/7ef962c606beabd9119d0aae283171839f806093",
+      "repo:docs/focus-mode/counties/_template/county-build-plan.md@7ef962c606beabd9119d0aae283171839f806093#blob=327c6304cd5301a38c9e086610be12725f3fabf7",
+      "repo:docs/focus-mode/README.md@7ef962c606beabd9119d0aae283171839f806093#blob=8600c0ac09452b4b03e5f60b94f1eb27c072b5db",
+      "repo:docs/focus-mode/counties/COUNTY_INDEX.md@7ef962c606beabd9119d0aae283171839f806093#blob=ba888a806148866501bf1f6c730a7b411ca67277",
+      "repo:docs/adr/ADR-0027-county-focus-mode-control-plane.md@7ef962c606beabd9119d0aae283171839f806093#blob=4dfb29c963cd5662265d3cb97f98be82212d5e08",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@7ef962c606beabd9119d0aae283171839f806093#blob=a4de0d7a96b78da59cfc499d1025e1508afd8dd9",
+      "repo:docs/doctrine/directory-rules.md@7ef962c606beabd9119d0aae283171839f806093#blob=fd49a0b83e55cef52c1124281f093e263526898d",
+      "repo:contracts/focus_mode/focus_mode_payload.md@7ef962c606beabd9119d0aae283171839f806093#blob=7fe687d587cd60dafd6e3fa34306cd58fd125c73",
+      "repo:schemas/contracts/v1/focus/README.md@7ef962c606beabd9119d0aae283171839f806093#blob=5debcb6f96e5eaa2e5bd91effa8e9c16c50c2e8d",
+      "repo:schemas/contracts/v1/ui/map_context_envelope.schema.json@7ef962c606beabd9119d0aae283171839f806093#blob=6972d16341339c266499eca17dc2717b67778bed",
+      "repo:policy/focus/README.md@7ef962c606beabd9119d0aae283171839f806093#blob=35001e958a6b51d2f22004d5e637d72baeab49af",
+      "repo:tools/validators/validate_focus_mode_index.py@7ef962c606beabd9119d0aae283171839f806093#blob=89391d75680e859dddf3696b9b782369f364c73e",
+      "repo:tools/validators/validator_registry.json@7ef962c606beabd9119d0aae283171839f806093#blob=86aeadabe7104114c3f1efe60a8708ec11563bb1",
+      "repo:docs/architecture/publication/promotion-gates.md@7ef962c606beabd9119d0aae283171839f806093#blob=a3126726a625b5a15712b1c3cc7dc2a317192dd9",
+      "repo:.github/CODEOWNERS@7ef962c606beabd9119d0aae283171839f806093#blob=dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61",
+      "attachment:KFM_REPOSITORY_BUILD_V6#sha256=b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb"
+    ]
+  },
+  "truth_labels": {
+    "docs/focus-mode/counties/_template/county-build-plan.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-base-target-and-overlap-inspection",
+      "outcome": "PASS",
+      "reason": "Pinned current main and the prior target blob; bounded open-PR and branch searches found no matching active work."
+    },
+    {
+      "gate": "same-path-directory-governance-review",
+      "outcome": "PASS",
+      "reason": "Accepted ADR-0029 keeps docs/ as the owning root; this revision stays at the tracked path and explicitly leaves Focus subtree migration unresolved."
+    },
+    {
+      "gate": "repository-grounded-contract-reconciliation",
+      "outcome": "PASS",
+      "reason": "The document distinguishes current singular-path evidence, proposed ADR-0027, the proposed semantic contract, absent county payload schema/validator, the validator grammar mismatch, inactive Focus policy, and non-publication."
+    },
+    {
+      "gate": "markdown-metadata-anchor-table-fence-and-sensitivity-scan",
+      "outcome": "PASS",
+      "reason": "One H1, ordered headings, stable explicit anchors, balanced YAML fence, consistent tables, required metadata fields, final newline, and no coordinate-like harmful precision or executable HTML were found."
+    },
+    {
+      "gate": "repository-relative-link-resolution",
+      "outcome": "PASS",
+      "reason": "All 13 unique repository-relative targets resolved at the pinned base."
+    },
+    {
+      "gate": "generated-receipt-shape-and-artifact-binding",
+      "outcome": "PASS",
+      "reason": "The receipt uses contract 3.0.0, binds the complete SHA-256 artifact digest, keeps truth-label and artifact maps aligned, cites repository evidence, and records pending human review."
+    },
+    {
+      "gate": "repository-native-full-and-hosted-validation",
+      "outcome": "SKIPPED",
+      "reason": "No mounted repository dependency environment is available; exact-head hosted checks remain to be inspected after draft PR creation."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "repo-focus-lane-boundary",
+      "validated": true,
+      "evidence_ref": "repo:docs/focus-mode/README.md@7ef962c606beabd9119d0aae283171839f806093"
+    },
+    {
+      "id": "repo-directory-authority",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@7ef962c606beabd9119d0aae283171839f806093"
+    },
+    {
+      "id": "repo-county-control-plane-candidate",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0027-county-focus-mode-control-plane.md@7ef962c606beabd9119d0aae283171839f806093"
+    },
+    {
+      "id": "repo-focus-index-validator",
+      "validated": true,
+      "evidence_ref": "repo:tools/validators/validate_focus_mode_index.py@7ef962c606beabd9119d0aae283171839f806093"
+    },
+    {
+      "id": "repo-focus-policy-boundary",
+      "validated": true,
+      "evidence_ref": "repo:policy/focus/README.md@7ef962c606beabd9119d0aae283171839f806093"
+    },
+    {
+      "id": "attached-implementation-prompt-v6",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_REPOSITORY_BUILD_V6#sha256=b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-20T23:32:49Z",
+  "emitter": "OpenAI Codex via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0027-county-focus-mode-control-plane.md",
+    "drift_register_entry": "FM-27-03"
+  },
+  "notes": "Authoring provenance only. This receipt is not evidence authority, policy approval, migration authority, merge approval, release, deployment, or publication authority."
+}

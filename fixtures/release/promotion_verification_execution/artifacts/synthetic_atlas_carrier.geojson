@@ -1,0 +1,55 @@
+{
+  "type": "FeatureCollection",
+  "name": "synthetic-kansas-promotion-proof",
+  "bbox": [-102.0, 37.0, -94.6, 40.0],
+  "kfm": {
+    "candidate_id": "overlay:synthetic-kansas-promotion-proof",
+    "schema_ref": "https://www.rfc-editor.org/rfc/rfc7946",
+    "truth_posture": "SYNTHETIC",
+    "fixture_only": true,
+    "lifecycle_state": "FIXTURE",
+    "policy_label": "public",
+    "rights": {
+      "status": "SYNTHETIC_FIXTURE",
+      "basis": "repository-authored deterministic test geometry"
+    },
+    "sensitivity": {
+      "classification": "PUBLIC_SYNTHETIC",
+      "precision": "generalized-test-extent"
+    },
+    "temporal": {
+      "start": "2026-04-13T00:00:00Z",
+      "end": "2026-04-13T01:00:00Z"
+    },
+    "quality": {
+      "geometry_valid": true,
+      "deterministic": true,
+      "feature_count": 1,
+      "limitations": [
+        "Fixture-only generalized geometry; not surveyed, observed, or suitable for real-world decisions."
+      ]
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "id": "synthetic-kansas-test-extent",
+      "properties": {
+        "classification": "synthetic",
+        "value": 1
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [-102.0, 37.0],
+            [-94.6, 37.0],
+            [-94.6, 40.0],
+            [-102.0, 40.0],
+            [-102.0, 37.0]
+          ]
+        ]
+      }
+    }
+  ]
+}

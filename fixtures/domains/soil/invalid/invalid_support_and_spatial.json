@@ -1,0 +1,31 @@
+{
+  "record_id": "soil-fixture-invalid-support-spatial",
+  "support_type": "soil_profile",
+  "source_descriptor_ref": "source:synthetic-soil-station",
+  "evidence_refs": [
+    "evidence:synthetic-soil-reading"
+  ],
+  "spatial_support": {
+    "kind": "exact_point",
+    "county_fips": "99",
+    "latitude": "candidate-latitude",
+    "longitude": "candidate-longitude"
+  },
+  "depth_interval_cm": {
+    "top": 10,
+    "bottom": 20
+  },
+  "measurement": {
+    "property": "volumetric_water_content",
+    "value": 0.24,
+    "unit": "m3/m3"
+  },
+  "governance": {
+    "rights_state": "fixture_only",
+    "sensitivity_state": "public_safe_fixture",
+    "review_state": "fixture_only",
+    "release_state": "not_released",
+    "promotion_eligible": false,
+    "rollback_state": "fixture_only"
+  }
+}

@@ -1,0 +1,182 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/common/distinct_null_deduplication_assessment.schema.json",
+  "title": "DistinctNullDeduplicationAssessmentCandidate",
+  "description": "Fixture-only DISTINCT-like tuple and NULL-semantics declaration with no SQL execution, row mutation, identity reconciliation, or authority effects.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "profile_spec_hash",
+    "source_card",
+    "assessed_at",
+    "operation_ref",
+    "operation_digest",
+    "use_case",
+    "operation_kind",
+    "dialect_profile_ref",
+    "distinct_fields",
+    "null_semantics",
+    "fixture_check",
+    "adjacent_contracts",
+    "disclosure",
+    "limitations",
+    "authority_claims"
+  ],
+  "properties": {
+    "object_type": {"const": "DistinctNullDeduplicationAssessmentCandidate"},
+    "schema_version": {"const": "1.0.0"},
+    "profile": {"const": "kfm.common.distinct-null-deduplication.fixture.v1"},
+    "profile_spec_hash": {"$ref": "#/$defs/sha256"},
+    "source_card": {"const": "KFM-P18-INV-155"},
+    "assessed_at": {"type": "string", "format": "date-time"},
+    "operation_ref": {"$ref": "#/$defs/ref"},
+    "operation_digest": {"$ref": "#/$defs/sha256"},
+    "use_case": {
+      "enum": ["COUNT_POPULATION", "DATASET_ROW_DEDUPLICATION", "ENTITY_MATCH_CANDIDATE", "UNRESOLVED"]
+    },
+    "operation_kind": {
+      "enum": ["SQL_DISTINCT", "EXPLICIT_GROUP_BY", "DETERMINISTIC_RECONCILIATION", "UNRESOLVED"]
+    },
+    "dialect_profile_ref": {"$ref": "#/$defs/nullable_ref"},
+    "distinct_fields": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 16,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/field_name"}
+    },
+    "null_semantics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["row_posture", "null_equivalence", "multi_column_basis"],
+      "properties": {
+        "row_posture": {
+          "enum": ["INCLUDE_ROWS", "EXCLUDE_IF_ANY_NULL", "EXCLUDE_IF_ALL_NULL", "ERROR", "UNRESOLVED"]
+        },
+        "null_equivalence": {
+          "enum": ["COLLAPSE_EQUAL_NULL_POSITIONS", "KEEP_NULL_ROWS_DISTINCT", "DIALECT_DEFINED", "ERROR", "UNRESOLVED"]
+        },
+        "multi_column_basis": {"enum": ["SINGLE_FIELD", "ORDERED_VALUE_TUPLE", "UNRESOLVED"]}
+      }
+    },
+    "fixture_check": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state",
+        "fixture_ref",
+        "fixture_digest",
+        "coverage",
+        "expected_distinct_count",
+        "observed_distinct_count",
+        "receipt_ref"
+      ],
+      "properties": {
+        "state": {"enum": ["MATCHED", "MISMATCH", "NOT_RUN", "ERROR"]},
+        "fixture_ref": {"$ref": "#/$defs/nullable_ref"},
+        "fixture_digest": {"$ref": "#/$defs/nullable_sha256"},
+        "coverage": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["null_rows", "duplicate_rows", "multi_column_tuples"],
+          "properties": {
+            "null_rows": {"type": "boolean"},
+            "duplicate_rows": {"type": "boolean"},
+            "multi_column_tuples": {"type": "boolean"}
+          }
+        },
+        "expected_distinct_count": {"$ref": "#/$defs/nullable_uint"},
+        "observed_distinct_count": {"$ref": "#/$defs/nullable_uint"},
+        "receipt_ref": {"$ref": "#/$defs/nullable_ref"}
+      }
+    },
+    "adjacent_contracts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["count_population_disclosure_ref", "reconciliation_contract_ref"],
+      "properties": {
+        "count_population_disclosure_ref": {"$ref": "#/$defs/nullable_ref"},
+        "reconciliation_contract_ref": {"$ref": "#/$defs/nullable_ref"}
+      }
+    },
+    "disclosure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["intended_use", "summary", "review_record_refs"],
+      "properties": {
+        "intended_use": {"enum": ["INTERNAL_REVIEW", "REPRODUCIBILITY_PACKET", "PUBLIC_CANDIDATE"]},
+        "summary": {"type": "string", "minLength": 12, "maxLength": 512, "pattern": "^[^\\r\\n]+$"},
+        "review_record_refs": {
+          "type": "array",
+          "maxItems": 32,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/ref"}
+        }
+      }
+    },
+    "limitations": {
+      "const": [
+        "DECLARATION_ONLY",
+        "NO_RAW_SQL_OR_SOURCE_ROWS",
+        "NO_QUERY_EXECUTION_OR_ROW_MUTATION",
+        "NO_IDENTITY_RECONCILIATION_AUTHORITY",
+        "NO_EVIDENCE_POLICY_OR_REVIEW_AUTHORITY",
+        "NO_RELEASE_OR_PUBLICATION_AUTHORITY"
+      ]
+    },
+    "authority_claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "query_execution_authority",
+        "row_mutation_authority",
+        "identity_reconciliation_authority",
+        "evidence_authority",
+        "policy_authority",
+        "review_authority",
+        "promotion_authority",
+        "release_authority",
+        "publication_authority",
+        "public_use_authority"
+      ],
+      "properties": {
+        "query_execution_authority": {"const": false},
+        "row_mutation_authority": {"const": false},
+        "identity_reconciliation_authority": {"const": false},
+        "evidence_authority": {"const": false},
+        "policy_authority": {"const": false},
+        "review_authority": {"const": false},
+        "promotion_authority": {"const": false},
+        "release_authority": {"const": false},
+        "publication_authority": {"const": false},
+        "public_use_authority": {"const": false}
+      }
+    }
+  },
+  "$defs": {
+    "ref": {
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 512,
+      "pattern": "^[A-Za-z][A-Za-z0-9+.-]*:[^\\s]+$"
+    },
+    "nullable_ref": {"anyOf": [{"$ref": "#/$defs/ref"}, {"type": "null"}]},
+    "sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "nullable_sha256": {"anyOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]},
+    "nullable_uint": {
+      "anyOf": [
+        {"type": "integer", "minimum": 0, "maximum": 9007199254740991},
+        {"type": "null"}
+      ]
+    },
+    "field_name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z_][A-Za-z0-9_.-]*$"
+    }
+  }
+}

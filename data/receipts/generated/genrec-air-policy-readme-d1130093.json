@@ -1,0 +1,152 @@
+{
+  "receipt_id": "genrec-air-policy-readme-d1130093",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "policy/domains/air/README.md"
+  ],
+  "artifact_hashes": {
+    "policy/domains/air/README.md": "sha256:d11300939da00e9be9f8315eb1c5756ffd1845e5589d9e22ebb20802ca45eef0"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-19"
+  },
+  "prompt_or_contract": "sha256:d378b0a4aaf23a6e80281fbd279f49f9234a916b3ae4bdfae0a3f2f69cfb92fc",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "repository evidence inspection",
+      "Directory Rules",
+      "KFM AI Build Operating Contract",
+      "local Markdown and hash validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "Directory Rules.pdf",
+      "Kansas Frontier Matrix — AI Build Operating Contract.md",
+      "KFM Unified Doctrine Synthesis.md"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0c0fc543a82123ea4b2216df7a4b41df0c1c82ae/policy/domains/air/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0c0fc543a82123ea4b2216df7a4b41df0c1c82ae/policy/domains/atmosphere/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0c0fc543a82123ea4b2216df7a4b41df0c1c82ae/docs/domains/atmosphere/CANONICAL_PATHS.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0c0fc543a82123ea4b2216df7a4b41df0c1c82ae/docs/domains/atmosphere/POLICY.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0c0fc543a82123ea4b2216df7a4b41df0c1c82ae/docs/domains/atmosphere/SENSITIVITY.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0c0fc543a82123ea4b2216df7a4b41df0c1c82ae/contracts/air/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0c0fc543a82123ea4b2216df7a4b41df0c1c82ae/tests/domains/air/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0c0fc543a82123ea4b2216df7a4b41df0c1c82ae/tests/domains/atmosphere/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0c0fc543a82123ea4b2216df7a4b41df0c1c82ae/pipeline_specs/air/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0c0fc543a82123ea4b2216df7a4b41df0c1c82ae/.github/workflows/domain-atmosphere.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0c0fc543a82123ea4b2216df7a4b41df0c1c82ae/packages/policy-runtime/src/policy_runtime/core.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0c0fc543a82123ea4b2216df7a4b41df0c1c82ae/schemas/contracts/v1/policy/policy_decision.schema.json"
+    ]
+  },
+  "truth_labels": {
+    "policy/domains/air/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-authority-preflight",
+      "outcome": "PASS",
+      "reason": "Verified repository identity, target path, current blob, canonical policy root, preferred Atmosphere lane, and review-branch write permission."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "The existing Air path remains under policy/ but is explicitly constrained to compatibility documentation; no new authority root or executable policy home was created."
+    },
+    {
+      "gate": "repository-evidence-grounding",
+      "outcome": "PASS",
+      "reason": "Inspected Air and Atmosphere policy READMEs, Atmosphere canonical-path/policy/sensitivity docs, Air contract/test/spec guardrails, Atmosphere test parent, domain workflow, policy runtime placeholder, and shared PolicyDecision schema."
+    },
+    {
+      "gate": "parallel-authority-prevention",
+      "outcome": "PASS",
+      "reason": "The README freezes executable expansion under Air, redirects new work to Atmosphere pending ADR, and requires one active source, bundle, selector, and decision."
+    },
+    {
+      "gate": "life-safety-boundary",
+      "outcome": "PASS",
+      "reason": "The README explicitly denies AQI, medical, regulatory, emergency-alerting, and life-safety issuing authority and requires official-authority redirection."
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "Verified one H1 outside code fences, complete KFM Meta Block, final newline, required README sections, conflict register, validation, definition of done, rollback, changelog, and evidence ledger."
+    },
+    {
+      "gate": "remote-readback-and-hash",
+      "outcome": "PASS",
+      "reason": "GitHub returned blob SHA d722464dcce4effeb5f70861bbfb629b8d3aed9d, matching the locally computed Git blob SHA; SHA-256 is d11300939da00e9be9f8315eb1c5756ffd1845e5589d9e22ebb20802ca45eef0."
+    },
+    {
+      "gate": "executable-policy-and-tests",
+      "outcome": "SKIPPED",
+      "reason": "No Air policy source, accepted Atmosphere bundle/evaluator, executable domain policy suite, runtime selector, or release mapping was implemented; the README records these holds."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "air-policy-prior-state",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/0c0fc543a82123ea4b2216df7a4b41df0c1c82ae/policy/domains/air/README.md"
+    },
+    {
+      "id": "preferred-atmosphere-policy-lane",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/0c0fc543a82123ea4b2216df7a4b41df0c1c82ae/policy/domains/atmosphere/README.md"
+    },
+    {
+      "id": "atmosphere-canonical-paths",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/0c0fc543a82123ea4b2216df7a4b41df0c1c82ae/docs/domains/atmosphere/CANONICAL_PATHS.md"
+    },
+    {
+      "id": "air-test-compatibility",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/0c0fc543a82123ea4b2216df7a4b41df0c1c82ae/tests/domains/air/README.md"
+    },
+    {
+      "id": "air-spec-compatibility",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/0c0fc543a82123ea4b2216df7a4b41df0c1c82ae/pipeline_specs/air/README.md"
+    },
+    {
+      "id": "atmosphere-workflow-hold",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/0c0fc543a82123ea4b2216df7a4b41df0c1c82ae/.github/workflows/domain-atmosphere.yml"
+    },
+    {
+      "id": "policy-decision-schema",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/0c0fc543a82123ea4b2216df7a4b41df0c1c82ae/schemas/contracts/v1/policy/policy_decision.schema.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-19T17:15:00Z",
+  "emitter": "openai/gpt-5.6-thinking",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored repository-grounded compatibility README revision on a scoped review branch. This receipt is provenance, not approval. No policy source, value, bundle, evaluator, schema, contract, fixture, test, validator, workflow, source record, lifecycle object, release artifact, deployment, alias, or public behavior was changed. Human review remains pending."
+}

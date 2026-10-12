@@ -1,0 +1,10 @@
+{
+  "decision_id": "dec1",
+  "outcome": "ABSTAIN",
+  "policy_family": "capability",
+  "reasons": [
+    "not ready"
+  ],
+  "obligations": [],
+  "evaluated_at": "2026-05-09T00:00:00Z"
+}

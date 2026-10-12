@@ -1,0 +1,6 @@
+status: PROPOSED
+path: "data/registry/sources/settlements-infrastructure/historical_gazetteer.yaml"
+source_docs:
+  - "docs/domains/settlements-infrastructure/EXPANSION_BACKLOG.md"
+notes:
+  - "Placeholder created from the current docs/domains markdown inventory."

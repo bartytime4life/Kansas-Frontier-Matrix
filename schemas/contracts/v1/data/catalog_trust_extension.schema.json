@@ -1,0 +1,138 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/data/catalog_trust_extension.schema.json",
+  "title": "CatalogTrustExtension",
+  "description": "Bounded KFM catalog trust payload. Validation creates no catalog, proof, policy, review, promotion, release, publication, or public-use authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "extension_id",
+    "host_profile",
+    "host_record_ref",
+    "namespace",
+    "hash_profile",
+    "spec_hash",
+    "kfm:run_receipt_ref",
+    "kfm:proof_ref",
+    "kfm:trust_class",
+    "kfm:source_role",
+    "governance"
+  ],
+  "properties": {
+    "object_type": {
+      "const": "CatalogTrustExtension"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "extension_id": {
+      "type": "string",
+      "pattern": "^catalog-trust-extension:[a-z0-9][a-z0-9_.:-]{7,240}$"
+    },
+    "host_profile": {
+      "enum": [
+        "DCAT_DISTRIBUTION",
+        "PROV_ACTIVITY",
+        "STAC_ITEM"
+      ]
+    },
+    "host_record_ref": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 640,
+      "pattern": "\\S"
+    },
+    "namespace": {
+      "const": "kfm"
+    },
+    "hash_profile": {
+      "const": "RFC8785-JCS"
+    },
+    "spec_hash": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "kfm:run_receipt_ref": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 640,
+      "pattern": "\\S"
+    },
+    "kfm:proof_ref": {
+      "oneOf": [
+        {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 640,
+          "pattern": "\\S"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "kfm:trust_class": {
+      "enum": [
+        "receipt",
+        "proof",
+        "catalog",
+        "publication"
+      ]
+    },
+    "kfm:source_role": {
+      "enum": [
+        "observed",
+        "regulatory",
+        "modeled",
+        "aggregate",
+        "administrative",
+        "candidate",
+        "synthetic"
+      ]
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "catalog_authorized",
+        "promotion_authorized",
+        "release_authorized",
+        "publication_authorized",
+        "public_use_allowed"
+      ],
+      "properties": {
+        "catalog_authorized": {
+          "type": "boolean"
+        },
+        "promotion_authorized": {
+          "type": "boolean"
+        },
+        "release_authorized": {
+          "type": "boolean"
+        },
+        "publication_authorized": {
+          "type": "boolean"
+        },
+        "public_use_allowed": {
+          "type": "boolean"
+        }
+      }
+    }
+  },
+  "x-kfm": {
+    "status": "DRAFT_SCHEMA",
+    "source_card": "KFM-P3-IDEA-0004",
+    "contract_doc": "contracts/data/catalog_trust_extension.md",
+    "fixtures_root": "fixtures/data/catalog_trust_extension/",
+    "validator": "tools/validators/catalog_trust_extension/validate_catalog_trust_extension.py",
+    "tests": "tests/validators/test_validate_catalog_trust_extension.py",
+    "authority": "catalog-trust-payload-shape-only",
+    "non_effects": [
+      "does_not_validate_complete_stac_dcat_or_prov_records",
+      "does_not_create_or_resolve_receipts_or_proofs",
+      "does_not_create_catalog_policy_review_promotion_release_or_publication_authority"
+    ]
+  }
+}

@@ -1,0 +1,257 @@
+{
+  "base": {
+    "profile_version": "kfm.camera-path-candidate.v1",
+    "camera_path_id": "kfm:camera-path:000000000000000000000000",
+    "spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "intent": "STORY",
+    "scene_ref": "kfm:scene-manifest:smoky-hill-corridor:v3",
+    "temporal_anchor": {
+      "valid_from": "1854-01-01",
+      "valid_to": "1900-12-31"
+    },
+    "view_states": [
+      {
+        "t_ms": 0,
+        "center": [-98.2, 38.74],
+        "zoom": 9.0,
+        "pitch": 0,
+        "bearing": 0,
+        "projection": "MERCATOR"
+      },
+      {
+        "t_ms": 6000,
+        "center": [-98.15, 38.75],
+        "zoom": 11.5,
+        "pitch": 55,
+        "bearing": 30,
+        "projection": "MERCATOR"
+      },
+      {
+        "t_ms": 12000,
+        "center": [-98.05, 38.78],
+        "zoom": 13.0,
+        "pitch": 65,
+        "bearing": 60,
+        "projection": "MERCATOR"
+      }
+    ],
+    "evidence_refs": [
+      "kfm:evidence-bundle:ellsworth-trail-1867:v1",
+      "kfm:evidence-bundle:smoky-hill-corridor:v2"
+    ],
+    "playback": {
+      "duration_ms": 12000,
+      "autoplay": false,
+      "loop": false,
+      "reduced_motion_mode": "DISCRETE_STEPS",
+      "two_d_fallback_required": true,
+      "outcome_requires_playback": false
+    },
+    "boundary": {
+      "fixture_only": true,
+      "adapter_seam_required": true,
+      "runtime_execution_performed": false,
+      "evidence_resolution_performed": false,
+      "policy_evaluation_performed": false,
+      "three_d_admission_authorized": false,
+      "plugin_admission_authorized": false,
+      "release_authorized": false,
+      "deployment_authorized": false,
+      "publication_authorized": false,
+      "public_use_authorized": false
+    }
+  },
+  "cases": [
+    {
+      "case_id": "valid_story_path",
+      "mutations": [],
+      "expected_outcome": "PASS",
+      "expected_state": "REVIEW_REQUIRED",
+      "expected_findings": []
+    },
+    {
+      "case_id": "valid_globe_declaration",
+      "mutations": [
+        {"path": "/view_states/2/projection", "value": "GLOBE"}
+      ],
+      "expected_outcome": "PASS",
+      "expected_state": "REVIEW_REQUIRED",
+      "expected_findings": []
+    },
+    {
+      "case_id": "first_timestamp_nonzero",
+      "mutations": [
+        {"path": "/view_states/0/t_ms", "value": 1}
+      ],
+      "expected_outcome": "DENY",
+      "expected_state": null,
+      "expected_findings": [
+        {"code": "CAMERA_PATH_FIRST_TIMESTAMP_INVALID", "path": "/view_states/0/t_ms"}
+      ]
+    },
+    {
+      "case_id": "timestamp_not_strictly_increasing",
+      "mutations": [
+        {"path": "/view_states/1/t_ms", "value": 0}
+      ],
+      "expected_outcome": "DENY",
+      "expected_state": null,
+      "expected_findings": [
+        {"code": "CAMERA_PATH_TIMESTAMP_NOT_STRICTLY_INCREASING", "path": "/view_states/1/t_ms"}
+      ]
+    },
+    {
+      "case_id": "duration_mismatch",
+      "mutations": [
+        {"path": "/playback/duration_ms", "value": 13000}
+      ],
+      "expected_outcome": "DENY",
+      "expected_state": null,
+      "expected_findings": [
+        {"code": "CAMERA_PATH_DURATION_MISMATCH", "path": "/playback/duration_ms"}
+      ]
+    },
+    {
+      "case_id": "temporal_anchor_reversed",
+      "mutations": [
+        {"path": "/temporal_anchor/valid_from", "value": "1901-01-01"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_state": null,
+      "expected_findings": [
+        {"code": "CAMERA_PATH_TEMPORAL_ANCHOR_INVALID", "path": "/temporal_anchor"}
+      ]
+    },
+    {
+      "case_id": "evidence_refs_unsorted",
+      "mutations": [
+        {
+          "path": "/evidence_refs",
+          "value": [
+            "kfm:evidence-bundle:smoky-hill-corridor:v2",
+            "kfm:evidence-bundle:ellsworth-trail-1867:v1"
+          ]
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_state": null,
+      "expected_findings": [
+        {"code": "CAMERA_PATH_EVIDENCE_ORDER_INVALID", "path": "/evidence_refs"}
+      ]
+    },
+    {
+      "case_id": "duplicate_evidence_ref",
+      "mutations": [
+        {
+          "path": "/evidence_refs",
+          "value": [
+            "kfm:evidence-bundle:ellsworth-trail-1867:v1",
+            "kfm:evidence-bundle:ellsworth-trail-1867:v1"
+          ]
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_state": null,
+      "expected_findings": [
+        {"code": "CAMERA_PATH_SCHEMA_INVALID", "path": "/evidence_refs"}
+      ]
+    },
+    {
+      "case_id": "longitude_out_of_range",
+      "mutations": [
+        {"path": "/view_states/1/center/0", "value": 181}
+      ],
+      "expected_outcome": "DENY",
+      "expected_state": null,
+      "expected_findings": [
+        {"code": "CAMERA_PATH_SCHEMA_INVALID", "path": "/view_states/1/center/0"}
+      ]
+    },
+    {
+      "case_id": "pitch_out_of_range",
+      "mutations": [
+        {"path": "/view_states/1/pitch", "value": 86}
+      ],
+      "expected_outcome": "DENY",
+      "expected_state": null,
+      "expected_findings": [
+        {"code": "CAMERA_PATH_SCHEMA_INVALID", "path": "/view_states/1/pitch"}
+      ]
+    },
+    {
+      "case_id": "reduced_motion_not_discrete",
+      "mutations": [
+        {"path": "/playback/reduced_motion_mode", "value": "ANIMATED"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_state": null,
+      "expected_findings": [
+        {"code": "CAMERA_PATH_SCHEMA_INVALID", "path": "/playback/reduced_motion_mode"}
+      ]
+    },
+    {
+      "case_id": "autoplay_overreach",
+      "mutations": [
+        {"path": "/playback/autoplay", "value": true}
+      ],
+      "expected_outcome": "DENY",
+      "expected_state": null,
+      "expected_findings": [
+        {"code": "CAMERA_PATH_SCHEMA_INVALID", "path": "/playback/autoplay"}
+      ]
+    },
+    {
+      "case_id": "outcome_requires_motion",
+      "mutations": [
+        {"path": "/playback/outcome_requires_playback", "value": true}
+      ],
+      "expected_outcome": "DENY",
+      "expected_state": null,
+      "expected_findings": [
+        {"code": "CAMERA_PATH_SCHEMA_INVALID", "path": "/playback/outcome_requires_playback"}
+      ]
+    },
+    {
+      "case_id": "runtime_execution_overreach",
+      "mutations": [
+        {"path": "/boundary/runtime_execution_performed", "value": true}
+      ],
+      "expected_outcome": "DENY",
+      "expected_state": null,
+      "expected_findings": [
+        {"code": "CAMERA_PATH_SCHEMA_INVALID", "path": "/boundary/runtime_execution_performed"}
+      ]
+    },
+    {
+      "case_id": "release_authority_overreach",
+      "mutations": [
+        {"path": "/boundary/release_authorized", "value": true}
+      ],
+      "expected_outcome": "DENY",
+      "expected_state": null,
+      "expected_findings": [
+        {"code": "CAMERA_PATH_SCHEMA_INVALID", "path": "/boundary/release_authorized"}
+      ]
+    },
+    {
+      "case_id": "spec_hash_mismatch",
+      "mutations": [],
+      "spec_hash_override": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "expected_outcome": "DENY",
+      "expected_state": null,
+      "expected_findings": [
+        {"code": "CAMERA_PATH_SPEC_HASH_MISMATCH", "path": "/spec_hash"}
+      ]
+    },
+    {
+      "case_id": "camera_path_id_mismatch",
+      "mutations": [],
+      "camera_path_id_override": "kfm:camera-path:ffffffffffffffffffffffff",
+      "expected_outcome": "DENY",
+      "expected_state": null,
+      "expected_findings": [
+        {"code": "CAMERA_PATH_ID_MISMATCH", "path": "/camera_path_id"}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,371 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/domains/hazards/kdhe_hab_advisory_snapshot.schema.json",
+  "title": "kdhe_hab_advisory_snapshot",
+  "type": "object",
+  "description": "Governed, no-network KDHE harmful-algal-bloom advisory snapshot contract candidate. This contract preserves volatile advisory state, identity ambiguity, zoned scope, lineage, freshness posture, and publication-denial posture without activating a connector or authorizing alerts/public release.",
+  "x-kfm": {
+    "status": "PROPOSED",
+    "contract_doc": "contracts/domains/hazards/kdhe_hab_advisory_snapshot.md",
+    "fixtures_root": "fixtures/domains/hazards/kdhe_hab_advisory_snapshot/",
+    "policy": "policy/domains/hazards/",
+    "activation": "disabled"
+  },
+  "properties": {
+    "advisory_snapshot_id": {
+      "type": "string",
+      "pattern": "^kdhe-hab:[a-f0-9]{64}$"
+    },
+    "deterministic_identity_key": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_id": {
+      "type": "string",
+      "const": "src:ks-kdhe-hab"
+    },
+    "source_product_id": {
+      "type": "string",
+      "const": "product:ks-kdhe-hab-current-advisories"
+    },
+    "source_surface_type": {
+      "type": "string",
+      "enum": ["current_table", "press_release", "response_program"]
+    },
+    "source_locator": {
+      "type": "string",
+      "pattern": "^https://www\\.kdhe\\.ks\\.gov/"
+    },
+    "content_digest": {
+      "type": "string",
+      "pattern": "^sha256:[A-Fa-f0-9]{64}$"
+    },
+    "water_body_name_native": {
+      "type": "string",
+      "minLength": 1
+    },
+    "county_names_native": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "water_body_id": {
+      "type": ["string", "null"],
+      "pattern": "^(kfm-water:[a-z0-9._:-]+)?$"
+    },
+    "identity_resolution_status": {
+      "type": "string",
+      "enum": ["RESOLVED", "UNRESOLVED", "CONFLICT"]
+    },
+    "duplicate_name_collision": {
+      "type": "boolean"
+    },
+    "source_scope_native": {
+      "type": "string",
+      "enum": ["whole_water_body", "zone", "partial", "unknown"]
+    },
+    "scope_type": {
+      "type": "string",
+      "enum": ["whole_water_body", "zone", "partial", "unresolved"]
+    },
+    "zone_id": {
+      "type": ["string", "null"]
+    },
+    "geometry_ref": {
+      "type": ["string", "null"]
+    },
+    "geometry_confidence": {
+      "type": "string",
+      "enum": ["confirmed", "approximate", "unresolved"]
+    },
+    "advisory_level_native": {
+      "type": ["string", "null"],
+      "enum": ["Watch", "Warning", "Hazard", null]
+    },
+    "normalized_state": {
+      "type": "string",
+      "enum": [
+        "WATCH",
+        "WARNING",
+        "HAZARD",
+        "LIFTED",
+        "NO_CURRENT_ADVISORY_CONFIRMED",
+        "SOURCE_UNAVAILABLE",
+        "STALE_SOURCE",
+        "IDENTITY_UNRESOLVED",
+        "GEOMETRY_UNRESOLVED",
+        "QUARANTINED"
+      ]
+    },
+    "source_updated_at": {
+      "type": ["string", "null"],
+      "format": "date-time"
+    },
+    "retrieved_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "first_observed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "last_observed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "recommendation_version_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "issuing_agency": {
+      "type": "string",
+      "const": "Kansas Department of Health and Environment"
+    },
+    "closure_authority_ref": {
+      "type": ["string", "null"]
+    },
+    "local_manager_ref": {
+      "type": ["string", "null"]
+    },
+    "supersedes_snapshot_id": {
+      "type": ["string", "null"],
+      "pattern": "^(kdhe-hab:[a-f0-9]{64})?$"
+    },
+    "correction_of_snapshot_id": {
+      "type": ["string", "null"],
+      "pattern": "^(kdhe-hab:[a-f0-9]{64})?$"
+    },
+    "snapshot_complete": {
+      "type": "boolean"
+    },
+    "retrieval_status": {
+      "type": "string",
+      "enum": ["success", "source_unavailable", "parse_error", "partial"]
+    },
+    "parse_status": {
+      "type": "string",
+      "enum": ["success", "malformed", "partial", "error"]
+    },
+    "freshness_status": {
+      "type": "string",
+      "enum": ["current", "stale", "unavailable", "quarantined"]
+    },
+    "freshness_budget_hours": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 48
+    },
+    "prior_identity_linked": {
+      "type": "boolean"
+    },
+    "receipt_refs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1
+    },
+    "publication_state": {
+      "type": "string",
+      "const": "denied"
+    },
+    "alerts_allowed": {
+      "type": "boolean",
+      "const": false
+    }
+  },
+  "required": [
+    "advisory_snapshot_id",
+    "deterministic_identity_key",
+    "source_id",
+    "source_product_id",
+    "source_surface_type",
+    "source_locator",
+    "content_digest",
+    "water_body_name_native",
+    "county_names_native",
+    "water_body_id",
+    "identity_resolution_status",
+    "duplicate_name_collision",
+    "source_scope_native",
+    "scope_type",
+    "zone_id",
+    "geometry_ref",
+    "geometry_confidence",
+    "advisory_level_native",
+    "normalized_state",
+    "source_updated_at",
+    "retrieved_at",
+    "first_observed_at",
+    "last_observed_at",
+    "recommendation_version_ref",
+    "issuing_agency",
+    "closure_authority_ref",
+    "local_manager_ref",
+    "supersedes_snapshot_id",
+    "correction_of_snapshot_id",
+    "snapshot_complete",
+    "retrieval_status",
+    "parse_status",
+    "freshness_status",
+    "freshness_budget_hours",
+    "prior_identity_linked",
+    "receipt_refs",
+    "evidence_refs",
+    "publication_state",
+    "alerts_allowed"
+  ],
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "identity_resolution_status": { "const": "RESOLVED" }
+        }
+      },
+      "then": {
+        "properties": {
+          "water_body_id": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "duplicate_name_collision": { "const": true }
+        }
+      },
+      "then": {
+        "properties": {
+          "identity_resolution_status": { "const": "CONFLICT" },
+          "water_body_id": { "type": "null" },
+          "normalized_state": { "const": "IDENTITY_UNRESOLVED" }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "source_scope_native": { "const": "zone" }
+        }
+      },
+      "then": {
+        "properties": {
+          "scope_type": { "const": "zone" }
+        },
+        "required": ["geometry_ref", "zone_id"]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "scope_type": { "const": "zone" }
+        }
+      },
+      "then": {
+        "properties": {
+          "zone_id": { "type": "string", "minLength": 1 },
+          "geometry_ref": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "normalized_state": { "enum": ["WATCH", "WARNING", "HAZARD"] }
+        }
+      },
+      "then": {
+        "properties": {
+          "advisory_level_native": { "enum": ["Watch", "Warning", "Hazard"] },
+          "retrieval_status": { "const": "success" },
+          "parse_status": { "const": "success" }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "normalized_state": { "const": "LIFTED" }
+        }
+      },
+      "then": {
+        "properties": {
+          "supersedes_snapshot_id": { "type": "string", "minLength": 1 },
+          "prior_identity_linked": { "const": true }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "normalized_state": { "const": "NO_CURRENT_ADVISORY_CONFIRMED" }
+        }
+      },
+      "then": {
+        "properties": {
+          "snapshot_complete": { "const": true },
+          "retrieval_status": { "const": "success" },
+          "parse_status": { "const": "success" },
+          "freshness_status": { "const": "current" },
+          "prior_identity_linked": { "const": true },
+          "supersedes_snapshot_id": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "normalized_state": { "const": "SOURCE_UNAVAILABLE" }
+        }
+      },
+      "then": {
+        "properties": {
+          "retrieval_status": { "const": "source_unavailable" },
+          "freshness_status": { "const": "unavailable" },
+          "supersedes_snapshot_id": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "normalized_state": { "const": "STALE_SOURCE" }
+        }
+      },
+      "then": {
+        "properties": {
+          "freshness_status": { "const": "stale" },
+          "supersedes_snapshot_id": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "source_updated_at": { "type": "null" }
+        }
+      },
+      "then": {
+        "properties": {
+          "normalized_state": {
+            "enum": ["SOURCE_UNAVAILABLE", "STALE_SOURCE", "QUARANTINED"]
+          }
+        }
+      }
+    }
+  ],
+  "additionalProperties": false
+}

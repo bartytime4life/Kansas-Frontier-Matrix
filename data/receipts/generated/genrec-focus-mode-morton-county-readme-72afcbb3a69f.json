@@ -1,0 +1,261 @@
+{
+  "receipt_id": "genrec-focus-mode-morton-county-readme-72afcbb3a69f",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/focus-mode/counties/morton_county/README.md"
+  ],
+  "artifact_hashes": {
+    "docs/focus-mode/counties/morton_county/README.md": "sha256:72afcbb3a69f9d168c81ea9d0e66fd3ac83d01c84dd7afb0fbdcd446d7f7f867"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "exact serving revision not exposed"
+  },
+  "prompt_or_contract": "sha256:811ff0077abb86b504b9ef8faaf047f7f4878881ba7efef58e7adff0c2597b78",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "bounded current-repository inspection",
+      "Python deterministic Markdown validation",
+      "SHA-256 and Git-blob verification"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:811ff0077abb86b504b9ef8faaf047f7f4878881ba7efef58e7adff0c2597b78",
+      "sha256:72afcbb3a69f9d168c81ea9d0e66fd3ac83d01c84dd7afb0fbdcd446d7f7f867"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/de8dd97920fa9cfd9f18e93d420f35344f766b9c",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/de8dd97920fa9cfd9f18e93d420f35344f766b9c/docs/focus-mode/counties/morton_county/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/de8dd97920fa9cfd9f18e93d420f35344f766b9c/docs/focus-mode/counties/morton_county/morton_county_focus_mode_build_plan.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/tree/de8dd97920fa9cfd9f18e93d420f35344f766b9c/docs/focus-mode/counties/morton_county",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/de8dd97920fa9cfd9f18e93d420f35344f766b9c/docs/focus-mode/counties/COUNTY_INDEX.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/de8dd97920fa9cfd9f18e93d420f35344f766b9c/docs/focus-mode/counties/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/de8dd97920fa9cfd9f18e93d420f35344f766b9c/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/de8dd97920fa9cfd9f18e93d420f35344f766b9c/docs/adr/ADR-0027-county-focus-mode-control-plane.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/de8dd97920fa9cfd9f18e93d420f35344f766b9c/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/de8dd97920fa9cfd9f18e93d420f35344f766b9c/contracts/focus_mode/focus_mode_payload.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/de8dd97920fa9cfd9f18e93d420f35344f766b9c/schemas/contracts/v1/focus/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/de8dd97920fa9cfd9f18e93d420f35344f766b9c/policy/focus/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/de8dd97920fa9cfd9f18e93d420f35344f766b9c/tools/validators/validate_focus_mode_index.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/de8dd97920fa9cfd9f18e93d420f35344f766b9c/.github/CODEOWNERS",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/de8dd97920fa9cfd9f18e93d420f35344f766b9c/CONTRIBUTING.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/de8dd97920fa9cfd9f18e93d420f35344f766b9c/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/de8dd97920fa9cfd9f18e93d420f35344f766b9c/.github/workflows/README.md"
+    ]
+  },
+  "truth_labels": {
+    "docs/focus-mode/counties/morton_county/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main-target-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Pinned main at de8dd97920fa9cfd9f18e93d420f35344f766b9c; verified the target as one LF byte, the sibling plan and two-file directory, current county-index row, no open Morton README pull request, and no matching task branch before mutation."
+    },
+    {
+      "gate": "path-scoped-instruction-preflight",
+      "outcome": "PASS",
+      "reason": "AGENTS.md was absent at the repository root, docs/, docs/focus-mode/, and docs/focus-mode/counties/ on the pinned base; CONTRIBUTING.md, CODEOWNERS, Directory Rules, and applicable ADRs were inspected."
+    },
+    {
+      "gate": "same-path-compatibility-placement",
+      "outcome": "PASS",
+      "reason": "The existing README remains at docs/focus-mode/counties/morton_county/ under docs/. Accepted ADR-0029 and adopted Directory Rules support docs/ ownership; proposed ADR-0027 does not authorize migration, and no parallel Focus tree, move, rename, or authority change is introduced."
+    },
+    {
+      "gate": "one-byte-placeholder-replacement",
+      "outcome": "PASS",
+      "reason": "The prior target was exactly one UTF-8 line-feed byte. The replacement supplies complete planning-lane orientation, evidence limits, responsibilities, plan reconciliation, source-role and temporal rules, sensitive-domain boundaries, finite outcomes, validation, maintenance, migration, correction, and rollback."
+    },
+    {
+      "gate": "linked-build-plan-reconciliation",
+      "outcome": "PASS",
+      "reason": "The complete 102,855-byte Morton build plan was inspected and left byte-unchanged. Current path and plan presence supersede only its old no-repository/plan-search uncertainty; its 2026-05-22 external observations and all proposed designs remain dated planning lineage."
+    },
+    {
+      "gate": "county-index-staleness-disclosure",
+      "outcome": "PASS",
+      "reason": "The shared index records Morton as README_1_BYTE. This leaf change makes that finding stale, but a partial high-churn inventory/count edit was not made; a separately pinned full current-main reconciliation is required."
+    },
+    {
+      "gate": "dated-source-and-temporal-fitness-boundary",
+      "outcome": "PASS",
+      "reason": "The README does not transform the plan's 2026-05-22 USFS, NPS, USGS, KGS, KDA, NASS, county, or KDOT observations into current repository, operational, access, fire, closure, water, road, safety, legal, or emergency truth."
+    },
+    {
+      "gate": "heritage-ecology-access-fire-safety-boundary",
+      "outcome": "PASS",
+      "reason": "Exact or inferred archaeological, cultural, heritage, species, nesting, habitat-management, private-access, fire, closure, camping, road, emergency, and cross-layer reconstruction claims remain denied, generalized, abstained, or routed to qualified current authority."
+    },
+    {
+      "gate": "water-agriculture-property-infrastructure-boundary",
+      "outcome": "PASS",
+      "reason": "The README makes no individual water-right, lawful-use, pumping, compliance, private-well, farm, owner, parcel, title, household, groundwater-availability, infrastructure-vulnerability, or current river-safety determination."
+    },
+    {
+      "gate": "finite-outcome-boundary",
+      "outcome": "PASS",
+      "reason": "The authored document preserves exactly ANSWER, ABSTAIN, DENY, and ERROR as terminal outcomes; candidate reason-code names remain explicitly proposed rather than accepted contract or policy enums."
+    },
+    {
+      "gate": "focus-surface-maturity-boundary",
+      "outcome": "PASS",
+      "reason": "Repository-present semantic contract, schema-family scaffolds, inactive Focus policy, and incompatible county validator are described within their verified maturity limits and are not promoted into Morton readiness or enforcement evidence."
+    },
+    {
+      "gate": "markdown-structure-and-diff-hygiene",
+      "outcome": "PASS",
+      "reason": "The 42,232-byte README has one H1, one KFM metadata block, 17 unique explicit anchors, resolving same-document links, balanced HTML comments, no code fences, LF-only endings, no tabs or trailing whitespace, and a final newline."
+    },
+    {
+      "gate": "repository-relative-link-closure",
+      "outcome": "PASS",
+      "reason": "All 11 distinct repository-relative targets were normalized from the Morton README path and verified as repository-present at the pinned base; all same-document fragments resolve to unique explicit anchors."
+    },
+    {
+      "gate": "artifact-byte-and-hash-closure",
+      "outcome": "PASS",
+      "reason": "README SHA-256 72afcbb3a69f9d168c81ea9d0e66fd3ac83d01c84dd7afb0fbdcd446d7f7f867; computed Git blob dbaf5eb5e775df1fdc5bd2878261843b4de7a1ce; 42,232 UTF-8 bytes. Artifact paths, hash keys, and truth-label keys are identical; the receipt is excluded from its own artifact map."
+    },
+    {
+      "gate": "generated-receipt-schema-constraint-validation",
+      "outcome": "PASS",
+      "reason": "The receipt satisfies the current generated_receipt.schema.json required fields, enums, patterns, object closures, artifact-map parity, canonical path form, citation shape, timestamp format, and pending human-review state."
+    },
+    {
+      "gate": "workflow-trigger-threat-preflight",
+      "outcome": "PASS",
+      "reason": "No workflow definitions are changed. Current workflow governance documents the workflow layer as a non-publisher and requires explicit threat review for privileged events; this branch performs documentation and provenance writes only, and exact-head hosted results are observed separately."
+    },
+    {
+      "gate": "shared-county-index-reconciliation",
+      "outcome": "SKIPPED",
+      "reason": "The index is a high-churn shared inventory whose row and aggregate counts require a full current-main recomputation. The leaf README discloses the stale finding rather than performing an isolated count edit."
+    },
+    {
+      "gate": "county-focus-mode-validator",
+      "outcome": "SKIPPED",
+      "reason": "The validator targets docs/focus-modes/, kebab-case lanes, a different index grammar, and seven required files; it is not a valid passing gate for the current singular snake_case two-file compatibility lane and was not weakened or misrepresented."
+    },
+    {
+      "gate": "external-source-currentness-rights-and-sensitivity-review",
+      "outcome": "SKIPPED",
+      "reason": "The task is documentation-only. External sources, rights, geometry, live operations, cultural/ecological review, and public-use fitness remain explicit future gates."
+    },
+    {
+      "gate": "hosted-exact-head-workflows",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks do not exist until the final branch head and draft pull request are created; their exact-head state will be inspected separately and not inferred."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending. CODEOWNERS routing is not source, rights, heritage, archaeology, ecology, access, fire, water, property, infrastructure, policy, release, or publication approval."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "current-user-implementation-request",
+      "validated": true,
+      "evidence_ref": "sha256:811ff0077abb86b504b9ef8faaf047f7f4878881ba7efef58e7adff0c2597b78"
+    },
+    {
+      "id": "pinned-current-main",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/de8dd97920fa9cfd9f18e93d420f35344f766b9c"
+    },
+    {
+      "id": "prior-one-byte-target",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/de8dd97920fa9cfd9f18e93d420f35344f766b9c/docs/focus-mode/counties/morton_county/README.md"
+    },
+    {
+      "id": "complete-morton-build-plan",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/de8dd97920fa9cfd9f18e93d420f35344f766b9c/docs/focus-mode/counties/morton_county/morton_county_focus_mode_build_plan.md"
+    },
+    {
+      "id": "current-morton-directory",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/tree/de8dd97920fa9cfd9f18e93d420f35344f766b9c/docs/focus-mode/counties/morton_county"
+    },
+    {
+      "id": "current-county-index",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/de8dd97920fa9cfd9f18e93d420f35344f766b9c/docs/focus-mode/counties/COUNTY_INDEX.md"
+    },
+    {
+      "id": "accepted-directory-rules-decision",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/de8dd97920fa9cfd9f18e93d420f35344f766b9c/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "proposed-county-control-plane-adr",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/de8dd97920fa9cfd9f18e93d420f35344f766b9c/docs/adr/ADR-0027-county-focus-mode-control-plane.md"
+    },
+    {
+      "id": "focus-semantic-contract",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/de8dd97920fa9cfd9f18e93d420f35344f766b9c/contracts/focus_mode/focus_mode_payload.md"
+    },
+    {
+      "id": "focus-schema-family",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/de8dd97920fa9cfd9f18e93d420f35344f766b9c/schemas/contracts/v1/focus/README.md"
+    },
+    {
+      "id": "focus-policy-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/de8dd97920fa9cfd9f18e93d420f35344f766b9c/policy/focus/README.md"
+    },
+    {
+      "id": "county-index-validator",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/de8dd97920fa9cfd9f18e93d420f35344f766b9c/tools/validators/validate_focus_mode_index.py"
+    },
+    {
+      "id": "review-routing-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/de8dd97920fa9cfd9f18e93d420f35344f766b9c/.github/CODEOWNERS"
+    },
+    {
+      "id": "contribution-requirements",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/de8dd97920fa9cfd9f18e93d420f35344f766b9c/CONTRIBUTING.md"
+    },
+    {
+      "id": "generated-receipt-schema",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/de8dd97920fa9cfd9f18e93d420f35344f766b9c/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    },
+    {
+      "id": "workflow-governance-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/de8dd97920fa9cfd9f18e93d420f35344f766b9c/.github/workflows/README.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-22T02:39:59Z",
+  "emitter": "OpenAI ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Provenance record for the Morton County README modernization only. It does not admit sources, establish evidence truth, approve policy, certify public safety, authorize merge, release, deployment, promotion, or publication."
+}

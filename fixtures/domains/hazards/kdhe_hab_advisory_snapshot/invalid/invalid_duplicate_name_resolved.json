@@ -1,0 +1,48 @@
+{
+  "source_id": "src:ks-kdhe-hab",
+  "source_product_id": "product:ks-kdhe-hab-current-advisories",
+  "source_surface_type": "current_table",
+  "source_locator": "https://www.kdhe.ks.gov/777/Harmful-Algal-Blooms",
+  "water_body_name_native": "Kirwin Lake",
+  "county_names_native": [
+    "Phillips",
+    "Smith"
+  ],
+  "water_body_id": "kfm-water:ks:kirwin-lake",
+  "identity_resolution_status": "RESOLVED",
+  "duplicate_name_collision": true,
+  "source_scope_native": "whole_water_body",
+  "scope_type": "whole_water_body",
+  "zone_id": null,
+  "geometry_ref": null,
+  "geometry_confidence": "unresolved",
+  "advisory_level_native": "Warning",
+  "normalized_state": "IDENTITY_UNRESOLVED",
+  "source_updated_at": "2026-07-24T15:00:00Z",
+  "retrieved_at": "2026-07-24T16:00:00Z",
+  "first_observed_at": "2026-07-24T16:00:00Z",
+  "last_observed_at": "2026-07-24T16:00:00Z",
+  "recommendation_version_ref": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+  "issuing_agency": "Kansas Department of Health and Environment",
+  "closure_authority_ref": "local-manager:county-or-lake-authority",
+  "local_manager_ref": "local-manager:kirwin-lake-authority",
+  "supersedes_snapshot_id": null,
+  "correction_of_snapshot_id": null,
+  "snapshot_complete": true,
+  "retrieval_status": "success",
+  "parse_status": "success",
+  "freshness_status": "current",
+  "freshness_budget_hours": 24,
+  "prior_identity_linked": true,
+  "receipt_refs": [
+    "kfm://receipt/hazards/kdhe/2026-07-24/table-1"
+  ],
+  "evidence_refs": [
+    "kfm://evidence/hazards/kdhe/2026-07-24/table-1"
+  ],
+  "publication_state": "denied",
+  "alerts_allowed": false,
+  "content_digest": "sha256:efefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefef",
+  "deterministic_identity_key": "src:ks-kdhe-hab|product:ks-kdhe-hab-current-advisories|current_table|https://www.kdhe.ks.gov/777/Harmful-Algal-Blooms|kirwin lake|Phillips,Smith|whole_water_body|-|Warning|2026-07-24T15:00:00Z|sha256:efefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefef",
+  "advisory_snapshot_id": "kdhe-hab:d74ddc88279d90462f1ad3f9df060fd12c249b779b4bb179c307b997ba9c2d3a"
+}

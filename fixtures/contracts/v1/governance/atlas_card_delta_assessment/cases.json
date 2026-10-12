@@ -1,0 +1,585 @@
+{
+  "cases": [
+    {
+      "case_id": "modified-card-pass",
+      "candidate": {
+        "schema_version": "1.0.0",
+        "profile": "kfm.governance.atlas-card-delta-assessment-candidate.v1",
+        "profile_status": "PROPOSED_FIXTURE_ONLY",
+        "candidate_id": "atlas-delta-modified-pass",
+        "before": {
+          "stable_id": "KFM-P10-IDEA-0010",
+          "spec_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "truth_label": "PROPOSED",
+          "normalized_statement": "A deterministic Atlas diff should make evidence and dependency changes reviewable.",
+          "evidence_refs": [
+            "gdrive://1Gx4pU71Pqk1cG1oKb8l69B8K4yOJK7zy5KNH-Xvl4HQ#atlas-diff-visualizer"
+          ],
+          "dependency_ids": [],
+          "candidate_authority_families": [
+            "contracts/",
+            "docs/",
+            "fixtures/",
+            "schemas/",
+            "tests/",
+            "tools/"
+          ]
+        },
+        "after": {
+          "stable_id": "KFM-P10-IDEA-0010",
+          "spec_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "truth_label": "CONFIRMED",
+          "normalized_statement": "A deterministic Atlas delta assessment makes evidence and dependency changes reviewable.",
+          "evidence_refs": [
+            "gdrive://1Gx4pU71Pqk1cG1oKb8l69B8K4yOJK7zy5KNH-Xvl4HQ#atlas-diff-visualizer",
+            "github://bartytime4life/Kansas-Frontier-Matrix/blob/169ac1946812b6452a28c38ee57bc78ee41901b8/docs/intake/exploratory/new-ideas-5-source-map.md"
+          ],
+          "dependency_ids": ["KFM-P10-PROG-0009"],
+          "candidate_authority_families": [
+            "contracts/",
+            "docs/",
+            "fixtures/",
+            "schemas/",
+            "tests/",
+            "tools/"
+          ]
+        },
+        "declared_delta": {
+          "transition": "MODIFIED",
+          "changed_fields": [
+            "dependency_ids",
+            "evidence_refs",
+            "normalized_statement",
+            "spec_hash",
+            "truth_label"
+          ],
+          "evidence_refs_added": [
+            "github://bartytime4life/Kansas-Frontier-Matrix/blob/169ac1946812b6452a28c38ee57bc78ee41901b8/docs/intake/exploratory/new-ideas-5-source-map.md"
+          ],
+          "evidence_refs_removed": [],
+          "dependency_ids_added": ["KFM-P10-PROG-0009"],
+          "dependency_ids_removed": [],
+          "candidate_authority_families_added": [],
+          "candidate_authority_families_removed": [],
+          "truth_transition": {
+            "from": "PROPOSED",
+            "to": "CONFIRMED"
+          }
+        },
+        "source_errors": [],
+        "authority_effects": {
+          "mutates_atlas": false,
+          "promotes_truth": false,
+          "approves_review": false,
+          "authorizes_release": false,
+          "authorizes_publication": false,
+          "authorizes_public_use": false
+        },
+        "non_effects": [
+          "does_not_mutate_atlas_cards_or_registries",
+          "does_not_resolve_evidence_or_decide_truth",
+          "does_not_approve_review_merge_or_promotion",
+          "does_not_authorize_release_publication_or_public_use",
+          "does_not_create_a_visualizer_or_public_interface"
+        ]
+      },
+      "expected": { "outcome": "PASS", "finding_codes": [] }
+    },
+    {
+      "case_id": "unchanged-card-pass",
+      "candidate": {
+        "schema_version": "1.0.0",
+        "profile": "kfm.governance.atlas-card-delta-assessment-candidate.v1",
+        "profile_status": "PROPOSED_FIXTURE_ONLY",
+        "candidate_id": "atlas-delta-unchanged-pass",
+        "before": {
+          "stable_id": "KFM-P10-IDEA-0010",
+          "spec_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "truth_label": "PROPOSED",
+          "normalized_statement": "A deterministic Atlas diff should make evidence and dependency changes reviewable.",
+          "evidence_refs": ["gdrive://1Gx4pU71Pqk1cG1oKb8l69B8K4yOJK7zy5KNH-Xvl4HQ"],
+          "dependency_ids": [],
+          "candidate_authority_families": ["contracts/", "schemas/", "tests/", "tools/"]
+        },
+        "after": {
+          "stable_id": "KFM-P10-IDEA-0010",
+          "spec_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "truth_label": "PROPOSED",
+          "normalized_statement": "A deterministic Atlas diff should make evidence and dependency changes reviewable.",
+          "evidence_refs": ["gdrive://1Gx4pU71Pqk1cG1oKb8l69B8K4yOJK7zy5KNH-Xvl4HQ"],
+          "dependency_ids": [],
+          "candidate_authority_families": ["contracts/", "schemas/", "tests/", "tools/"]
+        },
+        "declared_delta": {
+          "transition": "UNCHANGED",
+          "changed_fields": [],
+          "evidence_refs_added": [],
+          "evidence_refs_removed": [],
+          "dependency_ids_added": [],
+          "dependency_ids_removed": [],
+          "candidate_authority_families_added": [],
+          "candidate_authority_families_removed": [],
+          "truth_transition": { "from": "PROPOSED", "to": "PROPOSED" }
+        },
+        "source_errors": [],
+        "authority_effects": {
+          "mutates_atlas": false,
+          "promotes_truth": false,
+          "approves_review": false,
+          "authorizes_release": false,
+          "authorizes_publication": false,
+          "authorizes_public_use": false
+        },
+        "non_effects": [
+          "does_not_mutate_atlas_cards_or_registries",
+          "does_not_resolve_evidence_or_decide_truth",
+          "does_not_approve_review_merge_or_promotion",
+          "does_not_authorize_release_publication_or_public_use",
+          "does_not_create_a_visualizer_or_public_interface"
+        ]
+      },
+      "expected": { "outcome": "PASS", "finding_codes": [] }
+    },
+    {
+      "case_id": "added-proposed-card-pass",
+      "candidate": {
+        "schema_version": "1.0.0",
+        "profile": "kfm.governance.atlas-card-delta-assessment-candidate.v1",
+        "profile_status": "PROPOSED_FIXTURE_ONLY",
+        "candidate_id": "atlas-delta-added-pass",
+        "before": null,
+        "after": {
+          "stable_id": "KFM-P10-IDEA-0011",
+          "spec_hash": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+          "truth_label": "PROPOSED",
+          "normalized_statement": "A future visualizer may render a governed delta assessment.",
+          "evidence_refs": ["gdrive://1Gx4pU71Pqk1cG1oKb8l69B8K4yOJK7zy5KNH-Xvl4HQ"],
+          "dependency_ids": ["KFM-P10-IDEA-0010"],
+          "candidate_authority_families": ["apps/", "contracts/", "schemas/"]
+        },
+        "declared_delta": {
+          "transition": "ADDED",
+          "changed_fields": [
+            "candidate_authority_families",
+            "dependency_ids",
+            "evidence_refs",
+            "normalized_statement",
+            "spec_hash",
+            "stable_id",
+            "truth_label"
+          ],
+          "evidence_refs_added": ["gdrive://1Gx4pU71Pqk1cG1oKb8l69B8K4yOJK7zy5KNH-Xvl4HQ"],
+          "evidence_refs_removed": [],
+          "dependency_ids_added": ["KFM-P10-IDEA-0010"],
+          "dependency_ids_removed": [],
+          "candidate_authority_families_added": ["apps/", "contracts/", "schemas/"],
+          "candidate_authority_families_removed": [],
+          "truth_transition": { "from": null, "to": "PROPOSED" }
+        },
+        "source_errors": [],
+        "authority_effects": {
+          "mutates_atlas": false,
+          "promotes_truth": false,
+          "approves_review": false,
+          "authorizes_release": false,
+          "authorizes_publication": false,
+          "authorizes_public_use": false
+        },
+        "non_effects": [
+          "does_not_mutate_atlas_cards_or_registries",
+          "does_not_resolve_evidence_or_decide_truth",
+          "does_not_approve_review_merge_or_promotion",
+          "does_not_authorize_release_publication_or_public_use",
+          "does_not_create_a_visualizer_or_public_interface"
+        ]
+      },
+      "expected": { "outcome": "PASS", "finding_codes": [] }
+    },
+    {
+      "case_id": "target-truth-unresolved-abstain",
+      "candidate": {
+        "schema_version": "1.0.0",
+        "profile": "kfm.governance.atlas-card-delta-assessment-candidate.v1",
+        "profile_status": "PROPOSED_FIXTURE_ONLY",
+        "candidate_id": "atlas-delta-unresolved-abstain",
+        "before": {
+          "stable_id": "KFM-P10-IDEA-0010",
+          "spec_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "truth_label": "PROPOSED",
+          "normalized_statement": "A deterministic Atlas diff is proposed.",
+          "evidence_refs": ["gdrive://1Gx4pU71Pqk1cG1oKb8l69B8K4yOJK7zy5KNH-Xvl4HQ"],
+          "dependency_ids": [],
+          "candidate_authority_families": ["contracts/", "tools/"]
+        },
+        "after": {
+          "stable_id": "KFM-P10-IDEA-0010",
+          "spec_hash": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+          "truth_label": "NEEDS_VERIFICATION",
+          "normalized_statement": "A deterministic Atlas diff requires repository verification.",
+          "evidence_refs": ["gdrive://1Gx4pU71Pqk1cG1oKb8l69B8K4yOJK7zy5KNH-Xvl4HQ"],
+          "dependency_ids": [],
+          "candidate_authority_families": ["contracts/", "tools/"]
+        },
+        "declared_delta": {
+          "transition": "MODIFIED",
+          "changed_fields": ["normalized_statement", "spec_hash", "truth_label"],
+          "evidence_refs_added": [],
+          "evidence_refs_removed": [],
+          "dependency_ids_added": [],
+          "dependency_ids_removed": [],
+          "candidate_authority_families_added": [],
+          "candidate_authority_families_removed": [],
+          "truth_transition": { "from": "PROPOSED", "to": "NEEDS_VERIFICATION" }
+        },
+        "source_errors": [],
+        "authority_effects": {
+          "mutates_atlas": false,
+          "promotes_truth": false,
+          "approves_review": false,
+          "authorizes_release": false,
+          "authorizes_publication": false,
+          "authorizes_public_use": false
+        },
+        "non_effects": [
+          "does_not_mutate_atlas_cards_or_registries",
+          "does_not_resolve_evidence_or_decide_truth",
+          "does_not_approve_review_merge_or_promotion",
+          "does_not_authorize_release_publication_or_public_use",
+          "does_not_create_a_visualizer_or_public_interface"
+        ]
+      },
+      "expected": { "outcome": "ABSTAIN", "finding_codes": ["TARGET_TRUTH_UNRESOLVED"] }
+    },
+    {
+      "case_id": "confirmed-without-evidence-abstain",
+      "candidate": {
+        "schema_version": "1.0.0",
+        "profile": "kfm.governance.atlas-card-delta-assessment-candidate.v1",
+        "profile_status": "PROPOSED_FIXTURE_ONLY",
+        "candidate_id": "atlas-delta-confirmed-no-evidence",
+        "before": {
+          "stable_id": "KFM-P10-IDEA-0010",
+          "spec_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "truth_label": "PROPOSED",
+          "normalized_statement": "A deterministic Atlas diff is proposed.",
+          "evidence_refs": [],
+          "dependency_ids": [],
+          "candidate_authority_families": ["contracts/", "tools/"]
+        },
+        "after": {
+          "stable_id": "KFM-P10-IDEA-0010",
+          "spec_hash": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+          "truth_label": "CONFIRMED",
+          "normalized_statement": "A deterministic Atlas diff is confirmed without support.",
+          "evidence_refs": [],
+          "dependency_ids": [],
+          "candidate_authority_families": ["contracts/", "tools/"]
+        },
+        "declared_delta": {
+          "transition": "MODIFIED",
+          "changed_fields": ["normalized_statement", "spec_hash", "truth_label"],
+          "evidence_refs_added": [],
+          "evidence_refs_removed": [],
+          "dependency_ids_added": [],
+          "dependency_ids_removed": [],
+          "candidate_authority_families_added": [],
+          "candidate_authority_families_removed": [],
+          "truth_transition": { "from": "PROPOSED", "to": "CONFIRMED" }
+        },
+        "source_errors": [],
+        "authority_effects": {
+          "mutates_atlas": false,
+          "promotes_truth": false,
+          "approves_review": false,
+          "authorizes_release": false,
+          "authorizes_publication": false,
+          "authorizes_public_use": false
+        },
+        "non_effects": [
+          "does_not_mutate_atlas_cards_or_registries",
+          "does_not_resolve_evidence_or_decide_truth",
+          "does_not_approve_review_merge_or_promotion",
+          "does_not_authorize_release_publication_or_public_use",
+          "does_not_create_a_visualizer_or_public_interface"
+        ]
+      },
+      "expected": { "outcome": "ABSTAIN", "finding_codes": ["CONFIRMED_WITHOUT_EVIDENCE"] }
+    },
+    {
+      "case_id": "identity-change-deny",
+      "candidate": {
+        "schema_version": "1.0.0",
+        "profile": "kfm.governance.atlas-card-delta-assessment-candidate.v1",
+        "profile_status": "PROPOSED_FIXTURE_ONLY",
+        "candidate_id": "atlas-delta-identity-deny",
+        "before": {
+          "stable_id": "KFM-P10-IDEA-0010",
+          "spec_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "truth_label": "PROPOSED",
+          "normalized_statement": "A deterministic Atlas diff is proposed.",
+          "evidence_refs": ["gdrive://1Gx4pU71Pqk1cG1oKb8l69B8K4yOJK7zy5KNH-Xvl4HQ"],
+          "dependency_ids": [],
+          "candidate_authority_families": ["contracts/", "tools/"]
+        },
+        "after": {
+          "stable_id": "KFM-P10-IDEA-0099",
+          "spec_hash": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+          "truth_label": "PROPOSED",
+          "normalized_statement": "A deterministic Atlas diff is proposed.",
+          "evidence_refs": ["gdrive://1Gx4pU71Pqk1cG1oKb8l69B8K4yOJK7zy5KNH-Xvl4HQ"],
+          "dependency_ids": [],
+          "candidate_authority_families": ["contracts/", "tools/"]
+        },
+        "declared_delta": {
+          "transition": "MODIFIED",
+          "changed_fields": ["spec_hash", "stable_id"],
+          "evidence_refs_added": [],
+          "evidence_refs_removed": [],
+          "dependency_ids_added": [],
+          "dependency_ids_removed": [],
+          "candidate_authority_families_added": [],
+          "candidate_authority_families_removed": [],
+          "truth_transition": { "from": "PROPOSED", "to": "PROPOSED" }
+        },
+        "source_errors": [],
+        "authority_effects": {
+          "mutates_atlas": false,
+          "promotes_truth": false,
+          "approves_review": false,
+          "authorizes_release": false,
+          "authorizes_publication": false,
+          "authorizes_public_use": false
+        },
+        "non_effects": [
+          "does_not_mutate_atlas_cards_or_registries",
+          "does_not_resolve_evidence_or_decide_truth",
+          "does_not_approve_review_merge_or_promotion",
+          "does_not_authorize_release_publication_or_public_use",
+          "does_not_create_a_visualizer_or_public_interface"
+        ]
+      },
+      "expected": { "outcome": "DENY", "finding_codes": ["ATLAS_IDENTITY_CHANGED"] }
+    },
+    {
+      "case_id": "declared-fields-mismatch-deny",
+      "candidate": {
+        "schema_version": "1.0.0",
+        "profile": "kfm.governance.atlas-card-delta-assessment-candidate.v1",
+        "profile_status": "PROPOSED_FIXTURE_ONLY",
+        "candidate_id": "atlas-delta-fields-mismatch",
+        "before": {
+          "stable_id": "KFM-P10-IDEA-0010",
+          "spec_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "truth_label": "PROPOSED",
+          "normalized_statement": "A deterministic Atlas diff is proposed.",
+          "evidence_refs": ["gdrive://1Gx4pU71Pqk1cG1oKb8l69B8K4yOJK7zy5KNH-Xvl4HQ"],
+          "dependency_ids": [],
+          "candidate_authority_families": ["contracts/", "tools/"]
+        },
+        "after": {
+          "stable_id": "KFM-P10-IDEA-0010",
+          "spec_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "truth_label": "PROPOSED",
+          "normalized_statement": "A deterministic Atlas delta is proposed.",
+          "evidence_refs": ["gdrive://1Gx4pU71Pqk1cG1oKb8l69B8K4yOJK7zy5KNH-Xvl4HQ"],
+          "dependency_ids": [],
+          "candidate_authority_families": ["contracts/", "tools/"]
+        },
+        "declared_delta": {
+          "transition": "MODIFIED",
+          "changed_fields": ["spec_hash"],
+          "evidence_refs_added": [],
+          "evidence_refs_removed": [],
+          "dependency_ids_added": [],
+          "dependency_ids_removed": [],
+          "candidate_authority_families_added": [],
+          "candidate_authority_families_removed": [],
+          "truth_transition": { "from": "PROPOSED", "to": "PROPOSED" }
+        },
+        "source_errors": [],
+        "authority_effects": {
+          "mutates_atlas": false,
+          "promotes_truth": false,
+          "approves_review": false,
+          "authorizes_release": false,
+          "authorizes_publication": false,
+          "authorizes_public_use": false
+        },
+        "non_effects": [
+          "does_not_mutate_atlas_cards_or_registries",
+          "does_not_resolve_evidence_or_decide_truth",
+          "does_not_approve_review_merge_or_promotion",
+          "does_not_authorize_release_publication_or_public_use",
+          "does_not_create_a_visualizer_or_public_interface"
+        ]
+      },
+      "expected": { "outcome": "DENY", "finding_codes": ["DELTA_CHANGED_FIELDS_MISMATCH"] }
+    },
+    {
+      "case_id": "unchanged-hash-for-semantic-change-deny",
+      "candidate": {
+        "schema_version": "1.0.0",
+        "profile": "kfm.governance.atlas-card-delta-assessment-candidate.v1",
+        "profile_status": "PROPOSED_FIXTURE_ONLY",
+        "candidate_id": "atlas-delta-stale-hash-deny",
+        "before": {
+          "stable_id": "KFM-P10-IDEA-0010",
+          "spec_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "truth_label": "PROPOSED",
+          "normalized_statement": "A deterministic Atlas diff is proposed.",
+          "evidence_refs": ["gdrive://1Gx4pU71Pqk1cG1oKb8l69B8K4yOJK7zy5KNH-Xvl4HQ"],
+          "dependency_ids": [],
+          "candidate_authority_families": ["contracts/", "tools/"]
+        },
+        "after": {
+          "stable_id": "KFM-P10-IDEA-0010",
+          "spec_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "truth_label": "PROPOSED",
+          "normalized_statement": "A deterministic Atlas delta is proposed.",
+          "evidence_refs": ["gdrive://1Gx4pU71Pqk1cG1oKb8l69B8K4yOJK7zy5KNH-Xvl4HQ"],
+          "dependency_ids": [],
+          "candidate_authority_families": ["contracts/", "tools/"]
+        },
+        "declared_delta": {
+          "transition": "MODIFIED",
+          "changed_fields": ["normalized_statement"],
+          "evidence_refs_added": [],
+          "evidence_refs_removed": [],
+          "dependency_ids_added": [],
+          "dependency_ids_removed": [],
+          "candidate_authority_families_added": [],
+          "candidate_authority_families_removed": [],
+          "truth_transition": { "from": "PROPOSED", "to": "PROPOSED" }
+        },
+        "source_errors": [],
+        "authority_effects": {
+          "mutates_atlas": false,
+          "promotes_truth": false,
+          "approves_review": false,
+          "authorizes_release": false,
+          "authorizes_publication": false,
+          "authorizes_public_use": false
+        },
+        "non_effects": [
+          "does_not_mutate_atlas_cards_or_registries",
+          "does_not_resolve_evidence_or_decide_truth",
+          "does_not_approve_review_merge_or_promotion",
+          "does_not_authorize_release_publication_or_public_use",
+          "does_not_create_a_visualizer_or_public_interface"
+        ]
+      },
+      "expected": { "outcome": "DENY", "finding_codes": ["CARD_SPEC_HASH_NOT_CHANGED"] }
+    },
+    {
+      "case_id": "authority-overreach-deny",
+      "candidate": {
+        "schema_version": "1.0.0",
+        "profile": "kfm.governance.atlas-card-delta-assessment-candidate.v1",
+        "profile_status": "PROPOSED_FIXTURE_ONLY",
+        "candidate_id": "atlas-delta-authority-deny",
+        "before": {
+          "stable_id": "KFM-P10-IDEA-0010",
+          "spec_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "truth_label": "PROPOSED",
+          "normalized_statement": "A deterministic Atlas diff is proposed.",
+          "evidence_refs": ["gdrive://1Gx4pU71Pqk1cG1oKb8l69B8K4yOJK7zy5KNH-Xvl4HQ"],
+          "dependency_ids": [],
+          "candidate_authority_families": ["contracts/", "tools/"]
+        },
+        "after": {
+          "stable_id": "KFM-P10-IDEA-0010",
+          "spec_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "truth_label": "PROPOSED",
+          "normalized_statement": "A deterministic Atlas diff is proposed.",
+          "evidence_refs": ["gdrive://1Gx4pU71Pqk1cG1oKb8l69B8K4yOJK7zy5KNH-Xvl4HQ"],
+          "dependency_ids": [],
+          "candidate_authority_families": ["contracts/", "tools/"]
+        },
+        "declared_delta": {
+          "transition": "UNCHANGED",
+          "changed_fields": [],
+          "evidence_refs_added": [],
+          "evidence_refs_removed": [],
+          "dependency_ids_added": [],
+          "dependency_ids_removed": [],
+          "candidate_authority_families_added": [],
+          "candidate_authority_families_removed": [],
+          "truth_transition": { "from": "PROPOSED", "to": "PROPOSED" }
+        },
+        "source_errors": [],
+        "authority_effects": {
+          "mutates_atlas": true,
+          "promotes_truth": false,
+          "approves_review": false,
+          "authorizes_release": false,
+          "authorizes_publication": false,
+          "authorizes_public_use": false
+        },
+        "non_effects": [
+          "does_not_mutate_atlas_cards_or_registries",
+          "does_not_resolve_evidence_or_decide_truth",
+          "does_not_approve_review_merge_or_promotion",
+          "does_not_authorize_release_publication_or_public_use",
+          "does_not_create_a_visualizer_or_public_interface"
+        ]
+      },
+      "expected": { "outcome": "DENY", "finding_codes": ["AUTHORITY_EFFECT_OVERREACH"] }
+    },
+    {
+      "case_id": "upstream-source-error",
+      "candidate": {
+        "schema_version": "1.0.0",
+        "profile": "kfm.governance.atlas-card-delta-assessment-candidate.v1",
+        "profile_status": "PROPOSED_FIXTURE_ONLY",
+        "candidate_id": "atlas-delta-upstream-error",
+        "before": {
+          "stable_id": "KFM-P10-IDEA-0010",
+          "spec_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "truth_label": "PROPOSED",
+          "normalized_statement": "A deterministic Atlas diff is proposed.",
+          "evidence_refs": ["gdrive://1Gx4pU71Pqk1cG1oKb8l69B8K4yOJK7zy5KNH-Xvl4HQ"],
+          "dependency_ids": [],
+          "candidate_authority_families": ["contracts/", "tools/"]
+        },
+        "after": {
+          "stable_id": "KFM-P10-IDEA-0010",
+          "spec_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "truth_label": "PROPOSED",
+          "normalized_statement": "A deterministic Atlas diff is proposed.",
+          "evidence_refs": ["gdrive://1Gx4pU71Pqk1cG1oKb8l69B8K4yOJK7zy5KNH-Xvl4HQ"],
+          "dependency_ids": [],
+          "candidate_authority_families": ["contracts/", "tools/"]
+        },
+        "declared_delta": {
+          "transition": "UNCHANGED",
+          "changed_fields": [],
+          "evidence_refs_added": [],
+          "evidence_refs_removed": [],
+          "dependency_ids_added": [],
+          "dependency_ids_removed": [],
+          "candidate_authority_families_added": [],
+          "candidate_authority_families_removed": [],
+          "truth_transition": { "from": "PROPOSED", "to": "PROPOSED" }
+        },
+        "source_errors": ["UPSTREAM_TIMEOUT"],
+        "authority_effects": {
+          "mutates_atlas": false,
+          "promotes_truth": false,
+          "approves_review": false,
+          "authorizes_release": false,
+          "authorizes_publication": false,
+          "authorizes_public_use": false
+        },
+        "non_effects": [
+          "does_not_mutate_atlas_cards_or_registries",
+          "does_not_resolve_evidence_or_decide_truth",
+          "does_not_approve_review_merge_or_promotion",
+          "does_not_authorize_release_publication_or_public_use",
+          "does_not_create_a_visualizer_or_public_interface"
+        ]
+      },
+      "expected": { "outcome": "ERROR", "finding_codes": ["SOURCE_INPUT_ERROR"] }
+    }
+  ],
+  "profile": "kfm.governance.atlas-card-delta-assessment-candidate.fixture-suite.v1"
+}

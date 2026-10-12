@@ -1,0 +1,118 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/domains/hydrology/proof_slice_case.schema.json",
+  "title": "Hydrology proof-slice case",
+  "description": "One synthetic request case for the no-network Hydrology proof slice. A case is a set of overrides applied to the shared base request; it carries no real source, observation, or policy authority.",
+  "x-kfm": {
+    "contract_doc": "contracts/domains/hydrology/proof_slice.md",
+    "validator": "pipelines/domains/hydrology/proof_slice.py",
+    "status": "PROPOSED"
+  },
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "case_id",
+    "thin_slice_assertion",
+    "description",
+    "overrides"
+  ],
+  "properties": {
+    "case_id": {
+      "type": "string",
+      "pattern": "^[0-9]{2}-[a-z0-9-]{1,60}$"
+    },
+    "thin_slice_assertion": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10
+        }
+      ]
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "overrides": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "surface": {
+          "enum": [
+            "governed_api",
+            "browser_direct_model"
+          ]
+        },
+        "requested_artifact": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[A-Za-z0-9._/-]+$"
+        },
+        "scenario_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "evidence_bundle": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 512,
+              "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[A-Za-z0-9._/-]+$"
+            }
+          ]
+        },
+        "geometry_precision": {
+          "enum": [
+            "generalized_huc12",
+            "exact_point"
+          ]
+        },
+        "feature_source_role": {
+          "enum": [
+            "synthetic_observation",
+            "regulatory_context"
+          ]
+        },
+        "presented_as": {
+          "enum": [
+            "observed_gauge_series",
+            "regulatory_context_overlay",
+            "observed_flood_event"
+          ]
+        },
+        "policy_evaluator": {
+          "enum": [
+            "available",
+            "unavailable"
+          ]
+        },
+        "release_candidate": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_:.-]{0,127}$"
+        },
+        "rollback_target": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_:.-]{0,127}$"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

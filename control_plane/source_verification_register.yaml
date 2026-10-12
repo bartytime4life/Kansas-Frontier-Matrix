@@ -1,4 +1,0 @@
-source_verification_register:
-  - source_id: SRC-HYD-WBD-CANDIDATE
-    status: CANDIDATE
-    verification_status: NEEDS_VERIFICATION

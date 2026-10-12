@@ -1,0 +1,73 @@
+{
+  "bases": {
+    "approved": {
+      "object_type": "SovereigntyExceptionReceiptCandidate",
+      "schema_version": "1.0.0",
+      "status": "PROPOSED_INACTIVE",
+      "receipt_id": "GENERATED",
+      "spec_hash": "GENERATED",
+      "subject_ref": "kfm://fixture/candidate/synthetic-sovereignty-subject-001",
+      "exception_class": "SOVEREIGNTY_CONSTRAINT",
+      "requested_operation": "EXPORT",
+      "reason_codes": ["RESTRICTED_EGRESS_REQUIRED", "SOVEREIGN_CUSTODY_REQUIRED"],
+      "requested_at": "2026-08-09T12:00:00Z",
+      "recorded_at": "2026-08-09T13:00:00Z",
+      "decision": {
+        "disposition": "RECORDED_APPROVED",
+        "policy_decision_ref": "kfm://fixture/policy/decision-sovereignty-001",
+        "review_record_refs": ["kfm://fixture/review/policy-steward-001", "kfm://fixture/review/sovereignty-steward-001"],
+        "approver_roster_ref": "kfm://fixture/governance/approver-roster-001",
+        "decided_at": "2026-08-09T12:50:00Z",
+        "expires_at": "2026-08-10T12:50:00Z",
+        "obligations": ["AUDIT_REQUIRED", "EXPIRY_ENFORCED", "NO_RAW_EGRESS"]
+      },
+      "provenance": {
+        "activity_ref": "kfm://fixture/prov/activity-sovereignty-exception-001",
+        "evidence_refs": ["evidence:synthetic-policy-decision-001", "evidence:synthetic-review-record-001"]
+      },
+      "governance": {
+        "execution_mode": "FIXTURE_ONLY",
+        "network_attempted": false,
+        "exception_authority_created": false,
+        "policy_overridden": false,
+        "review_approved_by_validator": false,
+        "access_granted": false,
+        "lifecycle_write_performed": false,
+        "promotion_authorized": false,
+        "release_authorized": false,
+        "publication_authorized": false,
+        "published": false
+      }
+    }
+  },
+  "cases": [
+    {"case_id": "approved-record-pass", "base": "approved", "expected_outcome": "PASS", "expected_findings": []},
+    {"case_id": "denied-record-pass", "base": "approved", "mutations": [
+      {"path": "/decision/disposition", "value": "RECORDED_DENIED"},
+      {"path": "/decision/expires_at", "value": null},
+      {"path": "/decision/obligations", "value": []}
+    ], "expected_outcome": "PASS", "expected_findings": []},
+    {"case_id": "expired-record-pass", "base": "approved", "mutations": [
+      {"path": "/decision/disposition", "value": "EXPIRED"},
+      {"path": "/recorded_at", "value": "2026-08-11T12:50:00Z"}
+    ], "expected_outcome": "PASS", "expected_findings": []},
+    {"case_id": "pending-review-abstain", "base": "approved", "mutations": [
+      {"path": "/decision/disposition", "value": "PENDING_REVIEW"},
+      {"path": "/decision/policy_decision_ref", "value": null},
+      {"path": "/decision/review_record_refs", "value": []},
+      {"path": "/decision/approver_roster_ref", "value": null},
+      {"path": "/decision/decided_at", "value": null},
+      {"path": "/decision/expires_at", "value": null},
+      {"path": "/decision/obligations", "value": []},
+      {"path": "/provenance/activity_ref", "value": null}
+    ], "expected_outcome": "ABSTAIN", "expected_findings": [{"code": "SOVEREIGNTY_EXCEPTION_PENDING_REVIEW", "path": "/decision/disposition"}]},
+    {"case_id": "approved-missing-policy-decision", "base": "approved", "mutations": [{"path": "/decision/policy_decision_ref", "value": null}], "expected_outcome": "DENY", "expected_findings": [{"code": "SOVEREIGNTY_EXCEPTION_EXTERNAL_AUTHORITY_INCOMPLETE", "path": "/decision"}]},
+    {"case_id": "approved-missing-provenance-activity", "base": "approved", "mutations": [{"path": "/provenance/activity_ref", "value": null}], "expected_outcome": "DENY", "expected_findings": [{"code": "SOVEREIGNTY_EXCEPTION_EXTERNAL_AUTHORITY_INCOMPLETE", "path": "/decision"}]},
+    {"case_id": "approved-missing-expiry-obligation", "base": "approved", "mutations": [{"path": "/decision/obligations", "value": ["AUDIT_REQUIRED", "NO_RAW_EGRESS"]}], "expected_outcome": "DENY", "expected_findings": [{"code": "SOVEREIGNTY_EXCEPTION_OBLIGATIONS_INCOMPLETE", "path": "/decision/obligations"}]},
+    {"case_id": "export-missing-no-raw-egress", "base": "approved", "mutations": [{"path": "/decision/obligations", "value": ["AUDIT_REQUIRED", "EXPIRY_ENFORCED"]}], "expected_outcome": "DENY", "expected_findings": [{"code": "SOVEREIGNTY_EXCEPTION_OBLIGATIONS_INCOMPLETE", "path": "/decision/obligations"}]},
+    {"case_id": "approved-already-expired", "base": "approved", "mutations": [{"path": "/recorded_at", "value": "2026-08-11T12:50:00Z"}], "expected_outcome": "DENY", "expected_findings": [{"code": "SOVEREIGNTY_EXCEPTION_TIME_ORDER_INVALID", "path": "/decision/expires_at"}]},
+    {"case_id": "noncanonical-review-records", "base": "approved", "mutations": [{"path": "/decision/review_record_refs", "value": ["kfm://fixture/review/sovereignty-steward-001", "kfm://fixture/review/policy-steward-001"]}], "expected_outcome": "DENY", "expected_findings": [{"code": "SOVEREIGNTY_EXCEPTION_REFERENCE_ORDER_INVALID", "path": "/decision/review_record_refs"}]},
+    {"case_id": "self-authorizing-override", "base": "approved", "mutations": [{"path": "/governance/policy_overridden", "value": true}], "expected_outcome": "DENY", "expected_findings": [{"code": "SOVEREIGNTY_EXCEPTION_SCHEMA_INVALID", "path": "/governance/policy_overridden"}]},
+    {"case_id": "identity-corrupt", "base": "approved", "spec_hash_override": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "expected_outcome": "DENY", "expected_findings": [{"code": "SOVEREIGNTY_EXCEPTION_SPEC_HASH_MISMATCH", "path": "/spec_hash"}]}
+  ]
+}

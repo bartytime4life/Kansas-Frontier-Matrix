@@ -1,0 +1,201 @@
+{
+  "receipt_id": "genrec-map-master-renderer-boundary-743e5ce26267",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/architecture/map-master/RENDERER_BOUNDARY.md"
+  ],
+  "artifact_hashes": {
+    "docs/architecture/map-master/RENDERER_BOUNDARY.md": "sha256:743e5ce262678d25e030b434a9f74ad00700614ec3876d8c36671f65e4466161"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-19"
+  },
+  "prompt_or_contract": "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector (repository read/write, branch, and draft-PR actions)",
+      "attached-file search",
+      "local deterministic Markdown, hash, and receipt validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0",
+      "KFM MapLibre Operating Architecture, Governed UI, and AI Interaction Manual — Revised Working Edition",
+      "KFM Directory Governance Standard v2.0.0-draft.1"
+    ],
+    "evidence_refs": [
+      "repo:commit/996b7e16d46a703c9436b26ef74ed0ecaf87796a",
+      "repo:commit/1bdc5fe5819a90d20c611246cdcbf34d9c61aec7",
+      "repo:commit/2a9a14018ab98bdf9022f7d4fbcd638ca895d0af",
+      "repo:docs/architecture/map-master/RENDERER_BOUNDARY.md@996b7e16d46a703c9436b26ef74ed0ecaf87796a",
+      "repo:docs/architecture/map-master/README.md@996b7e16d46a703c9436b26ef74ed0ecaf87796a",
+      "repo:docs/architecture/map-shell.md@996b7e16d46a703c9436b26ef74ed0ecaf87796a",
+      "repo:docs/architecture/maplibre-master.md@996b7e16d46a703c9436b26ef74ed0ecaf87796a",
+      "repo:docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md@996b7e16d46a703c9436b26ef74ed0ecaf87796a",
+      "repo:docs/adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md@996b7e16d46a703c9436b26ef74ed0ecaf87796a",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@996b7e16d46a703c9436b26ef74ed0ecaf87796a",
+      "repo:.github/CODEOWNERS@996b7e16d46a703c9436b26ef74ed0ecaf87796a",
+      "repo:packages/maplibre/package.json@996b7e16d46a703c9436b26ef74ed0ecaf87796a",
+      "repo:packages/maplibre/src/index.ts@996b7e16d46a703c9436b26ef74ed0ecaf87796a",
+      "repo:apps/explorer-web/package.json@996b7e16d46a703c9436b26ef74ed0ecaf87796a",
+      "repo:apps/explorer-web/src/site/README.md@996b7e16d46a703c9436b26ef74ed0ecaf87796a",
+      "repo:apps/explorer-web/src/adapters/MapLibreAdapter.ts@996b7e16d46a703c9436b26ef74ed0ecaf87796a",
+      "repo:apps/explorer-web/src/features/map_runtime/index.tsx@996b7e16d46a703c9436b26ef74ed0ecaf87796a",
+      "repo:apps/explorer-web/src/features/map_runtime/layer_manifest_admission.ts@996b7e16d46a703c9436b26ef74ed0ecaf87796a",
+      "repo:apps/explorer-web/src/features/map_runtime/pmtiles_release_cache.ts@996b7e16d46a703c9436b26ef74ed0ecaf87796a",
+      "repo:apps/explorer-web/tests/map-evidence-drawer.test.ts@996b7e16d46a703c9436b26ef74ed0ecaf87796a",
+      "repo:tools/validators/maplibre/assess_acquisition_inventory.py@996b7e16d46a703c9436b26ef74ed0ecaf87796a",
+      "repo:tools/validators/maplibre/validate_v6_readiness.py@996b7e16d46a703c9436b26ef74ed0ecaf87796a",
+      "repo:tests/policy/test_explorer_web_adapter_boundary.py@996b7e16d46a703c9436b26ef74ed0ecaf87796a",
+      "repo:.github/workflows/maplibre-acquisition-inventory.yml@996b7e16d46a703c9436b26ef74ed0ecaf87796a",
+      "repo:issue/2957",
+      "repo:issue/2906",
+      "repo:pull/3070",
+      "attachment:KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0",
+      "attachment:KFM MapLibre Operating Architecture, Governed UI, and AI Interaction Manual — Revised Working Edition",
+      "attachment:KFM Directory Governance Standard v2.0.0-draft.1",
+      "repo:docs/architecture/map-master/2D_3D_PARITY.md@1bdc5fe5819a90d20c611246cdcbf34d9c61aec7",
+      "repo:docs/architecture/map-master/LAYER_LIFECYCLE.md@1bdc5fe5819a90d20c611246cdcbf34d9c61aec7",
+      "repo:docs/architecture/map-master/PERFORMANCE_BUDGETS.md@2a9a14018ab98bdf9022f7d4fbcd638ca895d0af"
+    ]
+  },
+  "truth_labels": {
+    "docs/architecture/map-master/RENDERER_BOUNDARY.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main-and-overlap-inspection",
+      "outcome": "PASS",
+      "reason": "Pinned main at 996b7e16d46a703c9436b26ef74ed0ecaf87796a, verified prior target blob 5bb5d7fd37ac0279e3097c5fe830a79480d73cb0, and found no open pull request claiming the exact target path before branch creation."
+    },
+    {
+      "gate": "post-authoring-main-reconciliation",
+      "outcome": "PASS",
+      "reason": "Reconciled the branch without force to main@1bdc5fe5819a90d20c611246cdcbf34d9c61aec7. Intervening changes modified only docs/architecture/map-master/2D_3D_PARITY.md, docs/architecture/map-master/LAYER_LIFECYCLE.md, and docs/architecture/publication/GEO_MANIFEST.md; the target did not overlap. The final document incorporates the newly grounded parity and layer-lifecycle postures."
+    },
+    {
+      "gate": "final-pre-pr-main-reconciliation",
+      "outcome": "PASS",
+      "reason": "Reconciled the branch without force to main@2a9a14018ab98bdf9022f7d4fbcd638ca895d0af. The additional main delta added only the generated performance-budget receipt and grounded docs/architecture/map-master/PERFORMANCE_BUDGETS.md; the renderer-boundary target did not overlap and its operational-performance HOLD is compatible with this document."
+    },
+    {
+      "gate": "directory-rules-and-authority-boundary",
+      "outcome": "PASS",
+      "reason": "Accepted ADR-0029 and Directory Rules v2 confirm same-path docs/ placement while preserving contract, schema, policy, implementation, evidence, receipt, release, and public-carrier authority boundaries."
+    },
+    {
+      "gate": "repository-evidence-crosswalk",
+      "outcome": "PASS",
+      "reason": "Inspected the complete target, Map Master lane README, current map-shell and MapLibre master references, ADR-0006/0007/0029, CODEOWNERS, package and app manifests, placeholder implementation, renderer-neutral bridge and tests, fixture-only admission/cache decisions, acquisition inventory/workflow, readiness validator, and open governance/runtime issues."
+    },
+    {
+      "gate": "markdown-structure-anchor-table-and-link-check",
+      "outcome": "PASS",
+      "reason": "Verified one H1, YAML-readable meta block, 19 unique explicit anchors, 42 resolved local fragment references, 16 balanced fence markers, 15 stable Markdown tables, 71 Markdown links, 20 unique repository-relative targets, no tabs or trailing whitespace, and a final newline."
+    },
+    {
+      "gate": "remote-artifact-hash-binding",
+      "outcome": "PASS",
+      "reason": "Remote branch blob 628872aa58f9f86e31337924025a8590405385b5 matches the locally computed Git blob; final document SHA-256 is 743e5ce262678d25e030b434a9f74ad00700614ec3876d8c36671f65e4466161."
+    },
+    {
+      "gate": "generated-receipt-shape",
+      "outcome": "PASS",
+      "reason": "Receipt JSON was checked for required fields, finite enums, digest patterns, artifact path/hash closure, pending human review, and allowed top-level properties."
+    },
+    {
+      "gate": "repository-native-renderer-tests",
+      "outcome": "SKIPPED",
+      "reason": "No mounted repository checkout or dependency environment was available. Current code, tests, validators, and workflow bytes were inspected; no repository-native command was represented as executed."
+    },
+    {
+      "gate": "draft-pr-delivery",
+      "outcome": "PASS",
+      "reason": "Opened draft PR #3123 from agent/update-map-master-renderer-boundary-20260819 to main. The opening head was 1a37b4d34fb3f190277960364d0e9b8a4042d52a; human review remains pending."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Pending hosted execution for draft PR #3123 after the final receipt update; hosted exact-head results remain separate evidence."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending; this receipt creates no decision, dependency admission, authority, release, deployment, or publication effect."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "pinned-main-baseline",
+      "validated": true,
+      "evidence_ref": "repo:commit/996b7e16d46a703c9436b26ef74ed0ecaf87796a"
+    },
+    {
+      "id": "accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@996b7e16d46a703c9436b26ef74ed0ecaf87796a"
+    },
+    {
+      "id": "current-map-shell",
+      "validated": true,
+      "evidence_ref": "repo:docs/architecture/map-shell.md@996b7e16d46a703c9436b26ef74ed0ecaf87796a"
+    },
+    {
+      "id": "adapter-boundary-status",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md@996b7e16d46a703c9436b26ef74ed0ecaf87796a"
+    },
+    {
+      "id": "renderer-family-status",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md@996b7e16d46a703c9436b26ef74ed0ecaf87796a"
+    },
+    {
+      "id": "renderer-neutral-selection-bridge",
+      "validated": true,
+      "evidence_ref": "repo:apps/explorer-web/src/features/map_runtime/index.tsx@996b7e16d46a703c9436b26ef74ed0ecaf87796a"
+    },
+    {
+      "id": "acquisition-inventory",
+      "validated": true,
+      "evidence_ref": "repo:tools/validators/maplibre/assess_acquisition_inventory.py@996b7e16d46a703c9436b26ef74ed0ecaf87796a"
+    },
+    {
+      "id": "exact-readiness-classifier",
+      "validated": true,
+      "evidence_ref": "repo:tools/validators/maplibre/validate_v6_readiness.py@996b7e16d46a703c9436b26ef74ed0ecaf87796a"
+    },
+    {
+      "id": "implementation-contract",
+      "validated": true,
+      "evidence_ref": "attachment:KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0"
+    },
+    {
+      "id": "maplibre-operating-doctrine",
+      "validated": true,
+      "evidence_ref": "attachment:KFM MapLibre Operating Architecture, Governed UI, and AI Interaction Manual — Revised Working Edition"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-19T22:43:22Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": 3123,
+    "adr_link": "docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md",
+    "drift_register_entry": null
+  },
+  "notes": "Same-path documentation modernization delivered in draft PR #3123. It preserves the seven negative authorities, corrects stale placement and truth-store claims, reconciles current renderer-neutral and fixture-only implementation evidence plus the grounded 2D/3D parity, layer-lifecycle, and performance-budget companions, keeps ADR-0006/0007 and concrete MapLibre admission on HOLD, and changes no contract, schema, policy, dependency, lockfile, source, runtime, release, deployment, publication, or repository setting."
+}

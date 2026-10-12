@@ -1,0 +1,188 @@
+{
+  "receipt_id": "genrec-release-candidates-people-readme-2782f00e",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "release/candidates/people/README.md"
+  ],
+  "artifact_hashes": {
+    "release/candidates/people/README.md": "sha256:2782f00e3c7ddf34720116d28e7b82a5cb45a60633cf008ce3db84d630714705"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5"
+  },
+  "prompt_or_contract": "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "filesystem inspection",
+      "Poppler text extraction"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85"
+    ],
+    "attached_docs": [
+      "Pasted text(63).txt",
+      "Directory Rules.pdf"
+    ],
+    "evidence_refs": [
+      "release/candidates/people/README.md@0b9307b94c67920e3451e1d40b80d287e7364ee7",
+      "release/candidates/people-dna-land/README.md@0b9307b94c67920e3451e1d40b80d287e7364ee7",
+      "release/candidates/people-dna-land/land-ownership/README.md@0b9307b94c67920e3451e1d40b80d287e7364ee7",
+      "release/candidates/README.md@0b9307b94c67920e3451e1d40b80d287e7364ee7",
+      "release/README.md@0b9307b94c67920e3451e1d40b80d287e7364ee7",
+      "release/promotion_decisions/README.md@0b9307b94c67920e3451e1d40b80d287e7364ee7",
+      "release/manifests/README.md@0b9307b94c67920e3451e1d40b80d287e7364ee7",
+      "release/rollback_cards/README.md@0b9307b94c67920e3451e1d40b80d287e7364ee7",
+      "release/correction_notices/README.md@0b9307b94c67920e3451e1d40b80d287e7364ee7",
+      "docs/doctrine/directory-rules.md@0b9307b94c67920e3451e1d40b80d287e7364ee7#12-domain-placement-law",
+      "docs/architecture/domain-placement-law.md@0b9307b94c67920e3451e1d40b80d287e7364ee7#2-canonical-kfm-domain-inventory",
+      "control_plane/registers/DRIFT_REGISTER.md@0b9307b94c67920e3451e1d40b80d287e7364ee7",
+      "docs/domains/people-dna-land/people.md@0b9307b94c67920e3451e1d40b80d287e7364ee7",
+      "docs/domains/people-dna-land/SENSITIVITY.md@0b9307b94c67920e3451e1d40b80d287e7364ee7",
+      "docs/domains/people-dna-land/RELEASE_INDEX.md@0b9307b94c67920e3451e1d40b80d287e7364ee7",
+      "contracts/evidence/evidence_bundle.md@0b9307b94c67920e3451e1d40b80d287e7364ee7",
+      "contracts/release/promotion_decision.md@0b9307b94c67920e3451e1d40b80d287e7364ee7",
+      "contracts/release/release_manifest.md@0b9307b94c67920e3451e1d40b80d287e7364ee7",
+      "contracts/correction/correction_notice.md@0b9307b94c67920e3451e1d40b80d287e7364ee7",
+      "schemas/contracts/v1/release/promotion_decision.schema.json@0b9307b94c67920e3451e1d40b80d287e7364ee7",
+      "schemas/contracts/v1/release/release_manifest.schema.json@0b9307b94c67920e3451e1d40b80d287e7364ee7",
+      "schemas/contracts/v1/receipts/generated_receipt.schema.json@0b9307b94c67920e3451e1d40b80d287e7364ee7",
+      "policy/domains/people-dna-land/living_person.rego@0b9307b94c67920e3451e1d40b80d287e7364ee7",
+      "policy/domains/people-dna-land/abstain_on_ambiguous.rego@0b9307b94c67920e3451e1d40b80d287e7364ee7",
+      "docs/adr/ADR-0018-promotion-gate-sequence.md@0b9307b94c67920e3451e1d40b80d287e7364ee7",
+      "docs/adr/ADR-0024-steward-separation-of-duties-for-release.md@0b9307b94c67920e3451e1d40b80d287e7364ee7",
+      "docs/runbooks/people-dna-land/PROMOTION_RUNBOOK.md@0b9307b94c67920e3451e1d40b80d287e7364ee7",
+      ".github/CODEOWNERS@0b9307b94c67920e3451e1d40b80d287e7364ee7",
+      ".github/PULL_REQUEST_TEMPLATE.md@0b9307b94c67920e3451e1d40b80d287e7364ee7",
+      ".github/workflows/domain-people-dna-land.yml@0b9307b94c67920e3451e1d40b80d287e7364ee7",
+      ".github/workflows/release-dry-run.yml@0b9307b94c67920e3451e1d40b80d287e7364ee7"
+    ]
+  },
+  "truth_labels": {
+    "release/candidates/people/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "markdown_structure",
+      "outcome": "PASS",
+      "reason": "One document H1 outside fenced examples, balanced fences, consecutive heading hierarchy, no trailing whitespace or merge markers, and a final newline were confirmed."
+    },
+    {
+      "gate": "repository_relative_links",
+      "outcome": "PASS",
+      "reason": "Every repository-relative file target in the revised README was read successfully at the pinned base commit; local heading targets were checked against the document headings."
+    },
+    {
+      "gate": "metadata_block",
+      "outcome": "PASS",
+      "reason": "The existing doc_id and unresolved role placeholders were preserved; title, version, tags, and update date now reflect the substantive compatibility-boundary revision without inventing semantic owner assignments."
+    },
+    {
+      "gate": "directory_rules_and_authority",
+      "outcome": "PASS",
+      "reason": "The README identifies release/ as the owning root, treats people-dna-land as the canonical compound domain segment, and prevents the existing short people path from evolving into parallel release authority."
+    },
+    {
+      "gate": "no_loss_and_current_parent",
+      "outcome": "PASS",
+      "reason": "The prior candidate-not-release, lifecycle, fail-closed, scope, candidate-record, verification, and rollback substance remains while inaccurate correction/rollback path names and unqualified enforcement claims were corrected."
+    },
+    {
+      "gate": "evidence_and_truth_posture",
+      "outcome": "PASS",
+      "reason": "Repository facts are commit-pinned; scaffolds, proposals, conflicts, unknown inventories, ownership gaps, and enforcement gaps remain visibly labeled."
+    },
+    {
+      "gate": "sensitivity_and_publication_boundary",
+      "outcome": "PASS",
+      "reason": "No real person, family, address, parcel, title, DNA, consent, restricted payload, credential, candidate, release, or public artifact was introduced; ambiguous and sensitive cases remain fail closed."
+    },
+    {
+      "gate": "workflow_trigger_preflight",
+      "outcome": "PASS",
+      "reason": "The inspected domain and release-dry-run workflows use ordinary pull-request events with read-only repository permissions; no workflow file is modified and no release, deployment, or publication action was authorized."
+    },
+    {
+      "gate": "repository_native_ci",
+      "outcome": "SKIPPED",
+      "reason": "No local repository checkout was used under API_ONLY_STRICT; ordinary GitHub checks will be observed on the draft pull request without dispatch, rerun, approval, or bypass."
+    },
+    {
+      "gate": "human_review_and_mergeability",
+      "outcome": "SKIPPED",
+      "reason": "Human review is pending. This receipt is schema-shaped provenance but is not mergeable approval, release authority, or publication evidence."
+    }
+  ],
+  "policy_decisions": [
+    "documentation-only:no PolicyDecision or release decision was made; existing fail-closed People/DNA/Land posture was preserved pending human review"
+  ],
+  "citations": [
+    {
+      "id": "directory-rules-candidate-placement",
+      "validated": true,
+      "evidence_ref": "docs/doctrine/directory-rules.md@0b9307b94c67920e3451e1d40b80d287e7364ee7#12-domain-placement-law"
+    },
+    {
+      "id": "domain-placement-canonical-people-segment",
+      "validated": true,
+      "evidence_ref": "docs/architecture/domain-placement-law.md@0b9307b94c67920e3451e1d40b80d287e7364ee7#2-canonical-kfm-domain-inventory"
+    },
+    {
+      "id": "people-domain-release-posture",
+      "validated": true,
+      "evidence_ref": "docs/domains/people-dna-land/RELEASE_INDEX.md@0b9307b94c67920e3451e1d40b80d287e7364ee7"
+    },
+    {
+      "id": "people-domain-sensitivity",
+      "validated": true,
+      "evidence_ref": "docs/domains/people-dna-land/SENSITIVITY.md@0b9307b94c67920e3451e1d40b80d287e7364ee7"
+    },
+    {
+      "id": "living-person-policy-scaffold",
+      "validated": true,
+      "evidence_ref": "policy/domains/people-dna-land/living_person.rego@0b9307b94c67920e3451e1d40b80d287e7364ee7"
+    },
+    {
+      "id": "ambiguous-evidence-policy-scaffold",
+      "validated": true,
+      "evidence_ref": "policy/domains/people-dna-land/abstain_on_ambiguous.rego@0b9307b94c67920e3451e1d40b80d287e7364ee7"
+    },
+    {
+      "id": "promotion-decision-contract-and-enum",
+      "validated": true,
+      "evidence_ref": "contracts/release/promotion_decision.md@0b9307b94c67920e3451e1d40b80d287e7364ee7"
+    },
+    {
+      "id": "release-manifest-thin-schema",
+      "validated": true,
+      "evidence_ref": "schemas/contracts/v1/release/release_manifest.schema.json@0b9307b94c67920e3451e1d40b80d287e7364ee7"
+    },
+    {
+      "id": "github-review-route",
+      "validated": true,
+      "evidence_ref": ".github/CODEOWNERS@0b9307b94c67920e3451e1d40b80d287e7364ee7"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-20T10:47:46-05:00",
+  "emitter": "OpenAI Codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Documentation-only revision of the short-name People release-candidate README. It preserves the existing path as a compatibility/index lane, routes new dossiers to the canonical people-dna-land segment, and records unresolved migration, stewardship, policy, manifest, workflow, and enforcement gaps. The policy_decisions entry is an explicit non-action note because no governed PolicyDecision object was issued or required for this documentation change. This receipt is provenance and pending human review; it is not policy approval, a promotion decision, release approval, or publication authority. No candidate, data, schema, contract, policy, validator, workflow, manifest, release, or public artifact was changed."
+}

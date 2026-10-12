@@ -1,0 +1,91 @@
+{
+  "artifact_hashes": {
+    ".github/workflows/connector-gate.yml": "sha256:800628aa537291491447fa0e28a400d27cef22f7c77b2e174ae3763f5bcc36bb",
+    "tests/validators/test_validate_connector_gate_entrypoint.py": "sha256:d5883e53592f9b6ac01b141fa588bd258906d5d54a668f341dae5d20858aaa81",
+    "tools/validators/connector_gate/README.md": "sha256:745512a043e44c8bd79b59a03193b8aed51ea546c3677d86b96925a3ce47b98c",
+    "tools/validators/validate_connector_gate.py": "sha256:35b9b8c70ae41858009ce71bcd726e57bed7f9aca7bf81f58f4be0d37d2d2036"
+  },
+  "artifact_paths": [
+    ".github/workflows/connector-gate.yml",
+    "tools/validators/connector_gate/README.md",
+    "tools/validators/validate_connector_gate.py",
+    "tests/validators/test_validate_connector_gate_entrypoint.py"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix@bb08d3e9b92e9251c193debab6567be843136070",
+      "id": "repo-main-base",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-09-24T02:12:57Z",
+  "emitter": "OpenAI GPT-6 Codex via ChatGPT",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [],
+    "evidence_refs": [
+      "repo:bartytime4life/Kansas-Frontier-Matrix@bb08d3e9b92e9251c193debab6567be843136070",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "tools/validators/connector_gate/output_paths.py"
+    ]
+  },
+  "model_identity": {
+    "model": "GPT-6 Codex",
+    "provider": "OpenAI",
+    "version": "2026-09-24"
+  },
+  "notes": "Static repository output-path validation only. The full connector admission gate, live connector runs, receipt presence, source activation, policy, lifecycle movement, release, and publication remain held.",
+  "parameters": {
+    "max_tokens": null,
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "local repository and Python tests",
+      "GitHub connector read-only"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "receipt_id": "kfm-connector-gate-static-entry-20260924",
+  "truth_labels": {
+    ".github/workflows/connector-gate.yml": "CONFIRMED",
+    "tests/validators/test_validate_connector_gate_entrypoint.py": "CONFIRMED",
+    "tools/validators/connector_gate/README.md": "CONFIRMED",
+    "tools/validators/validate_connector_gate.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "connector source scan",
+      "outcome": "PASS",
+      "reason": "99 selected connector files, zero findings; bounded static scan only."
+    },
+    {
+      "gate": "connector scanner policy tests",
+      "outcome": "PASS",
+      "reason": "Two existing positive/negative scanner tests passed."
+    },
+    {
+      "gate": "connector entry point tests",
+      "outcome": "PASS",
+      "reason": "Three tests cover allowed and forbidden targets, empty inventory, and scan read failure."
+    },
+    {
+      "gate": "workflow YAML and Markdown links",
+      "outcome": "PASS",
+      "reason": "Workflow parsed; changed README has one H1 and no broken relative links."
+    },
+    {
+      "gate": "hosted exact-head checks and independent review",
+      "outcome": "SKIPPED",
+      "reason": "Branch remains local; no hosted result or independent review is claimed."
+    }
+  ]
+}

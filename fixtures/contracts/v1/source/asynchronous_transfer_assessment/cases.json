@@ -1,0 +1,307 @@
+{
+  "bases": {
+    "partial": {
+      "object_type": "AsynchronousTransferAssessment",
+      "schema_version": "1.0.0",
+      "profile": "kfm.asynchronous-transfer.fixture.v1",
+      "assessment_id": "",
+      "assessment_state": "COMPLETE",
+      "source_id": "synthetic.bulk.provider",
+      "source_descriptor_ref": "kfm://source/synthetic.bulk.provider",
+      "normalized_query_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "request_idempotency_key": "synthetic-query-20260810-v1",
+      "provider_request_id": "job-synthetic-001",
+      "assessed_at": "2026-08-10T00:15:00Z",
+      "job": {
+        "state": "RUNNING",
+        "attempt": 1,
+        "requested_at": "2026-08-10T00:00:00Z",
+        "last_observed_at": "2026-08-10T00:10:00Z",
+        "completed_at": null,
+        "archive_expires_at": null
+      },
+      "poll_history": [
+        {
+          "sequence": 1,
+          "observed_at": "2026-08-10T00:02:00Z",
+          "state": "QUEUED"
+        },
+        {
+          "sequence": 2,
+          "observed_at": "2026-08-10T00:10:00Z",
+          "state": "RUNNING"
+        }
+      ],
+      "transfer": {
+        "state": "PARTIAL",
+        "expected_size_bytes": 1000,
+        "local_size_bytes": 400,
+        "completed_ranges": [[0, 400]],
+        "expected_sha256": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "partial_sha256": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "final_sha256": null,
+        "digest_match": null,
+        "resume_supported": true,
+        "resume_basis": "BYTE_RANGE"
+      },
+      "checkpoint": {
+        "checkpoint_id": "kfm:transfer-checkpoint:synthetic-001",
+        "sequence": 1,
+        "observed_at": "2026-08-10T00:10:00Z",
+        "byte_offset": 400,
+        "provider_job_state": "RUNNING",
+        "transfer_state": "PARTIAL"
+      },
+      "retry_lineage": {
+        "previous_assessment_ref": null,
+        "reason": null
+      },
+      "ingest": {
+        "state": "NOT_SEEN",
+        "candidate_artifact_ref": null,
+        "downstream_processed_incomplete_bytes": false
+      },
+      "decision": {
+        "state": "RESUME_ELIGIBLE",
+        "reason_codes": ["PARTIAL_PREFIX_CHECKPOINTED"],
+        "review_required": true,
+        "retry_allowed": true,
+        "ingest_candidate_allowed": false
+      },
+      "governance": {
+        "execution_mode": "FIXTURE_ONLY",
+        "network_attempted": false,
+        "source_activation_allowed": false,
+        "download_allowed": false,
+        "raw_write_allowed": false,
+        "ingest_authorized": false,
+        "promotion_authorized": false,
+        "release_authorized": false,
+        "publication_authorized": false,
+        "public_use_allowed": false
+      },
+      "spec_hash": ""
+    }
+  },
+  "cases": [
+    {
+      "case_id": "partial-prefix-resumable",
+      "base": "partial",
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "queued-without-local-bytes",
+      "base": "partial",
+      "mutations": [
+        { "path": "/job/state", "value": "QUEUED" },
+        { "path": "/job/last_observed_at", "value": "2026-08-10T00:02:00Z" },
+        { "path": "/poll_history", "value": [{ "sequence": 1, "observed_at": "2026-08-10T00:02:00Z", "state": "QUEUED" }] },
+        { "path": "/transfer/state", "value": "NOT_STARTED" },
+        { "path": "/transfer/local_size_bytes", "value": 0 },
+        { "path": "/transfer/completed_ranges", "value": [] },
+        { "path": "/transfer/partial_sha256", "value": null },
+        { "path": "/transfer/resume_supported", "value": false },
+        { "path": "/transfer/resume_basis", "value": "NONE" },
+        { "path": "/checkpoint/observed_at", "value": "2026-08-10T00:02:00Z" },
+        { "path": "/checkpoint/byte_offset", "value": 0 },
+        { "path": "/checkpoint/provider_job_state", "value": "QUEUED" },
+        { "path": "/checkpoint/transfer_state", "value": "NOT_STARTED" }
+      ],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "complete-size-and-digest-match",
+      "base": "partial",
+      "mutations": [
+        { "path": "/job/state", "value": "SUCCEEDED" },
+        { "path": "/job/last_observed_at", "value": "2026-08-10T00:20:00Z" },
+        { "path": "/job/completed_at", "value": "2026-08-10T00:20:00Z" },
+        { "path": "/job/archive_expires_at", "value": "2026-08-11T00:20:00Z" },
+        { "path": "/assessed_at", "value": "2026-08-10T00:25:00Z" },
+        { "path": "/poll_history", "value": [{ "sequence": 1, "observed_at": "2026-08-10T00:02:00Z", "state": "QUEUED" }, { "sequence": 2, "observed_at": "2026-08-10T00:10:00Z", "state": "RUNNING" }, { "sequence": 3, "observed_at": "2026-08-10T00:20:00Z", "state": "SUCCEEDED" }] },
+        { "path": "/transfer/state", "value": "COMPLETE" },
+        { "path": "/transfer/local_size_bytes", "value": 1000 },
+        { "path": "/transfer/completed_ranges", "value": [[0, 1000]] },
+        { "path": "/transfer/partial_sha256", "value": null },
+        { "path": "/transfer/final_sha256", "value": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" },
+        { "path": "/transfer/digest_match", "value": true },
+        { "path": "/transfer/resume_supported", "value": false },
+        { "path": "/transfer/resume_basis", "value": "NONE" },
+        { "path": "/checkpoint/observed_at", "value": "2026-08-10T00:20:00Z" },
+        { "path": "/checkpoint/byte_offset", "value": 1000 },
+        { "path": "/checkpoint/provider_job_state", "value": "SUCCEEDED" },
+        { "path": "/checkpoint/transfer_state", "value": "COMPLETE" },
+        { "path": "/ingest/state", "value": "QUARANTINE_CANDIDATE" },
+        { "path": "/ingest/candidate_artifact_ref", "value": "kfm:artifact-candidate:synthetic-001" }
+      ],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "complete-bytes-digest-mismatch",
+      "base": "partial",
+      "mutations": [
+        { "path": "/job/state", "value": "SUCCEEDED" },
+        { "path": "/job/last_observed_at", "value": "2026-08-10T00:20:00Z" },
+        { "path": "/job/completed_at", "value": "2026-08-10T00:20:00Z" },
+        { "path": "/assessed_at", "value": "2026-08-10T00:25:00Z" },
+        { "path": "/poll_history", "value": [{ "sequence": 1, "observed_at": "2026-08-10T00:02:00Z", "state": "QUEUED" }, { "sequence": 2, "observed_at": "2026-08-10T00:10:00Z", "state": "RUNNING" }, { "sequence": 3, "observed_at": "2026-08-10T00:20:00Z", "state": "SUCCEEDED" }] },
+        { "path": "/transfer/state", "value": "QUARANTINED" },
+        { "path": "/transfer/local_size_bytes", "value": 1000 },
+        { "path": "/transfer/completed_ranges", "value": [[0, 1000]] },
+        { "path": "/transfer/partial_sha256", "value": null },
+        { "path": "/transfer/final_sha256", "value": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd" },
+        { "path": "/transfer/digest_match", "value": false },
+        { "path": "/checkpoint/observed_at", "value": "2026-08-10T00:20:00Z" },
+        { "path": "/checkpoint/byte_offset", "value": 1000 },
+        { "path": "/checkpoint/provider_job_state", "value": "SUCCEEDED" },
+        { "path": "/checkpoint/transfer_state", "value": "QUARANTINED" }
+      ],
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": [{ "code": "CHECKSUM_MISMATCH", "path": "/decision/state" }]
+    },
+    {
+      "case_id": "failed-job-without-artifact",
+      "base": "partial",
+      "mutations": [
+        { "path": "/job/state", "value": "FAILED" },
+        { "path": "/job/last_observed_at", "value": "2026-08-10T00:20:00Z" },
+        { "path": "/job/completed_at", "value": "2026-08-10T00:20:00Z" },
+        { "path": "/assessed_at", "value": "2026-08-10T00:25:00Z" },
+        { "path": "/poll_history", "value": [{ "sequence": 1, "observed_at": "2026-08-10T00:02:00Z", "state": "QUEUED" }, { "sequence": 2, "observed_at": "2026-08-10T00:20:00Z", "state": "FAILED" }] },
+        { "path": "/transfer/state", "value": "NOT_STARTED" },
+        { "path": "/transfer/local_size_bytes", "value": 0 },
+        { "path": "/transfer/completed_ranges", "value": [] },
+        { "path": "/transfer/partial_sha256", "value": null },
+        { "path": "/transfer/resume_supported", "value": false },
+        { "path": "/transfer/resume_basis", "value": "NONE" },
+        { "path": "/checkpoint/observed_at", "value": "2026-08-10T00:20:00Z" },
+        { "path": "/checkpoint/byte_offset", "value": 0 },
+        { "path": "/checkpoint/provider_job_state", "value": "FAILED" },
+        { "path": "/checkpoint/transfer_state", "value": "NOT_STARTED" }
+      ],
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": [{ "code": "JOB_TERMINAL_WITHOUT_ARTIFACT", "path": "/decision/state" }]
+    },
+    {
+      "case_id": "assessment-error",
+      "base": "partial",
+      "mutations": [{ "path": "/assessment_state", "value": "ERROR" }],
+      "expected_outcome": "ERROR",
+      "expected_findings": [{ "code": "ASSESSMENT_ERROR", "path": "/decision/state" }]
+    },
+    {
+      "case_id": "decision-mismatch",
+      "base": "partial",
+      "decision_override": {
+        "state": "WAITING",
+        "reason_codes": ["PROVIDER_JOB_ACTIVE"],
+        "review_required": true,
+        "retry_allowed": true,
+        "ingest_candidate_allowed": false
+      },
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "ASYNC_TRANSFER_DECISION_MISMATCH", "path": "/decision" }]
+    },
+    {
+      "case_id": "source-reference-mismatch",
+      "base": "partial",
+      "mutations": [{ "path": "/source_descriptor_ref", "value": "kfm://source/synthetic.other.provider" }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "ASYNC_TRANSFER_SOURCE_REF_MISMATCH", "path": "/source_descriptor_ref" }]
+    },
+    {
+      "case_id": "poll-sequence-gap",
+      "base": "partial",
+      "mutations": [{ "path": "/poll_history/1/sequence", "value": 3 }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "ASYNC_TRANSFER_POLL_SEQUENCE_INVALID", "path": "/poll_history/1/sequence" }]
+    },
+    {
+      "case_id": "poll-time-not-increasing",
+      "base": "partial",
+      "mutations": [
+        { "path": "/poll_history/1/observed_at", "value": "2026-08-10T00:02:00Z" },
+        { "path": "/job/last_observed_at", "value": "2026-08-10T00:02:00Z" }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "ASYNC_TRANSFER_POLL_TIME_ORDER_INVALID", "path": "/poll_history/1/observed_at" }]
+    },
+    {
+      "case_id": "poll-snapshot-disagrees-with-job",
+      "base": "partial",
+      "mutations": [{ "path": "/poll_history/1/state", "value": "QUEUED" }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "ASYNC_TRANSFER_POLL_SNAPSHOT_MISMATCH", "path": "/poll_history" }]
+    },
+    {
+      "case_id": "completed-range-gap",
+      "base": "partial",
+      "mutations": [{ "path": "/transfer/completed_ranges", "value": [[0, 200], [250, 400]] }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "ASYNC_TRANSFER_RANGES_INVALID", "path": "/transfer/completed_ranges" }]
+    },
+    {
+      "case_id": "checkpoint-offset-mismatch",
+      "base": "partial",
+      "mutations": [{ "path": "/checkpoint/byte_offset", "value": 399 }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "ASYNC_TRANSFER_CHECKPOINT_OFFSET_MISMATCH", "path": "/checkpoint/byte_offset" }]
+    },
+    {
+      "case_id": "checkpoint-state-mismatch",
+      "base": "partial",
+      "mutations": [{ "path": "/checkpoint/provider_job_state", "value": "QUEUED" }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "ASYNC_TRANSFER_CHECKPOINT_STATE_MISMATCH", "path": "/checkpoint" }]
+    },
+    {
+      "case_id": "partial-size-reaches-expected-size",
+      "base": "partial",
+      "mutations": [
+        { "path": "/transfer/local_size_bytes", "value": 1000 },
+        { "path": "/transfer/completed_ranges", "value": [[0, 1000]] },
+        { "path": "/checkpoint/byte_offset", "value": 1000 }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "ASYNC_TRANSFER_PARTIAL_STATE_INVALID", "path": "/transfer" }]
+    },
+    {
+      "case_id": "provider-request-id-missing",
+      "base": "partial",
+      "mutations": [{ "path": "/provider_request_id", "value": null }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "ASYNC_TRANSFER_PROVIDER_ID_REQUIRED", "path": "/provider_request_id" }]
+    },
+    {
+      "case_id": "spec-hash-mismatch",
+      "base": "partial",
+      "spec_hash_override": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "ASYNC_TRANSFER_SPEC_HASH_MISMATCH", "path": "/spec_hash" }]
+    },
+    {
+      "case_id": "assessment-id-mismatch",
+      "base": "partial",
+      "assessment_id_override": "kfm:async-transfer:ffffffffffffffffffffffff",
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "ASYNC_TRANSFER_ID_MISMATCH", "path": "/assessment_id" }]
+    },
+    {
+      "case_id": "authority-overreach",
+      "base": "partial",
+      "mutations": [{ "path": "/governance/ingest_authorized", "value": true }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "ASYNC_TRANSFER_SCHEMA_INVALID", "path": "/governance/ingest_authorized" }]
+    },
+    {
+      "case_id": "retry-reason-without-previous-assessment",
+      "base": "partial",
+      "mutations": [{ "path": "/retry_lineage/reason", "value": "TRANSFER_INTERRUPTED" }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "ASYNC_TRANSFER_RETRY_LINEAGE_INVALID", "path": "/retry_lineage" }]
+    }
+  ]
+}

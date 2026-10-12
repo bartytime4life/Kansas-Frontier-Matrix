@@ -1,0 +1,183 @@
+{
+  "receipt_id": "genrec-inaturalist-package-readme-01550264",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "connectors/inaturalist/src/inaturalist/README.md"
+  ],
+  "artifact_hashes": {
+    "connectors/inaturalist/src/inaturalist/README.md": "sha256:bdb9727e028e81043a4117c288b92f0da8fd7f89f54bf10954d8b2e4f5de7052"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-07-12-session"
+  },
+  "prompt_or_contract": "sha256:fb982c328e877c8a218555442cbd2f2bb9cc5e15085d10dfc79b576b2ecbd86e",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "file_search",
+      "python"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:b18d4c2d18fb7a2803232525ee312c9048c22d9832185df340f7641f2ea3a049",
+      "sha256:e75883fef82a4066a95a64922dc46a175b0f2b8f37172fca1915fe2d1f39342e",
+      "sha256:58f204fc9918edb1944aee028e299dc66b583724584b4a052e5c3f1127d6a8a5",
+      "sha256:81baf0a1702f1dc9dbf460af4697ae32fa612b6d52949136d6971b081c0df583",
+      "sha256:d67d6cdd5c9c19f99ebfeb0815d53bd085d81b19d714a9ee0dd3c905160e95b4"
+    ],
+    "attached_docs": [
+      "KFM GitHub Repository Documentation Implementation Agent — Full Operating Prompt v3",
+      "Directory Rules.pdf",
+      "KFM Pass 20 Combined Edition",
+      "KFM Domains v1.1 + Pass 23/32 Consolidated Atlas",
+      "Unified Implementation Architecture Build Manual",
+      "Repository Structure Guiding Document",
+      "Unified Doctrine Synthesis"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/2ef3cf2c21ee2384a51d8ca76cdec302d825770c",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2ef3cf2c21ee2384a51d8ca76cdec302d825770c/connectors/inaturalist/src/inaturalist/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2ef3cf2c21ee2384a51d8ca76cdec302d825770c/connectors/inaturalist/pyproject.toml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2ef3cf2c21ee2384a51d8ca76cdec302d825770c/connectors/inaturalist/src/inaturalist/__init__.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2ef3cf2c21ee2384a51d8ca76cdec302d825770c/connectors/inaturalist/src/inaturalist/fetch.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2ef3cf2c21ee2384a51d8ca76cdec302d825770c/connectors/inaturalist/src/inaturalist/admit.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2ef3cf2c21ee2384a51d8ca76cdec302d825770c/connectors/inaturalist/src/inaturalist/descriptor.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2ef3cf2c21ee2384a51d8ca76cdec302d825770c/connectors/inaturalist/observations/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2ef3cf2c21ee2384a51d8ca76cdec302d825770c/connectors/inaturalist/tests/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2ef3cf2c21ee2384a51d8ca76cdec302d825770c/connectors/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2ef3cf2c21ee2384a51d8ca76cdec302d825770c/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2ef3cf2c21ee2384a51d8ca76cdec302d825770c/docs/sources/catalog/inaturalist/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2ef3cf2c21ee2384a51d8ca76cdec302d825770c/docs/sources/catalog/inaturalist/research-grade-observations.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2ef3cf2c21ee2384a51d8ca76cdec302d825770c/connectors/usgs/src/usgs/README.md"
+    ]
+  },
+  "truth_labels": {
+    "connectors/inaturalist/src/inaturalist/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-preflight",
+      "outcome": "PASS",
+      "reason": "Repository, permissions, default branch, pinned base commit, target blob/history, duplicate PR/branch state, and adjacent package evidence were inspected."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "The README remains under the existing source-specific connectors/ implementation root and package source layout; no path move or parallel authority was created."
+    },
+    {
+      "gate": "scaffold-evidence",
+      "outcome": "PASS",
+      "reason": "Empty __init__.py, placeholder fetch.py/admit.py, unresolved descriptor.yaml, and minimal version-0.0.0 project metadata were verified at the pinned base."
+    },
+    {
+      "gate": "remote-readback",
+      "outcome": "PASS",
+      "reason": "Updated UTF-8 Markdown was read back from agent/inaturalist-package-readme at commit 01550264d57b91932c65adf7435007f42dc05148."
+    },
+    {
+      "gate": "artifact-integrity",
+      "outcome": "PASS",
+      "reason": "Raw UTF-8 SHA-256 is bdb9727e028e81043a4117c288b92f0da8fd7f89f54bf10954d8b2e4f5de7052 and Git blob SHA-1 is 92eb20e399e4f950914abc501300089bd4845a89."
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "Meta block, heading hierarchy, quick-jump anchors, tables, fenced blocks, code examples, implementation sequence, definition of done, verification backlog, and rollback section were checked."
+    },
+    {
+      "gate": "authority-boundary-review",
+      "outcome": "PASS",
+      "reason": "Package mechanics are separated from SourceDescriptor, activation, policy, schema, proof, catalog, release, public-client, and publication authority."
+    },
+    {
+      "gate": "import-safety-contract",
+      "outcome": "PASS",
+      "reason": "The documentation explicitly forbids network, filesystem, secret, clock, identifier, logging, thread, cache, descriptor-discovery, and activation side effects at import time."
+    },
+    {
+      "gate": "sensitive-data-review",
+      "outcome": "PASS",
+      "reason": "No source payload, observer data, exact occurrence geometry, media bytes, credentials, or live endpoint details were introduced."
+    },
+    {
+      "gate": "live-source-access",
+      "outcome": "SKIPPED",
+      "reason": "No iNaturalist, taxonomy, media, or other biodiversity source interaction was authorized or required."
+    },
+    {
+      "gate": "generated-receipt-schema",
+      "outcome": "PASS",
+      "reason": "Receipt was validated against a compact Draft 2020-12 mirror of the inspected repository schema; repository CI remains authoritative."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "KFM-OPERATING-PROMPT-V3",
+      "validated": true,
+      "evidence_ref": "attached://KFM GitHub Repository Documentation Implementation Agent — Full Operating Prompt v3"
+    },
+    {
+      "id": "KFM-DIRECTORY-RULES",
+      "validated": true,
+      "evidence_ref": "attached://Directory Rules.pdf"
+    },
+    {
+      "id": "REPO-DIRECTORY-RULES",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/2ef3cf2c21ee2384a51d8ca76cdec302d825770c/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "CONNECTORS-ROOT",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/2ef3cf2c21ee2384a51d8ca76cdec302d825770c/connectors/README.md"
+    },
+    {
+      "id": "INATURALIST-PACKAGE-BASE",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/2ef3cf2c21ee2384a51d8ca76cdec302d825770c/connectors/inaturalist/src/inaturalist/README.md"
+    },
+    {
+      "id": "INATURALIST-PROJECT-METADATA",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/2ef3cf2c21ee2384a51d8ca76cdec302d825770c/connectors/inaturalist/pyproject.toml"
+    },
+    {
+      "id": "INATURALIST-LOCAL-DESCRIPTOR",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/2ef3cf2c21ee2384a51d8ca76cdec302d825770c/connectors/inaturalist/src/inaturalist/descriptor.yaml"
+    },
+    {
+      "id": "INATURALIST-OBSERVATION-PRODUCT",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/2ef3cf2c21ee2384a51d8ca76cdec302d825770c/connectors/inaturalist/observations/README.md"
+    },
+    {
+      "id": "INATURALIST-SOURCE-PROFILE",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/2ef3cf2c21ee2384a51d8ca76cdec302d825770c/docs/sources/catalog/inaturalist/README.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-12T01:15:40Z",
+  "emitter": "ai-builder/openai-gpt-5.6-pro",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored package documentation update on a scoped review branch. The artifact hash is the raw UTF-8 SHA-256 of the exact committed README and is cross-checked against the Git blob SHA-1. The change defines implementation boundaries and a staged module plan without creating code, live access, source data, descriptor authority, policy authority, or release authority. Human review is intentionally pending; this receipt is well-formed but not merge-authorizing."
+}

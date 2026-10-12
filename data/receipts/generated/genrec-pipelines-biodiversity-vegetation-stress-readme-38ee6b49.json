@@ -1,0 +1,164 @@
+{
+  "receipt_id": "genrec-pipelines-biodiversity-vegetation-stress-readme-38ee6b49",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "pipelines/biodiversity/vegetation_stress/README.md"
+  ],
+  "artifact_hashes": {
+    "pipelines/biodiversity/vegetation_stress/README.md": "sha256:38ee6b497b74c649d7a994ccf243a05ff8b8bcb4810423609c1c40827ab34a7a"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-18"
+  },
+  "prompt_or_contract": "sha256:c395d98c2187412f3714b5e60675b0f78a09bf260078ba6a1a6ff6c00997229b",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "repository code search",
+      "repository file reads",
+      "remote branch and contents writes",
+      "local deterministic content validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:c395d98c2187412f3714b5e60675b0f78a09bf260078ba6a1a6ff6c00997229b"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/14a0be53f8fde399e20888b8fbf18174d41a8376",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/14a0be53f8fde399e20888b8fbf18174d41a8376/pipelines/biodiversity/vegetation_stress/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/08d4d1d6cb53479b3e4c8fb408f1e527c1ab2db1/pipelines/biodiversity/vegetation_stress/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/14a0be53f8fde399e20888b8fbf18174d41a8376/pipelines/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/14a0be53f8fde399e20888b8fbf18174d41a8376/pipelines/biodiversity/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/14a0be53f8fde399e20888b8fbf18174d41a8376/pipelines/cross_lane/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/14a0be53f8fde399e20888b8fbf18174d41a8376/pipelines/cross_lane/riparian_vegetation/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/14a0be53f8fde399e20888b8fbf18174d41a8376/pipelines/domains/flora/hazards/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/14a0be53f8fde399e20888b8fbf18174d41a8376/pipelines/domains/habitat/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/14a0be53f8fde399e20888b8fbf18174d41a8376/docs/architecture/cross-domain/vegetation-stress.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/14a0be53f8fde399e20888b8fbf18174d41a8376/docs/architecture/cross-domain/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/14a0be53f8fde399e20888b8fbf18174d41a8376/tests/pipelines/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/14a0be53f8fde399e20888b8fbf18174d41a8376/.github/CODEOWNERS",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/14a0be53f8fde399e20888b8fbf18174d41a8376/data/receipts/generated/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/14a0be53f8fde399e20888b8fbf18174d41a8376/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    ]
+  },
+  "truth_labels": {
+    "pipelines/biodiversity/vegetation_stress/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "task-contract-and-authority-preflight",
+      "outcome": "PASS",
+      "reason": "Repository identity, public visibility, authenticated push permission, target path, immutable base, prior target blob, scoped review branch, API-only execution profile, two-file change budget, acceptance criteria, and stop conditions were resolved before final delivery."
+    },
+    {
+      "gate": "base-drift-reconciliation",
+      "outcome": "PASS",
+      "reason": "Main advanced from 7b9c4592fc53ec6ac5182782bd62225816e86a6c to 14a0be53f8fde399e20888b8fbf18174d41a8376 through unrelated Habitat release-document work. The target retained blob 554f49b85311f4ce0d043228010ce3b38b8b9b5d, and the branch was created from the newer base."
+    },
+    {
+      "gate": "directory-instructions-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "AGENTS.md was not found at the repository root, pipelines/, pipelines/biodiversity/, or the target lane. Directory Rules, parent and competing implementation boundaries, CODEOWNERS, contribution controls, and generated-receipt requirements were inspected. No open pull request targeting this README was found."
+    },
+    {
+      "gate": "repository-inventory-and-no-overclaim",
+      "outcome": "PASS",
+      "reason": "Bounded search and exact path checks established a README-only direct lane and did not establish a local contract, runner, classifier, declarative spec, dedicated fixture README, dedicated test README, candidate contract/schema, receipt type instance, vegetation-stress-specific workflow, runtime trace, release, or public artifact."
+    },
+    {
+      "gate": "placement-conflict-and-one-active-home",
+      "outcome": "PASS",
+      "reason": "Overlapping Biodiversity, Cross-Lane, Flora Hazards, Habitat, and related riparian-vegetation responsibility claims remain visible. The revision does not select a canonical implementation home by assertion and freezes duplicate active implementations, specs, schedules, writers, and public paths pending a governed decision or migration note."
+    },
+    {
+      "gate": "signal-role-and-causal-anti-collapse",
+      "outcome": "PASS",
+      "reason": "The revision keeps observed, modeled, aggregate, regulatory, contextual, candidate, and generated support distinct; requires explicit baseline, method, uncertainty, spatial and temporal support; and blocks vegetation-index or contextual correlation from becoming observed stress, cause attribution, drought declaration, crop-loss determination, habitat truth, or life-safety authority."
+    },
+    {
+      "gate": "rights-sensitivity-security-and-data-minimization",
+      "outcome": "PASS",
+      "reason": "The revision contains no credentials, private endpoints, source payloads, exact sensitive locations, living-person or DNA records, private field/operator/parcel joins, archaeology or cultural details, infrastructure vulnerability detail, or publication action. Derived join risk, safe diagnostics, no-network defaults, and fail-closed behavior are explicit."
+    },
+    {
+      "gate": "markdown-meta-navigation-and-links",
+      "outcome": "PASS",
+      "reason": "The final README has one H1, unique heading slugs, complete internal navigation, balanced code fences, a parseable KFM Meta Block, no trailing whitespace, a final newline, and repository-relative links grounded in inspected paths."
+    },
+    {
+      "gate": "remote-readback-hash-and-final-scope",
+      "outcome": "PASS",
+      "reason": "GitHub returned final content blob 265dce76a9fcad0349a28b0f7f0cf792888614c2 on commit 08d4d1d6cb53479b3e4c8fb408f1e527c1ab2db1, matching the locally recomputed Git blob SHA. The final README SHA-256 is 38ee6b497b74c649d7a994ccf243a05ff8b8bcb4810423609c1c40827ab34a7a. Before receipt emission, the branch diff contained only the target README."
+    },
+    {
+      "gate": "intermediate-write-correction",
+      "outcome": "PASS",
+      "reason": "An intermediate contents-API commit temporarily wrote placeholder text on the scoped review branch. It was immediately superseded by the final validated README before receipt and pull-request creation. The default branch was unaffected, branch history was not rewritten, and final remote blob and diff were verified."
+    },
+    {
+      "gate": "repository-native-execution",
+      "outcome": "SKIPPED",
+      "reason": "API_ONLY_STRICT was selected. The repository was not cloned and repository-native test commands were not executed locally. Pull-request workflow results will be inspected after PR creation; pending or unavailable checks will not be reported as passing."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "user-request",
+      "validated": true,
+      "evidence_ref": "prompt://update-pipelines-biodiversity-vegetation-stress-readme#sha256=c395d98c2187412f3714b5e60675b0f78a09bf260078ba6a1a6ff6c00997229b"
+    },
+    {
+      "id": "target-baseline-and-remote-readback",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/08d4d1d6cb53479b3e4c8fb408f1e527c1ab2db1/pipelines/biodiversity/vegetation_stress/README.md"
+    },
+    {
+      "id": "cross-domain-vegetation-stress-architecture",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/14a0be53f8fde399e20888b8fbf18174d41a8376/docs/architecture/cross-domain/vegetation-stress.md"
+    },
+    {
+      "id": "placement-conflict",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/14a0be53f8fde399e20888b8fbf18174d41a8376/pipelines/cross_lane/README.md"
+    },
+    {
+      "id": "flora-hazards-overlap",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/14a0be53f8fde399e20888b8fbf18174d41a8376/pipelines/domains/flora/hazards/README.md"
+    },
+    {
+      "id": "pipeline-test-maturity",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/14a0be53f8fde399e20888b8fbf18174d41a8376/tests/pipelines/README.md"
+    },
+    {
+      "id": "generated-receipt-machine-shape",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/14a0be53f8fde399e20888b8fbf18174d41a8376/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-18T13:32:02-05:00",
+  "emitter": "openai-chatgpt/gpt-5.6-thinking",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored documentation-only revision on a scoped API-only review branch. It replaces a design-forward vegetation-stress pipeline description with current repository maturity, explicit placement conflict, source-role and causal anti-collapse controls, baseline/method/uncertainty requirements, unresolved candidate ownership, finite outcomes, no-network test expectations, sensitive-join controls, receipts, correction, and rollback boundaries. An intermediate placeholder write was immediately corrected on the same review branch before receipt and PR creation; final remote content and scope were verified. No executable code, source activation, schema, contract, policy, fixture, test, workflow, lifecycle data, release object, runtime behavior, or public artifact changed. This receipt is process provenance only; it is not factual proof, policy permission, human approval, release authority, or publication authority."
+}

@@ -1,0 +1,87 @@
+{
+  "schema_version": "kfm.stewardship-assignments/v1",
+  "repository": "bartytime4life/Kansas-Frontier-Matrix",
+  "observed_at": "2026-09-22T04:00:00Z",
+  "assignments": [
+    {
+      "assignment_id": "hydrology-tooling-steward",
+      "scope": "tools/catalog_builders and pipelines/domains/hydrology",
+      "role": "tooling steward",
+      "status": "UNASSIGNED",
+      "assignee": null,
+      "granted_authorities": [],
+      "denied_authorities": [
+        "source_admission",
+        "merge",
+        "release",
+        "deployment",
+        "publication",
+        "host_control"
+      ],
+      "effective_at": null,
+      "review_due": "2026-10-22T00:00:00Z",
+      "evidence_refs": [
+        "docs/adr/ADR-0009-hydrology-is-the-first-proof-bearing-lane.md"
+      ]
+    },
+    {
+      "assignment_id": "hydrology-evidence-steward",
+      "scope": "contracts/domains/hydrology and data/proofs/hydrology",
+      "role": "evidence steward",
+      "status": "UNASSIGNED",
+      "assignee": null,
+      "granted_authorities": [],
+      "denied_authorities": [
+        "source_admission",
+        "merge",
+        "release",
+        "deployment",
+        "publication",
+        "host_control"
+      ],
+      "effective_at": null,
+      "review_due": "2026-10-22T00:00:00Z",
+      "evidence_refs": [
+        "contracts/domains/hydrology/evidence_bundle.md"
+      ]
+    },
+    {
+      "assignment_id": "hydrology-policy-steward",
+      "scope": "policy/domains/hydrology",
+      "role": "policy steward",
+      "status": "UNASSIGNED",
+      "assignee": null,
+      "granted_authorities": [],
+      "denied_authorities": [
+        "source_admission",
+        "merge",
+        "release",
+        "deployment",
+        "publication",
+        "host_control"
+      ],
+      "effective_at": null,
+      "review_due": "2026-10-22T00:00:00Z",
+      "evidence_refs": ["policy/domains/hydrology/README.md"]
+    },
+    {
+      "assignment_id": "hydrology-release-steward",
+      "scope": "release/candidates/hydrology",
+      "role": "release steward",
+      "status": "UNASSIGNED",
+      "assignee": null,
+      "granted_authorities": [],
+      "denied_authorities": [
+        "source_admission",
+        "merge",
+        "release",
+        "deployment",
+        "publication",
+        "host_control"
+      ],
+      "effective_at": null,
+      "review_due": "2026-10-22T00:00:00Z",
+      "evidence_refs": ["release/candidates/hydrology/README.md"]
+    }
+  ]
+}

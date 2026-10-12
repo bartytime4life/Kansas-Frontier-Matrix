@@ -1,0 +1,98 @@
+{
+  "object_type": "MissingValueFilterReceiptFixtureManifest",
+  "schema_version": "1.0.0",
+  "profile": "kfm.common.missing-value-filter-receipt.fixture.v1",
+  "base_candidate": {
+    "object_type": "MissingValueFilterReceiptCandidate",
+    "schema_version": "1.0.0",
+    "profile": "kfm.common.missing-value-filter-receipt.fixture.v1",
+    "profile_spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "source_card": "KFM-P18-INV-443",
+    "observed_at": "2026-08-10T18:35:00Z",
+    "receipt_ref": "kfm:missing-value-filter-receipt:synthetic:001",
+    "analysis_scope": {
+      "ref": "kfm:analysis-scope:synthetic-derived-layer:001",
+      "digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+      "resolution": "RESOLVED"
+    },
+    "input_dataset": {
+      "artifact_ref": "kfm:dataset:synthetic-analysis-input:001",
+      "artifact_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+      "resolution": "RESOLVED",
+      "row_count": 100
+    },
+    "supporting_artifacts": {
+      "analysis_receipt": {"ref": "kfm:analysis-receipt:synthetic:001", "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333", "resolution": "RESOLVED"},
+      "dq_report": {"ref": "kfm:dq-report:synthetic:001", "digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444", "resolution": "RESOLVED"},
+      "summary_statistics": {"ref": "kfm:summary-statistics:synthetic:001", "digest": "sha256:5555555555555555555555555555555555555555555555555555555555555555", "resolution": "RESOLVED"},
+      "layer_manifest": {"ref": "kfm:layer-manifest:synthetic:001", "digest": "sha256:6666666666666666666666666666666666666666666666666666666666666666", "resolution": "RESOLVED"}
+    },
+    "filter_steps": [
+      {
+        "step_id": "filter_001",
+        "field_name": "synthetic_measure",
+        "operation": "EXCLUDE_ROWS_WITH_MISSING",
+        "missing_rule": {"null_values": true, "empty_strings": true, "sentinel_tokens": ["MISSING", "NOT_RECORDED"]},
+        "input_rows": 100,
+        "excluded_rows": 8,
+        "output_rows": 92,
+        "rationale": "Exclude rows whose synthetic measure is explicitly represented as missing before computing a derived candidate."
+      }
+    ],
+    "summary_statistic_steps": [
+      {"step_id": "summary_001_before", "filter_step_id": "filter_001", "field_name": "synthetic_measure", "population": "BEFORE_FILTER", "metric": "COUNT", "row_count": 100, "result_ref": "kfm:summary-result:synthetic:before:001", "result_digest": "sha256:7777777777777777777777777777777777777777777777777777777777777777"},
+      {"step_id": "summary_001_after", "filter_step_id": "filter_001", "field_name": "synthetic_measure", "population": "AFTER_FILTER", "metric": "COUNT", "row_count": 92, "result_ref": "kfm:summary-result:synthetic:after:001", "result_digest": "sha256:8888888888888888888888888888888888888888888888888888888888888888"}
+    ],
+    "output_dataset": {
+      "artifact_ref": "kfm:dataset:synthetic-analysis-filtered:001",
+      "artifact_digest": "sha256:9999999999999999999999999999999999999999999999999999999999999999",
+      "row_count": 92
+    },
+    "population_change_assessment": {
+      "assessment_ref": "kfm:population-change-assessment:synthetic:001",
+      "assessment_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "resolution": "RESOLVED",
+      "status": "REVIEW_REQUIRED",
+      "compared_dimensions": ["synthetic_measure", "synthetic_region_class"],
+      "rationale": "The excluded synthetic rows may change the represented population; downstream interpretation requires separate human review."
+    },
+    "downstream_disposition": "HOLD_FOR_REVIEW",
+    "evidence_refs": [
+      "kfm:evidence-bundle:synthetic-analysis-input:001",
+      "kfm:evidence-bundle:synthetic-missingness-qa:001"
+    ],
+    "limitations": [
+      "Filtering disclosures do not prove that any exclusion rule is scientifically appropriate.",
+      "Synthetic counts and references do not authenticate a real analysis or derived layer."
+    ],
+    "authority_claims": {
+      "analysis_truth_authority": false,
+      "evidence_authority": false,
+      "policy_authority": false,
+      "review_authority": false,
+      "promotion_authority": false,
+      "release_authority": false,
+      "publication_authority": false,
+      "public_use_authority": false
+    }
+  },
+  "cases": [
+    {"name": "pass_single_filter_receipt", "patch": {}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "pass_no_rows_excluded", "patch": {"filter_steps": [{"step_id": "filter_001", "field_name": "synthetic_measure", "operation": "EXCLUDE_ROWS_WITH_MISSING", "missing_rule": {"null_values": true, "empty_strings": true, "sentinel_tokens": ["MISSING", "NOT_RECORDED"]}, "input_rows": 100, "excluded_rows": 0, "output_rows": 100, "rationale": "The declared synthetic rule found no missing representations but remains recorded for reproducible analysis QA."}], "summary_statistic_steps": [{"step_id": "summary_001_before", "filter_step_id": "filter_001", "field_name": "synthetic_measure", "population": "BEFORE_FILTER", "metric": "COUNT", "row_count": 100, "result_ref": "kfm:summary-result:synthetic:before:001", "result_digest": "sha256:7777777777777777777777777777777777777777777777777777777777777777"}, {"step_id": "summary_001_after", "filter_step_id": "filter_001", "field_name": "synthetic_measure", "population": "AFTER_FILTER", "metric": "COUNT", "row_count": 100, "result_ref": "kfm:summary-result:synthetic:after:001", "result_digest": "sha256:8888888888888888888888888888888888888888888888888888888888888888"}], "output_dataset": {"row_count": 100}}, "expected": {"outcome": "PASS", "codes": []}},
+    {"name": "abstain_analysis_scope_unresolved", "patch": {"analysis_scope": {"resolution": "UNRESOLVED"}}, "expected": {"outcome": "ABSTAIN", "codes": ["ANALYSIS_SCOPE_UNRESOLVED"]}},
+    {"name": "abstain_input_dataset_unresolved", "patch": {"input_dataset": {"resolution": "UNRESOLVED"}}, "expected": {"outcome": "ABSTAIN", "codes": ["INPUT_DATASET_UNRESOLVED"]}},
+    {"name": "abstain_supporting_artifact_unresolved", "patch": {"supporting_artifacts": {"dq_report": {"resolution": "UNRESOLVED"}}}, "expected": {"outcome": "ABSTAIN", "codes": ["SUPPORTING_ARTIFACT_UNRESOLVED"]}},
+    {"name": "abstain_population_change_unresolved", "patch": {"population_change_assessment": {"resolution": "UNRESOLVED", "status": "UNKNOWN"}}, "expected": {"outcome": "ABSTAIN", "codes": ["POPULATION_CHANGE_UNRESOLVED"]}},
+    {"name": "deny_filter_count_mismatch", "patch": {"filter_steps": [{"step_id": "filter_001", "field_name": "synthetic_measure", "operation": "EXCLUDE_ROWS_WITH_MISSING", "missing_rule": {"null_values": true, "empty_strings": true, "sentinel_tokens": ["MISSING", "NOT_RECORDED"]}, "input_rows": 100, "excluded_rows": 9, "output_rows": 92, "rationale": "This intentionally inconsistent synthetic step demonstrates fail-closed count reconciliation behavior."}]}, "expected": {"outcome": "DENY", "codes": ["FILTER_COUNT_MISMATCH"]}},
+    {"name": "deny_filter_chain_start_mismatch", "patch": {"input_dataset": {"row_count": 101}}, "expected": {"outcome": "DENY", "codes": ["FILTER_CHAIN_MISMATCH"]}},
+    {"name": "deny_missing_rule_empty", "patch": {"filter_steps": [{"step_id": "filter_001", "field_name": "synthetic_measure", "operation": "EXCLUDE_ROWS_WITH_MISSING", "missing_rule": {"null_values": false, "empty_strings": false, "sentinel_tokens": []}, "input_rows": 100, "excluded_rows": 8, "output_rows": 92, "rationale": "This intentionally empty synthetic missingness rule demonstrates fail-closed rule disclosure behavior."}]}, "expected": {"outcome": "DENY", "codes": ["MISSING_RULE_EMPTY"]}},
+    {"name": "deny_sentinel_tokens_not_canonical", "patch": {"filter_steps": [{"step_id": "filter_001", "field_name": "synthetic_measure", "operation": "EXCLUDE_ROWS_WITH_MISSING", "missing_rule": {"null_values": true, "empty_strings": true, "sentinel_tokens": ["NOT_RECORDED", "MISSING"]}, "input_rows": 100, "excluded_rows": 8, "output_rows": 92, "rationale": "This intentionally noncanonical synthetic token order demonstrates deterministic missing-rule behavior."}]}, "expected": {"outcome": "DENY", "codes": ["SENTINEL_TOKENS_NOT_CANONICAL"]}},
+    {"name": "deny_summary_pair_incomplete", "patch": {"summary_statistic_steps": [{"step_id": "summary_001_before", "filter_step_id": "filter_001", "field_name": "synthetic_measure", "population": "BEFORE_FILTER", "metric": "COUNT", "row_count": 100, "result_ref": "kfm:summary-result:synthetic:before:001", "result_digest": "sha256:7777777777777777777777777777777777777777777777777777777777777777"}]}, "expected": {"outcome": "DENY", "codes": ["SUMMARY_PAIR_INCOMPLETE"]}},
+    {"name": "deny_summary_row_count_mismatch", "patch": {"summary_statistic_steps": [{"step_id": "summary_001_before", "filter_step_id": "filter_001", "field_name": "synthetic_measure", "population": "BEFORE_FILTER", "metric": "COUNT", "row_count": 99, "result_ref": "kfm:summary-result:synthetic:before:001", "result_digest": "sha256:7777777777777777777777777777777777777777777777777777777777777777"}, {"step_id": "summary_001_after", "filter_step_id": "filter_001", "field_name": "synthetic_measure", "population": "AFTER_FILTER", "metric": "COUNT", "row_count": 92, "result_ref": "kfm:summary-result:synthetic:after:001", "result_digest": "sha256:8888888888888888888888888888888888888888888888888888888888888888"}]}, "expected": {"outcome": "DENY", "codes": ["SUMMARY_ROW_COUNT_MISMATCH"]}},
+    {"name": "deny_output_count_mismatch", "patch": {"output_dataset": {"row_count": 91}}, "expected": {"outcome": "DENY", "codes": ["OUTPUT_COUNT_MISMATCH"]}},
+    {"name": "deny_noncanonical_evidence_refs", "patch": {"evidence_refs": ["kfm:evidence-bundle:synthetic-missingness-qa:001", "kfm:evidence-bundle:synthetic-analysis-input:001"]}, "expected": {"outcome": "DENY", "codes": ["EVIDENCE_REFS_NOT_CANONICAL"]}},
+    {"name": "deny_non_utc_timestamp", "patch": {"observed_at": "2026-08-10T18:35:00+00:00"}, "expected": {"outcome": "DENY", "codes": ["UTC_TIMESTAMP_REQUIRED"]}},
+    {"name": "deny_profile_hash_tamper", "patch": {}, "tamper": "profile_hash", "expected": {"outcome": "DENY", "codes": ["PROFILE_SPEC_HASH_MISMATCH"]}},
+    {"name": "error_unknown_field", "patch": {"publication_ready": true}, "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}}
+  ]
+}

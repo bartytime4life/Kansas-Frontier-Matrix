@@ -1,0 +1,268 @@
+{
+  "object_type": "HistoricalNetworkProximityAssessmentFixtureManifest",
+  "schema_version": "1.0.0",
+  "profile": "kfm.joins.historical-network-proximity.fixture.v1",
+  "base_candidate": {
+    "object_type": "HistoricalNetworkProximityAssessmentCandidate",
+    "schema_version": "1.0.0",
+    "profile": "kfm.joins.historical-network-proximity.fixture.v1",
+    "profile_spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "source_card": "KFM-TRIAD-041",
+    "assessment_ref": "kfm:historical-network-proximity:synthetic:exact-001",
+    "evaluated_at": "2026-08-11T18:00:00Z",
+    "place_assertion": {
+      "assertion_ref": "kfm:historical-place-assertion:synthetic:place-001",
+      "source_role": "HISTORICAL_PRIMARY_RECORD",
+      "valid_time": {
+        "start": "1860-01-01T00:00:00Z",
+        "end": "1870-01-01T00:00:00Z",
+        "bounds": "[)"
+      },
+      "resolution": "RESOLVED",
+      "coordinate_method": "SOURCE_NATIVE_POINT",
+      "uncertainty_m": 0,
+      "evidence_refs": [
+        "kfm:evidence-ref:synthetic:place-primary-001"
+      ]
+    },
+    "route_assertion": {
+      "assertion_ref": "kfm:historical-route-assertion:synthetic:route-001",
+      "source_role": "HISTORICAL_ROUTE_RECORD",
+      "valid_time": {
+        "start": "1855-01-01T00:00:00Z",
+        "end": "1875-01-01T00:00:00Z",
+        "bounds": "[)"
+      },
+      "resolution": "RESOLVED",
+      "alignment_method": "SOURCE_NATIVE_ALIGNMENT",
+      "uncertainty_m": 0,
+      "evidence_refs": [
+        "kfm:evidence-ref:synthetic:route-primary-001"
+      ]
+    },
+    "proximity": {
+      "method": "SYNTHETIC_INTERVAL_DISTANCE",
+      "distance_min_m": 1200,
+      "distance_max_m": 1200,
+      "combined_uncertainty_m": 0,
+      "temporal_overlap": true
+    },
+    "interpretation": {
+      "relation_kind": "PROXIMITY_CANDIDATE",
+      "causal_relationship_claimed": false,
+      "service_relationship_claimed": false,
+      "route_use_claimed": false,
+      "network_membership_claimed": false,
+      "historical_relationship_claimed": false
+    },
+    "conclusion": {
+      "declared_outcome": "CANDIDATE",
+      "reason_codes": ["QUALIFIED_PROXIMITY_ONLY"]
+    },
+    "limitations": [
+      "DISTANCE_IS_NOT_RELATIONSHIP",
+      "NO_CAUSAL_OR_SERVICE_INFERENCE",
+      "NO_GEOMETRY_EXECUTION",
+      "NO_RELEASE_OR_PUBLICATION_AUTHORITY",
+      "NO_SOURCE_OR_EVIDENCE_RESOLUTION"
+    ],
+    "governance": {
+      "synthetic_fixture": true,
+      "network_accessed": false,
+      "geometry_executed": false,
+      "source_records_resolved": false,
+      "real_location_data": false,
+      "public_release": false
+    },
+    "authority_claims": {
+      "place_truth": false,
+      "route_truth": false,
+      "evidence": false,
+      "source_admission": false,
+      "causal_relationship": false,
+      "service_relationship": false,
+      "policy": false,
+      "review": false,
+      "release": false,
+      "publication": false
+    }
+  },
+  "cases": [
+    {
+      "name": "pass_exact_historical_proximity_candidate",
+      "set": {},
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_approximate_reconstructed_candidate",
+      "set": {
+        "/assessment_ref": "kfm:historical-network-proximity:synthetic:approximate-001",
+        "/place_assertion/source_role": "HISTORICAL_GAZETTEER",
+        "/place_assertion/coordinate_method": "APPROXIMATE_CENTROID",
+        "/place_assertion/uncertainty_m": 400,
+        "/route_assertion/source_role": "HISTORICAL_CARTOGRAPHY",
+        "/route_assertion/alignment_method": "HISTORICAL_RECONSTRUCTION",
+        "/route_assertion/uncertainty_m": 600,
+        "/proximity/distance_min_m": 2000,
+        "/proximity/distance_max_m": 5000,
+        "/proximity/combined_uncertainty_m": 1000
+      },
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_non_overlapping_intervals_abstain",
+      "set": {
+        "/assessment_ref": "kfm:historical-network-proximity:synthetic:no-overlap-001",
+        "/route_assertion/valid_time/start": "1880-01-01T00:00:00Z",
+        "/route_assertion/valid_time/end": "1890-01-01T00:00:00Z",
+        "/proximity/temporal_overlap": false,
+        "/interpretation/relation_kind": "NO_TEMPORAL_OVERLAP",
+        "/conclusion/declared_outcome": "ABSTAIN",
+        "/conclusion/reason_codes": ["NO_TEMPORAL_OVERLAP"]
+      },
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_ambiguous_assertion_abstain",
+      "set": {
+        "/assessment_ref": "kfm:historical-network-proximity:synthetic:ambiguous-001",
+        "/place_assertion/resolution": "AMBIGUOUS",
+        "/interpretation/relation_kind": "AMBIGUOUS",
+        "/conclusion/declared_outcome": "ABSTAIN",
+        "/conclusion/reason_codes": ["ASSERTION_AMBIGUOUS"]
+      },
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_unresolved_assertion_abstain",
+      "set": {
+        "/assessment_ref": "kfm:historical-network-proximity:synthetic:unresolved-001",
+        "/route_assertion/resolution": "UNRESOLVED",
+        "/interpretation/relation_kind": "UNSUPPORTED",
+        "/conclusion/declared_outcome": "ABSTAIN",
+        "/conclusion/reason_codes": ["ASSERTION_UNRESOLVED"]
+      },
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_modern_alignment_context_only_abstain",
+      "set": {
+        "/assessment_ref": "kfm:historical-network-proximity:synthetic:modern-route-001",
+        "/route_assertion/source_role": "MODERN_DESIGNATED_ALIGNMENT",
+        "/route_assertion/alignment_method": "MODERN_DESIGNATED_ALIGNMENT",
+        "/route_assertion/uncertainty_m": 50,
+        "/proximity/combined_uncertainty_m": 50,
+        "/interpretation/relation_kind": "UNSUPPORTED",
+        "/conclusion/declared_outcome": "ABSTAIN",
+        "/conclusion/reason_codes": ["MODERN_ALIGNMENT_CONTEXT_ONLY"]
+      },
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_modern_place_context_only_abstain",
+      "set": {
+        "/assessment_ref": "kfm:historical-network-proximity:synthetic:modern-place-001",
+        "/place_assertion/source_role": "MODERN_REFERENCE",
+        "/interpretation/relation_kind": "UNSUPPORTED",
+        "/conclusion/declared_outcome": "ABSTAIN",
+        "/conclusion/reason_codes": ["MODERN_PLACE_CONTEXT_ONLY"]
+      },
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "deny_temporal_overlap_flag_mismatch",
+      "set": {
+        "/proximity/temporal_overlap": false
+      },
+      "expected": {"outcome": "DENY", "codes": ["TEMPORAL_OVERLAP_MISMATCH"]}
+    },
+    {
+      "name": "deny_combined_uncertainty_mismatch",
+      "set": {
+        "/proximity/combined_uncertainty_m": 1
+      },
+      "expected": {"outcome": "DENY", "codes": ["COMBINED_UNCERTAINTY_MISMATCH"]}
+    },
+    {
+      "name": "deny_distance_band_reversed",
+      "set": {
+        "/proximity/distance_min_m": 2000,
+        "/proximity/distance_max_m": 1000
+      },
+      "expected": {"outcome": "DENY", "codes": ["DISTANCE_BAND_INVALID"]}
+    },
+    {
+      "name": "deny_approximate_place_without_uncertainty",
+      "set": {
+        "/place_assertion/coordinate_method": "APPROXIMATE_CENTROID"
+      },
+      "expected": {"outcome": "DENY", "codes": ["PLACE_UNCERTAINTY_REQUIRED"]}
+    },
+    {
+      "name": "deny_reconstructed_route_without_uncertainty",
+      "set": {
+        "/route_assertion/source_role": "HISTORICAL_CARTOGRAPHY",
+        "/route_assertion/alignment_method": "HISTORICAL_RECONSTRUCTION"
+      },
+      "expected": {"outcome": "DENY", "codes": ["ROUTE_UNCERTAINTY_REQUIRED"]}
+    },
+    {
+      "name": "deny_modern_role_alignment_mismatch",
+      "set": {
+        "/route_assertion/source_role": "MODERN_DESIGNATED_ALIGNMENT",
+        "/interpretation/relation_kind": "UNSUPPORTED",
+        "/conclusion/declared_outcome": "ABSTAIN",
+        "/conclusion/reason_codes": ["MODERN_ALIGNMENT_CONTEXT_ONLY"]
+      },
+      "expected": {"outcome": "DENY", "codes": ["MODERN_ALIGNMENT_ROLE_MISMATCH"]}
+    },
+    {
+      "name": "deny_interpretation_kind_mismatch",
+      "set": {
+        "/interpretation/relation_kind": "AMBIGUOUS"
+      },
+      "expected": {"outcome": "DENY", "codes": ["INTERPRETATION_KIND_MISMATCH"]}
+    },
+    {
+      "name": "deny_declared_outcome_mismatch",
+      "set": {
+        "/conclusion/declared_outcome": "DENY"
+      },
+      "expected": {"outcome": "DENY", "codes": ["DECLARED_OUTCOME_MISMATCH"]}
+    },
+    {
+      "name": "deny_reason_codes_not_canonical",
+      "set": {
+        "/conclusion/reason_codes": ["ZZZ", "QUALIFIED_PROXIMITY_ONLY"]
+      },
+      "expected": {"outcome": "DENY", "codes": ["REASON_CODES_NOT_CANONICAL"]}
+    },
+    {
+      "name": "deny_profile_hash_tamper",
+      "set": {},
+      "tamper_profile_hash": true,
+      "expected": {"outcome": "DENY", "codes": ["PROFILE_SPEC_HASH_MISMATCH"]}
+    },
+    {
+      "name": "error_authority_overclaim",
+      "set": {
+        "/authority_claims/publication": true
+      },
+      "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}
+    },
+    {
+      "name": "error_missing_place_evidence",
+      "set": {
+        "/place_assertion/evidence_refs": []
+      },
+      "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}
+    },
+    {
+      "name": "error_coordinate_field_forbidden",
+      "set": {
+        "/place_assertion/coordinates": [0, 0]
+      },
+      "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}
+    }
+  ]
+}

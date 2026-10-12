@@ -1,0 +1,55 @@
+{
+  "artifact": {
+    "artifact_kind": "semantic_contract",
+    "authority_owner": "unresolved_composite_authority",
+    "current_path": null,
+    "execution_role": "none",
+    "exposure": "internal",
+    "lifecycle_stage": "not_applicable",
+    "mutability": "versioned",
+    "name": "composite_contract_schema_artifact",
+    "physical_storage": "git",
+    "proposed_path": "contracts/governance/composite_root_schema.md",
+    "retention": "durable",
+    "scope_id": "composite_contract_schema",
+    "scope_kind": "object_family"
+  },
+  "base_ref": "29bf0c8c6b112df0a77c141d54a3a39fc5e9dfaf",
+  "candidate_roots": [
+    "contracts/",
+    "schemas/"
+  ],
+  "canonical_source": null,
+  "consumer_refs": [],
+  "decision_id": "pathdec:composite_contract_schema_artifact",
+  "doctrine": {
+    "decision_ref": "ADR-0029",
+    "digest": "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+    "path": "docs/doctrine/directory-rules.md"
+  },
+  "evaluated_at": "2026-08-07T20:30:00Z",
+  "evidence": [
+    "repo:contracts/README.md",
+    "repo:docs/adr/ADR-0002-contracts-vs-schemas-split.md",
+    "repo:docs/doctrine/directory-rules.md"
+  ],
+  "outcome": "SPLIT",
+  "reason_codes": [
+    "multiple_authority_owners"
+  ],
+  "registry": {
+    "base_ref": "29bf0c8c6b112df0a77c141d54a3a39fc5e9dfaf",
+    "digest": "sha256:9dba2956624827673e3fcb7d903c567cbdc042aaf104d20728dc7b2d762f3641",
+    "path": "control_plane/root_registry.yaml"
+  },
+  "rules": [
+    "DIR-AUTHROOT-001",
+    "DIR-AUTHROOT-002",
+    "DIR-SIGNATURE-003"
+  ],
+  "split_targets": [
+    "contracts/governance/composite.md",
+    "schemas/contracts/v1/governance/composite.schema.json"
+  ],
+  "version": "v1"
+}

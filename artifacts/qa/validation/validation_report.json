@@ -1,0 +1,10 @@
+{
+  "status": "PROPOSED",
+  "generator": "tools/validators/validate_all.py",
+  "path": "artifacts/qa/validation/validation_report.json",
+  "checks": [],
+  "notes": [
+    "Aggregator inspection copy placeholder. Replace with generated validator output when available.",
+    "This is not a trust-bearing proof or receipt."
+  ]
+}

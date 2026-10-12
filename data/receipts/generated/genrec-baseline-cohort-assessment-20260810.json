@@ -1,0 +1,134 @@
+{
+  "receipt_id": "genrec-baseline-cohort-assessment-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/baseline-cohort-assessment.yml",
+    "contracts/data/baseline_cohort_assessment.md",
+    "fixtures/contracts/v1/data/baseline_cohort_assessment/cases.json",
+    "schemas/contracts/v1/data/baseline_cohort_assessment.schema.json",
+    "tests/data/test_baseline_cohort_assessment.py",
+    "tools/validators/data/validate_baseline_cohort_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/baseline-cohort-assessment.yml": "sha256:3614d07936b24e4f306fb2025d7c054c5b222c369edf3a3b408dba46656fc4c2",
+    "contracts/data/baseline_cohort_assessment.md": "sha256:6c341adb47ca57b82f7b41c7910e56c83dffc8b1f9df2eb7bf32eb3377fe9c1c",
+    "fixtures/contracts/v1/data/baseline_cohort_assessment/cases.json": "sha256:aff4686989e5c19573428f3250c51bf0c0f28d954eba64a4feb86aac098ee92b",
+    "schemas/contracts/v1/data/baseline_cohort_assessment.schema.json": "sha256:37f1c8c1792fbb191df4c2ae2638841308211e244be0528da8a75f0b72f825b1",
+    "tests/data/test_baseline_cohort_assessment.py": "sha256:444e0d311b7e8240a34537fbbe8d702dec65467899840a2e35c11ddf4994c1d1",
+    "tools/validators/data/validate_baseline_cohort_assessment.py": "sha256:e5433cbd790104ce43c3b3e2df4fc83b2fa49b1f07cfbbb2a16cbbe9284247d2"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-10"
+  },
+  "prompt_or_contract": "sha256:3a52d95e62abfc5b4837c75372fb557156de99bcfee86d70687ab3cfc69d42a2",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Google Drive connector",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Full_Atlas_seed_cards.md"
+    ],
+    "evidence_refs": [
+      "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho#KFM-TRIAD-036",
+      "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho#KFM-CAND-0108",
+      "repo:docs/intake/exploratory/new-ideas-4-16-source-map.md@9e76413313b8529091d01be6132d6e987e3f9fae",
+      "repo:tools/diff/stable_diff.py@9e76413313b8529091d01be6132d6e987e3f9fae",
+      "repo:contracts/data/material_change_assessment.md@9e76413313b8529091d01be6132d6e987e3f9fae",
+      "repo:docs/doctrine/directory-rules.md@9e76413313b8529091d01be6132d6e987e3f9fae"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/baseline-cohort-assessment.yml": "PROPOSED",
+    "contracts/data/baseline_cohort_assessment.md": "PROPOSED",
+    "fixtures/contracts/v1/data/baseline_cohort_assessment/cases.json": "PROPOSED",
+    "schemas/contracts/v1/data/baseline_cohort_assessment.schema.json": "PROPOSED",
+    "tests/data/test_baseline_cohort_assessment.py": "PROPOSED",
+    "tools/validators/data/validate_baseline_cohort_assessment.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-pytest",
+      "outcome": "PASS",
+      "reason": "Ten deterministic focused tests passed locally."
+    },
+    {
+      "gate": "fixture-matrix",
+      "outcome": "PASS",
+      "reason": "Nineteen synthetic positive and negative cases produced the expected finite outcomes."
+    },
+    {
+      "gate": "schema-check",
+      "outcome": "PASS",
+      "reason": "The Draft 2020-12 assessment schema passed schema validation."
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS",
+      "reason": "The read-only path-scoped workflow parsed locally."
+    },
+    {
+      "gate": "runtime-domain-adoption",
+      "outcome": "SKIPPED",
+      "reason": "No domain source, observation, threshold, anomaly, pipeline, policy, or lifecycle was changed."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted CI begins after the draft pull request is opened."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human data, analysis, domain, and release review remain pending."
+    }
+  ],
+  "policy_decisions": [
+    "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@9e76413313b8529091d01be6132d6e987e3f9fae"
+  ],
+  "citations": [
+    {
+      "id": "gdrive:full-atlas-triad-036",
+      "validated": true,
+      "evidence_ref": "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho#KFM-TRIAD-036"
+    },
+    {
+      "id": "gdrive:full-atlas-candidate-0108",
+      "validated": true,
+      "evidence_ref": "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho#KFM-CAND-0108"
+    },
+    {
+      "id": "repo:new-ideas-4-16-source-map",
+      "validated": true,
+      "evidence_ref": "repo:docs/intake/exploratory/new-ideas-4-16-source-map.md@9e76413313b8529091d01be6132d6e987e3f9fae"
+    },
+    {
+      "id": "repo:directory-rules",
+      "validated": true,
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md@9e76413313b8529091d01be6132d6e987e3f9fae"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-10T15:03:15Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-first baseline cohort governance proposal from Full Atlas triad KFM-TRIAD-036 after the stable-diff and material-change prerequisites; coherent validation remains HOLD and cannot establish scientific fitness, thresholds, anomaly status, source admission, or publication authority."
+}

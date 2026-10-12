@@ -1,0 +1,34 @@
+{
+  "fixture_id": "fixture:geology:resource-class:invalid-estimate-as-reserve",
+  "profile_id": "kfm-geology-resource-class-fixture-v1",
+  "object_family": "ResourceEstimate",
+  "resource_character": "RESOURCE_ESTIMATE",
+  "source_role": "modeled",
+  "source_descriptor_ref": "fixture://sources/geology/synthetic-estimate",
+  "evidence_refs": [
+    "fixture://evidence/geology/resource-class/invalid-estimate-as-reserve"
+  ],
+  "claim": {
+    "kind": "proven_reserve",
+    "commodity": "synthetic_commodity",
+    "intended_use": "reserve_certification"
+  },
+  "spatial_support": {
+    "kind": "generalized_county",
+    "county_fips": "99999"
+  },
+  "governance": {
+    "rights_state": "fixture_only",
+    "sensitivity_state": "public_safe_fixture",
+    "review_state": "fixture_only",
+    "release_state": "not_released",
+    "promotion_eligible": false,
+    "rollback_state": "fixture_only"
+  },
+  "limitations": [
+    "not_a_reserve",
+    "not_direct_observation",
+    "not_economic_viability",
+    "synthetic_fixture_only"
+  ]
+}

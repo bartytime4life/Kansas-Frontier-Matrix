@@ -1,0 +1,169 @@
+{
+  "receipt_id": "genrec-control-plane-readme-60f4fe817cd7",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "control_plane/README.md"
+  ],
+  "artifact_hashes": {
+    "control_plane/README.md": "sha256:60f4fe817cd77af2a5ce8c76a175ac70f7bbd906f5d31078886bf4b32022ade5"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-08-session"
+  },
+  "prompt_or_contract": "sha256:45a596f250d446bc1edb1a76a2d4096baf5bed16037cef91d38067df0b26369d",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "current repository file and workflow inspection",
+      "bounded local deterministic Markdown validation",
+      "remote branch/commit/PR writes",
+      "remote blob readback"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:45a596f250d446bc1edb1a76a2d4096baf5bed16037cef91d38067df0b26369d",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:aad95fd27f48a7c15aae1c3cda252ce6cd02ac5aac79e306f9ae48575e422c01"
+    ],
+    "attached_docs": [
+      "Current user request — update control_plane/README.md",
+      "KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0",
+      "KFM Directory Governance Standard v2.0.0-draft.1",
+      "Kansas Frontier Matrix — AI Build Operating Contract"
+    ],
+    "evidence_refs": [
+      "conversation://current#update-control-plane-readme",
+      "attachment://KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/fbfa7f95791094a858ebf659098fd39b7866adda",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/fbfa7f95791094a858ebf659098fd39b7866adda/control_plane/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/fbfa7f95791094a858ebf659098fd39b7866adda/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/fbfa7f95791094a858ebf659098fd39b7866adda/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/fbfa7f95791094a858ebf659098fd39b7866adda/tests/policy/test_control_plane_register_meta_contract.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/fbfa7f95791094a858ebf659098fd39b7866adda/.github/workflows/docs-control-plane.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/fbfa7f95791094a858ebf659098fd39b7866adda/.github/workflows/object-family-register.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/fbfa7f95791094a858ebf659098fd39b7866adda/.github/CODEOWNERS",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/fbfa7f95791094a858ebf659098fd39b7866adda/Makefile",
+      "github://bartytime4life/Kansas-Frontier-Matrix/pull/2259",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/20d73d129d70f528694633f4965db6f828a5dfd6"
+    ]
+  },
+  "truth_labels": {
+    "control_plane/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "task-contract-and-authority-preflight",
+      "outcome": "PASS",
+      "reason": "Current user request, repository, immutable base, same-path target, direct dependency, non-goals, feature branch, and draft-PR ceiling were resolved before mutation."
+    },
+    {
+      "gate": "overlap-and-base-drift-preflight",
+      "outcome": "PASS",
+      "reason": "No open overlapping README PR was found; later main movement was inspected and did not intersect the target or governing evidence used by this slice."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "The existing canonical control_plane root README was updated in place; generated provenance uses the existing data/receipts/generated process-memory lane; no root or parallel authority was created."
+    },
+    {
+      "gate": "complete-baseline-and-material-no-loss",
+      "outcome": "PASS",
+      "reason": "The complete v0.3 target was read; its purpose, authority boundaries, public-path denial, register packet, validation distinctions, stable anchors, correction/deprecation rules, and rollback posture were preserved or corrected."
+    },
+    {
+      "gate": "root-readme-profile",
+      "outcome": "PASS",
+      "reason": "The first twelve H2 sections implement the adopted Directory Rules v2 ROOT_FULL field order."
+    },
+    {
+      "gate": "repository-evidence-reconciliation",
+      "outcome": "PASS",
+      "reason": "ADR-0029 adoption, nine-file mixed validation packet, three-populated/six-empty register state, dedicated projections, inactive matrices, and stale repository-control projection were reconciled without converting path presence into authority."
+    },
+    {
+      "gate": "markdown-meta-structure-and-renderability",
+      "outcome": "PASS",
+      "reason": "UTF-8, LF, final newline, KFM metadata, one H1, heading order, explicit anchors, internal fragments, fences, tables, HTML balance, Mermaid blocks, and secret/sensitivity scans passed deterministic local checks."
+    },
+    {
+      "gate": "remote-readback-and-content-hash",
+      "outcome": "PASS",
+      "reason": "GitHub returned blob 77cad905655b66e3861767f3d4c411ddc58ab237 on commit 20d73d129d70f528694633f4965db6f828a5dfd6, matching the prepared Git blob; artifact SHA-256 is 60f4fe817cd77af2a5ce8c76a175ac70f7bbd906f5d31078886bf4b32022ade5."
+    },
+    {
+      "gate": "generated-receipt-schema-and-integrity",
+      "outcome": "PASS",
+      "reason": "The receipt passed bounded current-schema required-field, pattern, date-time, artifact/hash/truth-label key-parity, canonical repository-relative path, and local SHA-256 binding checks. The repository-owned validator and hosted checks remain separately observable after commit."
+    },
+    {
+      "gate": "repository-native-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted pull-request workflows are observed separately after this receipt commit; no hosted PASS is claimed by the receipt."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending and separate from generation, validation, branch delivery, merge, release, and publication."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "user-request",
+      "validated": true,
+      "evidence_ref": "conversation://current#update-control-plane-readme"
+    },
+    {
+      "id": "repository-build-v6",
+      "validated": true,
+      "evidence_ref": "attachment://KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0"
+    },
+    {
+      "id": "control-plane-baseline",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/fbfa7f95791094a858ebf659098fd39b7866adda/control_plane/README.md"
+    },
+    {
+      "id": "directory-rules-adopted-by-adr-0029",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/fbfa7f95791094a858ebf659098fd39b7866adda/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "control-plane-meta-contract",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/fbfa7f95791094a858ebf659098fd39b7866adda/tests/policy/test_control_plane_register_meta_contract.py"
+    },
+    {
+      "id": "docs-control-plane-workflow",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/fbfa7f95791094a858ebf659098fd39b7866adda/.github/workflows/docs-control-plane.yml"
+    },
+    {
+      "id": "remote-readback",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/20d73d129d70f528694633f4965db6f828a5dfd6"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-08T22:12:16Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": 2259,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Task kfm-control-plane-readme-v04-20260808. Same-path repository-grounded control-plane README correction plus generated provenance. This receipt records process memory only; human review and hosted CI remain separate, and no register authority, source activation, policy approval, release, deployment, promotion, publication, or settings change is created."
+}

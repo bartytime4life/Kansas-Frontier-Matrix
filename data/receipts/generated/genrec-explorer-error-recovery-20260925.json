@@ -1,0 +1,103 @@
+{
+  "receipt_id": "genrec-explorer-error-recovery-20260925",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "README.md",
+    "apps/kansas-frontier-matrix-explorer/README.md",
+    "apps/kansas-frontier-matrix-explorer/app/error.tsx",
+    "apps/kansas-frontier-matrix-explorer/main.tsx",
+    "apps/kansas-frontier-matrix-explorer/tests/error-boundary.test.mjs",
+    "apps/kansas-frontier-matrix-explorer/tests/error-boundary.browser.mjs"
+  ],
+  "artifact_hashes": {
+    "README.md": "sha256:ab64ca66103812352293d65f06aeea00b4e7f0df787fa9395b9c2f05d296bd4f",
+    "apps/kansas-frontier-matrix-explorer/README.md": "sha256:1c2e4d623641857b8328ca84e7e9e0fea01de5773d94d6cef941fe8ffcf6e610",
+    "apps/kansas-frontier-matrix-explorer/app/error.tsx": "sha256:b5289d4b3fe65c094c8e3dd37eb45547822f96de7fc97977b0ac7a2bb29e5aed",
+    "apps/kansas-frontier-matrix-explorer/main.tsx": "sha256:93deb8efe530637de3a4b136c5bbf116ff6584e0267fcf7250523797886685c4",
+    "apps/kansas-frontier-matrix-explorer/tests/error-boundary.test.mjs": "sha256:db49ae42a090ec4906faf0010e19e941e78f57a4176c2e66eefcea3482bf4daf",
+    "apps/kansas-frontier-matrix-explorer/tests/error-boundary.browser.mjs": "sha256:17236002b424e389ec724387e7e11f317afe661a3deb84614c7e7b1e13e04187"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6",
+    "version": "runtime revision not exposed"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "temperature": null,
+    "seed": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/7e25a287eaeb080bf18a743ae2518147b08b7e2a",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4416",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024#issuecomment-5788994213",
+      "https://react.dev/reference/react/Component#catching-rendering-errors-with-an-error-boundary",
+      "https://react.dev/reference/react-dom/client/createRoot"
+    ]
+  },
+  "truth_labels": {
+    "README.md": "CONFIRMED",
+    "apps/kansas-frontier-matrix-explorer/README.md": "CONFIRMED",
+    "apps/kansas-frontier-matrix-explorer/app/error.tsx": "CONFIRMED",
+    "apps/kansas-frontier-matrix-explorer/main.tsx": "CONFIRMED",
+    "apps/kansas-frontier-matrix-explorer/tests/error-boundary.test.mjs": "CONFIRMED",
+    "apps/kansas-frontier-matrix-explorer/tests/error-boundary.browser.mjs": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "original-entrypoint-regression",
+      "outcome": "PASS",
+      "reason": "New composition test failed on unchanged main; mounted browser fixture on base 7e25a287eaeb080bf18a743ae2518147b08b7e2a timed out with a blank root after a render failure."
+    },
+    {
+      "gate": "native-app-build-and-typecheck",
+      "outcome": "PASS",
+      "reason": "Node 22.13.1; React 19.3.0; app-local declared compiler; Vite 8.3.0. Existing installed dependencies copied to isolated checkout; no fresh frozen install or tarball rehash claimed."
+    },
+    {
+      "gate": "native-app-tests",
+      "outcome": "PASS",
+      "reason": "288 pass, 0 fail, 2 opt-in esbuild/Drizzle probes skipped; 5 lint compatibility tests pass."
+    },
+    {
+      "gate": "native-app-eslint",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "mounted-react-browser-fixture",
+      "outcome": "PASS",
+      "reason": "Codex in-app browser, production React bundle; nine scenarios with 13 assertions each. Real main.tsx and boundary, synthetic route/auxiliary children, no CSS or network data. Render/effect/null/undefined/string/unsafe-digest failures, About and auxiliary surfaces; repeated failure, retry, focus, cleanup, saved bytes, labels and sanitized diagnostics."
+    },
+    {
+      "gate": "normal-app-browser-smoke",
+      "outcome": "PASS",
+      "reason": "Actual locally built client served over loopback: Explorer opens, zoom changes from 5.45 to 6.45, Save view confirms success, reload preserves zoom and demonstration/renderer-hold labels. This is not a renderer test."
+    },
+    {
+      "gate": "hosted-ci-webgl-independent-acceptance",
+      "outcome": "SKIPPED",
+      "reason": "No PR/hosted deployment/source admission; renderer remains NullMapRuntime; independent review pending."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "base",
+      "validated": true,
+      "evidence_ref": "7e25a287eaeb080bf18a743ae2518147b08b7e2a"
+    },
+    {
+      "id": "directory-rules",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": []
+  },
+  "created_at": "2026-09-25T01:13:08.139387Z",
+  "emitter": "Codex",
+  "notes": "Branch-scoped repair only. No evidence lifecycle, access policy, source payload, hosting identity, dependency, workflow, or storage format changed. Recovery remounts child state; unsaved changes may be lost. Event-handler, arbitrary async and pre-mount module failures remain outside this boundary. #4024 independently proven delivery path remains unverified; #4416 broader acceptance remains open. Worktree evidence; final commit replay is recorded in the delivery handoff, not recursively embedded here."
+}

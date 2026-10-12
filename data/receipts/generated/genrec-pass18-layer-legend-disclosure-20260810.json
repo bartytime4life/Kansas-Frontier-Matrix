@@ -1,0 +1,141 @@
+{
+  "receipt_id": "genrec-pass18-layer-legend-disclosure-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/layer-legend-disclosure.yml",
+    "contracts/data/layer_legend_disclosure.md",
+    "docs/intake/exploratory/pass-18-layer-legend-disclosure-source-map.md",
+    "fixtures/contracts/v1/data/layer_legend_disclosure/cases.json",
+    "schemas/contracts/v1/data/layer_legend_disclosure.schema.json",
+    "tests/validators/test_validate_layer_legend_disclosure.py",
+    "tools/validators/data/validate_layer_legend_disclosure.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/layer-legend-disclosure.yml": "sha256:b9dc9f8489c46bd2b33414d62fe5c45789c0e27121f39758d3ffd12a1764153c",
+    "contracts/data/layer_legend_disclosure.md": "sha256:e34cbc2b4d87d0378718faa57a52f40233e454dcf2486bb09dee56e67b10dacd",
+    "docs/intake/exploratory/pass-18-layer-legend-disclosure-source-map.md": "sha256:9cd1ba8b94d1dad86c056d7df762e128c93d4c47f93cec1168b6e544d792e8b7",
+    "fixtures/contracts/v1/data/layer_legend_disclosure/cases.json": "sha256:dbdfe217cc500de1211129722406bec8aee377357fea02e6e30ac3d6cc731fa2",
+    "schemas/contracts/v1/data/layer_legend_disclosure.schema.json": "sha256:70ea4511cf468ff2b814bb0b76ac7481e6998be6627315899a4649f24df18cb1",
+    "tests/validators/test_validate_layer_legend_disclosure.py": "sha256:3f0f5130891842b95c61eb9bf938b52aae2fbcabdda3aa943aedc588c85d97f1",
+    "tools/validators/data/validate_layer_legend_disclosure.py": "sha256:499cc5b89d6a8ea05ecea7b251e24eb75c4ca56e58767b36a6802d2d29e5bcf5"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-10"
+  },
+  "prompt_or_contract": "sha256:e34cbc2b4d87d0378718faa57a52f40233e454dcf2486bb09dee56e67b10dacd",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connected-corpus discovery",
+      "GitHub repository inspection and connector publication",
+      "local deterministic JSON, YAML, Python, schema, and fixture validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:efc0d159761581b5ae043c607dfa28bbc58b3ca5423c9d18a659e650271d73b9"
+    ],
+    "attached_docs": [
+      "KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf",
+      "Google Drive New Ideas 5-19-26"
+    ],
+    "evidence_refs": [
+      "attachment://KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#card=KFM-P18-INV-351",
+      "gdrive://1Gx4pU71Pqk1cG1oKb8l69B8K4yOJK7zy5KNH-Xvl4HQ#document=New-Ideas-5-19-26",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7301a90ff528b7f620c22e57a2b624cbca45e570/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7301a90ff528b7f620c22e57a2b624cbca45e570/contracts/data/layer_manifest.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7301a90ff528b7f620c22e57a2b624cbca45e570/contracts/data/cartographic_omission_disclosure.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7301a90ff528b7f620c22e57a2b624cbca45e570/contracts/evidence/representation_fitness_assessment.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/layer-legend-disclosure.yml": "CONFIRMED",
+    "contracts/data/layer_legend_disclosure.md": "PROPOSED",
+    "docs/intake/exploratory/pass-18-layer-legend-disclosure-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/data/layer_legend_disclosure/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/data/layer_legend_disclosure.schema.json": "PROPOSED",
+    "tests/validators/test_validate_layer_legend_disclosure.py": "CONFIRMED",
+    "tools/validators/data/validate_layer_legend_disclosure.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "python-syntax-compilation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "draft-2020-12-schema-meta-validation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "focused-unittest-suite",
+      "outcome": "PASS",
+      "reason": "Eight deterministic layer legend disclosure tests passed."
+    },
+    {
+      "gate": "exact-fixture-replay",
+      "outcome": "PASS",
+      "reason": "Sixteen exact PASS, ABSTAIN, DENY, and ERROR cases matched reviewed outcomes and codes."
+    },
+    {
+      "gate": "no-network-boundary",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pass18-kfm-p18-inv-351",
+      "validated": true,
+      "evidence_ref": "attachment://KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#card=KFM-P18-INV-351"
+    },
+    {
+      "id": "drive-new-ideas-5-19-26",
+      "validated": true,
+      "evidence_ref": "gdrive://1Gx4pU71Pqk1cG1oKb8l69B8K4yOJK7zy5KNH-Xvl4HQ#document=New-Ideas-5-19-26"
+    },
+    {
+      "id": "accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/7301a90ff528b7f620c22e57a2b624cbca45e570/docs/doctrine/directory-rules.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-11T01:43:07Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub and Google Drive connectors",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Additive, inactive, fixture-only layer legend disclosure profile. It checks evidence-class, release-state, render-state, sensitivity-transform, uncertainty, correction, and reference disclosure without rendering a layer, deciding policy or review, changing lifecycle state, releasing, or publishing."
+}

@@ -1,0 +1,89 @@
+{
+  "object_type": "TemporalSlice",
+  "schema_version": "1.0.0",
+  "slice_id": "kfm:temporal-slice:sha256:f692588bd50dc403aecfe23b64d59a36a4582395ee6680cb9bcc105273140bf7",
+  "identity_profile": "kfm-temporal-slice-id-v1",
+  "dataset_version_ref": "kfm:dataset-version:synthetic-observation:2026-08-06",
+  "temporal_window": {
+    "start": "2026-08-06T12:05:00Z",
+    "end": "2026-08-06T12:10:00Z",
+    "time_kind": "observed"
+  },
+  "cadence_hint": "PT5M",
+  "spatial": {
+    "footprint_hash": "sha256:4d70cb04152bdcc71a9e7bf86e089f427a45041cecf5901168a3950be1aabaef",
+    "support_type": "cell",
+    "grid_system": "h3",
+    "grid_key": "h3:8928308280fffff",
+    "geometry_ref": "kfm:geometry:synthetic-h3-cell-8928308280fffff"
+  },
+  "provenance": {
+    "evidence_bundle_refs": [
+      "kfm:evidence-bundle:synthetic-temporal-slice-002"
+    ],
+    "run_receipt_ref": "kfm:run-receipt:synthetic-temporal-slice-002",
+    "spec_hash": "sha256:287f71244eff3249c93b4ae3f73d72c487b69c48cc36a4b6c211ba67a0e4448e",
+    "processing_level": "L2",
+    "input_refs": [
+      "kfm:input:synthetic-observation-window-002"
+    ]
+  },
+  "verification": {
+    "promotion_gate_ref": "kfm:promotion-gate:synthetic-prepublish-f",
+    "check_refs": [
+      "kfm:check:synthetic-change-proof",
+      "kfm:check:synthetic-crs",
+      "kfm:check:synthetic-quality"
+    ],
+    "policy_decision_refs": [
+      "kfm:policy-decision:synthetic-temporal-slice-002"
+    ],
+    "policy_labels": [
+      "internal",
+      "synthetic"
+    ],
+    "obligations": [
+      "retain:source-citation"
+    ]
+  },
+  "change": {
+    "state": "CHANGED",
+    "previous_slice_ref": "kfm:temporal-slice:sha256:63cbe1104a316e7dc2ed4d3092855b73ccda463c6abe3afa59d2ac4e12cbf047",
+    "material_change_assessment_ref": null,
+    "delta_proof_ref": null,
+    "delta_magnitude": null,
+    "change_flags": []
+  },
+  "materialization": {
+    "surfaces": [
+      "focus",
+      "map",
+      "story"
+    ],
+    "artifacts": [
+      {
+        "artifact_ref": "kfm:artifact:synthetic-temporal-slice-002-cog",
+        "artifact_kind": "raster",
+        "media_type": "image/tiff",
+        "digest": "sha256:64499d6e113a1f1315e5119aacca1f124456f3e5edde3cad5cc08b91f3211136"
+      },
+      {
+        "artifact_ref": "kfm:artifact:synthetic-temporal-slice-002-pmtiles",
+        "artifact_kind": "tile",
+        "media_type": "application/vnd.pmtiles",
+        "digest": "sha256:99927f955e49449d2ab2e87751f381da24548d9d55e089bda62ddd25af82a87a"
+      }
+    ]
+  },
+  "lifecycle_stage": "CATALOG",
+  "governance": {
+    "authority_created": false,
+    "evidence_closure_claimed": false,
+    "policy_evaluated": false,
+    "promotion_authorized": false,
+    "release_authorized": false,
+    "publication_authorized": false,
+    "public_use_allowed": false,
+    "release_ref": null
+  }
+}

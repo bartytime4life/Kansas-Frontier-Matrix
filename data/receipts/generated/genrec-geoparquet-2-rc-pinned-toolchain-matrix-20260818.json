@@ -1,0 +1,160 @@
+{
+  "receipt_id": "genrec-geoparquet-2-rc-pinned-toolchain-matrix-20260818",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/geoparquet-2-rc-compatibility-assessment.yml",
+    "contracts/release/geoparquet_2_rc_compatibility_assessment.md",
+    "fixtures/contracts/v1/release/geoparquet_2_rc_compatibility_assessment/cases.json",
+    "schemas/contracts/v1/release/geoparquet_2_rc_compatibility_assessment.schema.json",
+    "tests/release/test_geoparquet_2_rc_compatibility_assessment.py",
+    "tools/validators/release/validate_geoparquet_2_rc_compatibility_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/geoparquet-2-rc-compatibility-assessment.yml": "sha256:6cd273264ad7da16bc897039c3a2e1c607d842ccf263ea06175e87a5826a22bb",
+    "contracts/release/geoparquet_2_rc_compatibility_assessment.md": "sha256:201888e1bca645cf4002c8ba8682e765ad9801a036b3c3956bfd82e0d7185e59",
+    "fixtures/contracts/v1/release/geoparquet_2_rc_compatibility_assessment/cases.json": "sha256:3c047283dd07280b690ba9633aa99647843bf54ce55c396a5d02d36b59750868",
+    "schemas/contracts/v1/release/geoparquet_2_rc_compatibility_assessment.schema.json": "sha256:d27f4af41679eb0383cc111f136e75bc0fadac2999961f981d871137bf6ad896",
+    "tests/release/test_geoparquet_2_rc_compatibility_assessment.py": "sha256:ebe76ce27934df881d575edb5c79007b5ac7076a6bb26b49a493aff7487494f6",
+    "tools/validators/release/validate_geoparquet_2_rc_compatibility_assessment.py": "sha256:9a43731ddd9565920e55b4121ebe6860b654bebb1f711f30e760d6dd95baf3bb"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-18"
+  },
+  "prompt_or_contract": "sha256:c93f0e14cd540787679b107a03148f4e0bc0b343a8475db5342acbfa6313ee70",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "web primary-source verification",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:c93f0e14cd540787679b107a03148f4e0bc0b343a8475db5342acbfa6313ee70"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "repo:main@9cb437d803a431928d3b919d9a7814647f812583",
+      "repo:data/receipts/generated/genrec-geoparquet-2-rc-compatibility-assessment-20260815.json@9cb437d803a431928d3b919d9a7814647f812583",
+      "upstream:geoparquet/geoparquet/v2.0.0-rc.1@0c7fab74cf1177e2fe61df8eb7fcd1813b73e4aa",
+      "upstream:OSGeo/gdal/v3.13.2@b40672525acf3f5c4f29d8541aa7dcff1e18eb92",
+      "upstream:duckdb/duckdb/v1.5.5@d8cdaa33fda8df955cc76ef58a280f68f4cd43fa",
+      "upstream:apache/sedona/sedona-1.9.0@34098262086a6137d105cd8d9e0b366e4a8246c0",
+      "upstream:apache/spark/v3.5.9@7c14a3c28b141cc97a330c4d0f5d2a6da7267f85",
+      "upstream:apache/sedona/sedonadb-0.4.0-doc@689c4544b03d79891322423b1dbca6d4d4421919",
+      "upstream:apache/arrow/25.0.0",
+      "repo:docs/adr/ADR-0033-geoparquet-version-readiness.md@9cb437d803a431928d3b919d9a7814647f812583"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/geoparquet-2-rc-compatibility-assessment.yml": "PROPOSED",
+    "contracts/release/geoparquet_2_rc_compatibility_assessment.md": "PROPOSED",
+    "fixtures/contracts/v1/release/geoparquet_2_rc_compatibility_assessment/cases.json": "PROPOSED",
+    "schemas/contracts/v1/release/geoparquet_2_rc_compatibility_assessment.schema.json": "PROPOSED",
+    "tests/release/test_geoparquet_2_rc_compatibility_assessment.py": "PROPOSED",
+    "tools/validators/release/validate_geoparquet_2_rc_compatibility_assessment.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-unit-tests",
+      "outcome": "PASS",
+      "reason": "Ten focused pytest tests passed for exact toolchain binding, finite READY/HOLD/ERROR classification, default preservation, evidence-reference separation, and governance boundaries."
+    },
+    {
+      "gate": "synthetic-fixture-polarity",
+      "outcome": "PASS",
+      "reason": "Fourteen declared compatibility cases passed exact outcome and reason-code polarity."
+    },
+    {
+      "gate": "exact-toolchain-declaration",
+      "outcome": "PASS",
+      "reason": "The synthetic readiness packet binds GDAL 3.13.2, DuckDB 1.5.5 plus spatial 1.5.5, SedonaSpark 1.9.0 plus Spark 3.5.9/Java 11/Scala 2.12.18/parquet-java 1.13.1, distinct SedonaDB 0.4.0, and PyArrow 25.0.0."
+    },
+    {
+      "gate": "sedona-surface-separation",
+      "outcome": "PASS",
+      "reason": "SedonaSpark and SedonaDB are modeled as distinct lanes and cannot reuse one evidence reference or imply support across surfaces."
+    },
+    {
+      "gate": "artifact-byte-binding",
+      "outcome": "PASS",
+      "reason": "SHA-256 values were recomputed over the six finalized non-self artifacts named by this receipt."
+    },
+    {
+      "gate": "carrier-byte-interoperability",
+      "outcome": "SKIPPED",
+      "reason": "No GeoParquet carrier bytes, engine packages, remote extensions, containers, or transitive artifacts were downloaded or executed."
+    },
+    {
+      "gate": "package-and-distribution-integrity",
+      "outcome": "SKIPPED",
+      "reason": "The profile requires per-artifact digests in the future execution packet; this declaration uses non-authoritative synthetic digest fixtures only."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted CI starts after the draft pull request opens."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0033-geoparquet-version-readiness.md",
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "geoparquet-2-rc-specification",
+      "validated": true,
+      "evidence_ref": "upstream:geoparquet/geoparquet/v2.0.0-rc.1@0c7fab74cf1177e2fe61df8eb7fcd1813b73e4aa"
+    },
+    {
+      "id": "gdal-3-13-2-tag",
+      "validated": true,
+      "evidence_ref": "upstream:OSGeo/gdal/v3.13.2@b40672525acf3f5c4f29d8541aa7dcff1e18eb92"
+    },
+    {
+      "id": "duckdb-1-5-5-tag",
+      "validated": true,
+      "evidence_ref": "upstream:duckdb/duckdb/v1.5.5@d8cdaa33fda8df955cc76ef58a280f68f4cd43fa"
+    },
+    {
+      "id": "sedona-1-9-0-tag",
+      "validated": true,
+      "evidence_ref": "upstream:apache/sedona/sedona-1.9.0@34098262086a6137d105cd8d9e0b366e4a8246c0"
+    },
+    {
+      "id": "spark-3-5-9-tag",
+      "validated": true,
+      "evidence_ref": "upstream:apache/spark/v3.5.9@7c14a3c28b141cc97a330c4d0f5d2a6da7267f85"
+    },
+    {
+      "id": "historical-readiness-receipt",
+      "validated": true,
+      "evidence_ref": "repo:data/receipts/generated/genrec-geoparquet-2-rc-compatibility-assessment-20260815.json@9cb437d803a431928d3b919d9a7814647f812583"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-18T16:25:28Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0033-geoparquet-version-readiness.md",
+    "drift_register_entry": null
+  },
+  "notes": "Adds an exact, inactive declaration matrix for later carrier-byte probes. READY means only that the declared matrix is complete enough to execute. GeoParquet 1.1.0 remains the default. This receipt does not prove support in any engine, install packages, authenticate remote extensions or distributions, create carrier bytes, accept ADR-0033, authorize adoption or migration, or create review, merge, release, deployment, publication, or public-use authority."
+}

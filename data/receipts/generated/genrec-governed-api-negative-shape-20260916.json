@@ -1,0 +1,107 @@
+{
+  "receipt_id": "genrec-governed-api-negative-shape-20260916",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/governed-api/README.md",
+    "apps/governed-api/src/governed_api/stub.py",
+    "apps/governed-api/tests/test_api_failure_fixtures.py"
+  ],
+  "artifact_hashes": {
+    "apps/governed-api/README.md": "sha256:c4ec045648b3728d201e20f7d794c7e4cb3418514fe82449c21aaaf1006c16a2",
+    "apps/governed-api/src/governed_api/stub.py": "sha256:c65feb849a2c717460e7c7504344765c4627b5d29ab44e83ed6db2bfe9fca63c",
+    "apps/governed-api/tests/test_api_failure_fixtures.py": "sha256:d1454dbfada0d7649817e063308bf3a09b3856b33420e3d0b3b562ced6b0df7d"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "UNKNOWN: deployment revision not exposed"
+  },
+  "prompt_or_contract": "sha256:2d9a916bf521ada0160d38c8f87c16b6dde327154abe5ece2595df794efa5b6b",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub",
+      "container"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/5bbfae05970acd4357a08135ff340284585039f4/apps/governed-api/README.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/5bbfae05970acd4357a08135ff340284585039f4/apps/governed-api/src/governed_api/stub.py",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/5bbfae05970acd4357a08135ff340284585039f4/apps/governed-api/tests/test_api_failure_fixtures.py",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/5bbfae05970acd4357a08135ff340284585039f4/CONTRIBUTING.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/5bbfae05970acd4357a08135ff340284585039f4/.github/PULL_REQUEST_TEMPLATE.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/5bbfae05970acd4357a08135ff340284585039f4/.github/CODEOWNERS",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/5bbfae05970acd4357a08135ff340284585039f4/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/5bbfae05970acd4357a08135ff340284585039f4/docs/doctrine/directory-rules.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/5bbfae05970acd4357a08135ff340284585039f4/apps/governed-api/src/governed_api/README.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/5bbfae05970acd4357a08135ff340284585039f4/apps/governed-api/tests/README.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/5bbfae05970acd4357a08135ff340284585039f4/.github/workflows/api-test.yml",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/5bbfae05970acd4357a08135ff340284585039f4/schemas/contracts/v1/runtime/runtime_response_envelope.schema.json",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3400",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4416"
+    ]
+  },
+  "truth_labels": {
+    "apps/governed-api/README.md": "PROPOSED",
+    "apps/governed-api/src/governed_api/stub.py": "PROPOSED",
+    "apps/governed-api/tests/test_api_failure_fixtures.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "governed-api-native",
+      "outcome": "PASS",
+      "reason": "Python 3.12.14, pytest 9.1.1; make governed-api-verify: 36 tests passed, zero skipped, forbidden renderer/model import boundary intact."
+    },
+    {
+      "gate": "api-consumer-and-synthetic-closure",
+      "outcome": "PASS",
+      "reason": "pytest apps/governed-api/tests tests/policy/test_explorer_web_adapter_boundary.py tests/release/test_synthetic_release_closure.py --strict-config --strict-markers: 40 tests passed, zero skipped."
+    },
+    {
+      "gate": "contract-promotion-rollup-regression",
+      "outcome": "PASS",
+      "reason": "pytest tests/docs/test_contract_object_map_lifecycle.py tests/release/test_promotion_verification_execution.py tests/validators/test_validate_operational_trust_rollup.py --strict-config --strict-markers: 24 tests passed, zero skipped."
+    },
+    {
+      "gate": "focused-doc-metadata",
+      "outcome": "PASS",
+      "reason": "Existing metadata checker exited 0, one valid block, zero fail findings, eleven unsupported-nesting warnings retained; no clean-warning claim."
+    },
+    {
+      "gate": "diff-whitespace",
+      "outcome": "PASS",
+      "reason": "git diff --check passed for the authored artifact set."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "directory-rules",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/5bbfae05970acd4357a08135ff340284585039f4/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "api-schema",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/5bbfae05970acd4357a08135ff340284585039f4/schemas/contracts/v1/runtime/runtime_response_envelope.schema.json"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-16T15:37:20.982991Z",
+  "emitter": "Codex governed API negative-shape repair",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Process provenance only; not policy, independent acceptance or release authority. Base list/dict outcome values reproduced an uncaught TypeError; the successor rejects non-plain JSON values before membership/equality/regex, retaining intentional negative outcomes and ANSWER denial. No route/schema/policy/client/data/dependency/permissions/settings changes. Exact-head hosted checks and accountable review NOT_RUN; the api-test workflow already runs the complete app test directory. Initial supplemental command referenced a nonexistent tests/contracts path and collected no tests; corrected tests/docs command passed as recorded. Total output-byte and execution-time bounds are not established; no new limit policy is invented. Historical receipts remain unchanged. Abandon the branch before integration; after separately authorized integration, review a forward fix or code/test/docs revert, preserving authoring receipt history. No source admission, release, deployment, promotion, publication, scheduler, canary, catalog or topology-baseline effect."
+}

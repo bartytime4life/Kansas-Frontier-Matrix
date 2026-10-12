@@ -1,0 +1,121 @@
+{
+  "receipt_id": "genrec-maplibre-v6-4-readiness-current-binding-20260818",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/briefing-implementation-campaign.yml",
+    "fixtures/maplibre/v6_readiness/cases.json",
+    "tests/maplibre/test_validate_v6_readiness.py",
+    "tools/validators/maplibre/validate_v6_readiness.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/briefing-implementation-campaign.yml": "sha256:f5344e0e4ed1e12ad0d9cdc08c32d0395ea42bae7e962c32e2b4352527068e46",
+    "fixtures/maplibre/v6_readiness/cases.json": "sha256:c844256bbb776666f58ab57979811f57fa343648be575dd5d0cd356b0ee6d843",
+    "tests/maplibre/test_validate_v6_readiness.py": "sha256:d72e4fec41bdc454638f7e5cd6fc48089c07a11c3b228175a912c1d8bdbdaafd",
+    "tools/validators/maplibre/validate_v6_readiness.py": "sha256:81cf8f4f5861310b609ee4606f89c1bc0431469b1a7469134f93da1348fd84d7"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-18"
+  },
+  "prompt_or_contract": "sha256:956a78464aa4ee75528536d9628cc6c60af886d4e1b7a8778c346af18a0a807b",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:37d523dd3b07b6eb42a22dec2f532be3c952fe5c9c00b76f0e7a11e185e0c1b4"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "repo:main@9cb437d803a431928d3b919d9a7814647f812583",
+      "repo:data/receipts/generated/genrec-maplibre-v6-3-readiness-current-binding-20260815.json@9cb437d803a431928d3b919d9a7814647f812583",
+      "upstream:maplibre/maplibre-gl-js/v6.4.0@4529c6e451f0e5607ef42ad0ed81aa76a14a0f43",
+      "repo:docs/adr/ADR-0007-sole-browser-renderer@9cb437d803a431928d3b919d9a7814647f812583"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/briefing-implementation-campaign.yml": "PROPOSED",
+    "fixtures/maplibre/v6_readiness/cases.json": "PROPOSED",
+    "tests/maplibre/test_validate_v6_readiness.py": "PROPOSED",
+    "tools/validators/maplibre/validate_v6_readiness.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-maplibre-unit-tests",
+      "outcome": "PASS",
+      "reason": "Fourteen deterministic standard-library unit tests passed for exact 6.4.0 selection, upstream tag binding, previous-minor hold, dependency conflict, import/internal boundaries, runtime probes, profile migration, and declared-outcome integrity."
+    },
+    {
+      "gate": "synthetic-fixture-polarity",
+      "outcome": "PASS",
+      "reason": "Three non-error candidate cases and five exact-reason negative cases passed the fixture runner."
+    },
+    {
+      "gate": "current-hold-preservation",
+      "outcome": "PASS",
+      "reason": "The default-branch scan remains HOLD while the dependency is unpinned and runtime probes are not recorded."
+    },
+    {
+      "gate": "historical-receipt-preservation",
+      "outcome": "PASS",
+      "reason": "The August 14 and August 15 MapLibre receipts remain unchanged as prior process memory; this successor binds only the v3 profile bytes."
+    },
+    {
+      "gate": "package-tarball-integrity",
+      "outcome": "SKIPPED",
+      "reason": "No npm package was downloaded or admitted. The exact registry tarball integrity remains mandatory in the later execution packet."
+    },
+    {
+      "gate": "artifact-byte-binding",
+      "outcome": "PASS",
+      "reason": "SHA-256 values were recomputed over the four finalized non-self artifacts named by this receipt."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted CI starts after the draft pull request opens."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "maplibre-v6-4-tag",
+      "validated": true,
+      "evidence_ref": "upstream:maplibre/maplibre-gl-js/v6.4.0@4529c6e451f0e5607ef42ad0ed81aa76a14a0f43"
+    },
+    {
+      "id": "prior-current-binding",
+      "validated": true,
+      "evidence_ref": "repo:data/receipts/generated/genrec-maplibre-v6-3-readiness-current-binding-20260815.json@9cb437d803a431928d3b919d9a7814647f812583"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-18T16:00:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md",
+    "drift_register_entry": null
+  },
+  "notes": "Supersedes the active readiness target with exact MapLibre GL JS 6.4.0 while preserving the valid historical 6.3.0 receipt and the default-branch HOLD. It does not pin or install MapLibre, authenticate npm tarball integrity, record browser probe results, accept an ADR, authorize an upgrade, or create review, merge, release, deployment, promotion, publication, or public-use authority."
+}

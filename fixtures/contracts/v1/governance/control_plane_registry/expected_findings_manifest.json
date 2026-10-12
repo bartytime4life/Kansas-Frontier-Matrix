@@ -1,0 +1,17 @@
+{
+  "duplicate_entry_id.yaml": [
+    "ENTRY_ID_DUPLICATE"
+  ],
+  "missing_material_authority.yaml": [
+    "MATERIAL_AUTHORITY_EVIDENCE_MISSING"
+  ],
+  "self_activation.yaml": [
+    "SCHEMA_INVALID"
+  ],
+  "unknown_field.yaml": [
+    "SCHEMA_INVALID"
+  ],
+  "unresolved_governing_ref.yaml": [
+    "PATH_NOT_FOUND"
+  ]
+}

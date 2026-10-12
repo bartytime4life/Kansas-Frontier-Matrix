@@ -1,7 +1,0 @@
-{
-  "claim_id": "claim-hydro-synth-missing",
-  "text": "Missing evidence claim",
-  "evidence_ref": "evr-missing",
-  "synthetic_label": "SYNTHETIC_TEST",
-  "knowledge_character": "SYNTHETIC_TEST"
-}

@@ -1,0 +1,240 @@
+{
+  "fixture_only": true,
+  "network_access": "forbidden",
+  "identity_authority": {
+    "authority_id": "kwo:rac:regional-advisory-committees",
+    "authority_kind": "region-identity",
+    "source_locator": "https://www.kwo.ks.gov/about-us/regional-advisory-committees",
+    "source_observed_date": "2026-07-30",
+    "source_version_posture": "unversioned-public-page:observed-2026-07-30",
+    "record_version": "kfm-rac-identity-v1",
+    "record_digest": "sha256:fdeeff3d69ad1f64a3e4a2e8718299dd0298a1a3d1e6fc6f7becd04963050490",
+    "digest_scope": "authority-metadata-and-ordered-id-ordinal-name-tuples",
+    "record_posture": "source-grounded-candidate",
+    "correction_status": "current",
+    "supersedes_ref": null,
+    "source_native_numeric_ids": false,
+    "id_assignment_method": "kfm-lexicographic-official-name-order-v1",
+    "use_boundary": "identity-reference-only"
+  },
+  "geometry_authorities": [
+    {
+      "authority_id": "synthetic:geometry:rac-region:v1",
+      "authority_kind": "region-geometry",
+      "record_version": "v1",
+      "record_digest": "sha256:8e59b32c2bad07ea1360999be06e6f1298002928afa816cb685d1a89f5501d47",
+      "record_posture": "synthetic-fixture-only",
+      "reference_only": true,
+      "use_boundary": "synthetic-test-only",
+      "correction_status": "current",
+      "supersedes_ref": null
+    },
+    {
+      "authority_id": "synthetic:geometry:project-location:v1",
+      "authority_kind": "project-location-geometry",
+      "record_version": "v1",
+      "record_digest": "sha256:f95cc99f4ceef6ca44a2fd339e237ffd089fab86c0d2833636333123f9774576",
+      "record_posture": "synthetic-fixture-only",
+      "reference_only": true,
+      "use_boundary": "synthetic-test-only",
+      "correction_status": "current",
+      "supersedes_ref": null
+    }
+  ],
+  "county_crosswalk_authorities": [
+    {
+      "authority_id": "synthetic:crosswalk:rac-county:v1",
+      "authority_kind": "county-crosswalk",
+      "record_version": "v1",
+      "record_digest": "sha256:0a648404d883599c2b749cfd34af9f562668c999354aada6b503daef01f7a1b7",
+      "record_posture": "synthetic-fixture-only",
+      "reference_only": true,
+      "use_boundary": "synthetic-test-only",
+      "correction_status": "current",
+      "supersedes_ref": null
+    }
+  ],
+  "regions": [
+    {
+      "region_id": "kwo-rac-00",
+      "name": "Cimarron",
+      "rac_number": 1,
+      "geometry_ref": null,
+      "geometry_confidence": "unresolved",
+      "county_crosswalk_ref": null,
+      "county_crosswalk_resolution_status": "unresolved",
+      "source_ref": "kwo:rac:regional-advisory-committees"
+    },
+    {
+      "region_id": "kwo-rac-03",
+      "name": "Equus-Walnut",
+      "rac_number": 2,
+      "geometry_ref": null,
+      "geometry_confidence": "unresolved",
+      "county_crosswalk_ref": null,
+      "county_crosswalk_resolution_status": "unresolved",
+      "source_ref": "kwo:rac:regional-advisory-committees"
+    },
+    {
+      "region_id": "kwo-rac-03",
+      "name": "Great Bend Prairie",
+      "rac_number": 3,
+      "geometry_ref": null,
+      "geometry_confidence": "unresolved",
+      "county_crosswalk_ref": null,
+      "county_crosswalk_resolution_status": "unresolved",
+      "source_ref": "kwo:rac:regional-advisory-committees"
+    },
+    {
+      "region_id": "kwo-gmd-04",
+      "name": "Kansas",
+      "rac_number": 4,
+      "geometry_ref": null,
+      "geometry_confidence": "unresolved",
+      "county_crosswalk_ref": null,
+      "county_crosswalk_resolution_status": "unresolved",
+      "source_ref": "kwo:rac:regional-advisory-committees"
+    },
+    {
+      "region_id": "kwo-rac-15",
+      "name": "Marais des Cygnes",
+      "rac_number": 15,
+      "geometry_ref": null,
+      "geometry_confidence": "unresolved",
+      "county_crosswalk_ref": null,
+      "county_crosswalk_resolution_status": "unresolved",
+      "source_ref": "kwo:rac:regional-advisory-committees"
+    },
+    {
+      "region_id": "kwo-rac-99",
+      "name": "Missouri",
+      "rac_number": 6,
+      "geometry_ref": null,
+      "geometry_confidence": "unresolved",
+      "county_crosswalk_ref": null,
+      "county_crosswalk_resolution_status": "unresolved",
+      "source_ref": "kwo:rac:regional-advisory-committees"
+    },
+    {
+      "region_id": "kwo-rac-07",
+      "name": "Neosho",
+      "rac_number": 7,
+      "geometry_ref": null,
+      "geometry_confidence": "confirmed",
+      "county_crosswalk_ref": null,
+      "county_crosswalk_resolution_status": "unresolved",
+      "source_ref": "kwo:rac:regional-advisory-committees"
+    },
+    {
+      "region_id": "kwo-rac-08",
+      "name": "Red Hills",
+      "rac_number": 8,
+      "geometry_ref": null,
+      "geometry_confidence": "unresolved",
+      "county_crosswalk_ref": null,
+      "county_crosswalk_resolution_status": "resolved",
+      "source_ref": "kwo:rac:regional-advisory-committees"
+    },
+    {
+      "region_id": "kwo-rac-09",
+      "name": "Invented Region Name",
+      "rac_number": 9,
+      "geometry_ref": null,
+      "geometry_confidence": "unresolved",
+      "county_crosswalk_ref": null,
+      "county_crosswalk_resolution_status": "unresolved",
+      "source_ref": "kwo:rac:regional-advisory-committees"
+    },
+    {
+      "region_id": "kwo-rac-10",
+      "name": "Solomon-Republican",
+      "rac_number": 10,
+      "geometry_ref": null,
+      "geometry_confidence": "unresolved",
+      "county_crosswalk_ref": null,
+      "county_crosswalk_resolution_status": "unresolved",
+      "source_ref": "kwo:rac:regional-advisory-committees"
+    },
+    {
+      "region_id": "kwo-rac-11",
+      "name": "Upper Arkansas",
+      "rac_number": 11,
+      "geometry_ref": null,
+      "geometry_confidence": "unresolved",
+      "county_crosswalk_ref": null,
+      "county_crosswalk_resolution_status": "unresolved",
+      "source_ref": "kwo:rac:regional-advisory-committees"
+    },
+    {
+      "region_id": "kwo-rac-12",
+      "name": "Upper Republican",
+      "rac_number": 12,
+      "geometry_ref": null,
+      "geometry_confidence": "unresolved",
+      "county_crosswalk_ref": null,
+      "county_crosswalk_resolution_status": "unresolved",
+      "source_ref": "kwo:rac:regional-advisory-committees"
+    },
+    {
+      "region_id": "kwo-rac-13",
+      "name": "Upper Smoky Hill",
+      "rac_number": 13,
+      "geometry_ref": null,
+      "geometry_confidence": "unresolved",
+      "county_crosswalk_ref": null,
+      "county_crosswalk_resolution_status": "unresolved",
+      "source_ref": "kwo:rac:regional-advisory-committees"
+    },
+    {
+      "region_id": "kwo-rac-14",
+      "name": "Verdigris",
+      "rac_number": 14,
+      "geometry_ref": null,
+      "geometry_confidence": "unresolved",
+      "county_crosswalk_ref": null,
+      "county_crosswalk_resolution_status": "unresolved",
+      "source_ref": "kwo:rac:regional-advisory-committees"
+    }
+  ],
+  "projects": [
+    {
+      "project_id": "kwo-swigp-fy2027-proj-synthetic-001",
+      "award_ref": "kwo-swigp-fy2027-award-synthetic-001",
+      "recipient_ref": null,
+      "recipient_resolution_status": "unresolved",
+      "location_ref": null,
+      "geometry_confidence": "confirmed",
+      "planning_region_ref": "kwo-gmd-01",
+      "planning_region_resolution_status": "resolved",
+      "source_publication_time": null,
+      "source_ref": "synthetic:water-planning:project:001",
+      "address": "Protected Example Address"
+    },
+    {
+      "project_id": "kwo-swigp-fy2027-proj-synthetic-002",
+      "award_ref": "kwo-swigp-fy2027-award-synthetic-002",
+      "recipient_ref": null,
+      "recipient_resolution_status": "unresolved",
+      "location_ref": "synthetic:geometry:project-location:v1",
+      "geometry_confidence": "approximate",
+      "planning_region_ref": "kwo-rac-02",
+      "planning_region_resolution_status": "resolved",
+      "source_publication_time": null,
+      "source_ref": "synthetic:water-planning:project:002"
+    }
+  ],
+  "blocked_behaviors": {
+    "authenticated_portal": false,
+    "connector": false,
+    "deployment": false,
+    "geocoding": false,
+    "geometry_construction": false,
+    "proof": false,
+    "publication": false,
+    "real_applicant": false,
+    "real_project": false,
+    "real_recipient": false,
+    "release": false,
+    "source_activation": true
+  }
+}

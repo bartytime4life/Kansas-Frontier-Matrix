@@ -1,0 +1,118 @@
+{
+  "object_type": "ProjectionDistortionDisclosureFixtureManifest",
+  "schema_version": "1.0.0",
+  "profile": "kfm.evidence.projection-distortion-disclosure.fixture.v1",
+  "base_candidate": {
+    "object_type": "ProjectionDistortionDisclosureCandidate",
+    "schema_version": "1.0.0",
+    "profile": "kfm.evidence.projection-distortion-disclosure.fixture.v1",
+    "profile_spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "source_card": "KFM-P18-INV-426",
+    "observed_at": "2026-08-10T22:30:00Z",
+    "layer_manifest": {
+      "ref": "kfm:layer-manifest:synthetic-statewide:001",
+      "digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+      "resolution": "RESOLVED"
+    },
+    "evidence_bundle": {
+      "ref": "kfm:evidence-bundle:synthetic-statewide:001",
+      "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+      "resolution": "RESOLVED"
+    },
+    "intended_use": "PUBLIC_MAP_CANDIDATE",
+    "claim_scope": "STATEWIDE",
+    "projection": {
+      "state": "COMPLETE",
+      "crs_identifier": "EPSG:5070",
+      "projection_name": "Synthetic conterminous equal-area declaration",
+      "family": "EQUAL_AREA",
+      "area_of_use_ref": "kfm:area-of-use:synthetic-kansas:001",
+      "transformation_ref": "kfm:coordinate-operation:synthetic:001",
+      "distortion_assessment": {
+        "ref": "kfm:distortion-assessment:synthetic-statewide:001",
+        "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+        "resolution": "RESOLVED"
+      },
+      "materiality": "MATERIAL",
+      "materiality_rationale_ref": "kfm:cartographic-rationale:synthetic-statewide:001"
+    },
+    "distortions": {
+      "area": "PRESERVED_WITHIN_DECLARED_SCOPE",
+      "distance": "DISTORTED",
+      "direction": "DISTORTED",
+      "shape": "DISTORTED",
+      "scale_variation": "DECLARED"
+    },
+    "disclosure": {
+      "material_risks": ["DISTANCE_DISTORTION", "DIRECTION_DISTORTION", "SHAPE_DISTORTION", "SCALE_VARIATION"],
+      "review_record_refs": ["kfm:review-record:synthetic-projection:001"],
+      "evidence_drawer_section_ref": "kfm:evidence-drawer-section:synthetic-projection:001",
+      "public_interpretation_caveat": "Synthetic projection disclosure: distances, directions, shapes, and local scale can vary; this declaration does not prove map fitness, review, release, or publication."
+    },
+    "limitations": [
+      "DECLARATION_ONLY",
+      "NO_COORDINATE_TRANSFORMATION",
+      "NO_DISTORTION_MEASUREMENT",
+      "NO_PUBLICATION_AUTHORITY"
+    ],
+    "authority_claims": {
+      "crs_authority": false,
+      "transformation_authority": false,
+      "cartographic_fitness_authority": false,
+      "evidence_authority": false,
+      "policy_authority": false,
+      "review_authority": false,
+      "promotion_authority": false,
+      "release_authority": false,
+      "publication_authority": false,
+      "public_use_authority": false
+    }
+  },
+  "cases": [
+    {"name": "pass_statewide_public_material", "patch": {}, "expected": {"outcome": "PASS", "codes": []}},
+    {
+      "name": "pass_regional_internal_not_material",
+      "patch": {
+        "intended_use": "INTERNAL_QA",
+        "claim_scope": "REGIONAL",
+        "projection": {"materiality": "NOT_MATERIAL", "materiality_rationale_ref": "kfm:cartographic-rationale:synthetic-not-material:001"},
+        "disclosure": {"material_risks": [], "review_record_refs": [], "evidence_drawer_section_ref": null, "public_interpretation_caveat": null}
+      },
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_local_exploratory_material",
+      "patch": {
+        "intended_use": "EXPLORATORY_ANALYSIS",
+        "claim_scope": "LOCAL",
+        "disclosure": {"review_record_refs": [], "evidence_drawer_section_ref": null, "public_interpretation_caveat": null}
+      },
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "abstain_projection_incomplete",
+      "patch": {"projection": {"state": "INCOMPLETE", "crs_identifier": null, "projection_name": null, "family": "UNKNOWN"}},
+      "expected": {"outcome": "ABSTAIN", "codes": ["PROJECTION_DECLARATION_INCOMPLETE"]}
+    },
+    {"name": "abstain_scope_unknown", "patch": {"claim_scope": "UNKNOWN"}, "expected": {"outcome": "ABSTAIN", "codes": ["CLAIM_SCOPE_UNKNOWN"]}},
+    {
+      "name": "abstain_distortion_assessment_unresolved",
+      "patch": {"projection": {"distortion_assessment": {"resolution": "UNRESOLVED"}}},
+      "expected": {"outcome": "ABSTAIN", "codes": ["DISTORTION_ASSESSMENT_UNRESOLVED"]}
+    },
+    {"name": "abstain_materiality_unknown", "patch": {"projection": {"materiality": "UNKNOWN"}}, "expected": {"outcome": "ABSTAIN", "codes": ["MATERIALITY_UNKNOWN"]}},
+    {"name": "deny_hash_mismatch", "patch": {}, "tamper_profile_hash": true, "expected": {"outcome": "DENY", "codes": ["PROFILE_SPEC_HASH_MISMATCH"]}},
+    {"name": "deny_complete_missing_crs", "patch": {"projection": {"crs_identifier": null}}, "expected": {"outcome": "DENY", "codes": ["COMPLETE_PROJECTION_IDENTITY_REQUIRED"]}},
+    {"name": "deny_dimension_not_evaluated", "patch": {"distortions": {"area": "NOT_EVALUATED"}}, "expected": {"outcome": "DENY", "codes": ["COMPLETE_DISTORTION_DIMENSIONS_REQUIRED"]}},
+    {
+      "name": "deny_missing_distance_risk",
+      "patch": {"disclosure": {"material_risks": ["DIRECTION_DISTORTION", "SHAPE_DISTORTION", "SCALE_VARIATION"]}},
+      "expected": {"outcome": "DENY", "codes": ["DISTANCE_DISTORTION_RISK_REQUIRED"]}
+    },
+    {"name": "deny_not_material_rationale_missing", "patch": {"projection": {"materiality": "NOT_MATERIAL", "materiality_rationale_ref": null}}, "expected": {"outcome": "DENY", "codes": ["NOT_MATERIAL_RATIONALE_REQUIRED"]}},
+    {"name": "deny_public_review_missing", "patch": {"disclosure": {"review_record_refs": []}}, "expected": {"outcome": "DENY", "codes": ["PUBLIC_REVIEW_REFERENCE_REQUIRED"]}},
+    {"name": "deny_public_caveat_missing", "patch": {"disclosure": {"public_interpretation_caveat": null}}, "expected": {"outcome": "DENY", "codes": ["PUBLIC_INTERPRETATION_CAVEAT_REQUIRED"]}},
+    {"name": "error_projection_state", "patch": {"projection": {"state": "ERROR"}}, "expected": {"outcome": "ERROR", "codes": ["PROJECTION_EVALUATION_ERROR"]}},
+    {"name": "error_authority_overreach", "patch": {"authority_claims": {"publication_authority": true}}, "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}}
+  ]
+}

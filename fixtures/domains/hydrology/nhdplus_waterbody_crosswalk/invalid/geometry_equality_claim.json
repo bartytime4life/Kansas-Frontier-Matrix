@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0.0",
+  "data_class": "synthetic_fixture",
+  "source_release": {
+    "publisher": "U.S. Geological Survey",
+    "doi": "10.5066/P13N85SW",
+    "release_date": "2026-02-26",
+    "source_file": "NHDPlusHR_NHDPlusV2.csv",
+    "rights": "CC0-1.0"
+  },
+  "crosswalk_scope": {
+    "source_system": "NHDPlusHR",
+    "source_identifier": "Permanent Identifier",
+    "target_system": "NHDPlusV2",
+    "target_identifier": "COMID",
+    "feature_type": "waterbody",
+    "relation_basis": "spatial_overlap"
+  },
+  "records": [
+    {
+      "nhdplus_hr_permanent_identifier": "synthetic:nhdhr-waterbody:geometry",
+      "nhdplus_v2_comid": 94001,
+      "nhdplus_hr_area_m2": 100000.0,
+      "nhdplus_v2_area_m2": 100000.0,
+      "shared_area_m2": 100000.0,
+      "relationship_type": "exact",
+      "outcome": "ANSWER",
+      "geometry_equal": true
+    }
+  ],
+  "spec_hash": "sha256:111f7d4a875a8aa29da2ea35703e0676909d4ae2fb8f7376cebca803c139e453"
+}

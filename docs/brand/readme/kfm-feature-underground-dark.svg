@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 340" width="600" height="340" role="img" aria-labelledby="t d">
+  <title id="t">Underground — 3D cutaway of recorded columns</title>
+  <desc id="d">Illustration of the Underground 3D cutaway: an isometric block of generalized strata with recorded well columns exposed on the cut faces and a moving slice plane. Counts of 314,844 mapped water-well records and 6,598 core locations are shown, with the note that only recorded columns are drawn.</desc>
+  <defs>
+    <clipPath id="frame"><rect x="1" y="1" width="598" height="338" rx="18"/></clipPath>
+    <style>
+      .serif{font-family:Georgia,'Times New Roman',serif}
+      .sans{font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif}
+      .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+      .lbl{font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;letter-spacing:2.5px;font-weight:700}
+
+      .well{transform-box:fill-box;transform-origin:top;animation:grow 10s ease-out infinite}
+      @keyframes grow{0%{transform:scaleY(0)}25%,100%{transform:scaleY(1)}}
+      .slice{animation:slice 10s ease-in-out infinite;animation-delay:-3s}
+      @keyframes slice{0%,15%{transform:translateY(0)}55%{transform:translateY(96px)}100%{transform:translateY(0)}}
+      @media (prefers-reduced-motion: reduce){.well,.slice{animation:none}.slice{transform:translateY(48px)}}
+    </style>
+  </defs>
+  <g clip-path="url(#frame)">
+    <rect width="600" height="340" fill="#161B22"/>
+    <rect width="600" height="6" fill="#D2A06A"/>
+
+    <g>
+      <polygon points="110.0,150.0 239.0,225.0 239.0,241.0 110.0,166.0" fill="#5E4F33"/><polygon points="110.0,166.0 239.0,241.0 239.0,265.0 110.0,190.0" fill="#7A5E3A"/><polygon points="110.0,190.0 239.0,265.0 239.0,287.0 110.0,212.0" fill="#6A4E33"/><polygon points="110.0,212.0 239.0,287.0 239.0,309.0 110.0,234.0" fill="#9AAABA"/><polygon points="110.0,234.0 239.0,309.0 239.0,325.0 110.0,250.0" fill="#3A4A5E"/><polygon points="325.0,175.0 239.0,225.0 239.0,241.0 325.0,191.0" fill="#5E4F33" fill-opacity="0.78"/><polygon points="325.0,191.0 239.0,241.0 239.0,265.0 325.0,215.0" fill="#7A5E3A" fill-opacity="0.78"/><polygon points="325.0,215.0 239.0,265.0 239.0,287.0 325.0,237.0" fill="#6A4E33" fill-opacity="0.78"/><polygon points="325.0,237.0 239.0,287.0 239.0,309.0 325.0,259.0" fill="#9AAABA" fill-opacity="0.78"/><polygon points="325.0,259.0 239.0,309.0 239.0,325.0 325.0,275.0" fill="#3A4A5E" fill-opacity="0.78"/>
+      <polygon points="196.0,100.0 325.0,175.0 239.0,225.0 110.0,150.0" fill="#1C2A21" stroke="#62B487" stroke-width="1.2"/>
+      <g class="well" style="animation-delay:-0.00s"><rect x="124.2" y="160.0" width="6" height="16" fill="#1C2A21" stroke="#E6EDF3" stroke-width="0.6"/><rect x="124.2" y="176.0" width="6" height="8" fill="#7FA9E3" stroke="#E6EDF3" stroke-width="0.6"/><rect x="124.2" y="184.0" width="6" height="12" fill="#161B22" stroke="#E6EDF3" stroke-width="0.6"/><rect x="124.2" y="196.0" width="6" height="12" fill="#161B22" stroke="#E6EDF3" stroke-width="0.6"/><rect x="124.2" y="208.0" width="6" height="16" fill="#7FA9E3" stroke="#E6EDF3" stroke-width="0.6"/><rect x="124.2" y="224.0" width="6" height="12" fill="#7FA9E3" stroke="#E6EDF3" stroke-width="0.6"/><rect x="124.2" y="236.0" width="6" height="8" fill="#1C2A21" stroke="#E6EDF3" stroke-width="0.6"/><rect x="124.2" y="244.0" width="6" height="6" fill="#161B22" stroke="#E6EDF3" stroke-width="0.6"/></g><circle cx="127.2" cy="160.0" r="3.5" fill="#E6EDF3"/><g class="well" style="animation-delay:-0.45s"><rect x="154.3" y="177.5" width="6" height="20" fill="#D9B440" stroke="#E6EDF3" stroke-width="0.6"/><rect x="154.3" y="197.5" width="6" height="12" fill="#7FA9E3" stroke="#E6EDF3" stroke-width="0.6"/><rect x="154.3" y="209.5" width="6" height="12" fill="#161B22" stroke="#E6EDF3" stroke-width="0.6"/><rect x="154.3" y="221.5" width="6" height="12" fill="#1C2A21" stroke="#E6EDF3" stroke-width="0.6"/><rect x="154.3" y="233.5" width="6" height="20" fill="#1B2838" stroke="#E6EDF3" stroke-width="0.6"/><rect x="154.3" y="253.5" width="6" height="2" fill="#161B22" stroke="#E6EDF3" stroke-width="0.6"/></g><circle cx="157.3" cy="177.5" r="3.5" fill="#E6EDF3"/><g class="well" style="animation-delay:-0.90s"><rect x="188.7" y="197.5" width="6" height="12" fill="#1B2838" stroke="#E6EDF3" stroke-width="0.6"/><rect x="188.7" y="209.5" width="6" height="12" fill="#1B2838" stroke="#E6EDF3" stroke-width="0.6"/><rect x="188.7" y="221.5" width="6" height="16" fill="#D9B440" stroke="#E6EDF3" stroke-width="0.6"/><rect x="188.7" y="237.5" width="6" height="12" fill="#1C2A21" stroke="#E6EDF3" stroke-width="0.6"/><rect x="188.7" y="249.5" width="6" height="10" fill="#1B2838" stroke="#E6EDF3" stroke-width="0.6"/></g><circle cx="191.7" cy="197.5" r="3.5" fill="#E6EDF3"/><g class="well" style="animation-delay:-1.35s"><rect x="218.8" y="215.0" width="6" height="20" fill="#D9B440" stroke="#E6EDF3" stroke-width="0.6"/><rect x="218.8" y="235.0" width="6" height="8" fill="#D9B440" stroke="#E6EDF3" stroke-width="0.6"/><rect x="218.8" y="243.0" width="6" height="20" fill="#1B2838" stroke="#E6EDF3" stroke-width="0.6"/><rect x="218.8" y="263.0" width="6" height="12" fill="#D9B440" stroke="#E6EDF3" stroke-width="0.6"/><rect x="218.8" y="275.0" width="6" height="8" fill="#D9B440" stroke="#E6EDF3" stroke-width="0.6"/><rect x="218.8" y="283.0" width="6" height="10" fill="#1C2A21" stroke="#E6EDF3" stroke-width="0.6"/></g><circle cx="221.8" cy="215.0" r="3.5" fill="#E6EDF3"/><g class="well" style="animation-delay:-1.80s"><rect x="300.5" y="187.5" width="6" height="16" fill="#161B22" stroke="#E6EDF3" stroke-width="0.6"/><rect x="300.5" y="203.5" width="6" height="16" fill="#D9B440" stroke="#E6EDF3" stroke-width="0.6"/><rect x="300.5" y="219.5" width="6" height="16" fill="#7FA9E3" stroke="#E6EDF3" stroke-width="0.6"/><rect x="300.5" y="235.5" width="6" height="14" fill="#1B2838" stroke="#E6EDF3" stroke-width="0.6"/></g><circle cx="303.5" cy="187.5" r="3.5" fill="#E6EDF3"/><g class="well" style="animation-delay:-2.25s"><rect x="270.4" y="205.0" width="6" height="20" fill="#1B2838" stroke="#E6EDF3" stroke-width="0.6"/><rect x="270.4" y="225.0" width="6" height="8" fill="#D9B440" stroke="#E6EDF3" stroke-width="0.6"/><rect x="270.4" y="233.0" width="6" height="8" fill="#D9B440" stroke="#E6EDF3" stroke-width="0.6"/><rect x="270.4" y="241.0" width="6" height="20" fill="#161B22" stroke="#E6EDF3" stroke-width="0.6"/><rect x="270.4" y="261.0" width="6" height="20" fill="#D9B440" stroke="#E6EDF3" stroke-width="0.6"/><rect x="270.4" y="281.0" width="6" height="20" fill="#1C2A21" stroke="#E6EDF3" stroke-width="0.6"/></g><circle cx="273.4" cy="205.0" r="3.5" fill="#E6EDF3"/>
+      <polygon class="slice" points="196.0,100.0 325.0,175.0 239.0,225.0 110.0,150.0" fill="#7FA9E3" fill-opacity="0.16" stroke="#7FA9E3" stroke-width="1.5"/>
+
+    </g>
+    <g transform="translate(408,122)" class="sans">
+      <text x="0" y="0" font-size="30" class="serif" fill="#E6EDF3">314,844</text>
+      <text x="0" y="22" font-size="12" fill="#9198A1">mapped water-well records</text>
+      <text x="0" y="70" font-size="30" class="serif" fill="#E6EDF3">6,598</text>
+      <text x="0" y="92" font-size="12" fill="#9198A1">core locations</text>
+      <text x="0" y="138" font-size="12" fill="#9198A1">Recorded columns only —</text>
+      <text x="0" y="155" font-size="12" fill="#9198A1">no geology invented</text>
+      <text x="0" y="172" font-size="12" fill="#9198A1">between them</text>
+    </g>
+  </g>
+  <rect x="1" y="1" width="598" height="338" rx="18" fill="none" stroke="#30363D" stroke-width="2"/>
+  <text x="28" y="44" class="lbl" fill="#D2A06A">UNDERGROUND 3D</text>
+  <text x="28" y="72" class="sans" font-size="17" fill="#A8C4EA">Slice through Kansas water-well and core records</text>
+</svg>

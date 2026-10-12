@@ -1,0 +1,47 @@
+{
+  "profile": "kfm.explorer.focus-composed-claim.public-safe.v1",
+  "request_id": "request:focus:soil-context-deny-001",
+  "claim_id": "claim:synthetic:soil-context-004",
+  "outcome": "DENY",
+  "reason_code": "POLICY_DENIED",
+  "closure_id": "kfm:closure:synthetic:soil-context-deny-001",
+  "closure_outcome": "DENY",
+  "answer": null,
+  "evidence_refs": [],
+  "citations": [],
+  "resolved_roles": [],
+  "unavailable_roles": [],
+  "limitations": [
+    "Restricted source detail is not exposed."
+  ],
+  "policy": "DENY",
+  "review": "NOT_APPLICABLE",
+  "release": "UNRELEASED",
+  "freshness": "UNKNOWN",
+  "ai_receipt_ref": "kfm:receipt:ai:synthetic:focus-deny-001",
+  "evidence_drawer": {
+    "profile": "kfm.explorer.evidence-drawer.public-safe.v1",
+    "id": "kfm:ui:evidence-drawer:focus-soil-deny-001",
+    "outcome": "DENY",
+    "reason_code": "SENSITIVE_DETAIL_RESTRICTED",
+    "title": "Restricted synthetic evidence",
+    "summary": "SENSITIVE_FOCUS_DENIAL_CANARY_36e71b",
+    "evidence_refs": [],
+    "citations": [],
+    "limitations": [
+      "Restricted source detail is not exposed."
+    ],
+    "trust_state": {
+      "source_role": "context",
+      "policy": "DENY",
+      "review": "NOT_APPLICABLE",
+      "release": "UNRELEASED",
+      "freshness": "UNKNOWN",
+      "correction": "NONE"
+    },
+    "history": {
+      "negative_outcomes": [],
+      "corrections": []
+    }
+  }
+}

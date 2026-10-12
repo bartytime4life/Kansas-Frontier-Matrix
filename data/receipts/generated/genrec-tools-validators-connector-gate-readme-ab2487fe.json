@@ -1,0 +1,125 @@
+{
+  "receipt_id": "genrec-tools-validators-connector-gate-readme-ab2487fe",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tools/validators/connector_gate/README.md"
+  ],
+  "artifact_hashes": {
+    "tools/validators/connector_gate/README.md": "sha256:ab2487feb87dc3078cd7d4b67376e164a2d3c1d2500987b2241d4aaaeda69acf"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-16-session"
+  },
+  "prompt_or_contract": "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Python validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM GitHub Repository Documentation Implementation Agent — Full Operating Prompt v3.1",
+      "Directory Rules.pdf",
+      "Kansas Frontier Matrix — AI Build Operating Contract.md"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/6829e8daed19521f59a82780974f643771e898eb",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6829e8daed19521f59a82780974f643771e898eb/tools/validators/connector_gate/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6829e8daed19521f59a82780974f643771e898eb/connectors/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6829e8daed19521f59a82780974f643771e898eb/packages/connectors-core/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6829e8daed19521f59a82780974f643771e898eb/contracts/source/source_descriptor.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6829e8daed19521f59a82780974f643771e898eb/schemas/contracts/v1/source/source_descriptor.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6829e8daed19521f59a82780974f643771e898eb/schemas/contracts/v1/sources/source_descriptor.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6829e8daed19521f59a82780974f643771e898eb/tools/validators/validate_source_descriptor.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6829e8daed19521f59a82780974f643771e898eb/fixtures/contracts/v1/source/source_descriptor/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6829e8daed19521f59a82780974f643771e898eb/data/registry/sources/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6829e8daed19521f59a82780974f643771e898eb/control_plane/source_authority_register.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6829e8daed19521f59a82780974f643771e898eb/docs/sources/ADMISSION_PROCESS.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6829e8daed19521f59a82780974f643771e898eb/docs/adr/ADR-0017-source-descriptor-admission-process.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6829e8daed19521f59a82780974f643771e898eb/docs/architecture/source-roles.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6829e8daed19521f59a82780974f643771e898eb/contracts/source/ingest_receipt.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6829e8daed19521f59a82780974f643771e898eb/schemas/contracts/v1/source/ingest_receipt.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6829e8daed19521f59a82780974f643771e898eb/.github/workflows/connector-gate.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6829e8daed19521f59a82780974f643771e898eb/tools/validators/_common/run_all.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6829e8daed19521f59a82780974f643771e898eb/tests/validators/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6829e8daed19521f59a82780974f643771e898eb/policy/source/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6829e8daed19521f59a82780974f643771e898eb/policy/rights/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6829e8daed19521f59a82780974f643771e898eb/policy/sensitivity/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6829e8daed19521f59a82780974f643771e898eb/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/6829e8daed19521f59a82780974f643771e898eb/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    ]
+  },
+  "truth_labels": {
+    "tools/validators/connector_gate/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-target-preflight",
+      "outcome": "PASS",
+      "reason": "Repository, current main commit, target path, prior blob, bounded implementation paths, and scoped branch were verified."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "The validator README remains under tools/validators and creates no parallel source, policy, lifecycle, proof, receipt, release, or runtime authority."
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "Exactly one H1, balanced fenced blocks, final newline, and no trailing whitespace or tabs."
+    },
+    {
+      "gate": "internal-fragment-links",
+      "outcome": "PASS",
+      "reason": "All 63 internal fragment links resolve to explicit anchors."
+    },
+    {
+      "gate": "credential-and-sensitive-content-review",
+      "outcome": "PASS",
+      "reason": "No common credential patterns, private endpoints, signed URLs, source payloads, sensitive coordinates, restricted values, hidden policy thresholds, or bypass instructions were included."
+    },
+    {
+      "gate": "executable-tests",
+      "outcome": "SKIPPED",
+      "reason": "Documentation-only change; no direct connector-gate executable surfaced or changed."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "connector-gate-target-and-root-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/6829e8daed19521f59a82780974f643771e898eb"
+    },
+    {
+      "id": "source-descriptor-schema-validator-fixture-drift",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/6829e8daed19521f59a82780974f643771e898eb/schemas/contracts/v1/source/source_descriptor.schema.json"
+    },
+    {
+      "id": "admission-activation-receipt-and-workflow-maturity",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/6829e8daed19521f59a82780974f643771e898eb/.github/workflows/connector-gate.yml"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-07-17T01:17:59Z",
+  "emitter": "OpenAI GPT-5.6 Thinking",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Documentation-only generated-work receipt. The README records confirmed repository evidence, proposed future contracts, unresolved source-admission drift, validation performed, and rollback posture. Human review remains pending; this receipt is not source activation, admission approval, policy permission, merge authorization, evidence closure, release approval, or publication authority."
+}

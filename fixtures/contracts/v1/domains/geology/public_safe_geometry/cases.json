@@ -1,0 +1,260 @@
+{
+  "profile_id": "kfm-geology-public-safe-geometry-fixture-v1",
+  "base": {
+    "object_type": "GeologyPublicSafeGeometryAssessment",
+    "schema_version": "1.0.0",
+    "profile_id": "kfm-geology-public-safe-geometry-fixture-v1",
+    "assessment_id": "",
+    "spec_hash": "",
+    "evaluated_at": "2026-08-10T12:00:00Z",
+    "object_family": "BoreholeReference",
+    "requested_surface": "PUBLIC_MAP",
+    "source_geometry": {
+      "geometry_ref": "kfm:fixture:geology:geometry:restricted-borehole-001",
+      "geometry_role": "INTERNAL_EXACT",
+      "storage_class": "RESTRICTED",
+      "coordinate_material_present": false,
+      "crs_ref": "urn:ogc:def:crs:EPSG::4326",
+      "scale_denominator": 24000,
+      "sensitivity_class": "EXACT_SUBSURFACE"
+    },
+    "public_derivative": {
+      "disposition": "GENERALIZED",
+      "geometry_ref": "kfm:fixture:geology:geometry:county-generalized-001",
+      "geometry_role": "GENERALIZED_PUBLIC",
+      "coordinate_material_present": false,
+      "generalization_method": "ADMINISTRATIVE_AREA",
+      "crs_ref": "urn:ogc:def:crs:EPSG::4326",
+      "scale_denominator": 100000,
+      "uncertainty_disclosed": true
+    },
+    "governance": {
+      "source_descriptor_ref": "kfm:fixture:source:geology-synthetic-001",
+      "evidence_refs": [
+        "kfm:fixture:evidence:geology-public-safe-001"
+      ],
+      "transform_receipt_ref": "kfm:fixture:receipt:geology-generalization-001",
+      "policy_decision_ref": "kfm:fixture:policy:geology-public-safe-001",
+      "review_record_ref": "kfm:fixture:review:geology-public-safe-001",
+      "release_manifest_ref": null,
+      "rights_state": "VERIFIED",
+      "policy_outcome": "ALLOW_GENERALIZED",
+      "review_state": "APPROVED",
+      "release_state": "NOT_RELEASED",
+      "publication_authorized": false
+    },
+    "assessment": {
+      "outcome": "HOLD",
+      "reason_codes": ["RELEASE_AUTHORITY_UNWIRED"],
+      "required_next_gates": ["PUBLICATION_REVIEW", "RELEASE_MANIFEST"],
+      "authority": "NONE"
+    },
+    "limitations": [
+      "fixture_only",
+      "metadata_only_no_geometry_bytes",
+      "no_live_policy_evaluation",
+      "no_release_or_publication",
+      "no_review_performed",
+      "no_transform_execution"
+    ]
+  },
+  "cases": [
+    {
+      "case_id": "generalized-borehole-hold",
+      "expected_outcome": "HOLD",
+      "expected_findings": []
+    },
+    {
+      "case_id": "withheld-sample-deny",
+      "mutations": [
+        {"path": "/object_family", "value": "GeochemistrySample"},
+        {"path": "/source_geometry/sensitivity_class", "value": "SAMPLE_LOCALITY"},
+        {"path": "/public_derivative/disposition", "value": "WITHHELD"},
+        {"path": "/public_derivative/geometry_ref", "value": null},
+        {"path": "/public_derivative/geometry_role", "value": "WITHHELD"},
+        {"path": "/public_derivative/generalization_method", "value": "WITHHELD"},
+        {"path": "/public_derivative/crs_ref", "value": null},
+        {"path": "/public_derivative/scale_denominator", "value": null},
+        {"path": "/governance/policy_outcome", "value": "WITHHOLD"},
+        {"path": "/governance/review_state", "value": "PENDING"},
+        {"path": "/assessment/outcome", "value": "DENY"},
+        {"path": "/assessment/reason_codes", "value": ["PUBLIC_GEOMETRY_WITHHELD"]},
+        {"path": "/assessment/required_next_gates", "value": []}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": []
+    },
+    {
+      "case_id": "exact-resource-location-deny",
+      "mutations": [
+        {"path": "/object_family", "value": "MineralOccurrence"},
+        {"path": "/source_geometry/sensitivity_class", "value": "RESOURCE_TARGET"},
+        {"path": "/public_derivative/disposition", "value": "EXACT_REQUEST"},
+        {"path": "/public_derivative/geometry_ref", "value": "kfm:fixture:geology:geometry:exact-public-request-001"},
+        {"path": "/public_derivative/geometry_role", "value": "EXACT_PUBLIC_REQUEST"},
+        {"path": "/public_derivative/generalization_method", "value": "NONE"},
+        {"path": "/public_derivative/scale_denominator", "value": 24000},
+        {"path": "/governance/transform_receipt_ref", "value": null},
+        {"path": "/governance/policy_outcome", "value": "DENY"},
+        {"path": "/governance/review_state", "value": "PENDING"},
+        {"path": "/assessment/outcome", "value": "DENY"},
+        {"path": "/assessment/reason_codes", "value": ["EXACT_PUBLIC_GEOMETRY_DENIED"]},
+        {"path": "/assessment/required_next_gates", "value": []}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": []
+    },
+    {
+      "case_id": "generalized-boundary-hold",
+      "mutations": [
+        {"path": "/object_family", "value": "GeologyBoundaryVersion"},
+        {"path": "/source_geometry/sensitivity_class", "value": "CANONICAL_BOUNDARY"},
+        {"path": "/public_derivative/generalization_method", "value": "SOURCE_SCALE"}
+      ],
+      "expected_outcome": "HOLD",
+      "expected_findings": []
+    },
+    {
+      "case_id": "source-coordinate-material-denied",
+      "mutations": [
+        {"path": "/source_geometry/coordinate_material_present", "value": true}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "SOURCE_COORDINATE_MATERIAL_DENIED", "path": "/source_geometry/coordinate_material_present"}
+      ]
+    },
+    {
+      "case_id": "public-coordinate-material-denied",
+      "mutations": [
+        {"path": "/public_derivative/coordinate_material_present", "value": true}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "PUBLIC_COORDINATE_MATERIAL_DENIED", "path": "/public_derivative/coordinate_material_present"}
+      ]
+    },
+    {
+      "case_id": "exact-source-not-restricted",
+      "mutations": [
+        {"path": "/source_geometry/storage_class", "value": "PUBLIC"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "EXACT_SOURCE_STORAGE_DENIED", "path": "/source_geometry/storage_class"}
+      ]
+    },
+    {
+      "case_id": "object-sensitivity-mismatch",
+      "mutations": [
+        {"path": "/source_geometry/sensitivity_class", "value": "RESOURCE_TARGET"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "SENSITIVITY_CLASS_MISMATCH", "path": "/source_geometry/sensitivity_class"}
+      ]
+    },
+    {
+      "case_id": "generalization-receipt-missing",
+      "mutations": [
+        {"path": "/governance/transform_receipt_ref", "value": null}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "TRANSFORM_RECEIPT_REQUIRED", "path": "/governance/transform_receipt_ref"}
+      ]
+    },
+    {
+      "case_id": "generalization-not-coarser",
+      "mutations": [
+        {"path": "/public_derivative/scale_denominator", "value": 24000}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "PUBLIC_SCALE_NOT_COARSER", "path": "/public_derivative/scale_denominator"}
+      ]
+    },
+    {
+      "case_id": "uncertainty-undisclosed",
+      "mutations": [
+        {"path": "/public_derivative/uncertainty_disclosed", "value": false}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "UNCERTAINTY_DISCLOSURE_REQUIRED", "path": "/public_derivative/uncertainty_disclosed"}
+      ]
+    },
+    {
+      "case_id": "rights-unresolved",
+      "mutations": [
+        {"path": "/governance/rights_state", "value": "UNKNOWN"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "RIGHTS_NOT_VERIFIED", "path": "/governance/rights_state"}
+      ]
+    },
+    {
+      "case_id": "policy-does-not-allow-generalized",
+      "mutations": [
+        {"path": "/governance/policy_outcome", "value": "UNKNOWN"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "GENERALIZATION_POLICY_MISMATCH", "path": "/governance/policy_outcome"}
+      ]
+    },
+    {
+      "case_id": "review-not-approved",
+      "mutations": [
+        {"path": "/governance/review_state", "value": "PENDING"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "GENERALIZATION_REVIEW_MISMATCH", "path": "/governance/review_state"}
+      ]
+    },
+    {
+      "case_id": "release-claim-denied",
+      "mutations": [
+        {"path": "/governance/release_state", "value": "RELEASED"},
+        {"path": "/governance/publication_authorized", "value": true}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "PUBLICATION_AUTHORITY_DENIED", "path": "/governance/publication_authorized"},
+        {"code": "RELEASE_STATE_DENIED", "path": "/governance/release_state"}
+      ]
+    },
+    {
+      "case_id": "assessment-outcome-mismatch",
+      "mutations": [
+        {"path": "/assessment/outcome", "value": "DENY"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "ASSESSMENT_OUTCOME_MISMATCH", "path": "/assessment/outcome"}
+      ]
+    },
+    {
+      "case_id": "assessment-reasons-mismatch",
+      "mutations": [
+        {"path": "/assessment/reason_codes", "value": ["PUBLIC_GEOMETRY_WITHHELD"]}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "ASSESSMENT_REASON_CODES_MISMATCH", "path": "/assessment/reason_codes"}
+      ]
+    },
+    {
+      "case_id": "assessment-gates-mismatch",
+      "mutations": [
+        {"path": "/assessment/required_next_gates", "value": []}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {"code": "ASSESSMENT_NEXT_GATES_MISMATCH", "path": "/assessment/required_next_gates"}
+      ]
+    }
+  ]
+}

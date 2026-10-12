@@ -1,0 +1,103 @@
+{
+  "object_type": "SourceDescriptor",
+  "schema_version": "v1",
+  "source_id": "src:ku-news-gmd3-aem-announcement-2026-05-11",
+  "descriptor_version": "0.3.0",
+  "title": "KU News 2026-05-11 GMD 3 AEM Survey Announcement Candidate",
+  "description": "Connector-disabled, noncanonical citation candidate for a University of Kansas news announcement published 2026-05-11 about a planned Southwest Kansas airborne electromagnetic survey. The document reported planning context; it does not establish current campaign state, completed flights, observed coverage, or raw, processed, inverted, resistivity, interpreted, or released product bytes. No connector activation, schedule, credential, observation claim, release, or publication is authorized by this fixture descriptor.",
+  "domain_scope": ["geology", "hydrology"],
+  "source_type": "bibliography_or_report",
+  "source_role": "citation_source",
+  "authority_rank": "candidate_only",
+  "authority_notes": "This document-specific fixture may support citation and historical announcement context only. It is not authority for current campaign state, acquisition, flight coverage, raw data, processing or inversion runs, scientific fitness, resistivity products, hydrostratigraphic interpretation, groundwater observations, rights, policy, release, or publication. Any future campaign or product claim requires a separate source identity, separately observed metadata, and governed admission.",
+  "publisher": {
+    "name": "Kansas Geological Survey (KGS), University of Kansas",
+    "jurisdiction": "Kansas, United States",
+    "contact": {
+      "contact_status": "public_contact",
+      "contact_url": "https://www.kgs.ku.edu/"
+    }
+  },
+  "owner_or_steward": {
+    "name": "University of Kansas News / Kansas Geological Survey",
+    "jurisdiction": "Kansas, United States",
+    "contact": {
+      "contact_status": "public_contact",
+      "contact_url": "https://news.ku.edu/"
+    }
+  },
+  "rights": {
+    "rights_status": "unknown",
+    "license_or_terms": "NEEDS VERIFICATION — reuse terms for this announcement and for any data or products that may be produced by the described campaign have not been established for KFM derivative use.",
+    "attribution_required": true,
+    "attribution_text": "University of Kansas News and Kansas Geological Survey, 2026-05-11 GMD 3 airborne electromagnetic survey announcement.",
+    "redistribution_allowed": "unknown",
+    "commercial_use_allowed": "unknown",
+    "last_verified_at": "2026-08-03T00:00:00Z",
+    "verified_by": "kfm-source-review"
+  },
+  "sensitivity_default": "restricted",
+  "cadence": {
+    "update_cadence": "static",
+    "freshness_expectation": "The 2026-05-11 announcement described flights planned for late May through late July 2026. Current campaign state and any processing or product-release state are UNKNOWN / NEEDS VERIFICATION.",
+    "staleness_policy": "deny_publication"
+  },
+  "access": {
+    "access_method": "manual_archive",
+    "access_posture": "restricted",
+    "endpoints": [
+      {
+        "label": "KU News announcement published 2026-05-11",
+        "uri": "https://news.ku.edu/news/article/airborne-electromagnetic-survey-of-ogallala-aquifer-conditions-planned-in-southwest-kansas-ARTICLE-B0R8YR-ARTICLE-B0R8YR",
+        "purpose": "documentation"
+      }
+    ],
+    "rate_limit_notes": "Documentation-only manual review. No data endpoint, credential, or live connector is established."
+  },
+  "citation": {
+    "citation_required": true,
+    "citation_template": "University of Kansas News, 2026-05-11, GMD 3 airborne electromagnetic survey announcement ({source_id}), accessed {accessed_at}.",
+    "citation_guidance": "Cite this source only as a historical announcement. Do not cite it as evidence of current campaign state, completed acquisition, flight coverage, a processing or inversion run, a resistivity or hydrostratigraphic product, or release. Future observed campaign or product records require separate source identities and metadata.",
+    "preferred_link": "https://news.ku.edu/news/article/airborne-electromagnetic-survey-of-ogallala-aquifer-conditions-planned-in-southwest-kansas-ARTICLE-B0R8YR-ARTICLE-B0R8YR"
+  },
+  "source_head": {
+    "observed_at": "2026-08-03T00:00:00Z",
+    "method": "manual_review",
+    "content_identity": {
+      "upstream_version": "ku-news-gmd3-aem-announcement-2026-05-11-review-2026-08-03"
+    },
+    "source_head_notes": "Documentation-page review only. This fixture binds no campaign telemetry, acquisition bytes, flight-line data, processing run, inversion output, interpreted product, or release. Current campaign and product state remain UNKNOWN / NEEDS VERIFICATION."
+  },
+  "admissibility_limits": {
+    "allowed_claim_roles": ["candidate_signal", "citation_support", "historical_context"],
+    "prohibited_claim_roles": ["legal_status", "regulatory_context", "observed_event", "observation", "operational_context", "map_display"],
+    "limitations": "Historical announcement context cannot become current campaign, observation, or product truth. No acquisition, navigation, processing, inversion, resistivity, hydrostratigraphic, uncertainty, recommendation, management-decision, release, groundwater-level, water-right, title, legal, map-display, or life-safety claim is admitted.",
+    "confidence_posture": "candidate_only",
+    "review_required_before_use": true,
+    "review_required_before_publication": true
+  },
+  "public_release": {
+    "allowed": false,
+    "requires_review": true,
+    "redaction_required": true,
+    "release_conditions": [
+      "Issue #1944 controls verified",
+      "Document-specific SourceDescriptor reviewed and explicitly authorized",
+      "Announcement reuse rights and attribution verified for KFM derivative use",
+      "Any current campaign or product claim uses a separate source identity with separately observed metadata",
+      "EvidenceBundle + policy decision + review + release + rollback recorded"
+    ],
+    "deny_reason_if_not_allowed": "Historical announcement candidate only — no live endpoint, connector, credential, source admission, current campaign claim, product claim, release, or publication authority."
+  },
+  "connectors": {
+    "activation_state": "disabled",
+    "activation_notes": "No connector, watcher, schedule, credential, or live fetch is established for this documentation-only fixture."
+  },
+  "review_state": "needs_review",
+  "release_state": "not_released",
+  "lifecycle": {
+    "registry_state": "proposed",
+    "created_at": "2026-08-03T00:00:00Z",
+    "updated_at": "2026-08-03T00:00:00Z"
+  }
+}

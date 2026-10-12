@@ -1,0 +1,161 @@
+{
+  "receipt_id": "genrec-claim-envelope-20260809",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/claim-envelope-validation.yml",
+    "contracts/evidence/claim_envelope.md",
+    "fixtures/contracts/v1/evidence/claim_envelope/README.md",
+    "fixtures/contracts/v1/evidence/claim_envelope/expected_findings_manifest.json",
+    "fixtures/contracts/v1/evidence/claim_envelope/invalid/schema_additional_property.json",
+    "fixtures/contracts/v1/evidence/claim_envelope/invalid/schema_bad_spec_hash.json",
+    "fixtures/contracts/v1/evidence/claim_envelope/invalid/schema_missing_claim_id.json",
+    "fixtures/contracts/v1/evidence/claim_envelope/semantic_invalid/semantic_ai_proposal_published.json",
+    "fixtures/contracts/v1/evidence/claim_envelope/semantic_invalid/semantic_internal_reference.json",
+    "fixtures/contracts/v1/evidence/claim_envelope/semantic_invalid/semantic_published_without_evidence.json",
+    "fixtures/contracts/v1/evidence/claim_envelope/semantic_invalid/semantic_published_without_rollback.json",
+    "fixtures/contracts/v1/evidence/claim_envelope/semantic_invalid/semantic_temporal_order.json",
+    "fixtures/contracts/v1/evidence/claim_envelope/semantic_invalid/semantic_unresolved_published.json",
+    "fixtures/contracts/v1/evidence/claim_envelope/semantic_invalid/semantic_unsorted_references.json",
+    "fixtures/contracts/v1/evidence/claim_envelope/valid/valid_published_generalized.json",
+    "fixtures/contracts/v1/evidence/claim_envelope/valid/valid_supported_draft.json",
+    "schemas/contracts/v1/evidence/claim_envelope.schema.json",
+    "tests/validators/test_validate_claim_envelope.py",
+    "tools/validators/validate_claim_envelope.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/claim-envelope-validation.yml": "sha256:507f2c37d6a182960afd44d85bca4701258347538611c1481328cea2776494e1",
+    "contracts/evidence/claim_envelope.md": "sha256:07e791717bf4af924a3136efce7c53b220b17f6ce211b0027bddd7d3ee25c9d4",
+    "fixtures/contracts/v1/evidence/claim_envelope/README.md": "sha256:a6e95b823087da2cb11e464f7d7a73b3e37f808d0ae72b0d738eb41fb83b3c99",
+    "fixtures/contracts/v1/evidence/claim_envelope/expected_findings_manifest.json": "sha256:b6044d256b7233a6abaf637f53d36af81809c91a6d0a6e7b9e4f1cc837cdd03b",
+    "fixtures/contracts/v1/evidence/claim_envelope/invalid/schema_additional_property.json": "sha256:dc800c5a04b6c5b8d29c5b02b087fff3bba42304a0cef8a80c7b0e364129c6fc",
+    "fixtures/contracts/v1/evidence/claim_envelope/invalid/schema_bad_spec_hash.json": "sha256:5a2977274a659cebe2798393b2373e3da8ac1090d1f063f315e8f84f5acb8870",
+    "fixtures/contracts/v1/evidence/claim_envelope/invalid/schema_missing_claim_id.json": "sha256:c92c844ff97c59fb9d20ee9e67fd0635f76009d9aa4ef37c5c1b0881c1fc4fff",
+    "fixtures/contracts/v1/evidence/claim_envelope/semantic_invalid/semantic_ai_proposal_published.json": "sha256:e2e80a63c4988f1169358ff9b92ed2b074016cd498f562a71edab5ae049ce5c4",
+    "fixtures/contracts/v1/evidence/claim_envelope/semantic_invalid/semantic_internal_reference.json": "sha256:16628e4fe87db4cf974625c3e33b648c8d4cc869940d5ce548118b2e23364ae8",
+    "fixtures/contracts/v1/evidence/claim_envelope/semantic_invalid/semantic_published_without_evidence.json": "sha256:27f96da9bcb14d04be0daade899a78d3a11dff927b7626d442a29e03d869883c",
+    "fixtures/contracts/v1/evidence/claim_envelope/semantic_invalid/semantic_published_without_rollback.json": "sha256:ebaaddc91394f281d02db07e721fe99cb78c3b21c0ddab26244018598e9f225c",
+    "fixtures/contracts/v1/evidence/claim_envelope/semantic_invalid/semantic_temporal_order.json": "sha256:e6ff3da61a81c1fe7484b7b4fe2ebbda86bc973415db6aa6cc876978800c3e92",
+    "fixtures/contracts/v1/evidence/claim_envelope/semantic_invalid/semantic_unresolved_published.json": "sha256:01b217b54af2c2b1bee05ba78d4140591bdcb85f95dda37a6629e2d264d2453a",
+    "fixtures/contracts/v1/evidence/claim_envelope/semantic_invalid/semantic_unsorted_references.json": "sha256:74b4262545911b98482882ca721d39a2c9ec9f3b3bb19aaa1303f21d689e4c9d",
+    "fixtures/contracts/v1/evidence/claim_envelope/valid/valid_published_generalized.json": "sha256:6fdd66e8c408be455daab06aba7bfb783b20ceeda94f5f719d7d95779a043420",
+    "fixtures/contracts/v1/evidence/claim_envelope/valid/valid_supported_draft.json": "sha256:8e079e867276c9ca78192ab1a34dcdee4f9114757ddb45fe8bcdff4ba53fac11",
+    "schemas/contracts/v1/evidence/claim_envelope.schema.json": "sha256:8de7f5808a933c1dfa66f070fe04b0e2385ee7f7c0ba7c69c007fdd444861f2f",
+    "tests/validators/test_validate_claim_envelope.py": "sha256:43547095bf110352daf60f04190d9beaca6bb94e58ed9a26d4720ba7c3b08114",
+    "tools/validators/validate_claim_envelope.py": "sha256:00222939428eca25f1573f818e5b22558e6665f32b5f45855bc5f1fbbff34815"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-08"
+  },
+  "prompt_or_contract": "sha256:b5af7cafad7231cfc873af06ff0d19b70ffa147fe1d085233385b8722a0f44cf",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector (read/write)",
+      "uploaded-file search",
+      "local deterministic Python validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Components_Pass_18_Idea_Index_Category_Atlas_Verification_Dossier_Expansion_Manual.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:KFM-Components-Pass-18#P0-first-schema-wave",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@c7f6cbff40a6ca643e4bd0492a14d92ec39bfd2e",
+      "repo:contracts/evidence/README.md@c7f6cbff40a6ca643e4bd0492a14d92ec39bfd2e",
+      "repo:schemas/contracts/v1/runtime/decision_envelope.schema.json@c7f6cbff40a6ca643e4bd0492a14d92ec39bfd2e"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/claim-envelope-validation.yml": "PROPOSED",
+    "contracts/evidence/claim_envelope.md": "PROPOSED",
+    "fixtures/contracts/v1/evidence/claim_envelope/README.md": "PROPOSED",
+    "fixtures/contracts/v1/evidence/claim_envelope/expected_findings_manifest.json": "PROPOSED",
+    "fixtures/contracts/v1/evidence/claim_envelope/invalid/schema_additional_property.json": "PROPOSED",
+    "fixtures/contracts/v1/evidence/claim_envelope/invalid/schema_bad_spec_hash.json": "PROPOSED",
+    "fixtures/contracts/v1/evidence/claim_envelope/invalid/schema_missing_claim_id.json": "PROPOSED",
+    "fixtures/contracts/v1/evidence/claim_envelope/semantic_invalid/semantic_ai_proposal_published.json": "PROPOSED",
+    "fixtures/contracts/v1/evidence/claim_envelope/semantic_invalid/semantic_internal_reference.json": "PROPOSED",
+    "fixtures/contracts/v1/evidence/claim_envelope/semantic_invalid/semantic_published_without_evidence.json": "PROPOSED",
+    "fixtures/contracts/v1/evidence/claim_envelope/semantic_invalid/semantic_published_without_rollback.json": "PROPOSED",
+    "fixtures/contracts/v1/evidence/claim_envelope/semantic_invalid/semantic_temporal_order.json": "PROPOSED",
+    "fixtures/contracts/v1/evidence/claim_envelope/semantic_invalid/semantic_unresolved_published.json": "PROPOSED",
+    "fixtures/contracts/v1/evidence/claim_envelope/semantic_invalid/semantic_unsorted_references.json": "PROPOSED",
+    "fixtures/contracts/v1/evidence/claim_envelope/valid/valid_published_generalized.json": "PROPOSED",
+    "fixtures/contracts/v1/evidence/claim_envelope/valid/valid_supported_draft.json": "PROPOSED",
+    "schemas/contracts/v1/evidence/claim_envelope.schema.json": "PROPOSED",
+    "tests/validators/test_validate_claim_envelope.py": "PROPOSED",
+    "tools/validators/validate_claim_envelope.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "artifact-byte-binding",
+      "outcome": "PASS",
+      "reason": "Every authored artifact except this non-self-referential receipt is bound to prepared SHA-256 bytes."
+    },
+    {
+      "gate": "draft-2020-12-meta",
+      "outcome": "PASS",
+      "reason": "The closed ClaimEnvelope schema passes Draft 2020-12 meta-validation."
+    },
+    {
+      "gate": "fixture-polarity",
+      "outcome": "PASS",
+      "reason": "Twelve synthetic cases have exact PASS/FAIL polarity and reason-code expectations."
+    },
+    {
+      "gate": "no-network-replay",
+      "outcome": "PASS",
+      "reason": "Focused tests patch socket creation and prove deterministic replay."
+    },
+    {
+      "gate": "hosted-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted exact-head execution begins after the draft pull request is opened."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:pass18-p0-schema-wave",
+      "validated": true,
+      "evidence_ref": "attachment:KFM-Components-Pass-18#P0-first-schema-wave"
+    },
+    {
+      "id": "repository:directory-governance",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@c7f6cbff40a6ca643e4bd0492a14d92ec39bfd2e"
+    },
+    {
+      "id": "repository:evidence-contract-family",
+      "validated": true,
+      "evidence_ref": "repo:contracts/evidence/README.md@c7f6cbff40a6ca643e4bd0492a14d92ec39bfd2e"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-09T03:40:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Implements the Pass 18 P0 ClaimEnvelope validation slice as a proposed shared evidence contract. The change is additive and validation-only; it creates no evidence, policy, review, release, publication, or public-use authority."
+}

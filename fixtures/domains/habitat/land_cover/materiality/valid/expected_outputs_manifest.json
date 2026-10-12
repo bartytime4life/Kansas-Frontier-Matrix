@@ -1,0 +1,30 @@
+{
+  "valid_byte_only.json": {
+    "change_class": "BYTE_ONLY",
+    "outcome": "NON_EVENT"
+  },
+  "valid_hold_metric_unavailable.json": {
+    "change_class": "UNDETERMINED",
+    "outcome": "HOLD"
+  },
+  "valid_hold_wrong_analysis_unit.json": {
+    "change_class": "UNDETERMINED",
+    "outcome": "HOLD"
+  },
+  "valid_material_net_area.json": {
+    "change_class": "MATERIAL",
+    "outcome": "PROMOTION_CANDIDATE"
+  },
+  "valid_material_reclassification.json": {
+    "change_class": "MATERIAL",
+    "outcome": "PROMOTION_CANDIDATE"
+  },
+  "valid_semantic_non_material.json": {
+    "change_class": "SEMANTIC_NON_MATERIAL",
+    "outcome": "NON_EVENT"
+  },
+  "valid_unchanged.json": {
+    "change_class": "UNCHANGED",
+    "outcome": "NON_EVENT"
+  }
+}

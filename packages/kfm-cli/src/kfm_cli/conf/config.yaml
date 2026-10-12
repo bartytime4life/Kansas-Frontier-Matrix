@@ -1,0 +1,6 @@
+app:
+  name: Kansas Frontier Matrix
+paths:
+  data_dir: data
+ci:
+  strict: true

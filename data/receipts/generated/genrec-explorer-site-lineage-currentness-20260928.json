@@ -1,0 +1,72 @@
+{
+  "receipt_id": "genrec-explorer-site-lineage-currentness-20260928",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/site/README.md"
+  ],
+  "artifact_hashes": {
+    "apps/site/README.md": "sha256:8dd31bc4a4514878b3e09f75c5366a777eca1d4d357728e5bfaccc3fcfd68367"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6",
+    "version": "2026-09-28"
+  },
+  "prompt_or_contract": "sha256:2bbc2aef00759908c200c820239942a2b3b51c534c074eec41584170a6b2302b",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local Git and filesystem",
+      "GitHub connector"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "GitHub main de2dcbd38a70af7668a18eac968e2b217390adfb",
+      "GitHub PR #4787 merged e2bdc7a9abbcb649f3047ccc0725c9e0d9577c5c",
+      "GitHub PR #4788 merged 19a8147702ec80bdf9556d691c37f170addee51a",
+      "GitHub PR #4789 merged de2dcbd38a70af7668a18eac968e2b217390adfb",
+      "Historical v104 receipt genrec-explorer-site-v104-mirror-20260928"
+    ]
+  },
+  "truth_labels": {
+    "apps/site/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "documentation-local-links",
+      "outcome": "PASS",
+      "reason": "check_links.py apps/site/README.md: DOC_LINK_CHECK_PASS, three local targets; external URLs were not requested."
+    },
+    {
+      "gate": "site-runtime",
+      "outcome": "SKIPPED",
+      "reason": "Documentation only; no Site source or hosted runtime changed."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending owner review."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "github-current-main",
+      "validated": true,
+      "evidence_ref": "GitHub main de2dcbd38a70af7668a18eac968e2b217390adfb"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-28T22:59:02.143727+00:00",
+  "emitter": "OpenAI GPT-6 via Codex",
+  "notes": "Documentation currentness only. The v104 receipt remains historical and was not rewritten. No claim of hosted parity, Site publication, source admission, or acceptance."
+}

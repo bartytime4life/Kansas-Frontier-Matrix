@@ -1,0 +1,13 @@
+{
+  "kind": "ContractFixtureManifest",
+  "manifest_version": "1.0.0",
+  "wave": "wave-01-core",
+  "description": "Exact negative: schema path attempts to escape the schema responsibility root.",
+  "families": [
+    {
+      "family": "path-escape",
+      "schema_path": "../schemas/contracts/v1/runtime/decision_envelope.schema.json",
+      "fixture_root": "fixtures/contracts/v1/runtime/decision_envelope"
+    }
+  ]
+}

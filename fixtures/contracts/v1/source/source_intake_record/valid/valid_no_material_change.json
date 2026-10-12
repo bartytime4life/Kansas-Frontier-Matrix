@@ -1,0 +1,37 @@
+{
+  "object_type": "SourceIntakeRecord",
+  "schema_version": "v1",
+  "intake_id": "kfm://source-intake/usda-cdl/2026-08-08/no-change",
+  "source_descriptor_ref": "kfm://source/usda/nass/cdl",
+  "source_role": "official_derived",
+  "observed_at": "2026-08-08T15:30:00Z",
+  "publication_state": "WORK",
+  "promotion_required": true,
+  "evidence_bundle_resolved": false,
+  "policy_review_required": false,
+  "drift_summary": {
+    "object_type": "DriftSummary",
+    "schema_version": "v1",
+    "drift_id": "kfm://drift/usda-cdl/2026-08-08/no-change",
+    "source_descriptor_ref": "kfm://source/usda/nass/cdl",
+    "observed_at": "2026-08-08T15:30:00Z",
+    "comparison_window": {
+      "prior_observed_at": "2026-08-07T15:30:00Z",
+      "current_observed_at": "2026-08-08T15:30:00Z"
+    },
+    "drift_kind": "NONE",
+    "materiality": "NONE",
+    "change_codes": [
+      "NO_CHANGE"
+    ],
+    "changed_fields": [],
+    "summary": "No declared source-head or profile change was detected.",
+    "sensitive_implication": "NONE",
+    "public_detail_allowed": true
+  },
+  "disposition": "NO_MATERIAL_CHANGE",
+  "reason_codes": [
+    "NO_MATERIAL_CHANGE"
+  ],
+  "emitted_by": "tool:fixture-source-watch"
+}

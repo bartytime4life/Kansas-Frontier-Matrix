@@ -1,0 +1,69 @@
+{
+  "receipt_id": "genrec-domain-fauna-workflow-4c8931f9",
+  "contract_version": "3.0.0",
+  "receipt_type": "GenerationReceipt",
+  "status": "PROPOSED",
+  "generated_at": "2026-07-18T00:00:00-05:00",
+  "repository": "bartytime4life/Kansas-Frontier-Matrix",
+  "base_commit": "3c0b8f0fa2d9d2a490701d72a5a5b3bc448b02e0",
+  "branch": "agent/domain-fauna-workflow-20260718",
+  "target_path": ".github/workflows/domain-fauna.yml",
+  "previous_blob": "53e6b038f72772d7f38fb0968339548c23b1db69",
+  "new_blob": "981a6554d38cacd3b528dea45ae7e2834f55934b",
+  "sha256": "4c8931f9b589374b6998f441a723651ed212ee364a7e33a42096592045a34189",
+  "truth_labels": {
+    "confirmed": [
+      "The prior validate-fauna, build-proof-fauna, and publish-dry-run-fauna jobs only executed TODO echo commands.",
+      "Baseline workflow run 29650601349 completed successfully without Fauna validation, proof construction, or release dry-run execution.",
+      "Sampled Fauna test modules contain only PROPOSED placeholder docstrings.",
+      "The broad and per-domain Fauna validator indexes record executable behavior as unverified and README-backed.",
+      "The Fauna proof lane is draft and PROPOSED, with concrete proof inventory and enforcement unresolved.",
+      "The Fauna release-candidate lane is pre-publication and states that a candidate is not a release.",
+      "Workflow name domain-fauna and all three job ids are preserved."
+    ],
+    "proposed": [
+      "Explicit fail-closed readiness holds are the safest current CI behavior until accepted executable Fauna lanes exist.",
+      "AST-based test detection and implementation-presence checks are appropriate graduation signals for the current scaffold maturity."
+    ],
+    "needs_verification": [
+      "Final-head GitHub Actions conclusions.",
+      "Accepted Fauna validator ownership and deterministic no-network suite.",
+      "Concrete EvidenceBundle and proof producer contracts, schemas, public-safe fixtures, geoprivacy controls, access controls, manifests, and receipts.",
+      "Accepted Fauna candidate, release dry-run, sensitivity, stewardship, correction, withdrawal, and rollback contracts.",
+      "Branch-protection dependencies, independent review ownership, and immutable action pinning."
+    ]
+  },
+  "changes": [
+    "Added workflow_dispatch, contents: read permission, concurrency cancellation, deterministic Python setup, and job timeouts.",
+    "Disabled persisted checkout credentials.",
+    "Converted all three TODO-only jobs into explicit WORKFLOW_SKIPPED_EXPLICIT and WORKFLOW_HOLD readiness checks.",
+    "Added required-boundary checks across Fauna docs, contracts, schemas, fixtures, policy, tests, validators, registry, proofs, release candidates, and published lanes.",
+    "Added AST-based detection for newly executable Fauna tests.",
+    "Added fail-closed graduation checks for validators, proof artifacts or producers, candidate records, Make targets, and changed release posture.",
+    "Added bounded summaries preserving sensitive-species, exact-occurrence, stewardship, geoprivacy, rights, release, correction, and rollback boundaries."
+  ],
+  "authority_boundary": "A green held result is repository-readiness evidence only. It is not Fauna validation, taxonomic or occurrence confirmation, stewardship approval, geoprivacy approval, EvidenceBundle resolution, proof construction, lifecycle promotion, release approval, hunting or legal guidance, or publication authority.",
+  "directory_rules_basis": [
+    ".github/workflows remains the existing CI orchestration location.",
+    "tests and fixtures remain the test and bounded test-data roots.",
+    "tools remains the validator and helper root.",
+    "data/proofs remains the proof-support root.",
+    "release remains the release-decision root.",
+    "data/published remains the released-payload root.",
+    "data/receipts/generated remains the existing generated process-memory lane."
+  ],
+  "validation": {
+    "workflow_yaml_parse": "PASS",
+    "workflow_and_job_identities_preserved": "PASS",
+    "exact_changed_paths": [
+      ".github/workflows/domain-fauna.yml",
+      "data/receipts/generated/genrec-domain-fauna-workflow-4c8931f9.json"
+    ],
+    "final_head_ci": "PENDING",
+    "human_review": "PENDING"
+  },
+  "rollback": {
+    "strategy": "Close the pull request without merge or revert the receipt commit and workflow commit in reverse order.",
+    "restores_blob": "53e6b038f72772d7f38fb0968339548c23b1db69"
+  }
+}

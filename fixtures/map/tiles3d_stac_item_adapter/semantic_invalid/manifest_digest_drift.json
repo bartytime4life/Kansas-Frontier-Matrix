@@ -1,0 +1,46 @@
+{
+  "canonicalization_profile": "RFC8785-JCS",
+  "digest_algorithm": "sha256",
+  "file_count": 3,
+  "files": [
+    {
+      "byte_size": 26,
+      "media_type": "application/octet-stream",
+      "path": "subtrees/0/0/0.subtree",
+      "role": "subtree",
+      "sha256": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    {
+      "byte_size": 22,
+      "media_type": "model/gltf-binary",
+      "path": "tiles/0/0/0.glb",
+      "role": "content",
+      "sha256": "sha256:b09f4a48521eeca2cac087d6fb0c5f1acad7bc9d0e7b4dc08fb4be871a903797"
+    },
+    {
+      "byte_size": 204,
+      "media_type": "application/json",
+      "path": "tileset.json",
+      "role": "tileset",
+      "sha256": "sha256:90681fb3cd007fb6bde3133e943ef7d5d768cd06bb327afdaeb6e34875070217"
+    }
+  ],
+  "governance": {
+    "evidence_resolved": false,
+    "policy_evaluated": false,
+    "promotion_authorized": false,
+    "publication_authorized": false,
+    "release_authorized": false,
+    "release_manifest_ref": null,
+    "source_activated": false,
+    "tile_artifact_manifest_ref": null
+  },
+  "manifest_id": "kfm://map/tiles3d-tree/e09dc9fd5952197bdd6e68309275ed6e38929e4039b376c9b15e8b56bbda5b6e",
+  "object_type": "Tiles3DTreeHashManifest",
+  "schema_version": "1.0.0",
+  "spec_hash": "sha256:a7db629712c0cb23c51ec24fd0eec5b63d38337c5f1459de8738ead5e8863928",
+  "status": "CANDIDATE_INTEGRITY_ONLY",
+  "tileset_path": "tileset.json",
+  "total_bytes": 252,
+  "tree_hash": "sha256:e09dc9fd5952197bdd6e68309275ed6e38929e4039b376c9b15e8b56bbda5b6e"
+}

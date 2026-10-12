@@ -1,0 +1,31 @@
+{
+  "bundle_id": "bundle:2",
+  "claim_scope": "route answer",
+  "evidence_refs": [
+    {
+      "ref": "set:2",
+      "kind": "dataset"
+    }
+  ],
+  "source_records": [
+    "src2"
+  ],
+  "citations": [
+    "cite2"
+  ],
+  "rights": {
+    "license": "ODC-BY"
+  },
+  "sensitivity": {
+    "level": "generalized",
+    "reason": "aggregation",
+    "applied_at": "2026-05-09T00:00:00Z"
+  },
+  "transforms": [],
+  "checksums": {
+    "bundle": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+  },
+  "spec_hash": {
+    "value": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+  }
+}

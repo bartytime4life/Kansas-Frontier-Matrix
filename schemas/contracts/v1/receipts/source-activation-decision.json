@@ -1,0 +1,10 @@
+{
+  "status": "PROPOSED",
+  "path": "schemas/contracts/v1/receipts/source-activation-decision.json",
+  "source_docs": [
+    "docs/domains/flora/SOURCE_REGISTRY.md"
+  ],
+  "notes": [
+    "Placeholder created from the current docs/domains markdown inventory."
+  ]
+}

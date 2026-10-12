@@ -1,0 +1,140 @@
+{
+  "receipt_id": "genrec_trust_spine_baseline_pinned_replay_20260822",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "Makefile",
+    "contracts/governance/trust_spine_baseline.md",
+    "tests/validators/test_validate_trust_spine_baseline.py",
+    "tools/validators/control_plane/validate_trust_spine_baseline.py"
+  ],
+  "artifact_hashes": {
+    "Makefile": "sha256:863743697275ec3025bbdfc2904f04e3dff3082a5b39d1888644dad01c61a5ca",
+    "contracts/governance/trust_spine_baseline.md": "sha256:b55cae918b0dcd0f4923553f2271d22d773c5fe2517a10b959128864bb3a9578",
+    "tests/validators/test_validate_trust_spine_baseline.py": "sha256:a0124e50ac3b0bf907211a7582d1731f84351b2ef7c6e8be7422e74cd62606e1",
+    "tools/validators/control_plane/validate_trust_spine_baseline.py": "sha256:8012efa3e17f21e63113017a8677cfcb1c8377f3f1e183b21159966e428c2459"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-5)",
+    "version": "2026-08-22"
+  },
+  "prompt_or_contract": "sha256:2cf6ffd0f99d80c57b41fda523d63b26f615305785f4147a0a23733737121884",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Google Drive connector",
+      "local deterministic QA"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:060b20d6e28197faa8a9034ccb5a29b63621f73ebdeea1d2d77d31b23c2149e0",
+      "sha256:9dba2956624827673e3fcb7d903c567cbdc042aaf104d20728dc7b2d762f3641"
+    ],
+    "attached_docs": [
+      "Kansas Frontier Matrix — AI Build Operating Contract"
+    ],
+    "evidence_refs": [
+      "repo:bartytime4life/Kansas-Frontier-Matrix@568a95f025654d1ceb551f4d014674b736b5dbad",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/3402",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3358",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3359",
+      "repo:control_plane/trust_spine_baseline.yaml@fddd64cf00492f6f367fce633073b61510ad47bf",
+      "https://docs.google.com/document/d/1yy3IaBJm9epC578w7Oak_12gVxT59vnw6IJYn0XIHKs/edit"
+    ]
+  },
+  "truth_labels": {
+    "Makefile": "PROPOSED",
+    "contracts/governance/trust_spine_baseline.md": "PROPOSED",
+    "tests/validators/test_validate_trust_spine_baseline.py": "PROPOSED",
+    "tools/validators/control_plane/validate_trust_spine_baseline.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "concurrent_change_preflight",
+      "outcome": "PASS",
+      "reason": "PR #3402, its merged files, issue closure, exact-head workflow result, current main, open pull requests, and MRTS-02 branch overlap were inspected before writing."
+    },
+    {
+      "gate": "pinned_git_blob_regression",
+      "outcome": "PASS",
+      "reason": "A temporary Git repository proved that the validator reads the recorded commit bytes after the same working-tree path is changed."
+    },
+    {
+      "gate": "python_compile",
+      "outcome": "PASS",
+      "reason": "The modified validator and focused test module compiled successfully."
+    },
+    {
+      "gate": "bounded_git_object_controls",
+      "outcome": "PASS",
+      "reason": "Pinned reads enforce canonical path roots, exact 40-hex commit identity, regular-file Git modes, a 64 MiB size limit, bounded subprocess time, and non-echoing findings."
+    },
+    {
+      "gate": "artifact_sha256_integrity",
+      "outcome": "PASS",
+      "reason": "All four authored artifact byte streams were hashed and bound in this receipt; the receipt does not bind itself."
+    },
+    {
+      "gate": "repository_native_profile",
+      "outcome": "SKIPPED",
+      "reason": "The connector scratch is not a full repository checkout and lacks declared project dependencies; make trust-spine-baseline remains exact-head hosted evidence."
+    },
+    {
+      "gate": "hosted_exact_head_checks",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks run after the draft pull request is opened."
+    },
+    {
+      "gate": "accountable_human_review",
+      "outcome": "SKIPPED",
+      "reason": "Independent human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@a4de0d7a96b78da59cfc499d1025e1508afd8dd9"
+  ],
+  "citations": [
+    {
+      "id": "merged-mrts-01-pr-3402",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/3402"
+    },
+    {
+      "id": "mrts-02-issue-3359",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3359"
+    },
+    {
+      "id": "trust-spine-baseline-fddd64cf",
+      "validated": true,
+      "evidence_ref": "repo:control_plane/trust_spine_baseline.yaml@fddd64cf00492f6f367fce633073b61510ad47bf"
+    },
+    {
+      "id": "ai-build-operating-contract-drive",
+      "validated": true,
+      "evidence_ref": "https://docs.google.com/document/d/1yy3IaBJm9epC578w7Oak_12gVxT59vnw6IJYn0XIHKs/edit"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [
+      "@bartytime4life"
+    ],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-22T18:44:43Z",
+  "emitter": "OpenAI Codex via ChatGPT GitHub and Google Drive connectors",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Forward-fix provenance for historical path/digest replay. This change does not modify the baseline instance, authority inventory, topology findings, source activation, policy, lifecycle, release, deployment, publication, or repository settings."
+}

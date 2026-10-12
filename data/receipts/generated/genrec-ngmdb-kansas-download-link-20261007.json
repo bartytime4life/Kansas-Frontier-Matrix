@@ -1,0 +1,90 @@
+{
+  "receipt_id": "genrec-ngmdb-kansas-download-link-20261007",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/site/source/README.md",
+    "apps/site/source/app/data-intake.ts",
+    "apps/site/source/app/map-toolbar.tsx"
+  ],
+  "artifact_hashes": {
+    "apps/site/source/README.md": "sha256:ab202b58477752589a4885801cad7507f83888128aef1593a4623568fa420919",
+    "apps/site/source/app/data-intake.ts": "sha256:2eeb598fe0f54c57c5700608852e1e3d46429dffe2a88a18a5d598579d12cc96",
+    "apps/site/source/app/map-toolbar.tsx": "sha256:2b49b9ec5383dd964240c5c7d3887fe7af0ca7a5a5e127eb23e26d92000b2c28"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:634a472506ed3941ec06b643c6552276f3f5671704101b0e01b4cd6b7fb37e92",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "main@bc1a4f411f53fa7f1f9fb935da3d60c8c252b778",
+      "Site v176 source cc98024115e44d96ce0e3c115b71471e98e76e31",
+      "Site v177 source 7bd612a3fb26283bbb71e047ca78588270a59708",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "citations": [
+    {
+      "id": "Inspected Kansas USGS download entry",
+      "evidence_ref": "apps/site/source/app/map-toolbar.tsx",
+      "validated": true
+    },
+    {
+      "id": "Inspected geologic proposal source choice",
+      "evidence_ref": "apps/site/source/app/data-intake.ts",
+      "validated": true
+    }
+  ],
+  "truth_labels": {
+    "apps/site/source/README.md": "CONFIRMED",
+    "apps/site/source/app/data-intake.ts": "CONFIRMED",
+    "apps/site/source/app/map-toolbar.tsx": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Production build and adjacent Site tests",
+      "outcome": "PASS",
+      "reason": "Site v177 production build and 11 data-intake/historical-topo tests passed. Exact Kansas/USGS URL parameters and matching proposal choice checked."
+    },
+    {
+      "gate": "Provider and browser verification",
+      "outcome": "SKIPPED",
+      "reason": "Supplied USGS URL returned HTTP 403 to direct fetch; browser could not verify administrator security policy. Exact owner supplied URL preserved; no live catalog or visual acceptance claimed."
+    },
+    {
+      "gate": "Owner-private Site delivery",
+      "outcome": "PASS",
+      "reason": "Native deployment appgdep_6ac690a619008191a112b80ad21ee98e succeeded for saved v177 and source 7bd612a3fb26283bbb71e047ca78588270a59708."
+    },
+    {
+      "gate": "Repository mirror review",
+      "outcome": "FAIL",
+      "reason": "Existing MIRROR_REVIEW_REQUIRED hold remains; this narrow source patch neither replaces nor approves the active reviewed receipt."
+    },
+    {
+      "gate": "Local Site delivery",
+      "outcome": "PASS",
+      "reason": "Projects/KFM-Explorer-Site-v177 serves the page and built Kansas/USGS link asset on 127.0.0.1:4173 with existing state and reviewed imagery settings. Previous v175 retained; dependency lock matches and its installed modules are reused."
+    }
+  ],
+  "policy_decisions": [],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-10-07T18:35:16.032532Z",
+  "emitter": "Codex repository-authoring session",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Three-file Site delta only. Historical topographic browser and historical-route topoView links remain distinct. No catalog data was downloaded, no data admitted, no repository merge or mirror approval. Rollback this patch or restore Site v176. Documentation uses the existing apps/site/source responsibility home; authoring receipt uses data/receipts/generated."
+}

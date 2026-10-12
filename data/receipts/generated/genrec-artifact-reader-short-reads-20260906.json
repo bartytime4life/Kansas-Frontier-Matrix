@@ -1,0 +1,109 @@
+{
+  "receipt_id": "genrec-artifact-reader-short-reads-20260906",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/source-artifact-validation.yml",
+    "tools/validators/_source_artifact.py",
+    "tools/validators/evidence/_kfm_geo_manifest.py",
+    "tests/validators/test_artifact_reader_short_reads.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/source-artifact-validation.yml": "sha256:f0844036a43298e6e4d5d6c6a0fc094a00f91607a2776f6d7ba5e3be096bbf96",
+    "tools/validators/_source_artifact.py": "sha256:4fcc13da5688a5fc3de3744425e59f140a6eb7ae3532d0131d699534283d53d4",
+    "tools/validators/evidence/_kfm_geo_manifest.py": "sha256:beb7331f9a336b3904135a98e37edc90f5d5a07939d048a8b756adbf588c1588",
+    "tests/validators/test_artifact_reader_short_reads.py": "sha256:4fc11053d184bb27411c3fb8333d1dcf3eb9bb3aa76fa2c59396af18e396f654"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Astra Pro",
+    "version": "not exposed"
+  },
+  "prompt_or_contract": "sha256:08f7525dafe9d16bd1886017eda748e67b6b632ca535042f7eaa6ab39050825b",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub",
+      "Notion",
+      "Google_Drive",
+      "container",
+      "web"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/a9a53470e385350b795f6d978ad3e7a5811961c5/tools/validators/_source_artifact.py",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/a9a53470e385350b795f6d978ad3e7a5811961c5/tools/validators/evidence/_kfm_geo_manifest.py",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/a9a53470e385350b795f6d978ad3e7a5811961c5/.github/workflows/source-artifact-validation.yml",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/a9a53470e385350b795f6d978ad3e7a5811961c5/CONTRIBUTING.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/a9a53470e385350b795f6d978ad3e7a5811961c5/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "https://docs.google.com/document/d/1uTqdIEFZE2cq3gyISetoRYM6LIlnKqTc3FobtEx7Cbs/edit",
+      "https://app.notion.com/p/3c9a92021bf68195b8b1f3a8d694b447",
+      "https://docs.python.org/3/library/os.html#os.read"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/source-artifact-validation.yml": "CONFIRMED",
+    "tools/validators/_source_artifact.py": "CONFIRMED",
+    "tools/validators/evidence/_kfm_geo_manifest.py": "CONFIRMED",
+    "tests/validators/test_artifact_reader_short_reads.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Exact current-base source transfer",
+      "outcome": "PASS",
+      "reason": "Both helper files, the original workflow and receipt schema match their GitHub Git blob SHA-1 identities at a9a53470e385350b795f6d978ad3e7a5811961c5."
+    },
+    {
+      "gate": "New regression overlay on unchanged base helpers",
+      "outcome": "FAIL",
+      "reason": "40 unittest cases: 16 pass, 24 assertion failures, zero errors or skips. Expected negative control; not a claim that the pristine main test suite failed."
+    },
+    {
+      "gate": "Candidate local-reader regression suite",
+      "outcome": "PASS",
+      "reason": "40/40 tests, zero errors or skips, Python 3.13.5 and jsonschema 4.26.0 on Linux. Tests use synthetic local files and bounded real os.read calls; no schemas or findings mocked."
+    },
+    {
+      "gate": "Existing CI command and control-boundary static comparison",
+      "outcome": "PASS",
+      "reason": "Only three watched paths per event and one regression step added. Existing step bodies, action pins, installer, permissions, environment, branches, job identity and concurrency preserved. Added step bash syntax and local execution pass; its 40 tests are a repeat, not additional unique cases."
+    },
+    {
+      "gate": "Python syntax and changed-file whitespace",
+      "outcome": "PASS",
+      "reason": "ast.parse, py_compile, final-newline and trailing-whitespace checks pass for affected source/test bytes."
+    },
+    {
+      "gate": "Receipt schema and artifact-map/hash parity",
+      "outcome": "PASS",
+      "reason": "Draft 2020-12 plus FormatChecker against exact fetched receipt schema; all four artifact paths and SHA-256 bindings agree with local product bytes."
+    },
+    {
+      "gate": "Full native fixtures, aggregate validators and hosted exact-head execution",
+      "outcome": "SKIPPED",
+      "reason": "NOT_RUN. No full checkout: clone DNS failed. Existing SourceArtifact and KFMGeoManifest full fixture suites, native receipt CLI, workflow-security/topology ratchets and hosted CI were not executed. Local unittest is not the locked project-test environment."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "adopted-directory-rules",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/a9a53470e385350b795f6d978ad3e7a5811961c5/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "python-os-read",
+      "validated": true,
+      "evidence_ref": "https://docs.python.org/3/library/os.html#os.read"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-09-06T01:15:10.109099+00:00",
+  "emitter": "kfm-artifact-reader-integrity-author",
+  "notes": "Bounded enforcement repair under existing tools/, tests/, .github/ and data/ responsibility roots; no root, contract, schema, policy or API migration. Helper docstrings, the test module run instructions and workflow comment document the change; existing semantics and limits are unchanged. Read through EOF in at most 64 KiB requests, retaining the limit+1 sentinel and safe failures; do not treat a short read as complete bytes. The two existing helper homes are deliberately preserved rather than introducing a new shared authority. Confirmed labels cover these authored and locally checked artifacts, not hosted conformance or production readiness. Drive Directory Rules is unversioned lineage, not adoption authority. Historical source-artifact and geo-manifest implementation branches have zero commits ahead of this base. Delivery is branch-only with human review pending: the latest #4024 incident observation does not reopen its quarantined PR path despite the issue metadata being closed. No ready, merge, setting, source activation, release, deployment or publication authority. Revert the five-file commit together if rejected, preserving this receipt in Git history; reverting restores the demonstrated defect. This change does not promise immutable concurrent-file snapshots or ancestor-symlink race resistance."
+}

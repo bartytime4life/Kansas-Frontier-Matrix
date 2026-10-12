@@ -1,0 +1,178 @@
+{
+  "receipt_id": "genrec-pipelines-air-readme-6f625f98",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "pipelines/domains/air/README.md"
+  ],
+  "artifact_hashes": {
+    "pipelines/domains/air/README.md": "sha256:6f625f98e5ebb983c70564e22196d0b2804fc6b591c073b0d8ffbc28dc51ce39"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-19"
+  },
+  "prompt_or_contract": "sha256:40dce79a58214db53ac70283f85d96115be2cc5110e38e1276c75530d30e6202",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "repository code search",
+      "repository file reads",
+      "remote branch and contents writes",
+      "local deterministic content validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:40dce79a58214db53ac70283f85d96115be2cc5110e38e1276c75530d30e6202"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "repo:bartytime4life/Kansas-Frontier-Matrix:pipelines/domains/air/README.md@2783739bba744f560772388a9969ed3107d08930",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:pipelines/README.md@2783739bba744f560772388a9969ed3107d08930",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:pipelines/domains/README.md@2783739bba744f560772388a9969ed3107d08930",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:docs/architecture/directory-rules.md@2783739bba744f560772388a9969ed3107d08930",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:docs/domains/atmosphere/CANONICAL_PATHS.md@2783739bba744f560772388a9969ed3107d08930",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:pipelines/domains/atmosphere/README.md@2783739bba744f560772388a9969ed3107d08930",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:pipelines/domains/atmosphere/normalize/README.md@2783739bba744f560772388a9969ed3107d08930",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:pipelines/domains/atmosphere/validate/README.md@2783739bba744f560772388a9969ed3107d08930",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:pipeline_specs/air/README.md@2783739bba744f560772388a9969ed3107d08930",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:pipeline_specs/atmosphere/README.md@2783739bba744f560772388a9969ed3107d08930",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:packages/domains/atmosphere/src/atmosphere/README.md@2783739bba744f560772388a9969ed3107d08930",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:contracts/domains/atmosphere/README.md@2783739bba744f560772388a9969ed3107d08930",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:schemas/contracts/v1/domains/atmosphere/README.md@2783739bba744f560772388a9969ed3107d08930",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:policy/domains/air/README.md@2783739bba744f560772388a9969ed3107d08930",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:policy/domains/atmosphere/README.md@2783739bba744f560772388a9969ed3107d08930",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:tests/domains/atmosphere/README.md@2783739bba744f560772388a9969ed3107d08930",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:.github/workflows/domain-atmosphere.yml@2783739bba744f560772388a9969ed3107d08930",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:schemas/contracts/v1/receipts/generated_receipt.schema.json@2783739bba744f560772388a9969ed3107d08930",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:pipelines/domains/air/README.md@e13c9630fdd11971aeaac69ac8aa4e94b8c44ccc"
+    ]
+  },
+  "truth_labels": {
+    "pipelines/domains/air/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "task-contract-and-change-budget",
+      "outcome": "PASS",
+      "reason": "Scope is limited to one existing Air pipeline README plus the required generated-work receipt; no executable, source, specification, package API, contract, schema, policy, fixture, test, workflow, lifecycle, proof, release, runtime, route, deployment, advisory, or public behavior is changed."
+    },
+    {
+      "gate": "base-drift-reconciliation",
+      "outcome": "PASS",
+      "reason": "Main advanced from 7af75ca2b7c3bfe75325e41f4fbfca664bfcd7fd to 2783739bba744f560772388a9969ed3107d08930 through unrelated documentation and generated-receipt changes. The target retained blob 75bcd81d996c93595492e61860a34b3c8f6dfe51 and none of the inspected Air/Atmosphere evidence paths changed."
+    },
+    {
+      "gate": "directory-authority-and-duplicate-preflight",
+      "outcome": "PASS",
+      "reason": "The existing pipelines/domains/air path and stable document identity were retained. Directory Rules, Atmosphere canonical-path guidance, preferred Atmosphere pipeline and spec lanes, compatibility paths, and concurrency state were inspected without creating a parallel root or executable authority."
+    },
+    {
+      "gate": "repository-inventory-and-no-overclaim",
+      "outcome": "PASS",
+      "reason": "The README limits the Air direct inventory to the README at checked paths; distinguishes preferred Atmosphere documentation from executable implementation; and keeps unverified sources, parsers, packages, contracts, schemas, policy, tests, receipts, proofs, release, runtime, and public consumers explicitly bounded."
+    },
+    {
+      "gate": "slug-compatibility-and-migration-boundary",
+      "outcome": "PASS",
+      "reason": "The revision treats air versus atmosphere as CONFLICTED and ADR-class, redirects new work toward Atmosphere as the current documentation preference, prohibits duplicate implementation or lifecycle authority, and defines reversible migration and deprecation requirements."
+    },
+    {
+      "gate": "markdown-meta-anchor-and-structure",
+      "outcome": "PASS",
+      "reason": "The final README has one H1, one closed KFM Meta Block v2, 92 unique heading slugs, resolved internal anchors, balanced code fences, no trailing whitespace, and a final newline."
+    },
+    {
+      "gate": "repository-relative-link-validation",
+      "outcome": "PASS",
+      "reason": "All repository-relative links in the revised README resolve to files inspected at the pinned repository snapshot."
+    },
+    {
+      "gate": "security-rights-sensitivity-and-official-authority",
+      "outcome": "PASS",
+      "reason": "The revision contains no credentials, private endpoints, live payloads, sensitive station records, health or exposure instructions, regulatory determinations, emergency alerts, or life-safety advice. It preserves source-role, time, freshness, caveat, evidence, policy, release, and official-issuer boundaries."
+    },
+    {
+      "gate": "no-loss-preservation",
+      "outcome": "PASS",
+      "reason": "Useful v0.1 Air/Atmosphere scope, slug-conflict, lifecycle, source-family, AQI/concentration, AOD/PM2.5, model/observation, caveat, evidence, policy, no-direct-publish, correction, rollback, and fixture-first obligations were retained and strengthened. Unsupported executable trees and pseudo-machine examples were reclassified rather than silently promoted."
+    },
+    {
+      "gate": "remote-readback-and-content-hash",
+      "outcome": "PASS",
+      "reason": "GitHub returned README blob 2717874d4f489248a145bb8df82d4c65258b1972 on commit e13c9630fdd11971aeaac69ac8aa4e94b8c44ccc, matching the locally recomputed Git blob and SHA-256 artifact hash 6f625f98e5ebb983c70564e22196d0b2804fc6b591c073b0d8ffbc28dc51ce39."
+    },
+    {
+      "gate": "repository-native-execution",
+      "outcome": "SKIPPED",
+      "reason": "The API-only workflow did not clone or execute repository code. No accepted Air pipeline command exists, and the inspected Atmosphere workflow intentionally records validation, proof, and release readiness holds."
+    },
+    {
+      "gate": "generated-receipt-shape",
+      "outcome": "PASS",
+      "reason": "The receipt payload satisfies the fetched generated-receipt required fields, truth-label and gate enums, hash patterns, review-state vocabulary, and additional-property restrictions in local structural validation."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human governance review remains pending and separate from generation, static validation, mergeability, release, and publication."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "user-request-air-pipeline-readme",
+      "validated": true,
+      "evidence_ref": "prompt://sha256:40dce79a58214db53ac70283f85d96115be2cc5110e38e1276c75530d30e6202"
+    },
+    {
+      "id": "air-pipeline-base",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:pipelines/domains/air/README.md@2783739bba744f560772388a9969ed3107d08930"
+    },
+    {
+      "id": "atmosphere-canonical-path-posture",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:docs/domains/atmosphere/CANONICAL_PATHS.md@2783739bba744f560772388a9969ed3107d08930"
+    },
+    {
+      "id": "air-spec-compatibility-guardrail",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:pipeline_specs/air/README.md@2783739bba744f560772388a9969ed3107d08930"
+    },
+    {
+      "id": "air-policy-compatibility-guardrail",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:policy/domains/air/README.md@2783739bba744f560772388a9969ed3107d08930"
+    },
+    {
+      "id": "atmosphere-readiness-workflow",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:.github/workflows/domain-atmosphere.yml@2783739bba744f560772388a9969ed3107d08930"
+    },
+    {
+      "id": "final-readme-remote-readback",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:pipelines/domains/air/README.md@e13c9630fdd11971aeaac69ac8aa4e94b8c44ccc"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-19T17:28:24Z",
+  "emitter": "OpenAI GPT-5.6 Thinking via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Task kfm-pipelines-air-readme-v0-2-20260719. Documentation-only update. This receipt records provenance and bounded validation outcomes; it is not Atmosphere or Air evidence, source admission, policy approval, human review, lifecycle promotion, release approval, medical or regulatory guidance, emergency authority, or publication."
+}

@@ -1,0 +1,91 @@
+{
+  "receipt_id": "kfm-evidence-drawer-occupancy-20261010",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/site/source/app/page.tsx",
+    "apps/site/source/app/inspection-panel.tsx",
+    "apps/site/source/app/inspection-panel.css",
+    "apps/site/source/tests/inspection-panel.test.mjs",
+    "apps/site/source/scripts/verify-explorer-geometry.mjs"
+  ],
+  "artifact_hashes": {
+    "apps/site/source/app/page.tsx": "sha256:7e1340575de52e3c6c2cc3121ef70867434d845407490fc2f6a8198134f27e05",
+    "apps/site/source/app/inspection-panel.tsx": "sha256:16314fd24cde232f8545d74b41335a1b0d3b8ca4cafde57ae74a8b04f906d670",
+    "apps/site/source/app/inspection-panel.css": "sha256:2f295bf15208d8510d7feccfd5cf720458de0f89f7eaeb6b5ea14b5ee42ef15f",
+    "apps/site/source/tests/inspection-panel.test.mjs": "sha256:ef937950d49f6d0a209f81122ee1018f0375c3b264a39fe85780a6309ac8cb8f",
+    "apps/site/source/scripts/verify-explorer-geometry.mjs": "sha256:2a4b03826927863b099299522be880ccd5d425902562dde275f65424648110b2"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Codex",
+    "version": "active session; exact backend build unavailable"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "Sites",
+      "GitHub",
+      "CUA"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "repository main@a2be50732770629b796861fd1afbb566010d49df",
+      "Site v208@a14465d020a680b90cd95b0a023d061d48e8664a",
+      "User-provided evidence/Qwen occupancy screenshot; instructions interpreted from user request only"
+    ]
+  },
+  "truth_labels": {
+    "apps/site/source/app/page.tsx": "PROPOSED",
+    "apps/site/source/app/inspection-panel.tsx": "PROPOSED",
+    "apps/site/source/app/inspection-panel.css": "PROPOSED",
+    "apps/site/source/tests/inspection-panel.test.mjs": "PROPOSED",
+    "apps/site/source/scripts/verify-explorer-geometry.mjs": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Repository production build and Node suite",
+      "outcome": "PASS",
+      "reason": "npm run build; node --test tests/*.test.mjs: 926 passed."
+    },
+    {
+      "gate": "Same-Site production build and Node suite",
+      "outcome": "PASS",
+      "reason": "build-site.mjs; node --test tests/*.test.mjs: 902 passed. Both trees preserve their existing differences."
+    },
+    {
+      "gate": "Local browser occupancy and interactions",
+      "outcome": "PASS",
+      "reason": "CUA: 1440x1000, 1101x700, 1100x700, 1024x768, 761x600, 760x600 and 390x844. Desktop side columns and Scene/Evidence separation, selected Pratt record, retained Qwen draft, mobile scroll containment, Escape/focus return, sticky close. Flint Hills slope sample remained visible at full map width; closing Scene revealed the retained Chase county record. Actual selection/effect regression covers all competing panels."
+    },
+    {
+      "gate": "Dedicated CDP geometry runner",
+      "outcome": "SKIPPED",
+      "reason": "Updated to reflect the shared panel and checked with node --check; browser interactions performed through CUA in this session."
+    },
+    {
+      "gate": "Independent human review and merge",
+      "outcome": "SKIPPED",
+      "reason": "Review remains pending; no merge authorization."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "ADR-0029",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-10-10T05:18:02.283420Z",
+  "emitter": "Codex",
+  "notes": "Bounded UI layout and state change. Preserve source/selection semantics, local-only model policy, saved data, DB/BUCKET and owner-private access. Receipt establishes artifact integrity, not approval or admission. Existing mirror review receipts are unchanged. Site publication and GitHub PR state are recorded separately."
+}

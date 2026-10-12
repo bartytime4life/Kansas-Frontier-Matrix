@@ -1,0 +1,5 @@
+status: PROPOSED
+source_doc: docs/domains/habitat/CANONICAL_PATHS.md
+path: data/registry/sources/habitat/usfws_ecos.yaml
+notes:
+  - Placeholder created from docs/domains markdown inventory.

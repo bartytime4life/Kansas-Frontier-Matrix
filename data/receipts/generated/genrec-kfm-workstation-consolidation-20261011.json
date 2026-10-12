@@ -1,0 +1,152 @@
+{
+  "artifact_hashes": {
+    "docs/runbooks/kfm-projects-consolidation.md": "sha256:c0dbca66a97fd2e5b45ae65cc668e879f440e1560e1c183ceafdbff5e613141d",
+    "docs/runbooks/raw-data-intake.md": "sha256:b2d4b546815807c2f9622e7fd2a961bdfc270467cc1db3b967baf5d3874d6dcf",
+    "tests/local_data/test_atlas.py": "sha256:663037ee1f0274b10762829cdff72e333a5ebd1612ba737ac3c440c236202cca",
+    "tests/local_data/test_consolidate.py": "sha256:65eaee90b42927880ba0c05affe05a78253f22d890d727f569de08e88608493e",
+    "tests/local_data/test_intake.py": "sha256:442e8939407d6b38b0cb2999c884dde3e854898c28efb410fe9fd6177e89948d",
+    "tests/local_data/test_intake_limits.py": "sha256:4c7faa00a65336b1955e531383f8716322e420f73cfcdbd32d5df6d4c78d453b",
+    "tools/local_data/README.md": "sha256:a1faaaa7e4f45b1633c275aea4677150b30b3941e4df1d02ce1eed4b03a4fe9a",
+    "tools/local_data/atlas.py": "sha256:6447ec25c8034914d8d7ddb269d370ea8c33410760fd33ab785e8b7356ed22d9",
+    "tools/local_data/atlas_worker.py": "sha256:01656da05f5d4d91aa1e682dcb526d5516608a4012bf93014c980a7cd76d40da",
+    "tools/local_data/catalogs/github-storage-budget.json": "sha256:5546b42fd5192772fbd77c66086f61443008183079ae34accf72b0fbe7885b3b",
+    "tools/local_data/consolidate.py": "sha256:f07d7ad72cb921b9c9a27f3c91ee6c8bfd0748125d69ac92d30182f60cd2be4e",
+    "tools/local_data/intake.py": "sha256:4d05041daab52aae7c21bfba4c8ccf55112cb1c08a8f6bba635d1c9cce2c6d97",
+    "tools/local_data/intake_desk/desk.js": "sha256:50fdccedc307584e781d7f01d1df271f3b268ea18506ace3435e70bcea61bb03",
+    "tools/local_data/intake_desk/index.html": "sha256:45086b415bba7442d200e78fd267fc5d5bdbede8be0e626d1a3a9b4795acc0a4",
+    "tools/local_data/intake_route.py": "sha256:032b50f2f513036c77ae0da64e901def7615f708eae5e47feb67d63c7dd22916",
+    "tools/local_data/intake_service.py": "sha256:1df1d767027244daddd91b40538ea46db6c3aa5dd5e8054b108e78a2e601ac5c"
+  },
+  "artifact_paths": [
+    "docs/runbooks/kfm-projects-consolidation.md",
+    "docs/runbooks/raw-data-intake.md",
+    "tests/local_data/test_atlas.py",
+    "tests/local_data/test_consolidate.py",
+    "tests/local_data/test_intake.py",
+    "tests/local_data/test_intake_limits.py",
+    "tools/local_data/README.md",
+    "tools/local_data/atlas.py",
+    "tools/local_data/atlas_worker.py",
+    "tools/local_data/catalogs/github-storage-budget.json",
+    "tools/local_data/consolidate.py",
+    "tools/local_data/intake.py",
+    "tools/local_data/intake_desk/desk.js",
+    "tools/local_data/intake_desk/index.html",
+    "tools/local_data/intake_route.py",
+    "tools/local_data/intake_service.py"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "docs/doctrine/directory-rules.md",
+      "id": "Adopted Directory Rules",
+      "validated": true
+    },
+    {
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "id": "Accepted ADR-0029",
+      "validated": true
+    },
+    {
+      "evidence_ref": "https://docs.github.com/en/repositories/creating-and-managing-repositories/repository-limits",
+      "id": "GitHub repository limits",
+      "validated": true
+    },
+    {
+      "evidence_ref": "https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases",
+      "id": "GitHub release limits",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-10-12T02:25:44.944262+00:00",
+  "emitter": "Codex owning conversation",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "main@b194938f9e8abc076f82c75b32e0dbec25add8ca",
+      "docs/doctrine/directory-rules.md",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "tools/local_data/intake.py",
+      "inspected owner-local atlas source; content provenance retained privately"
+    ]
+  },
+  "model_identity": {
+    "model": "GPT-6 Codex agent",
+    "provider": "OpenAI",
+    "version": "Runtime build identifier not exposed"
+  },
+  "notes": "A review-grade code/operator tranche of an active broader curation/consolidation goal. Inventory statistics are metadata observations, not duplicate or byte-integrity proof. Copy tooling retains originals and consumers; whole-project migration remains incomplete. New atlas code preserves inspected local features and restores current-main safeguards. GitHub usage is a dated estimate and mutable CI snapshot. Source admission, merge, release, deployment and publication remain independent. Pending human review is not approval.",
+  "override_record": null,
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "policy_decisions": [],
+  "prompt_or_contract": "sha256:b5f6c9afe537e3d04ccdf376432eadecf1db375385c1b42aa3ee12e1066c41df",
+  "receipt_id": "genrec-kfm-workstation-consolidation-20261011",
+  "truth_labels": {
+    "docs/runbooks/kfm-projects-consolidation.md": "NEEDS VERIFICATION",
+    "docs/runbooks/raw-data-intake.md": "NEEDS VERIFICATION",
+    "tests/local_data/test_atlas.py": "CONFIRMED",
+    "tests/local_data/test_consolidate.py": "CONFIRMED",
+    "tests/local_data/test_intake.py": "CONFIRMED",
+    "tests/local_data/test_intake_limits.py": "CONFIRMED",
+    "tools/local_data/README.md": "NEEDS VERIFICATION",
+    "tools/local_data/atlas.py": "CONFIRMED",
+    "tools/local_data/atlas_worker.py": "CONFIRMED",
+    "tools/local_data/catalogs/github-storage-budget.json": "CONFIRMED",
+    "tools/local_data/consolidate.py": "CONFIRMED",
+    "tools/local_data/intake.py": "CONFIRMED",
+    "tools/local_data/intake_desk/desk.js": "CONFIRMED",
+    "tools/local_data/intake_desk/index.html": "CONFIRMED",
+    "tools/local_data/intake_route.py": "CONFIRMED",
+    "tools/local_data/intake_service.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "tests/local_data full pytest suite",
+      "outcome": "PASS",
+      "reason": "371 passed and 188 subtests passed; before final malformed-atlas-value guard, followed by focused rerun"
+    },
+    {
+      "gate": "final atlas changed-area tests",
+      "outcome": "PASS",
+      "reason": "10 tests including malformed enum/compare values, legacy source-binding holds and digest changes"
+    },
+    {
+      "gate": "optional local-data dependency cases",
+      "outcome": "SKIPPED",
+      "reason": "3 optional dependency cases skipped by the suite"
+    },
+    {
+      "gate": "documentation metadata and local links",
+      "outcome": "PASS",
+      "reason": "3 documents, zero metadata warnings/failures; 25 local link targets"
+    },
+    {
+      "gate": "repository topology",
+      "outcome": "PASS",
+      "reason": "14770 indexed paths, zero invariant/new drift findings; 93 inherited baselined warnings"
+    },
+    {
+      "gate": "intake desk JavaScript syntax",
+      "outcome": "PASS",
+      "reason": "node --check completed successfully"
+    },
+    {
+      "gate": "host installation, full real-holdings reanalysis and browser acceptance",
+      "outcome": "SKIPPED",
+      "reason": "These independent steps remain pending; no deployment or public release performed"
+    },
+    {
+      "gate": "Codex Security native immutable diff review",
+      "outcome": "PASS",
+      "reason": "Scan1a53c867-00e0-4ff8-8691-4bc6a9d28a3f completed on b194938f9e8a..f394fef548f0 with9source files and8supporting artifacts, zero reportable findings. Final delta corrects documentation/docstring only and was manually checked; no executable behavior changed."
+    }
+  ]
+}

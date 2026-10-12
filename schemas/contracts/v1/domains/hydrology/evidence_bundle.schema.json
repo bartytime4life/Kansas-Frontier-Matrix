@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/domains/hydrology/evidence_bundle.schema.json",
+  "title": "evidence_bundle",
+  "type": "object",
+  "description": "Hydrology domain alias of common evidence_bundle contract.",
+  "x-kfm": {
+    "contract_doc": "contracts/domains/hydrology/evidence_bundle.md",
+    "fixtures_root": "fixtures/domains/hydrology/evidence_bundle/",
+    "validator": "tools/validators/domains/hydrology/validate_evidence_bundle.py",
+    "policy": "policy/domains/hydrology/",
+    "status": "PROPOSED"
+  },
+  "allOf": [
+    {
+      "$ref": "https://schemas.kfm.local/contracts/v1/evidence/evidence_bundle.schema.json"
+    }
+  ],
+  "unevaluatedProperties": false
+}

@@ -1,0 +1,23 @@
+{
+  "object_type": "RuntimeVerificationReceipt",
+  "schema_version": "1.0.0",
+  "receipt_id": "kfm://receipt/runtime-verification/r-checkpoint-001",
+  "job_id": "job-runtime-002",
+  "artifact_ref": "pmtiles://kansas/hydrology/v1",
+  "manifest_ref": "kfm://release/manifest/hydrology-v1",
+  "source_url": "https://example.invalid/kansas-hydrology.pmtiles",
+  "bytes_processed": 8388608,
+  "checkpoint_index": 1,
+  "partial_digest": {
+    "algorithm": "sha256",
+    "encoding": "hex",
+    "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  "status": "CHECKPOINTED",
+  "recorded_at": "2026-04-12T18:00:13Z",
+  "prior_receipt_ref": null,
+  "verifier": {
+    "surface": "runtime-worker",
+    "version": "0.1.0"
+  }
+}

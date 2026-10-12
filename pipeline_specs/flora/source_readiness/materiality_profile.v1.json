@@ -1,0 +1,54 @@
+{
+  "object_type": "FloraSourceReadinessMaterialityProfile",
+  "schema_version": "1.0.0",
+  "status": "PROPOSED_INACTIVE",
+  "profile_id": "kfm://materiality-profile/flora/source-readiness/occurrence-dataset-v1",
+  "profile_version": "1.0.0",
+  "spec_hash": "sha256:5557f00272a42fa3d7cc964291d85a336162177b399fa1e960a9c1b848e2ce39",
+  "domain": "flora",
+  "sublane": "source_readiness",
+  "analysis_unit_kind": "occurrence_dataset",
+  "digest_algorithm": "sha256",
+  "canonicalization_profile": "kfm-canonical-json-v1",
+  "combination": "ANY",
+  "triggers": {
+    "georeferenced_fraction_delta": {
+      "operator": ">",
+      "threshold": 0.05,
+      "unit": "fraction"
+    },
+    "specimen_backed_fraction_delta": {
+      "operator": ">",
+      "threshold": 0.1,
+      "unit": "fraction"
+    },
+    "license_resolved_fraction_delta": {
+      "operator": ">",
+      "threshold": 0.0,
+      "unit": "fraction"
+    },
+    "coordinate_uncertainty_p95_delta_km": {
+      "operator": ">",
+      "threshold": 5.0,
+      "unit": "kilometre"
+    },
+    "freshness_stale_state_change": {
+      "operator": "changed",
+      "stale_after_days": 90,
+      "unit": "day"
+    },
+    "api_access_state_change": {
+      "operator": "changed"
+    },
+    "sensitivity_posture_change": {
+      "operator": "changed"
+    }
+  },
+  "governance": {
+    "source_activated": false,
+    "policy_evaluated": false,
+    "promotion_authorized": false,
+    "public_use_allowed": false,
+    "release_ref": null
+  }
+}

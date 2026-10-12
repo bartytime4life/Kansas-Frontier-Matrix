@@ -1,0 +1,51 @@
+{
+  "receipt_id": "genrec-release-candidates-atmosphere-readme-92c61633",
+  "contract_version": "3.0.0",
+  "receipt_type": "GenerationReceipt",
+  "status": "PROPOSED",
+  "generated_at": "2026-07-18T11:34:03-05:00",
+  "repository": "bartytime4life/Kansas-Frontier-Matrix",
+  "base_commit": "0c28949d97cc718bd25b9cfa2a6470d46dc67f8d",
+  "branch": "agent/release-candidates-atmosphere-readme-20260718",
+  "target_path": "release/candidates/atmosphere/README.md",
+  "previous_blob": "9a454a6a77f2393583d505c7a84f2828a236fced",
+  "new_blob": "2cff863a65c035cc167583ecae481c03580fc24a",
+  "sha256": "92c616335558e0c83cd8db47bb9dc0d4b60e0a0922a13aa5f5e648326af284ba",
+  "truth_labels": {
+    "confirmed": [
+      "The Atmosphere candidate-lane README existed at the pinned base and was updated in place.",
+      "The bounded repository search surfaced the parent README but no child Atmosphere candidate dossier.",
+      "The domain-atmosphere workflow checks that this lane contains no non-README candidate record and retains explicit validation, proof, and release-dry-run holds.",
+      "The Atmosphere release index is a draft navigation surface whose release register is intentionally empty and whose examples are illustrative rather than real releases.",
+      "The Atmosphere proof parent and pm25_2026 child are documented, but concrete proof inventory, schemas, validators, fixtures, access controls, and release linkage remain unverified.",
+      "The Atmosphere test lane is a scaffold, the domain policy README is a greenfield scaffold, and the general release-dry-run workflow remains TODO-only.",
+      "The published Atmosphere README defines a release-gated carrier boundary while emitted artifact, manifest, and governed-route inventory remains unverified.",
+      "CODEOWNERS routes release review to bartytime4life while explicitly denying that routing is stewardship, review completion, release approval, or publication authority."
+    ],
+    "proposed": [
+      "release/candidates/atmosphere/ should operate as a repository-grounded, freshness-aware Atmosphere candidate index and pre-publication review contract without becoming source, evidence, policy, review, release, regulatory, medical, emergency, or publication authority."
+    ],
+    "needs_verification": [
+      "Exhaustive child inventory and deterministic candidate-index generation.",
+      "Candidate identity, artifact-manifest, object-family, pollutant, unit, averaging-window, grid, time, source-admission, rights, QA, correction, and EvidenceBundle contracts.",
+      "Executable knowledge-character, freshness, stale-state, caveat, public-boundary, no-network, policy, fixture, validator, and proof behavior.",
+      "Candidate-to-review, PromotionDecision, ReleaseManifest, correction, withdrawal, supersession, and rollback topology and operational handoff.",
+      "Correction consumers, cache invalidation, rollback drills, branch protection, required checks, immutable action pinning, and independent reviewer assignments."
+    ]
+  },
+  "changes": [
+    "Replaced generic Atmosphere candidate-lane guidance with a repository-grounded, freshness-aware candidate index and pre-publication review contract.",
+    "Recorded that no child candidate dossier or active candidate is established by the bounded inspection.",
+    "Preserved the exact A candidate is not a release workflow compatibility sentence and publication-not_yet marker.",
+    "Separated candidate review from source, evidence, contract, schema, policy, validation, review, manifest, correction, rollback, publication, regulatory, medical, emergency, and public-client authority.",
+    "Added finite candidate states and holds, admission and identity rules, knowledge-character and source-role anti-collapse, time and freshness controls, release gates, a required dossier structure, validation and automation posture, review handoff, correction and rollback discipline, public API/map/AI boundaries, evidence ledger, definition of done, open verification, and documentation rollback."
+  ],
+  "authority_boundary": "This receipt records an AI-authored documentation revision. It is not an Atmosphere candidate, SourceDescriptor, EvidenceBundle, PolicyDecision, ReviewRecord, ValidationReport, PromotionDecision, ReleaseManifest, CorrectionNotice, WithdrawalNotice, RollbackCard, AQI product, medical advice, regulatory determination, emergency alert, steward approval, release approval, publication authority, or proof of runtime behavior.",
+  "rollback": {
+    "strategy": "Close the draft pull request before merge, or revert the generated-receipt commit and README commit in reverse order after merge.",
+    "restores_blob": "9a454a6a77f2393583d505c7a84f2828a236fced"
+  },
+  "human_review": {
+    "state": "pending"
+  }
+}

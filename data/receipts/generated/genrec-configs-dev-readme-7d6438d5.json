@@ -1,0 +1,163 @@
+{
+  "receipt_id": "genrec-configs-dev-readme-7d6438d5",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "configs/dev/README.md"
+  ],
+  "artifact_hashes": {
+    "configs/dev/README.md": "sha256:7d6438d56faf24ea2d7fdd2e3ecb8509ff92d424c0e10060c34b705d6efbb953"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-13-session"
+  },
+  "prompt_or_contract": "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "file_search",
+      "web",
+      "python"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM GitHub Repository Documentation Implementation Agent — Full Operating Prompt v3.1",
+      "Directory Rules.pdf",
+      "Kansas Frontier Matrix — AI Build Operating Contract.md"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/b6bcc4cd27dc8c0fa1f74aa5b989cb3240e90aa8",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b6bcc4cd27dc8c0fa1f74aa5b989cb3240e90aa8/configs/dev/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b6bcc4cd27dc8c0fa1f74aa5b989cb3240e90aa8/configs/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b6bcc4cd27dc8c0fa1f74aa5b989cb3240e90aa8/configs/examples/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b6bcc4cd27dc8c0fa1f74aa5b989cb3240e90aa8/configs/local/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b6bcc4cd27dc8c0fa1f74aa5b989cb3240e90aa8/configs/templates/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b6bcc4cd27dc8c0fa1f74aa5b989cb3240e90aa8/configs/test/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b6bcc4cd27dc8c0fa1f74aa5b989cb3240e90aa8/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b6bcc4cd27dc8c0fa1f74aa5b989cb3240e90aa8/docs/security/SECRETS.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b6bcc4cd27dc8c0fa1f74aa5b989cb3240e90aa8/.github/CODEOWNERS",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b6bcc4cd27dc8c0fa1f74aa5b989cb3240e90aa8/.github/PULL_REQUEST_TEMPLATE.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b6bcc4cd27dc8c0fa1f74aa5b989cb3240e90aa8/docs/runbooks/FIRST_GOVERNED_PR_RUNBOOK.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b6bcc4cd27dc8c0fa1f74aa5b989cb3240e90aa8/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/581c9e52ebce31432eba11e94d0a00883e037dba/configs/dev/README.md"
+    ]
+  },
+  "truth_labels": {
+    "configs/dev/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-preflight",
+      "outcome": "PASS",
+      "reason": "Repository identity, permissions, default branch, pinned base commit, target blob, duplicate branch/PR state, parent and sibling config lanes, Directory Rules, secrets doctrine, CODEOWNERS, and PR contract were inspected."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "The documentation update remains in the existing configs/ responsibility root. The paired receipt uses the established data/receipts/generated/ lane. No new root, authority home, or lifecycle phase is created."
+    },
+    {
+      "gate": "bounded-inventory",
+      "outcome": "PASS",
+      "reason": "Repository search returned README.md as the only result located inside configs/dev/, and named probes for dev.yaml, .env.example, local.template.yaml, and validation.md returned Not Found. The README labels this as bounded rather than exhaustive."
+    },
+    {
+      "gate": "sibling-lane-reconciliation",
+      "outcome": "PASS",
+      "reason": "The dev lane is distinguished from configs/examples, configs/local, configs/templates, configs/test, fixtures, root examples, runtime, infra, and pipeline_specs without creating parallel authority."
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "Meta block, heading hierarchy, quick-link targets, tables, fenced blocks, definition of done, verification backlog, migration, rollback, and no-loss appendix were checked. All targeted anchors resolved and fences were balanced."
+    },
+    {
+      "gate": "secret-live-binding-review",
+      "outcome": "PASS",
+      "reason": "Changed text contains no private key blocks or common live token patterns and introduces no credential, private endpoint, personal path, deployment binding, or sensitive source payload."
+    },
+    {
+      "gate": "workflow-trigger-preflight",
+      "outcome": "PASS",
+      "reason": "Only documentation and its required provenance receipt are changed. No workflow, executable config, policy, schema, runtime, infrastructure, deployment, or public-surface file is modified."
+    },
+    {
+      "gate": "remote-readback",
+      "outcome": "PASS",
+      "reason": "The committed UTF-8 README was read back from the scoped branch and matched the v0.3 metadata and governed-development title."
+    },
+    {
+      "gate": "artifact-integrity",
+      "outcome": "PASS",
+      "reason": "Raw UTF-8 SHA-256 is 7d6438d56faf24ea2d7fdd2e3ecb8509ff92d424c0e10060c34b705d6efbb953; Git blob SHA-1 returned by GitHub is e05de7866a7f2423f462002a687f79c967973ac1."
+    },
+    {
+      "gate": "executable-config-tests",
+      "outcome": "SKIPPED",
+      "reason": "No YAML, JSON, TOML, dotenv, loader, consumer, runtime, pipeline, or deployment payload was created or changed."
+    },
+    {
+      "gate": "repository-native-ci",
+      "outcome": "SKIPPED",
+      "reason": "Repository-native required checks are not yet available at receipt emission time and remain subject to the draft pull request."
+    },
+    {
+      "gate": "generated-receipt-schema",
+      "outcome": "PASS",
+      "reason": "Required fields, types, hash patterns, truth-label enum, validation-outcome enum, review state, links, and notes length were checked against the inspected Draft 2020-12 schema."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "KFM-OPERATING-PROMPT-V3.1",
+      "validated": true,
+      "evidence_ref": "attached://KFM GitHub Repository Documentation Implementation Agent — Full Operating Prompt v3.1"
+    },
+    {
+      "id": "KFM-DIRECTORY-RULES",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/b6bcc4cd27dc8c0fa1f74aa5b989cb3240e90aa8/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "CONFIGS-ROOT-CONTRACT",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/b6bcc4cd27dc8c0fa1f74aa5b989cb3240e90aa8/configs/README.md"
+    },
+    {
+      "id": "KFM-SECRETS-STANDARD",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/b6bcc4cd27dc8c0fa1f74aa5b989cb3240e90aa8/docs/security/SECRETS.md"
+    },
+    {
+      "id": "KFM-PR-CONTRACT",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/b6bcc4cd27dc8c0fa1f74aa5b989cb3240e90aa8/.github/PULL_REQUEST_TEMPLATE.md"
+    },
+    {
+      "id": "GENERATED-RECEIPT-SCHEMA",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/b6bcc4cd27dc8c0fa1f74aa5b989cb3240e90aa8/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-13T18:31:00Z",
+  "emitter": "ai-builder/openai-gpt-5.6-thinking",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored documentation-only update on a scoped review branch. The README is reconciled with current repository evidence, Directory Rules, secrets doctrine, sibling config lanes, CODEOWNERS, and the PR contract. No development config payload, consumer, loader, schema, contract, policy, validator, test, workflow, deployment binding, runtime behavior, source activation, release decision, or public artifact was created or modified. Human review remains pending; this receipt is well-formed but not merge-authorizing."
+}

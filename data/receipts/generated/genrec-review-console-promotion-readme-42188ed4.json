@@ -1,0 +1,85 @@
+{
+  "receipt_id": "genrec-review-console-promotion-readme-42188ed4",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/review-console/src/features/promotion/README.md"
+  ],
+  "artifact_hashes": {
+    "apps/review-console/src/features/promotion/README.md": "sha256:42188ed404f559aaaced878964125a0594d23712869d719466abbd4df535ad44"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-19"
+  },
+  "prompt_or_contract": "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "container"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85"
+    ],
+    "attached_docs": [
+      "KFM GitHub Repository Documentation Implementation Agent v3.1 — prior project prompt"
+    ],
+    "evidence_refs": [
+      "repo:bartytime4life/Kansas-Frontier-Matrix:apps/review-console/src/features/promotion/README.md@74c669f23e675fc48fbff72a5c0c9bb055fb1080",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:contracts/release/promotion_decision.md@74c669f23e675fc48fbff72a5c0c9bb055fb1080",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:schemas/contracts/v1/release/promotion_decision.schema.json@74c669f23e675fc48fbff72a5c0c9bb055fb1080",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:tools/validators/release/validate_promotion_decision.py@74c669f23e675fc48fbff72a5c0c9bb055fb1080",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:tests/release/test_promotion_decision_schema.py@74c669f23e675fc48fbff72a5c0c9bb055fb1080",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:pipelines/domains/hydrology/promote.py@74c669f23e675fc48fbff72a5c0c9bb055fb1080",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:release/promotion_decisions/hydrology/run-local-smoke.json@74c669f23e675fc48fbff72a5c0c9bb055fb1080",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:.github/workflows/promotion-gate.yml@74c669f23e675fc48fbff72a5c0c9bb055fb1080"
+    ]
+  },
+  "truth_labels": {
+    "apps/review-console/src/features/promotion/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "One H1, closed KFM Meta Block, balanced fences, unique anchors, internal links, no trailing whitespace, and final newline."
+    },
+    {
+      "gate": "directory-rules-preflight",
+      "outcome": "PASS",
+      "reason": "Existing app-local path retained; contract, schema, policy, evidence, release, and lifecycle authority remain in owning roots."
+    },
+    {
+      "gate": "remote-byte-identity",
+      "outcome": "PASS",
+      "reason": "Git blob f31ab324d4ea2c0a12a58e2b1b322a3e75706b65 exactly matches the validated README bytes."
+    },
+    {
+      "gate": "repository-native-tests",
+      "outcome": "SKIPPED",
+      "reason": "API-only documentation workflow; no mounted checkout or local repository test execution claimed."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-19T18:07:00Z",
+  "emitter": "OpenAI GPT-5.6 Thinking",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Process-memory receipt for a documentation-only update. It is not a PromotionDecision, ReviewRecord, PolicyDecision, ReleaseManifest, RollbackCard, evidence, proof, lifecycle transition, release approval, deployment, or publication authority."
+}

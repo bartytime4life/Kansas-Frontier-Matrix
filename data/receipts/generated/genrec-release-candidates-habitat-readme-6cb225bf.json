@@ -1,0 +1,53 @@
+{
+  "receipt_id": "genrec-release-candidates-habitat-readme-6cb225bf",
+  "contract_version": "3.0.0",
+  "receipt_type": "GenerationReceipt",
+  "status": "PROPOSED",
+  "generated_at": "2026-07-18T13:21:00-05:00",
+  "repository": "bartytime4life/Kansas-Frontier-Matrix",
+  "base_commit": "7b9c4592fc53ec6ac5182782bd62225816e86a6c",
+  "branch": "agent/release-candidates-habitat-readme-20260718",
+  "target_path": "release/candidates/habitat/README.md",
+  "previous_blob": "bd0ccc0dfaaee950d0ca3e42f0395d391a50e0fc",
+  "new_blob": "e55b9344cda673e069bce5525937f5a50666bf63",
+  "sha256": "6cb225bf974398424c03b4454a2c34e1114a0964cabf01b8275c45c4962e3b95",
+  "truth_labels": {
+    "confirmed": [
+      "The Habitat parent candidate-lane README existed at the pinned base and was updated in place.",
+      "Bounded repository inspection established the parent README and two child README indexes: ecoregions and habitat_fauna_thin_slice.",
+      "Both child indexes explicitly report no child candidate dossier or active candidate.",
+      "The Habitat release index says no releases are currently indexed and marks its Habitat Fauna thin-slice row as illustrative rather than a real release.",
+      "The domain-habitat workflow retains a recursive non-README candidate detector and explicit validation, proof, and release-readiness holds.",
+      "The Habitat proof lane states implementation depth remains UNKNOWN and no accepted Habitat proof producer or inventory was established.",
+      "The Habitat domain policy README remains a greenfield scaffold rather than proof of executable policy enforcement.",
+      "Current Habitat test and validator surfaces include documentation and placeholder or scaffold modules; accepted suite ownership, pass rate, and detector behavior remain unresolved.",
+      "Habitat sensitivity guidance identifies join-induced sensitivity and requires the resulting product to inherit the most restrictive applicable posture.",
+      "The shared release-dry-run workflow remains TODO-only in recent observed runs."
+    ],
+    "proposed": [
+      "release/candidates/habitat/ should operate as a repository-grounded parent candidate index, governed child-lane router, and deny-by-default pre-publication review contract without becoming Habitat truth, policy, proof, release, or publication authority."
+    ],
+    "needs_verification": [
+      "Exhaustive recursive candidate inventory and deterministic candidate-index generation.",
+      "Canonical candidate identity, dossier, artifact-manifest, object-family, source-role, model, evidence, sensitivity, public-representation, correction, and rollback contracts.",
+      "Accepted parent-versus-child routing and ownership for future Habitat sublanes.",
+      "Executable policy, deterministic fixtures, accepted tests and validators, EvidenceBundle resolution, proof production, no-leak enforcement, and catalog closure.",
+      "Candidate-to-review, PromotionDecision, ReleaseManifest, correction, withdrawal, supersession, rollback, derivative invalidation, branch-protection, and independent-review topology."
+    ]
+  },
+  "changes": [
+    "Replaced generic Habitat candidate guidance with a repository-grounded parent candidate index and child-lane router.",
+    "Recorded the bounded three-README inventory and no-active-candidate posture.",
+    "Indexed the governed ecoregions and habitat_fauna_thin_slice child lanes without treating either README as a candidate.",
+    "Preserved the exact A candidate is not a release workflow sentence and publication-not_yet posture.",
+    "Added finite candidate states and holds, routing rules, admission fields, Habitat identity and source-role controls, model-observation-regulatory anti-collapse, join-induced sensitivity, geoprivacy and all-surface no-leak rules, time and stale-state discipline, release gates, a public-safe dossier template, validation and automation posture, review handoff, correction and rollback discipline, public-client boundaries, evidence ledger, definition of done, open verification, and documentation rollback."
+  ],
+  "authority_boundary": "This receipt records an AI-authored documentation revision. It is not a Habitat candidate, SourceDescriptor, semantic contract, schema, Habitat observation, model result, sensitive-join decision, geoprivacy transform, EvidenceBundle, PolicyDecision, ReviewRecord, ValidationReport, PromotionDecision, ReleaseManifest, public artifact, CorrectionNotice, WithdrawalNotice, RollbackCard, steward approval, release approval, publication authority, or proof of runtime behavior.",
+  "rollback": {
+    "strategy": "Close the draft pull request before merge, or revert the generated-receipt commit and README commit in reverse order after merge.",
+    "restores_blob": "bd0ccc0dfaaee950d0ca3e42f0395d391a50e0fc"
+  },
+  "human_review": {
+    "state": "pending"
+  }
+}

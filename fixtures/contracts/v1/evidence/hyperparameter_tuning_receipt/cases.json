@@ -1,0 +1,170 @@
+{
+  "fixture_version": "1.0.0",
+  "base_candidate": {
+    "object_type": "HyperparameterTuningReceiptCandidate",
+    "schema_version": "1.0.0",
+    "profile": "kfm.evidence.hyperparameter-tuning-receipt.fixture.v1",
+    "profile_spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "receipt_ref": "kfm:hyperparameter-tuning-receipt:0000000000000000000000000000000000000000000000000000000000000000",
+    "source_card": "KFM-P18-INV-160",
+    "observed_at": "2026-08-11T18:00:00Z",
+    "intended_use": "INTERNAL_MODEL_QA",
+    "tuning_state": "COMPLETE",
+    "model": {
+      "model_card": {
+        "ref": "kfm:model-card:synthetic-habitat-v1",
+        "digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "resolution": "RESOLVED"
+      },
+      "model_artifact": {
+        "ref": "artifact:model:synthetic-habitat-v1",
+        "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+        "resolution": "RESOLVED"
+      },
+      "layer_manifest": {
+        "ref": "kfm:layer-manifest:synthetic-habitat-v1",
+        "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+        "resolution": "RESOLVED"
+      }
+    },
+    "inputs": {
+      "training_run_receipt": {
+        "ref": "kfm:model-run-receipt:synthetic-training-v1",
+        "digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+        "resolution": "RESOLVED"
+      },
+      "evaluation_split_receipt": {
+        "ref": "kfm:model-evaluation-split-receipt:5555555555555555555555555555555555555555555555555555555555555555",
+        "digest": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+        "resolution": "RESOLVED"
+      },
+      "evaluation_report": {
+        "ref": "kfm:evaluation-report:synthetic-habitat-v1",
+        "digest": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+        "resolution": "RESOLVED"
+      }
+    },
+    "search": {
+      "method": "GRID_SEARCH",
+      "method_definition": null,
+      "random_seed": null,
+      "planned_trials": 12,
+      "completed_trials": 12,
+      "failed_trials": 0,
+      "search_space": [
+        {
+          "parameter_name": "learning_rate",
+          "value_kind": "FLOAT",
+          "selection_mode": "DISCRETE",
+          "domain_summary": "three public-safe candidate values from 0.01 through 0.10",
+          "domain_spec_ref": "kfm:tuning-domain:synthetic-learning-rate-v1",
+          "domain_digest": "sha256:7777777777777777777777777777777777777777777777777777777777777777",
+          "candidate_count": 3
+        },
+        {
+          "parameter_name": "max_depth",
+          "value_kind": "INT",
+          "selection_mode": "DISCRETE",
+          "domain_summary": "four public-safe integer candidates from 2 through 8",
+          "domain_spec_ref": "kfm:tuning-domain:synthetic-max-depth-v1",
+          "domain_digest": "sha256:8888888888888888888888888888888888888888888888888888888888888888",
+          "candidate_count": 4
+        }
+      ]
+    },
+    "objective": {
+      "metric_ref": "kfm:metric:synthetic-validation-loss-v1",
+      "direction": "MINIMIZE",
+      "validation_partition_ref": "kfm:partition:synthetic-validation-v1",
+      "selection_rule_ref": "kfm:selection-rule:minimum-validation-loss-v1"
+    },
+    "selection": {
+      "selected_trial_ref": "kfm:tuning-trial:synthetic-007",
+      "selected_trial_rank": 1,
+      "selected_values": [
+        {
+          "parameter_name": "learning_rate",
+          "value_kind": "FLOAT",
+          "canonical_value": "0.03"
+        },
+        {
+          "parameter_name": "max_depth",
+          "value_kind": "INT",
+          "canonical_value": "6"
+        }
+      ]
+    },
+    "reproducibility": {
+      "code_revision_ref": "git:synthetic-revision-abcdef0",
+      "environment_ref": "kfm:environment-lock:synthetic-model-v1",
+      "determinism_posture": "DETERMINISTIC",
+      "rerun_receipt_ref": null
+    },
+    "disclosure": {
+      "search_summary": null,
+      "evidence_bundle_refs": [],
+      "review_record_refs": [],
+      "generalization_assessment_ref": null,
+      "release_manifest_ref": null
+    },
+    "limitations": [
+      "DECLARATION_ONLY",
+      "NO_DATASET_ACCESS",
+      "NO_EVIDENCE_RESOLUTION",
+      "NO_METRIC_RECOMPUTATION",
+      "NO_MODEL_EXECUTION",
+      "NO_PUBLICATION_AUTHORITY",
+      "NO_SENSITIVE_VALUES",
+      "NO_TRAINING_EXECUTION"
+    ],
+    "authority_claims": {
+      "tuning_correctness": false,
+      "best_model": false,
+      "model_performance": false,
+      "generalization_authority": false,
+      "evidence_authority": false,
+      "policy_authority": false,
+      "review_authority": false,
+      "promotion_authority": false,
+      "release_authority": false,
+      "deployment_authority": false,
+      "publication_authority": false,
+      "public_use_authority": false
+    }
+  },
+  "cases": [
+    {"name": "pass_grid_search", "patch": {}, "expected_outcome": "PASS", "expected_codes": []},
+    {"name": "pass_random_search", "patch": {"search": {"method": "RANDOM_SEARCH", "random_seed": 20260811}, "reproducibility": {"determinism_posture": "SEEDED_STOCHASTIC"}}, "expected_outcome": "PASS", "expected_codes": []},
+    {"name": "pass_bayesian_optimization", "patch": {"search": {"method": "BAYESIAN_OPTIMIZATION", "random_seed": 41}, "reproducibility": {"determinism_posture": "SEEDED_STOCHASTIC"}}, "expected_outcome": "PASS", "expected_codes": []},
+    {"name": "pass_successive_halving", "patch": {"search": {"method": "SUCCESSIVE_HALVING", "random_seed": 42}, "reproducibility": {"determinism_posture": "SEEDED_STOCHASTIC"}}, "expected_outcome": "PASS", "expected_codes": []},
+    {"name": "pass_manual", "patch": {"search": {"method": "MANUAL", "planned_trials": 1, "completed_trials": 1}}, "expected_outcome": "PASS", "expected_codes": []},
+    {"name": "pass_custom", "patch": {"search": {"method": "CUSTOM", "method_definition": {"ref": "kfm:tuning-method:synthetic-custom-v1", "digest": "sha256:9999999999999999999999999999999999999999999999999999999999999999", "resolution": "RESOLVED"}}}, "expected_outcome": "PASS", "expected_codes": []},
+    {"name": "pass_public_claim_support", "patch": {"intended_use": "PUBLIC_CLAIM_SUPPORT_CANDIDATE", "disclosure": {"search_summary": "Synthetic bounded grid search selected the minimum declared validation loss.", "evidence_bundle_refs": ["kfm:evidence-bundle:synthetic-tuning-v1"], "review_record_refs": ["kfm:review-record:synthetic-tuning-v1"], "generalization_assessment_ref": "kfm:generalization-assessment:synthetic-habitat-v1"}}, "expected_outcome": "PASS", "expected_codes": []},
+
+    {"name": "abstain_incomplete", "patch": {"tuning_state": "INCOMPLETE"}, "expected_outcome": "ABSTAIN", "expected_codes": ["TUNING_INCOMPLETE"]},
+    {"name": "abstain_method_unresolved", "patch": {"search": {"method": "UNRESOLVED"}}, "expected_outcome": "ABSTAIN", "expected_codes": ["SEARCH_METHOD_UNRESOLVED"]},
+    {"name": "abstain_model_card_unresolved", "patch": {"model": {"model_card": {"digest": null, "resolution": "UNRESOLVED"}}}, "expected_outcome": "ABSTAIN", "expected_codes": ["REFERENCE_UNRESOLVED"]},
+    {"name": "abstain_evaluation_report_unresolved", "patch": {"inputs": {"evaluation_report": {"digest": null, "resolution": "UNRESOLVED"}}}, "expected_outcome": "ABSTAIN", "expected_codes": ["REFERENCE_UNRESOLVED"]},
+    {"name": "abstain_determinism_unknown", "patch": {"reproducibility": {"determinism_posture": "UNKNOWN"}}, "expected_outcome": "ABSTAIN", "expected_codes": ["REPRODUCIBILITY_UNRESOLVED"]},
+    {"name": "abstain_nondeterministic", "patch": {"reproducibility": {"determinism_posture": "NONDETERMINISTIC"}}, "expected_outcome": "ABSTAIN", "expected_codes": ["REPRODUCIBILITY_UNRESOLVED"]},
+
+    {"name": "deny_random_seed_missing", "patch": {"search": {"method": "RANDOM_SEARCH"}, "reproducibility": {"determinism_posture": "SEEDED_STOCHASTIC"}}, "expected_outcome": "DENY", "expected_codes": ["RANDOM_SEED_REQUIRED"]},
+    {"name": "deny_custom_definition_missing", "patch": {"search": {"method": "CUSTOM"}}, "expected_outcome": "DENY", "expected_codes": ["CUSTOM_METHOD_DEFINITION_REQUIRED"]},
+    {"name": "deny_selected_parameter_missing", "patch": {"selection": {"selected_values": [{"parameter_name": "learning_rate", "value_kind": "FLOAT", "canonical_value": "0.03"}]}}, "expected_outcome": "DENY", "expected_codes": ["SELECTED_PARAMETER_SET_MISMATCH"]},
+    {"name": "deny_selected_value_kind", "patch": {"selection": {"selected_values": [{"parameter_name": "learning_rate", "value_kind": "STRING", "canonical_value": "0.03"}, {"parameter_name": "max_depth", "value_kind": "INT", "canonical_value": "6"}]}}, "expected_outcome": "DENY", "expected_codes": ["SELECTED_VALUE_KIND_MISMATCH"]},
+    {"name": "deny_search_space_order", "patch": {"search": {"search_space": [{"parameter_name": "max_depth", "value_kind": "INT", "selection_mode": "DISCRETE", "domain_summary": "four public-safe integer candidates from 2 through 8", "domain_spec_ref": "kfm:tuning-domain:synthetic-max-depth-v1", "domain_digest": "sha256:8888888888888888888888888888888888888888888888888888888888888888", "candidate_count": 4}, {"parameter_name": "learning_rate", "value_kind": "FLOAT", "selection_mode": "DISCRETE", "domain_summary": "three public-safe candidate values from 0.01 through 0.10", "domain_spec_ref": "kfm:tuning-domain:synthetic-learning-rate-v1", "domain_digest": "sha256:7777777777777777777777777777777777777777777777777777777777777777", "candidate_count": 3}]}}, "expected_outcome": "DENY", "expected_codes": ["SEARCH_SPACE_NOT_CANONICAL"]},
+    {"name": "deny_selected_values_order", "patch": {"selection": {"selected_values": [{"parameter_name": "max_depth", "value_kind": "INT", "canonical_value": "6"}, {"parameter_name": "learning_rate", "value_kind": "FLOAT", "canonical_value": "0.03"}]}}, "expected_outcome": "DENY", "expected_codes": ["SELECTED_VALUES_NOT_CANONICAL"]},
+    {"name": "deny_trial_accounting", "patch": {"search": {"completed_trials": 10, "failed_trials": 3}}, "expected_outcome": "DENY", "expected_codes": ["TRIAL_ACCOUNTING_INVALID"]},
+    {"name": "deny_no_completed_trial", "patch": {"search": {"completed_trials": 0}}, "expected_outcome": "DENY", "expected_codes": ["COMPLETED_TRIAL_REQUIRED", "SELECTED_TRIAL_RANK_INVALID"]},
+    {"name": "deny_discrete_count_missing", "patch": {"search": {"search_space": [{"parameter_name": "learning_rate", "value_kind": "FLOAT", "selection_mode": "DISCRETE", "domain_summary": "three public-safe candidate values from 0.01 through 0.10", "domain_spec_ref": "kfm:tuning-domain:synthetic-learning-rate-v1", "domain_digest": "sha256:7777777777777777777777777777777777777777777777777777777777777777", "candidate_count": null}, {"parameter_name": "max_depth", "value_kind": "INT", "selection_mode": "DISCRETE", "domain_summary": "four public-safe integer candidates from 2 through 8", "domain_spec_ref": "kfm:tuning-domain:synthetic-max-depth-v1", "domain_digest": "sha256:8888888888888888888888888888888888888888888888888888888888888888", "candidate_count": 4}]}}, "expected_outcome": "DENY", "expected_codes": ["DOMAIN_CANDIDATE_COUNT_INVALID"]},
+    {"name": "deny_fixed_count_invalid", "patch": {"search": {"search_space": [{"parameter_name": "learning_rate", "value_kind": "FLOAT", "selection_mode": "FIXED", "domain_summary": "one public-safe fixed value", "domain_spec_ref": "kfm:tuning-domain:synthetic-learning-rate-v1", "domain_digest": "sha256:7777777777777777777777777777777777777777777777777777777777777777", "candidate_count": 3}, {"parameter_name": "max_depth", "value_kind": "INT", "selection_mode": "DISCRETE", "domain_summary": "four public-safe integer candidates from 2 through 8", "domain_spec_ref": "kfm:tuning-domain:synthetic-max-depth-v1", "domain_digest": "sha256:8888888888888888888888888888888888888888888888888888888888888888", "candidate_count": 4}]}}, "expected_outcome": "DENY", "expected_codes": ["DOMAIN_CANDIDATE_COUNT_INVALID"]},
+    {"name": "deny_public_summary_missing", "patch": {"intended_use": "PUBLIC_CLAIM_SUPPORT_CANDIDATE", "disclosure": {"evidence_bundle_refs": ["kfm:evidence-bundle:synthetic-tuning-v1"], "review_record_refs": ["kfm:review-record:synthetic-tuning-v1"], "generalization_assessment_ref": "kfm:generalization-assessment:synthetic-habitat-v1"}}, "expected_outcome": "DENY", "expected_codes": ["PUBLIC_SEARCH_SUMMARY_REQUIRED"]},
+    {"name": "deny_public_evidence_missing", "patch": {"intended_use": "PUBLIC_CLAIM_SUPPORT_CANDIDATE", "disclosure": {"search_summary": "Synthetic bounded search summary for review only.", "review_record_refs": ["kfm:review-record:synthetic-tuning-v1"], "generalization_assessment_ref": "kfm:generalization-assessment:synthetic-habitat-v1"}}, "expected_outcome": "DENY", "expected_codes": ["PUBLIC_EVIDENCE_REQUIRED"]},
+    {"name": "deny_public_review_missing", "patch": {"intended_use": "PUBLIC_CLAIM_SUPPORT_CANDIDATE", "disclosure": {"search_summary": "Synthetic bounded search summary for review only.", "evidence_bundle_refs": ["kfm:evidence-bundle:synthetic-tuning-v1"], "generalization_assessment_ref": "kfm:generalization-assessment:synthetic-habitat-v1"}}, "expected_outcome": "DENY", "expected_codes": ["PUBLIC_REVIEW_REQUIRED"]},
+    {"name": "deny_public_generalization_missing", "patch": {"intended_use": "PUBLIC_CLAIM_SUPPORT_CANDIDATE", "disclosure": {"search_summary": "Synthetic bounded search summary for review only.", "evidence_bundle_refs": ["kfm:evidence-bundle:synthetic-tuning-v1"], "review_record_refs": ["kfm:review-record:synthetic-tuning-v1"]}}, "expected_outcome": "DENY", "expected_codes": ["PUBLIC_GENERALIZATION_ASSESSMENT_REQUIRED"]},
+    {"name": "deny_profile_hash_mismatch", "patch": {}, "identity_overrides": {"profile_spec_hash": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"}, "expected_outcome": "DENY", "expected_codes": ["PROFILE_SPEC_HASH_MISMATCH"]},
+    {"name": "deny_receipt_ref_mismatch", "patch": {}, "identity_overrides": {"receipt_ref": "kfm:hyperparameter-tuning-receipt:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"}, "expected_outcome": "DENY", "expected_codes": ["RECEIPT_REF_MISMATCH"]},
+    {"name": "deny_authority_overclaim", "patch": {"authority_claims": {"publication_authority": true}}, "expected_outcome": "DENY", "expected_codes": ["SCHEMA_INVALID"]},
+    {"name": "error_tuning", "patch": {"tuning_state": "ERROR"}, "expected_outcome": "ERROR", "expected_codes": ["TUNING_ERROR"]}
+  ]
+}

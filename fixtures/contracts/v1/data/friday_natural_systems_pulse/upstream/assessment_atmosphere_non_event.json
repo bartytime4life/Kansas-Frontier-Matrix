@@ -1,0 +1,54 @@
+{
+  "assessment_id": "material-change:natural-systems:atmosphere:2026-03-20:non_event",
+  "baseline_ref": "kfm://dataset-version/natural-systems/atmosphere/2026-03-13",
+  "candidate_ref": "kfm://dataset-version/natural-systems/atmosphere/2026-03-20",
+  "classification": {
+    "change_class": "UNCHANGED",
+    "material": false,
+    "outcome": "NON_EVENT",
+    "reason_codes": [
+      "NO_BYTE_CHANGE"
+    ]
+  },
+  "comparison": {
+    "baseline_digest": "sha256:64a16df8954a61f0f24aea555426be39db169f8e6a37a2e19d92e84bfe51e1d9",
+    "byte_changed": false,
+    "candidate_digest": "sha256:64a16df8954a61f0f24aea555426be39db169f8e6a37a2e19d92e84bfe51e1d9",
+    "semantic_changed": false
+  },
+  "criteria": [],
+  "evidence": {
+    "diff_report_ref": null,
+    "source_refs": [
+      "kfm://source/synthetic/natural-systems/atmosphere"
+    ],
+    "validation_report_refs": []
+  },
+  "governance": {
+    "authority_created": false,
+    "policy_evaluated": false,
+    "promotion_authorized": false,
+    "public_use_allowed": false,
+    "release_ref": null,
+    "spec_hash": "sha256:a99fd1279a4703e27226fc1b5f385b006e057e1276e064fed012d0c2ff11da8d"
+  },
+  "lineage": {
+    "superseded_by": null,
+    "supersedes": null
+  },
+  "object_type": "MaterialChangeAssessment",
+  "profile": {
+    "canonicalization_profile": "kfm-canonical-json-v1",
+    "digest_algorithm": "sha256",
+    "profile_id": "kfm://materiality-profile/natural-systems/atmosphere/fixture-v1",
+    "profile_version": "1.0.0",
+    "spec_hash": "sha256:36eaa19b7d18394b187909d43199be208f82b29f94f0adcd0c91943fb8620aeb"
+  },
+  "schema_version": "1.0.0",
+  "subject_ref": "kfm://dataset/natural-systems/atmosphere",
+  "timing": {
+    "assessed_at": "2026-03-20T23:30:00Z",
+    "baseline_as_of": "2026-03-13T00:00:00Z",
+    "candidate_as_of": "2026-03-20T18:00:00Z"
+  }
+}

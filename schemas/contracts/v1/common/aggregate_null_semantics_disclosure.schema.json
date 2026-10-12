@@ -1,0 +1,162 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/common/aggregate_null_semantics_disclosure.schema.json",
+  "title": "AggregateNullSemanticsDisclosureCandidate",
+  "description": "Fixture-only aggregate NULL-semantics disclosure with no query execution, metric computation, imputation, evidence resolution, or authority effects.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "profile_spec_hash",
+    "source_card",
+    "observed_at",
+    "metric_report_ref",
+    "metric_report_digest",
+    "aggregate_statistic_ref",
+    "aggregate_statistic_digest",
+    "query_receipt",
+    "missingness_profile",
+    "semantics",
+    "disclosure",
+    "limitations",
+    "authority_claims"
+  ],
+  "properties": {
+    "object_type": {"const": "AggregateNullSemanticsDisclosureCandidate"},
+    "schema_version": {"const": "1.0.0"},
+    "profile": {"const": "kfm.common.aggregate-null-semantics-disclosure.fixture.v1"},
+    "profile_spec_hash": {"$ref": "#/$defs/sha256"},
+    "source_card": {"const": "KFM-P18-INV-430"},
+    "observed_at": {"type": "string", "format": "date-time"},
+    "metric_report_ref": {"$ref": "#/$defs/ref"},
+    "metric_report_digest": {"$ref": "#/$defs/sha256"},
+    "aggregate_statistic_ref": {"$ref": "#/$defs/ref"},
+    "aggregate_statistic_digest": {"$ref": "#/$defs/sha256"},
+    "query_receipt": {"$ref": "#/$defs/resolvable_ref"},
+    "missingness_profile": {"$ref": "#/$defs/resolvable_ref"},
+    "semantics": {"$ref": "#/$defs/semantics"},
+    "disclosure": {"$ref": "#/$defs/disclosure"},
+    "limitations": {
+      "const": [
+        "DECLARATION_ONLY",
+        "NO_RAW_SQL_OR_SOURCE_ROWS",
+        "NO_QUERY_EXECUTION_OR_METRIC_COMPUTATION",
+        "NO_IMPUTATION_OR_EVIDENCE_RESOLUTION",
+        "NO_POLICY_OR_REVIEW_AUTHORITY",
+        "NO_RELEASE_OR_PUBLICATION_AUTHORITY"
+      ]
+    },
+    "authority_claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "query_execution_authority",
+        "metric_computation_authority",
+        "imputation_authority",
+        "evidence_authority",
+        "policy_authority",
+        "review_authority",
+        "promotion_authority",
+        "release_authority",
+        "deployment_authority",
+        "publication_authority",
+        "public_use_authority"
+      ],
+      "properties": {
+        "query_execution_authority": {"const": false},
+        "metric_computation_authority": {"const": false},
+        "imputation_authority": {"const": false},
+        "evidence_authority": {"const": false},
+        "policy_authority": {"const": false},
+        "review_authority": {"const": false},
+        "promotion_authority": {"const": false},
+        "release_authority": {"const": false},
+        "deployment_authority": {"const": false},
+        "publication_authority": {"const": false},
+        "public_use_authority": {"const": false}
+      }
+    }
+  },
+  "$defs": {
+    "ref": {
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 512,
+      "pattern": "^[A-Za-z][A-Za-z0-9+.-]*:[^\\s]+$"
+    },
+    "nullable_ref": {"anyOf": [{"$ref": "#/$defs/ref"}, {"type": "null"}]},
+    "sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "field_name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z_][A-Za-z0-9_.-]*$"
+    },
+    "field_array": {
+      "type": "array",
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/field_name"}
+    },
+    "resolvable_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ref", "digest", "resolution"],
+      "properties": {
+        "ref": {"$ref": "#/$defs/ref"},
+        "digest": {"$ref": "#/$defs/sha256"},
+        "resolution": {"enum": ["RESOLVED", "UNRESOLVED"]}
+      }
+    },
+    "semantics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "aggregate_kind",
+        "value_fields",
+        "group_by_fields",
+        "input_null_handling",
+        "group_null_handling",
+        "empty_input_result",
+        "count_population_disclosure_ref",
+        "imputation_receipt_ref"
+      ],
+      "properties": {
+        "aggregate_kind": {
+          "enum": ["ROW_COUNT", "VALUE_COUNT", "DISTINCT_COUNT", "SUM", "AVERAGE", "MINIMUM", "MAXIMUM", "UNRESOLVED"]
+        },
+        "value_fields": {"$ref": "#/$defs/field_array"},
+        "group_by_fields": {"$ref": "#/$defs/field_array"},
+        "input_null_handling": {"enum": ["INCLUDED_AS_ROW", "EXCLUDED", "IMPUTED", "ERROR", "UNRESOLVED"]},
+        "group_null_handling": {"enum": ["NOT_GROUPED", "OWN_GROUP", "ROW_EXCLUDED", "ERROR", "UNRESOLVED"]},
+        "empty_input_result": {"enum": ["ZERO", "NULL", "NO_RESULT", "ERROR", "UNRESOLVED"]},
+        "count_population_disclosure_ref": {"$ref": "#/$defs/nullable_ref"},
+        "imputation_receipt_ref": {"$ref": "#/$defs/nullable_ref"}
+      }
+    },
+    "disclosure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "intended_use", "summary", "details_surface", "review_record_refs"],
+      "properties": {
+        "state": {"enum": ["COMPLETE_FOR_DECLARED_SCOPE", "INCOMPLETE", "UNKNOWN"]},
+        "intended_use": {"enum": ["INTERNAL_REVIEW", "DATA_QUALITY_REPORT", "PUBLIC_CANDIDATE"]},
+        "summary": {
+          "anyOf": [
+            {"type": "string", "minLength": 16, "maxLength": 512, "pattern": "^[^\\r\\n]+$"},
+            {"type": "null"}
+          ]
+        },
+        "details_surface": {"enum": ["NONE", "DATA_QUALITY_METADATA", "METRIC_NOTE", "EVIDENCE_DRAWER"]},
+        "review_record_refs": {
+          "type": "array",
+          "maxItems": 32,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/ref"}
+        }
+      }
+    }
+  }
+}

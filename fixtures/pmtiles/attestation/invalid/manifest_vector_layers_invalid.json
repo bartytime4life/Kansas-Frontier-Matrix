@@ -1,0 +1,11 @@
+{
+  "case_id": "tile-manifest-vector-layers-invalid",
+  "expected": {
+    "issue_codes": [
+      "TILE_MANIFEST_VECTOR_LAYERS_INVALID"
+    ],
+    "status": "DENY"
+  },
+  "fixture_profile": "kfm.pmtiles.tile-artifact-manifest.compat.v1",
+  "mutation": "manifest_vector_layers_invalid"
+}

@@ -1,0 +1,237 @@
+{
+  "receipt_id": "genrec-docs-focus-mode-counties-kearny-county-readme-784e118880eb",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/focus-mode/counties/kearny_county/README.md"
+  ],
+  "artifact_hashes": {
+    "docs/focus-mode/counties/kearny_county/README.md": "sha256:784e118880ebeb1cc287a8454b5d522ddbb5032141bcede8b2d884549ca26347"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "exact serving revision not exposed"
+  },
+  "prompt_or_contract": "sha256:f7ee0e52850b56043a392ec184b6d64bcff81ecc0a4ebc36e086b750e51a230c",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "bounded current-repository inspection",
+      "local deterministic Markdown validation",
+      "repository generated-receipt schema constraint validation",
+      "SHA-256 and Git-blob verification"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:f7ee0e52850b56043a392ec184b6d64bcff81ecc0a4ebc36e086b750e51a230c",
+      "sha256:784e118880ebeb1cc287a8454b5d522ddbb5032141bcede8b2d884549ca26347"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/59350f29e29df23d52084c95e30878ba24fdd6a0",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/59350f29e29df23d52084c95e30878ba24fdd6a0/docs/focus-mode/counties/kearny_county/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/59350f29e29df23d52084c95e30878ba24fdd6a0/docs/focus-mode/counties/kearny_county/kearny_county_focus_mode_build_plan.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/tree/59350f29e29df23d52084c95e30878ba24fdd6a0/docs/focus-mode/counties/kearny_county",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/59350f29e29df23d52084c95e30878ba24fdd6a0/docs/focus-mode/counties/COUNTY_INDEX.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/59350f29e29df23d52084c95e30878ba24fdd6a0/docs/focus-mode/counties/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/59350f29e29df23d52084c95e30878ba24fdd6a0/docs/focus-mode/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/59350f29e29df23d52084c95e30878ba24fdd6a0/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/59350f29e29df23d52084c95e30878ba24fdd6a0/docs/adr/ADR-0027-county-focus-mode-control-plane.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/59350f29e29df23d52084c95e30878ba24fdd6a0/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/59350f29e29df23d52084c95e30878ba24fdd6a0/contracts/focus_mode/focus_mode_payload.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/59350f29e29df23d52084c95e30878ba24fdd6a0/schemas/contracts/v1/focus/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/59350f29e29df23d52084c95e30878ba24fdd6a0/policy/focus/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/59350f29e29df23d52084c95e30878ba24fdd6a0/tools/validators/validate_focus_mode_index.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/59350f29e29df23d52084c95e30878ba24fdd6a0/.github/CODEOWNERS",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/59350f29e29df23d52084c95e30878ba24fdd6a0/CONTRIBUTING.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/59350f29e29df23d52084c95e30878ba24fdd6a0/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/59350f29e29df23d52084c95e30878ba24fdd6a0/.github/workflows/docs-meta-block.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/59350f29e29df23d52084c95e30878ba24fdd6a0/.github/workflows/docs-stale-scan.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/59350f29e29df23d52084c95e30878ba24fdd6a0/.github/workflows/validator-suite.yml"
+    ]
+  },
+  "truth_labels": {
+    "docs/focus-mode/counties/kearny_county/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main-target-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Pinned current main at 59350f29e29df23d52084c95e30878ba24fdd6a0; read the complete one-byte target and complete Kearny build plan; inspected the county index and supporting Focus authority surfaces; exact open-PR and task-branch searches found no overlapping Kearny README work."
+    },
+    {
+      "gate": "same-path-placement-and-authority-boundary",
+      "outcome": "PASS",
+      "reason": "The tracked README remains under docs/focus-mode/counties/kearny_county/ as an existing compatibility lane. Accepted ADR-0029 and proposed ADR-0027 were inspected; no move, rename, alias retirement, parallel Focus tree, or authority-root change is made."
+    },
+    {
+      "gate": "one-byte-placeholder-replacement",
+      "outcome": "PASS",
+      "reason": "The prior target was exactly one newline. The replacement supplies a complete lane README with current repository evidence, dated-source currentness, historic-location, access, groundwater, private-well, water-right, property/mineral/royalty, energy-operation, road, emergency, validation, correction, and rollback boundaries."
+    },
+    {
+      "gate": "linked-build-plan-reconciliation",
+      "outcome": "PASS",
+      "reason": "The complete Kearny build plan was reviewed and left byte-unchanged. Its no-plan and uncertain-path claims are superseded only for current repository presence; its 2026-06-08 source observations, proposed proof slice, cards, interfaces, fixtures, and release ideas remain planning evidence and are not promoted."
+    },
+    {
+      "gate": "county-index-staleness-disclosure",
+      "outcome": "PASS",
+      "reason": "The current index's Kearny README_1_BYTE finding is disclosed as becoming stale after this leaf change. The shared index is deferred to a current-main full 105-county recomputation rather than partially rewritten."
+    },
+    {
+      "gate": "historic-location-archaeology-and-access-boundary",
+      "outcome": "PASS",
+      "reason": "The authored bytes expose no coordinates or exact trail, archaeological, or cultural-resource location; historical context is explicitly not access permission, and precision remains generalized, withheld, deferred, or denied pending qualified review."
+    },
+    {
+      "gate": "water-property-mineral-royalty-and-energy-boundary",
+      "outcome": "PASS",
+      "reason": "The README makes no private-well, potability, property-impact, water-right, lawful-use, title, mineral-owner, lease, royalty, value, tax, investment, current-production, operational, infrastructure, environmental-health, or future-supply determination."
+    },
+    {
+      "gate": "current-road-emergency-and-public-safety-boundary",
+      "outcome": "PASS",
+      "reason": "Current road, incident, emergency, travel, and safety questions remain abstention and official-current-channel redirect cases; no cached or inferred guidance is represented as authority."
+    },
+    {
+      "gate": "markdown-structure-and-diff-hygiene",
+      "outcome": "PASS",
+      "reason": "The 44,920-byte README has one H1, one complete KFM metadata block, 17 unique explicit anchors, internally consistent tables, balanced fences, valid GFM alerts, LF endings, no tabs or trailing whitespace, no conflict markers, and a final newline."
+    },
+    {
+      "gate": "repository-relative-target-closure",
+      "outcome": "PASS",
+      "reason": "All 12 distinct repository-relative targets were normalized from the README path and resolved through current-session GitHub reads; all same-document fragments match unique explicit anchors. No external network request was required."
+    },
+    {
+      "gate": "shared-county-index-reconciliation",
+      "outcome": "SKIPPED",
+      "reason": "The shared index requires a full current-main count and finding recomputation across the high-churn county inventory. This leaf packet discloses Kearny's stale finding rather than making a partial shared-inventory edit."
+    },
+    {
+      "gate": "county-focus-mode-validator",
+      "outcome": "SKIPPED",
+      "reason": "The current validator targets docs/focus-modes/, kebab-case lanes, and seven required files; it is not a valid passing gate for the singular snake_case two-file compatibility lane and was not weakened or misrepresented."
+    },
+    {
+      "gate": "artifact-byte-and-hash-closure",
+      "outcome": "PASS",
+      "reason": "README SHA-256 784e118880ebeb1cc287a8454b5d522ddbb5032141bcede8b2d884549ca26347; Git blob 639e6bb91012f9f015970463fb96220a6ad01b64; 44,920 UTF-8 bytes. Artifact paths, hash keys, and truth-label keys are identical; the receipt is excluded from its own artifact map."
+    },
+    {
+      "gate": "generated-receipt-schema-constraint-validation",
+      "outcome": "PASS",
+      "reason": "The receipt was checked against the current GENERATED_RECEIPT JSON Schema and repository cross-field constraints; artifact-map parity, SHA-256 binding, canonical path form, citation presence, and pending-review state were recomputed."
+    },
+    {
+      "gate": "workflow-trigger-threat-preflight",
+      "outcome": "PASS",
+      "reason": "docs-meta-block, docs-stale-scan, and validator-suite use GitHub-hosted runners, bounded timeouts, immutable action pins, and read-only contents permission. No pull_request_target, workflow_run, self-hosted runner, OIDC, secret-bearing execution, deployment, release, publication, or administrative mutation was found for this path set."
+    },
+    {
+      "gate": "hosted-exact-head-workflows",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks do not exist until the final branch head and draft pull request are created. Their exact-head state will be inspected separately and not inferred."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending. CODEOWNERS routing is not historical, archaeological, cultural-resource, water-governance, property/mineral-rights, energy-security, emergency, road, rights, policy, release, or publication approval."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "current-user-implementation-contract",
+      "validated": true,
+      "evidence_ref": "sha256:f7ee0e52850b56043a392ec184b6d64bcff81ecc0a4ebc36e086b750e51a230c"
+    },
+    {
+      "id": "pinned-current-main",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/59350f29e29df23d52084c95e30878ba24fdd6a0"
+    },
+    {
+      "id": "prior-one-byte-target",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/59350f29e29df23d52084c95e30878ba24fdd6a0/docs/focus-mode/counties/kearny_county/README.md"
+    },
+    {
+      "id": "complete-kearny-build-plan",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/59350f29e29df23d52084c95e30878ba24fdd6a0/docs/focus-mode/counties/kearny_county/kearny_county_focus_mode_build_plan.md"
+    },
+    {
+      "id": "current-kearny-direct-child-inventory",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/tree/59350f29e29df23d52084c95e30878ba24fdd6a0/docs/focus-mode/counties/kearny_county"
+    },
+    {
+      "id": "current-county-index",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/59350f29e29df23d52084c95e30878ba24fdd6a0/docs/focus-mode/counties/COUNTY_INDEX.md"
+    },
+    {
+      "id": "focus-compatibility-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/59350f29e29df23d52084c95e30878ba24fdd6a0/docs/focus-mode/README.md"
+    },
+    {
+      "id": "accepted-directory-rules-decision",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/59350f29e29df23d52084c95e30878ba24fdd6a0/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "proposed-county-control-plane",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/59350f29e29df23d52084c95e30878ba24fdd6a0/docs/adr/ADR-0027-county-focus-mode-control-plane.md"
+    },
+    {
+      "id": "focus-payload-semantic-contract",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/59350f29e29df23d52084c95e30878ba24fdd6a0/contracts/focus_mode/focus_mode_payload.md"
+    },
+    {
+      "id": "focus-schema-family",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/59350f29e29df23d52084c95e30878ba24fdd6a0/schemas/contracts/v1/focus/README.md"
+    },
+    {
+      "id": "inactive-focus-policy-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/59350f29e29df23d52084c95e30878ba24fdd6a0/policy/focus/README.md"
+    },
+    {
+      "id": "generated-receipt-schema",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/59350f29e29df23d52084c95e30878ba24fdd6a0/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    },
+    {
+      "id": "workflow-trigger-preflight",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/59350f29e29df23d52084c95e30878ba24fdd6a0/.github/workflows/validator-suite.yml"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [
+      "@bartytime4life"
+    ],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-22T01:30:58Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT connected GitHub write",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Documentation-only same-path update. The Kearny build plan, county index, contracts, schemas, policy, validators, workflows, lifecycle data, release state, deployment state, and publication state are unchanged. External source observations in the plan were not rechecked. Human review and hosted exact-head checks remain separate from this generated-work receipt."
+}

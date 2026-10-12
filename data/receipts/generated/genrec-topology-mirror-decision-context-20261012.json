@@ -1,0 +1,103 @@
+{
+  "receipt_id": "genrec-topology-mirror-decision-context-20261012",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/directory-root-registry.yml",
+    "tests/ci/test_directory_root_registry_workflow.py",
+    "tests/validators/directory_governance/test_validate_context_binding_topology.py",
+    "tools/validators/directory_governance/README.md",
+    "tools/validators/directory_governance/render_repository_topology_diagnostics.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/directory-root-registry.yml": "sha256:7f9ffdee0f49d6cd421b6cd254f32a9f131ea9b41cd376802bf014a8b6f1168b",
+    "tests/ci/test_directory_root_registry_workflow.py": "sha256:edd7b66d9df9565076e3727bf76a1eaa44e70499d164a47ccea4f9808b01ed73",
+    "tests/validators/directory_governance/test_validate_context_binding_topology.py": "sha256:26b207babd66cb167f101ea08c17e24e23214462632da731a6b4f383cfef661a",
+    "tools/validators/directory_governance/README.md": "sha256:c72e8e262a5e163b9e66a01594f26ca04ab22ed53afa3edc02e633e3c1a444f2",
+    "tools/validators/directory_governance/render_repository_topology_diagnostics.py": "sha256:ce6cb8b16dcb480636480f3ff0b68664c403144228da1710d9e6e2c462929227"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code",
+    "version": "runtime revision not exposed"
+  },
+  "prompt_or_contract": "sha256:dbc35f0e3a6b909d101067f9503c08c4ca4eb95e4a891c4d7596c654c844ee0d",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub",
+      "container"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:7f9ffdee0f49d6cd421b6cd254f32a9f131ea9b41cd376802bf014a8b6f1168b",
+      "sha256:edd7b66d9df9565076e3727bf76a1eaa44e70499d164a47ccea4f9808b01ed73",
+      "sha256:26b207babd66cb167f101ea08c17e24e23214462632da731a6b4f383cfef661a",
+      "sha256:c72e8e262a5e163b9e66a01594f26ca04ab22ed53afa3edc02e633e3c1a444f2",
+      "sha256:ce6cb8b16dcb480636480f3ff0b68664c403144228da1710d9e6e2c462929227"
+    ],
+    "evidence_refs": [
+      "git:e0dd9f38b69346442cf362426ba452a04e164d00",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "docs/adr/ADR-0048-external-mirror-names-are-externally-fixed.md",
+      "data/receipts/generated/genrec-topology-mirror-register-context-20261012.json",
+      "control_plane/external_mirror_register.yaml"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/directory-root-registry.yml": "CONFIRMED",
+    "tests/ci/test_directory_root_registry_workflow.py": "CONFIRMED",
+    "tests/validators/directory_governance/test_validate_context_binding_topology.py": "CONFIRMED",
+    "tools/validators/directory_governance/README.md": "CONFIRMED",
+    "tools/validators/directory_governance/render_repository_topology_diagnostics.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "predecessor-receipt-replay",
+      "outcome": "PASS",
+      "reason": "The superseded mirror-register (context v3) five-artifact receipt validates at exact ancestor e0dd9f38b69346442cf362426ba452a04e164d00."
+    },
+    {
+      "gate": "current-binding-and-focused-regressions",
+      "outcome": "SKIPPED",
+      "reason": "Candidate validation follows emission and must be reported from the exact resulting tree; this receipt does not predict it."
+    },
+    {
+      "gate": "topology-conformance-and-independent-review",
+      "outcome": "SKIPPED",
+      "reason": "Independent review remains a separate held gate."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "adopted-directory-authority",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "mirror-register-decision",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0048-external-mirror-names-are-externally-fixed.md"
+    },
+    {
+      "id": "immutable-predecessor-binding",
+      "validated": true,
+      "evidence_ref": "data/receipts/generated/genrec-topology-mirror-register-context-20261012.json@e0dd9f38b69346442cf362426ba452a04e164d00"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-10-12T02:29:21Z",
+  "emitter": "Claude Code",
+  "links": {
+    "pr_number": 5073,
+    "adr_link": "docs/adr/ADR-0048-external-mirror-names-are-externally-fixed.md"
+  },
+  "notes": "Current successor binding for topology execution context v4, which adds docs/adr/ADR-0048-external-mirror-names-are-externally-fixed.md as a sixth indexed governance input (external_mirror_decision), because the topology validator now reads that ADR's metadata block to decide whether the mirror exemption applies. The v3 mirror-register predecessor receipt remains byte-identical and replays only at its exact ancestor on main. This receipt binds implementation bytes; it does not accept topology drift, grant review, merge, release, deployment, promotion, or publication authority."
+}

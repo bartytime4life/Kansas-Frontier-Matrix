@@ -1,0 +1,134 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/source/source_activation_portfolio_assessment.schema.json",
+  "title": "SourceActivationPortfolioAssessmentCandidate",
+  "description": "Fixture-only cross-source review-readiness composition with no source, policy, review, lifecycle, release, or publication authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "profile",
+    "schema_version",
+    "execution_mode",
+    "assessment_state",
+    "evaluated_at",
+    "portfolio_id",
+    "spec_hash",
+    "candidates",
+    "portfolio_decision",
+    "permissions"
+  ],
+  "properties": {
+    "profile": {"const": "kfm.source.activation-portfolio-assessment.fixture.v1"},
+    "schema_version": {"const": "1.0.0"},
+    "execution_mode": {"const": "FIXTURE_ONLY_NO_NETWORK"},
+    "assessment_state": {"enum": ["COMPLETE", "ERROR"]},
+    "evaluated_at": {"type": "string", "format": "date-time"},
+    "portfolio_id": {"type": "string", "pattern": "^kfm:source-portfolio:[0-9a-f]{24}$"},
+    "spec_hash": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "candidates": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 3,
+      "items": {"$ref": "#/$defs/candidate"}
+    },
+    "portfolio_decision": {"$ref": "#/$defs/portfolioDecision"},
+    "permissions": {"$ref": "#/$defs/permissions"}
+  },
+  "$defs": {
+    "reference": {
+      "type": "string",
+      "pattern": "^kfm://fixture/[a-z0-9][a-z0-9._~:/#-]{2,240}$"
+    },
+    "referenceArray": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/reference"}
+    },
+    "candidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_id",
+        "risk_class",
+        "source_descriptor_ref",
+        "source_role_ref",
+        "rights_currentness_assessment_ref",
+        "sensitivity_assessment_ref",
+        "reviewer_role_refs",
+        "dependency_refs",
+        "acceptance_test_refs",
+        "correction_ref",
+        "rollback_ref",
+        "readiness",
+        "declared_outcome",
+        "reason_codes",
+        "governance"
+      ],
+      "properties": {
+        "source_id": {"type": "string", "pattern": "^kfm:fixture:source:[a-z0-9]+(?:-[a-z0-9]+)*$"},
+        "risk_class": {"enum": ["PUBLIC_SAFE", "CONDITIONAL_AGENCY", "HIGH_RISK", "DENIED_CLASS"]},
+        "source_descriptor_ref": {"$ref": "#/$defs/reference"},
+        "source_role_ref": {"$ref": "#/$defs/reference"},
+        "rights_currentness_assessment_ref": {"$ref": "#/$defs/reference"},
+        "sensitivity_assessment_ref": {"$ref": "#/$defs/reference"},
+        "reviewer_role_refs": {"$ref": "#/$defs/referenceArray"},
+        "dependency_refs": {"$ref": "#/$defs/referenceArray"},
+        "acceptance_test_refs": {"$ref": "#/$defs/referenceArray"},
+        "correction_ref": {"$ref": "#/$defs/reference"},
+        "rollback_ref": {"$ref": "#/$defs/reference"},
+        "readiness": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["source_role", "rights_currentness", "sensitivity", "reviewer", "dependencies", "acceptance_tests", "correction_rollback"],
+          "properties": {
+            "source_role": {"enum": ["DECLARED", "REVIEW_REQUIRED", "HOLD"]},
+            "rights_currentness": {"enum": ["CURRENT", "REVIEW_REQUIRED", "HOLD", "DENIED"]},
+            "sensitivity": {"enum": ["CLEAR", "REVIEW_REQUIRED", "HOLD", "DENIED"]},
+            "reviewer": {"enum": ["ASSIGNED", "REVIEW_REQUIRED", "HOLD"]},
+            "dependencies": {"enum": ["SATISFIED", "REVIEW_REQUIRED", "HOLD"]},
+            "acceptance_tests": {"enum": ["DECLARED", "REVIEW_REQUIRED", "HOLD"]},
+            "correction_rollback": {"enum": ["DECLARED", "REVIEW_REQUIRED", "HOLD"]}
+          }
+        },
+        "declared_outcome": {"enum": ["READY_FOR_REVIEW", "CONDITIONAL", "HOLD", "ERROR"]},
+        "reason_codes": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^[A-Z][A-Z0-9_]{2,80}$"}
+        },
+        "governance": {"$ref": "#/$defs/permissions"}
+      }
+    },
+    "portfolioDecision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["outcome", "ordered_source_ids", "ready_source_ids", "conditional_source_ids", "held_source_ids", "reason_codes"],
+      "properties": {
+        "outcome": {"enum": ["READY_FOR_REVIEW", "CONDITIONAL", "HOLD", "ERROR"]},
+        "ordered_source_ids": {"type": "array", "minItems": 2, "maxItems": 3, "uniqueItems": true, "items": {"type": "string"}},
+        "ready_source_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+        "conditional_source_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+        "held_source_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+        "reason_codes": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "pattern": "^[A-Z][A-Z0-9_]{2,80}$"}}
+      }
+    },
+    "permissions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["may_contact_source", "may_admit", "may_activate", "may_schedule_review", "may_mutate", "may_promote", "may_release", "may_publish", "may_enable_public_use"],
+      "properties": {
+        "may_contact_source": {"const": false},
+        "may_admit": {"const": false},
+        "may_activate": {"const": false},
+        "may_schedule_review": {"const": false},
+        "may_mutate": {"const": false},
+        "may_promote": {"const": false},
+        "may_release": {"const": false},
+        "may_publish": {"const": false},
+        "may_enable_public_use": {"const": false}
+      }
+    }
+  }
+}

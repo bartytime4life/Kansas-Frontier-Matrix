@@ -1,0 +1,356 @@
+{
+  "base": {
+    "profile_version": "kfm.catalog-distribution-mapping-candidate.v1",
+    "candidate_id": "kfm:catalog-distribution-mapping:000000000000000000000000",
+    "spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "artifact": {
+      "artifact_id": "kfm:artifact:synthetic:kansas-pmtiles",
+      "locator": "urn:kfm:synthetic:distribution:kansas-pmtiles@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "media_type": "application/vnd.pmtiles",
+      "asset_role": "data"
+    },
+    "carriers": {
+      "stac": {
+        "item_ref": "urn:kfm:synthetic:stac:item:kansas-map",
+        "asset_key": "vector_tiles",
+        "href": "urn:kfm:synthetic:distribution:kansas-pmtiles@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "checksum": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "media_type": "application/vnd.pmtiles",
+        "roles": [
+          "data"
+        ]
+      },
+      "dcat": {
+        "distribution_ref": "urn:kfm:synthetic:dcat:distribution:kansas-map",
+        "access_url": "urn:kfm:synthetic:distribution:kansas-pmtiles@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "checksum": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "media_type": "application/vnd.pmtiles",
+        "role": "data"
+      },
+      "prov": {
+        "bundle_ref": "urn:kfm:synthetic:prov:bundle:kansas-map",
+        "entity_ref": "urn:kfm:synthetic:prov:entity:kansas-pmtiles",
+        "generated_entity_ref": "urn:kfm:synthetic:prov:entity:kansas-pmtiles",
+        "generated_by_ref": "urn:kfm:synthetic:prov:activity:build-kansas-pmtiles",
+        "attributed_to_ref": "urn:kfm:synthetic:prov:agent:kfm-fixture-builder",
+        "location": "urn:kfm:synthetic:distribution:kansas-pmtiles@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "checksum": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "media_type": "application/vnd.pmtiles",
+        "role": "data"
+      }
+    },
+    "alignment": {
+      "locator_match": true,
+      "digest_match": true,
+      "media_type_match": true,
+      "role_match": true,
+      "locator_digest_bound": true,
+      "prov_generation_bound": true,
+      "profile_state": "REVIEW_REQUIRED",
+      "catalog_records_emitted": false,
+      "publication_authorized": false
+    },
+    "governance": {
+      "fixture_only": true,
+      "network_access": false,
+      "writes_catalogs": false,
+      "resolves_evidence": false,
+      "decides_policy": false,
+      "approves_review": false,
+      "authorizes_release": false,
+      "activates_oci_or_oras": false,
+      "publishes": false,
+      "public_use_authorized": false
+    }
+  },
+  "cases": [
+    {
+      "case_id": "aligned_distribution_carriers",
+      "mutations": [],
+      "expected_outcome": "PASS",
+      "expected_profile_state": "REVIEW_REQUIRED",
+      "expected_findings": []
+    },
+    {
+      "case_id": "stac_locator_drift",
+      "mutations": [
+        {
+          "path": "/carriers/stac/href",
+          "value": "urn:kfm:synthetic:distribution:other-pmtiles@sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_profile_state": null,
+      "expected_findings": [
+        {
+          "code": "CATALOG_MAPPING_LOCATOR_MISMATCH",
+          "path": "/carriers"
+        }
+      ]
+    },
+    {
+      "case_id": "dcat_locator_drift",
+      "mutations": [
+        {
+          "path": "/carriers/dcat/access_url",
+          "value": "urn:kfm:synthetic:distribution:other-pmtiles@sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_profile_state": null,
+      "expected_findings": [
+        {
+          "code": "CATALOG_MAPPING_LOCATOR_MISMATCH",
+          "path": "/carriers"
+        }
+      ]
+    },
+    {
+      "case_id": "prov_locator_drift",
+      "mutations": [
+        {
+          "path": "/carriers/prov/location",
+          "value": "urn:kfm:synthetic:distribution:other-pmtiles@sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_profile_state": null,
+      "expected_findings": [
+        {
+          "code": "CATALOG_MAPPING_LOCATOR_MISMATCH",
+          "path": "/carriers"
+        }
+      ]
+    },
+    {
+      "case_id": "stac_digest_drift",
+      "mutations": [
+        {
+          "path": "/carriers/stac/checksum",
+          "value": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_profile_state": null,
+      "expected_findings": [
+        {
+          "code": "CATALOG_MAPPING_DIGEST_MISMATCH",
+          "path": "/carriers"
+        }
+      ]
+    },
+    {
+      "case_id": "dcat_digest_drift",
+      "mutations": [
+        {
+          "path": "/carriers/dcat/checksum",
+          "value": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_profile_state": null,
+      "expected_findings": [
+        {
+          "code": "CATALOG_MAPPING_DIGEST_MISMATCH",
+          "path": "/carriers"
+        }
+      ]
+    },
+    {
+      "case_id": "prov_digest_drift",
+      "mutations": [
+        {
+          "path": "/carriers/prov/checksum",
+          "value": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_profile_state": null,
+      "expected_findings": [
+        {
+          "code": "CATALOG_MAPPING_DIGEST_MISMATCH",
+          "path": "/carriers"
+        }
+      ]
+    },
+    {
+      "case_id": "digest_uri_drift",
+      "mutations": [
+        {
+          "path": "/artifact/locator",
+          "value": "urn:kfm:synthetic:distribution:kansas-pmtiles@sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        {
+          "path": "/carriers/stac/href",
+          "value": "urn:kfm:synthetic:distribution:kansas-pmtiles@sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        {
+          "path": "/carriers/dcat/access_url",
+          "value": "urn:kfm:synthetic:distribution:kansas-pmtiles@sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        },
+        {
+          "path": "/carriers/prov/location",
+          "value": "urn:kfm:synthetic:distribution:kansas-pmtiles@sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_profile_state": null,
+      "expected_findings": [
+        {
+          "code": "CATALOG_MAPPING_DIGEST_URI_MISMATCH",
+          "path": "/artifact/locator"
+        }
+      ]
+    },
+    {
+      "case_id": "stac_media_type_drift",
+      "mutations": [
+        {
+          "path": "/carriers/stac/media_type",
+          "value": "application/geo+json"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_profile_state": null,
+      "expected_findings": [
+        {
+          "code": "CATALOG_MAPPING_MEDIA_TYPE_MISMATCH",
+          "path": "/carriers"
+        }
+      ]
+    },
+    {
+      "case_id": "dcat_media_type_drift",
+      "mutations": [
+        {
+          "path": "/carriers/dcat/media_type",
+          "value": "application/geo+json"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_profile_state": null,
+      "expected_findings": [
+        {
+          "code": "CATALOG_MAPPING_MEDIA_TYPE_MISMATCH",
+          "path": "/carriers"
+        }
+      ]
+    },
+    {
+      "case_id": "role_drift",
+      "mutations": [
+        {
+          "path": "/carriers/stac/roles",
+          "value": [
+            "data",
+            "metadata"
+          ]
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_profile_state": null,
+      "expected_findings": [
+        {
+          "code": "CATALOG_MAPPING_ROLE_MISMATCH",
+          "path": "/carriers"
+        }
+      ]
+    },
+    {
+      "case_id": "prov_generation_drift",
+      "mutations": [
+        {
+          "path": "/carriers/prov/generated_entity_ref",
+          "value": "urn:kfm:synthetic:prov:entity:other-pmtiles"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_profile_state": null,
+      "expected_findings": [
+        {
+          "code": "CATALOG_MAPPING_PROV_GENERATION_MISMATCH",
+          "path": "/carriers/prov/generated_entity_ref"
+        }
+      ]
+    },
+    {
+      "case_id": "alignment_summary_tampered",
+      "mutations": [
+        {
+          "path": "/alignment/digest_match",
+          "value": false
+        }
+      ],
+      "preserve_alignment": true,
+      "expected_outcome": "DENY",
+      "expected_profile_state": null,
+      "expected_findings": [
+        {
+          "code": "CATALOG_MAPPING_ALIGNMENT_SUMMARY_MISMATCH",
+          "path": "/alignment"
+        }
+      ]
+    },
+    {
+      "case_id": "spec_hash_tampered",
+      "mutations": [],
+      "spec_hash_override": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "expected_outcome": "DENY",
+      "expected_profile_state": null,
+      "expected_findings": [
+        {
+          "code": "CATALOG_MAPPING_SPEC_HASH_MISMATCH",
+          "path": "/spec_hash"
+        }
+      ]
+    },
+    {
+      "case_id": "candidate_id_tampered",
+      "mutations": [],
+      "candidate_id_override": "kfm:catalog-distribution-mapping:000000000000000000000000",
+      "expected_outcome": "DENY",
+      "expected_profile_state": null,
+      "expected_findings": [
+        {
+          "code": "CATALOG_MAPPING_ID_MISMATCH",
+          "path": "/candidate_id"
+        }
+      ]
+    },
+    {
+      "case_id": "publication_authority_denied",
+      "mutations": [
+        {
+          "path": "/governance/publishes",
+          "value": true
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_profile_state": null,
+      "expected_findings": [
+        {
+          "code": "CATALOG_MAPPING_SCHEMA_INVALID",
+          "path": "/governance/publishes"
+        }
+      ]
+    },
+    {
+      "case_id": "unknown_field_denied",
+      "mutations": [
+        {
+          "path": "/unexpected",
+          "value": true
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_profile_state": null,
+      "expected_findings": [
+        {
+          "code": "CATALOG_MAPPING_SCHEMA_INVALID",
+          "path": "/"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,125 @@
+{
+  "receipt_id": "genrec-review-console-readme-480c04ef",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/review-console/README.md"
+  ],
+  "artifact_hashes": {
+    "apps/review-console/README.md": "sha256:480c04ef726f8849caa6b30ad226c3ed791db40348452e714a68b0027e812d8f"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Pro",
+    "version": "UNKNOWN: provider build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:11fe841c5ba7fe2fbda9dd56ae3a187e2bd739ed366b8a866b04a8512e8c26bb",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub",
+      "Google Drive",
+      "Notion",
+      "container"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:2dee168b300c090783cd5c724c5dfce59ffb1d2e03e5e9f0a7be33f24cba6f62",
+      "sha256:425e998e5584a7e400e99c963aba019b33ff685f9fa26b5b474d8758a3160b2a"
+    ],
+    "attached_docs": [
+      "Google Drive: Directory Rules (read-only proposal lineage)",
+      "Notion: KFM Repository Workbench (read-only coordination; not implementation authority)"
+    ],
+    "evidence_refs": [
+      "repo:bartytime4life/Kansas-Frontier-Matrix@cbd6d82bad962a58ab62cfb776ee31696b575107:apps/review-console/",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@cbd6d82bad962a58ab62cfb776ee31696b575107:apps/review-console/package.json",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@cbd6d82bad962a58ab62cfb776ee31696b575107:apps/explorer-web/src/features/review_console_readonly/index.tsx",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@cbd6d82bad962a58ab62cfb776ee31696b575107:docs/architecture/ui/REVIEW_CONSOLE.md",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@cbd6d82bad962a58ab62cfb776ee31696b575107:docs/doctrine/directory-rules.md",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@cbd6d82bad962a58ab62cfb776ee31696b575107:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@cbd6d82bad962a58ab62cfb776ee31696b575107:contracts/governance/ReviewRecord.md",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@cbd6d82bad962a58ab62cfb776ee31696b575107:schemas/contracts/v1/governance/review_record.schema.json",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@cbd6d82bad962a58ab62cfb776ee31696b575107:tools/validators/validate_review_record.py",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@cbd6d82bad962a58ab62cfb776ee31696b575107:schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@cbd6d82bad962a58ab62cfb776ee31696b575107:CONTRIBUTING.md",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@cbd6d82bad962a58ab62cfb776ee31696b575107:.github/PULL_REQUEST_TEMPLATE.md",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@cbd6d82bad962a58ab62cfb776ee31696b575107:docs/doctrine/ai-build-operating-contract.md"
+    ]
+  },
+  "truth_labels": {
+    "apps/review-console/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "pinned-app-inventory-and-manifest",
+      "outcome": "PASS",
+      "reason": "GitHub non-truncated app/source tree inspection confirms 11 tracked files: ten READMEs and a 72-byte placeholder manifest with no scripts or dependencies. The separately inspected Explorer review entry exports placeholder=true."
+    },
+    {
+      "gate": "session-only-markdown-and-link-qa",
+      "outcome": "PASS",
+      "reason": "MarkdownIt/metadata parsing, one H1, all 16 pre-existing H2 section names, 20 unique anchors, 43 Markdown links and 13 metadata references checked against pinned GitHub evidence, six consistent tables, four balanced fences, Bash syntax, final newline, and basic secret-pattern/hygiene checks. This is not a repository-wide link crawl or browser render."
+    },
+    {
+      "gate": "authored-file-whitespace",
+      "outcome": "PASS",
+      "reason": "git diff --cached --check in an isolated local authored-file repository, not a complete KFM checkout."
+    },
+    {
+      "gate": "review-schema-vocabulary-diagnostic",
+      "outcome": "PASS",
+      "reason": "Ten session-only synthetic JSON Schema checks against exact blob fe2f2223af46481e7fb19b0baa94f62ce9c6c855: three allowed decisions accepted, five legacy uppercase labels rejected, an extra field rejected, and a malformed date rejected. No actor, policy, audit, or app behavior is proved."
+    },
+    {
+      "gate": "generated-receipt-schema-and-hash-binding",
+      "outcome": "PASS",
+      "reason": "Draft202012Validator with FormatChecker using exact schema blob fba21ed27ebccf1362fe397fe0c3ebd85e072685; artifact-path/hash/truth-label parity and content SHA-256 independently checked; five negative mutations rejected by schema or explicit binding checks."
+    },
+    {
+      "gate": "repository-native-fixture-and-aggregate-checks",
+      "outcome": "SKIPPED",
+      "reason": "NOT RUN: container git ls-remote failed with GitHub DNS resolution error (exit 128); no full repository checkout or dependency environment was available. Native validate_review_record.py --fixtures, make validation, and full suite are not reported passing."
+    },
+    {
+      "gate": "hosted-exact-head-checks",
+      "outcome": "SKIPPED",
+      "reason": "Not run at receipt emission; subsequent PR CI observations must be recorded separately at their actual head."
+    },
+    {
+      "gate": "runtime-browser-accessibility-deployment",
+      "outcome": "SKIPPED",
+      "reason": "Documentation-only change; executable Review Console app absent in inspected subtree. No startup, live identity, API, audit, browser, release, or deployment proof."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "app-inventory",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix@cbd6d82bad962a58ab62cfb776ee31696b575107:apps/review-console/"
+    },
+    {
+      "id": "review-schema",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix@cbd6d82bad962a58ab62cfb776ee31696b575107:schemas/contracts/v1/governance/review_record.schema.json"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-05T18:34:31.183581+00:00",
+  "emitter": "ChatGPT: scoped review-console README authoring",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Documentation authoring receipt, not proof, review approval, a policy decision, control-exit evidence, or publication authority. The artifact-level PROPOSED label denotes an unapproved documentation revision; its pinned inventory observations are CONFIRMED and implementation proposals remain labeled. prompt_or_contract hashes only the direct user request; no prompt body, private reasoning, credentials, or tool transcripts are stored. Only the README and this receipt belong in the remote change; local QA scripts, copied schemas, and synthetic diagnostics are not repository artifacts. Preserve document ID, H1, and prior section anchors. Rollback restores prior README blob 02512b6b8d16a8f1dfcd4c564f8b6d68b61b49e3 with a reviewed non-force follow-up while retaining this receipt as historical process memory. Human review is pending; no merge/ready/deploy/source-admission/release/promotion/publication/settings authority. Historical issue closure is not verification that draft-transition controls are repaired."
+}

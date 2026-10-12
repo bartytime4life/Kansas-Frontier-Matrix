@@ -1,0 +1,113 @@
+{
+  "object_type": "SourceDescriptor",
+  "schema_version": "v1",
+  "source_id": "src:ks-kdhe-hab",
+  "descriptor_version": "1.0.0",
+  "title": "Kansas KDHE Harmful Algal Bloom Advisories",
+  "description": "KDHE harmful-algal-bloom advisory tables and related release surfaces for Kansas lakes. Inactive governance candidate only.",
+  "domain_scope": ["hazards"],
+  "source_type": "official_government_dataset",
+  "source_role": "regulatory_context",
+  "authority_rank": "regulatory_authority",
+  "authority_notes": "KDHE issues HAB advisories and health recommendations, but does not itself close lakes.",
+  "publisher": {
+    "name": "Kansas Department of Health and Environment",
+    "jurisdiction": "Kansas",
+    "contact": {
+      "contact_status": "public_contact",
+      "contact_url": "https://www.kdhe.ks.gov/480/Harmful-Algal-Blooms-Assistance"
+    }
+  },
+  "owner_or_steward": {
+    "name": "KDHE Bureau of Environmental Field Services",
+    "jurisdiction": "Kansas",
+    "contact": {
+      "contact_status": "public_contact",
+      "contact_url": "https://www.kdhe.ks.gov/777/Harmful-Algal-Blooms"
+    }
+  },
+  "rights": {
+    "rights_status": "verified_open",
+    "license_or_terms": "Public government advisory publication; verify reuse terms during review.",
+    "attribution_required": true,
+    "attribution_text": "Source: Kansas Department of Health and Environment (KDHE).",
+    "redistribution_allowed": "yes_with_conditions",
+    "commercial_use_allowed": "unknown",
+    "last_verified_at": "2026-07-25T00:00:00Z",
+    "verified_by": "kfm-source-review"
+  },
+  "sensitivity_default": "public",
+  "cadence": {
+    "update_cadence": "event_driven",
+    "freshness_expectation": "Volatile updates during recreation season (typically Apr 1-Oct 31).",
+    "staleness_policy": "deny_publication",
+    "known_update_window": "High-volatility recreational season updates",
+    "timezone": "America/Chicago"
+  },
+  "access": {
+    "access_method": "https_download",
+    "access_posture": "open",
+    "endpoints": [
+      {
+        "label": "KDHE current HAB advisories",
+        "uri": "https://www.kdhe.ks.gov/777/Harmful-Algal-Blooms",
+        "purpose": "query"
+      },
+      {
+        "label": "KDHE HAB response program",
+        "uri": "https://www.kdhe.ks.gov/779/Response-Program",
+        "purpose": "documentation"
+      }
+    ]
+  },
+  "citation": {
+    "citation_required": true,
+    "citation_template": "Kansas Department of Health and Environment, Harmful Algal Blooms advisories ({source_id}), accessed {accessed_at}.",
+    "citation_guidance": "Cite the exact KDHE locator and advisory-page update vintage used for each snapshot.",
+    "preferred_link": "https://www.kdhe.ks.gov/777/Harmful-Algal-Blooms"
+  },
+  "source_head": {
+    "observed_at": "2026-07-25T00:00:00Z",
+    "method": "manual_review",
+    "content_identity": {
+      "upstream_version": "kdhe-hab-2026-07-24"
+    },
+    "source_head_notes": "Documentation profile review only; no connector activation."
+  },
+  "admissibility_limits": {
+    "allowed_claim_roles": ["regulatory_context", "operational_context", "citation_support"],
+    "prohibited_claim_roles": ["not_for_life_safety", "derived_summary"],
+    "limitations": "Do not infer lake-closure authority, publication authority, or release approval from source presence alone.",
+    "confidence_posture": "corroborate_before_claim",
+    "review_required_before_use": true,
+    "review_required_before_publication": true
+  },
+  "public_release": {
+    "allowed": false,
+    "requires_review": true,
+    "redaction_required": false,
+    "release_conditions": [
+      "Issue #1675 controls verified",
+      "EvidenceBundle + policy decision + review + release + rollback recorded",
+      "Identity and geometry conflicts resolved or explicitly fail-closed"
+    ],
+    "deny_reason_if_not_allowed": "Blocked governance state; public-safe publication and alerts are denied pending control readiness."
+  },
+  "connectors": {
+    "activation_state": "disabled",
+    "connector_ref": "connectors/kansas/kdhe-hab/",
+    "activation_notes": "Connector and schedule remain disabled until issue #1675 unblock and explicit authorization."
+  },
+  "review_state": "needs_review",
+  "release_state": "not_released",
+  "lifecycle": {
+    "registry_state": "proposed",
+    "created_at": "2026-07-25T00:00:00Z",
+    "updated_at": "2026-07-25T00:00:00Z"
+  },
+  "governance_refs": {
+    "source_registry_ref": "kfm://source-registry/hazards/ks-kdhe-hab",
+    "adr_ref": "kfm://adr/hazards/source-governance",
+    "validation_report_ref": "kfm://validation/hazards/kdhe-hab/source-descriptor-candidate"
+  }
+}

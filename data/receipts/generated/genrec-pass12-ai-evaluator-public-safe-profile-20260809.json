@@ -1,0 +1,125 @@
+{
+  "receipt_id": "genrec-pass12-ai-evaluator-public-safe-profile-20260809",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/ai-evaluator-harness.yml",
+    "contracts/ai/evaluator_harness/README.md",
+    "docs/intake/exploratory/pass12-ai-evaluator-public-safe-profile-source-map.md",
+    "fixtures/contracts/v1/ai/evaluator_harness/cases.json",
+    "schemas/contracts/v1/ai/evaluator_harness.schema.json",
+    "tests/validators/test_validate_ai_evaluator_harness.py",
+    "tools/validators/ai/validate_ai_evaluator_harness.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/ai-evaluator-harness.yml": "sha256:3027e2198d591f806648c4ef6b3ded3d5dd8b7904001fc3c4516a4c850e61d5d",
+    "contracts/ai/evaluator_harness/README.md": "sha256:9cc6708a806fbc845a4f70b8c6719282f44c3f3373dfa7402640da9bbf83148d",
+    "docs/intake/exploratory/pass12-ai-evaluator-public-safe-profile-source-map.md": "sha256:4bc245c10c287be283d3410cadd481f845377a5970e16dda5442c610810d7a0d",
+    "fixtures/contracts/v1/ai/evaluator_harness/cases.json": "sha256:63c3bfd8312097df524fd45f411bf1c73ab3a6256c74bae2a1aff3aa73422e13",
+    "schemas/contracts/v1/ai/evaluator_harness.schema.json": "sha256:55cc78fd860ed357a1af7d03130454c8a0d1dd16a6ca081cf0c86a5b2b78b1da",
+    "tests/validators/test_validate_ai_evaluator_harness.py": "sha256:f8c01f8662cea31f129cc191d83d49a3455ceff678cbb02a5d4eabef0480814c",
+    "tools/validators/ai/validate_ai_evaluator_harness.py": "sha256:0469739fa53d10810c0bbb675db06d8ec6cf7c7d78b3eac2067fa816bb8ac124"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-08"
+  },
+  "prompt_or_contract": "sha256:07d16608b9364928018f7915d7cedf715b951020e7b7ca3dbee64878294f1d3e",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "uploaded-file search",
+      "GitHub connector repository inspection and mutation",
+      "local deterministic Python validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Components_Pass_12_Idea_Index_Category_Atlas_Verification_Dossier_Expansion_Manual.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Components_Pass_12_Idea_Index_Category_Atlas_Verification_Dossier_Expansion_Manual.pdf#10.7",
+      "repo:contracts/ai/evaluator_harness/README.md@49db0ceeaf05e762035f2835ff2a7a2f4cede201",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@49db0ceeaf05e762035f2835ff2a7a2f4cede201"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/ai-evaluator-harness.yml": "CONFIRMED",
+    "contracts/ai/evaluator_harness/README.md": "PROPOSED",
+    "docs/intake/exploratory/pass12-ai-evaluator-public-safe-profile-source-map.md": "PROPOSED",
+    "fixtures/contracts/v1/ai/evaluator_harness/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/ai/evaluator_harness.schema.json": "PROPOSED",
+    "tests/validators/test_validate_ai_evaluator_harness.py": "CONFIRMED",
+    "tools/validators/ai/validate_ai_evaluator_harness.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "python-syntax-compilation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "draft-2020-12-schema-meta-validation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "focused-unittest-suite",
+      "outcome": "PASS",
+      "reason": "Eight focused tests pass."
+    },
+    {
+      "gate": "exact-fixture-replay",
+      "outcome": "PASS",
+      "reason": "Thirteen generic and public-safe profile cases pass exact replay."
+    },
+    {
+      "gate": "no-network-boundary",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending on draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pass12-evaluator-harness-backlog",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Components_Pass_12_Idea_Index_Category_Atlas_Verification_Dossier_Expansion_Manual.pdf#10.7"
+    },
+    {
+      "id": "existing-evaluator-harness",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/49db0ceeaf05e762035f2835ff2a7a2f4cede201/contracts/ai/evaluator_harness/README.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-09T01:00:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Dependency-closed enhancement of the existing generic evaluator harness. The public-safe raster/text profiles remain fixture-only and create no evidence, policy, review, promotion, release, deployment, publication, or public-use authority."
+}

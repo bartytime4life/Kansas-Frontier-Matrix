@@ -1,0 +1,549 @@
+{
+  "schema_version": "kfm.forecast-product-fixtures.v1",
+  "profile": "kfm.common.forecast-product.v1",
+  "description": "One reusable forecast base with model, expert, hybrid correction, supersession, conflict, and fail-closed mutations.",
+  "bases": {
+    "current": {
+      "profile": "kfm.common.forecast-product.v1",
+      "status": "PROPOSED_INACTIVE",
+      "version": "1.0.0",
+      "forecast_family": "WEATHER_OUTLOOK",
+      "product_ref": "kfm://product/synthetic-weather-outlook/hourly",
+      "source_ref": "kfm://source/synthetic-weather-service",
+      "source_native_id": "forecast:synthetic:2026-08-09T12",
+      "issuing_authority_ref": "kfm://authority/synthetic-weather-service",
+      "source_role": "FORECAST",
+      "support_type": "PREDICTION",
+      "source_snapshot_refs": [
+        "kfm:source-snapshot:3333333333333333333333333333333333333333333333333333333333333333"
+      ],
+      "temporal_authority_ref": "kfm://temporal-authority/forecast/synthetic/2026-08-09T12",
+      "times": {
+        "source_data_cutoff_at": "2026-08-09T11:30:00Z",
+        "issued_at": "2026-08-09T12:00:00Z",
+        "valid_from": "2026-08-09T13:00:00Z",
+        "valid_to": "2026-08-10T13:00:00Z",
+        "retrieved_at": "2026-08-09T12:15:00Z",
+        "corrected_at": null,
+        "superseded_at": null,
+        "native_timezone": "America/Chicago"
+      },
+      "space": {
+        "geography_ref": "kfm://geography/kansas/central-region",
+        "scale": "REGIONAL",
+        "geometry_role": "OPERATIONAL",
+        "geometry_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "geometry_confidence": "HIGH"
+      },
+      "method": {
+        "kind": "MODEL",
+        "model_ref": "kfm://model/synthetic-weather-model",
+        "model_version": "2026.08-test",
+        "forecaster_ref": null,
+        "method_ref": "kfm://method/synthetic-probabilistic-outlook/v1",
+        "variable_id": "air_temperature_max",
+        "unit": "degC",
+        "ensemble_ref": "kfm://ensemble/synthetic-weather-model/2026-08-09T11",
+        "scenario_ref": null
+      },
+      "uncertainty": {
+        "kind": "PROBABILITY",
+        "value_ref": "kfm://uncertainty/synthetic-weather-outlook/2026-08-09T12",
+        "confidence": "MEDIUM"
+      },
+      "forecast_artifact_refs": [
+        "kfm://artifact/forecast/synthetic/2026-08-09T12/grid"
+      ],
+      "content_digests": [
+        "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      ],
+      "evidence_refs": [
+        "kfm://evidence-ref/forecast/synthetic/2026-08-09T12"
+      ],
+      "lineage": {
+        "state": "CURRENT",
+        "corrects": [],
+        "superseded_by": [],
+        "conflict_refs": []
+      },
+      "release_state": "UNRELEASED",
+      "release_ref": null,
+      "limitations": [
+        "Fixture-only forecast candidate.",
+        "Not an observed measurement or public guidance."
+      ],
+      "public_use_allowed": false,
+      "effects": {
+        "source_activated": false,
+        "evidence_resolved": false,
+        "policy_evaluated": false,
+        "promoted": false,
+        "released": false,
+        "published": false
+      }
+    }
+  },
+  "cases": [
+    {
+      "name": "valid_model_current",
+      "base": "current",
+      "mutations": [],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "valid_expert_current",
+      "base": "current",
+      "mutations": [
+        {
+          "path": "/source_native_id",
+          "value": "forecast:synthetic:expert:2026-08-09T12"
+        },
+        {
+          "path": "/method/kind",
+          "value": "EXPERT"
+        },
+        {
+          "path": "/method/model_ref",
+          "value": null
+        },
+        {
+          "path": "/method/model_version",
+          "value": null
+        },
+        {
+          "path": "/method/forecaster_ref",
+          "value": "kfm://forecaster/synthetic-weather-desk"
+        },
+        {
+          "path": "/method/method_ref",
+          "value": "kfm://method/synthetic-expert-outlook/v1"
+        },
+        {
+          "path": "/method/ensemble_ref",
+          "value": null
+        },
+        {
+          "path": "/uncertainty/kind",
+          "value": "CATEGORY_CONFIDENCE"
+        },
+        {
+          "path": "/uncertainty/value_ref",
+          "value": "kfm://uncertainty/synthetic-expert-outlook/2026-08-09T12"
+        },
+        {
+          "path": "/uncertainty/confidence",
+          "value": "LOW"
+        },
+        {
+          "path": "/content_digests",
+          "value": [
+            "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+          ]
+        },
+        {
+          "path": "/evidence_refs",
+          "value": [
+            "kfm://evidence-ref/forecast/synthetic/expert/2026-08-09T12"
+          ]
+        },
+        {
+          "path": "/forecast_artifact_refs",
+          "value": [
+            "kfm://artifact/forecast/synthetic/expert/2026-08-09T12/polygon-set"
+          ]
+        }
+      ],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "valid_hybrid_corrected",
+      "base": "current",
+      "mutations": [
+        {
+          "path": "/source_native_id",
+          "value": "forecast:synthetic:hybrid:2026-08-09T12:correction-1"
+        },
+        {
+          "path": "/method/kind",
+          "value": "HYBRID"
+        },
+        {
+          "path": "/method/forecaster_ref",
+          "value": "kfm://forecaster/synthetic-weather-desk"
+        },
+        {
+          "path": "/times/corrected_at",
+          "value": "2026-08-09T12:30:00Z"
+        },
+        {
+          "path": "/times/retrieved_at",
+          "value": "2026-08-09T12:45:00Z"
+        },
+        {
+          "path": "/lineage/state",
+          "value": "CORRECTED"
+        },
+        {
+          "path": "/lineage/corrects",
+          "value": [
+            "kfm://forecast-product/synthetic/2026-08-09T12/original"
+          ]
+        },
+        {
+          "path": "/content_digests",
+          "value": [
+            "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+          ]
+        },
+        {
+          "path": "/evidence_refs",
+          "value": [
+            "kfm://evidence-ref/forecast/synthetic/2026-08-09T12/correction-1"
+          ]
+        },
+        {
+          "path": "/limitations",
+          "value": [
+            "Correction lineage is fixture-only.",
+            "Fixture-only forecast candidate.",
+            "Not an observed measurement or public guidance."
+          ]
+        }
+      ],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "valid_superseded",
+      "base": "current",
+      "mutations": [
+        {
+          "path": "/source_native_id",
+          "value": "forecast:synthetic:2026-08-08T12"
+        },
+        {
+          "path": "/times/source_data_cutoff_at",
+          "value": "2026-08-08T11:30:00Z"
+        },
+        {
+          "path": "/times/issued_at",
+          "value": "2026-08-08T12:00:00Z"
+        },
+        {
+          "path": "/times/valid_from",
+          "value": "2026-08-08T13:00:00Z"
+        },
+        {
+          "path": "/times/valid_to",
+          "value": "2026-08-09T13:00:00Z"
+        },
+        {
+          "path": "/times/superseded_at",
+          "value": "2026-08-09T12:00:00Z"
+        },
+        {
+          "path": "/temporal_authority_ref",
+          "value": "kfm://temporal-authority/forecast/synthetic/2026-08-08T12"
+        },
+        {
+          "path": "/method/ensemble_ref",
+          "value": "kfm://ensemble/synthetic-weather-model/2026-08-08T11"
+        },
+        {
+          "path": "/uncertainty/value_ref",
+          "value": "kfm://uncertainty/synthetic-weather-outlook/2026-08-08T12"
+        },
+        {
+          "path": "/forecast_artifact_refs",
+          "value": [
+            "kfm://artifact/forecast/synthetic/2026-08-08T12/grid"
+          ]
+        },
+        {
+          "path": "/content_digests",
+          "value": [
+            "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+          ]
+        },
+        {
+          "path": "/evidence_refs",
+          "value": [
+            "kfm://evidence-ref/forecast/synthetic/2026-08-08T12"
+          ]
+        },
+        {
+          "path": "/lineage/state",
+          "value": "SUPERSEDED"
+        },
+        {
+          "path": "/lineage/superseded_by",
+          "value": [
+            "kfm://forecast-product/synthetic/2026-08-09T12"
+          ]
+        }
+      ],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "valid_conflicted",
+      "base": "current",
+      "mutations": [
+        {
+          "path": "/source_native_id",
+          "value": "forecast:synthetic:2026-08-09T12:conflicted"
+        },
+        {
+          "path": "/space/geography_ref",
+          "value": null
+        },
+        {
+          "path": "/space/geometry_role",
+          "value": "UNRESOLVED"
+        },
+        {
+          "path": "/space/geometry_digest",
+          "value": null
+        },
+        {
+          "path": "/space/geometry_confidence",
+          "value": "UNRESOLVED"
+        },
+        {
+          "path": "/content_digests",
+          "value": [
+            "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+          ]
+        },
+        {
+          "path": "/evidence_refs",
+          "value": [
+            "kfm://evidence-ref/forecast/synthetic/2026-08-09T12/source-a",
+            "kfm://evidence-ref/forecast/synthetic/2026-08-09T12/source-b"
+          ]
+        },
+        {
+          "path": "/lineage/state",
+          "value": "CONFLICTED"
+        },
+        {
+          "path": "/lineage/conflict_refs",
+          "value": [
+            "kfm://conflict/forecast/synthetic/geometry",
+            "kfm://conflict/forecast/synthetic/method"
+          ]
+        },
+        {
+          "path": "/limitations",
+          "value": [
+            "Conflicting forecast support remains unresolved.",
+            "Fixture-only forecast candidate.",
+            "Not an observed measurement or public guidance."
+          ]
+        }
+      ],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "source_role_collapse",
+      "base": "current",
+      "mutations": [
+        {
+          "path": "/source_role",
+          "value": "OBSERVATION"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "SOURCE_ROLE_COLLAPSE"
+      ]
+    },
+    {
+      "name": "support_type_collapse",
+      "base": "current",
+      "mutations": [
+        {
+          "path": "/support_type",
+          "value": "DIRECT_MEASUREMENT"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "SUPPORT_TYPE_COLLAPSE"
+      ]
+    },
+    {
+      "name": "data_cutoff_after_issuance",
+      "base": "current",
+      "mutations": [
+        {
+          "path": "/times/source_data_cutoff_at",
+          "value": "2026-08-09T12:05:00Z"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "DATA_CUTOFF_AFTER_ISSUANCE"
+      ]
+    },
+    {
+      "name": "validity_before_issuance",
+      "base": "current",
+      "mutations": [
+        {
+          "path": "/times/valid_from",
+          "value": "2026-08-09T11:45:00Z"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "VALIDITY_BEFORE_ISSUANCE"
+      ]
+    },
+    {
+      "name": "validity_interval_inverted",
+      "base": "current",
+      "mutations": [
+        {
+          "path": "/times/valid_to",
+          "value": "2026-08-09T12:30:00Z"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "VALIDITY_INTERVAL_INVALID"
+      ]
+    },
+    {
+      "name": "model_method_missing_model",
+      "base": "current",
+      "mutations": [
+        {
+          "path": "/method/model_ref",
+          "value": null
+        },
+        {
+          "path": "/method/model_version",
+          "value": null
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "METHOD_MODEL_CONTEXT_REQUIRED"
+      ]
+    },
+    {
+      "name": "expert_method_model_conflict",
+      "base": "current",
+      "mutations": [
+        {
+          "path": "/method/kind",
+          "value": "EXPERT"
+        },
+        {
+          "path": "/method/forecaster_ref",
+          "value": "kfm://forecaster/synthetic-weather-desk"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "METHOD_EXPERT_CONTEXT_CONFLICT"
+      ]
+    },
+    {
+      "name": "uncertainty_confidence_overclaim",
+      "base": "current",
+      "mutations": [
+        {
+          "path": "/uncertainty/kind",
+          "value": "NOT_PROVIDED"
+        },
+        {
+          "path": "/uncertainty/value_ref",
+          "value": null
+        },
+        {
+          "path": "/uncertainty/confidence",
+          "value": "HIGH"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "UNCERTAINTY_CONFIDENCE_OVERCLAIM"
+      ]
+    },
+    {
+      "name": "uncertainty_reference_missing",
+      "base": "current",
+      "mutations": [
+        {
+          "path": "/uncertainty/value_ref",
+          "value": null
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "UNCERTAINTY_REFERENCE_REQUIRED"
+      ]
+    },
+    {
+      "name": "release_overclaim",
+      "base": "current",
+      "mutations": [
+        {
+          "path": "/release_state",
+          "value": "RELEASED"
+        },
+        {
+          "path": "/release_ref",
+          "value": "kfm://release/forecast/synthetic/2026-08-09T12"
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "RELEASE_OVERCLAIM"
+      ]
+    },
+    {
+      "name": "public_use_overclaim",
+      "base": "current",
+      "mutations": [
+        {
+          "path": "/public_use_allowed",
+          "value": true
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "PUBLIC_USE_OVERCLAIM"
+      ]
+    },
+    {
+      "name": "effect_overclaim",
+      "base": "current",
+      "mutations": [
+        {
+          "path": "/effects/released",
+          "value": true
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        "EFFECT_OVERCLAIM"
+      ]
+    },
+    {
+      "name": "spec_hash_mismatch",
+      "base": "current",
+      "mutations": [],
+      "identity_mode": "MISMATCH_SPEC_HASH",
+      "expected_outcome": "ERROR",
+      "expected_findings": [
+        "SPEC_HASH_MISMATCH"
+      ]
+    }
+  ]
+}

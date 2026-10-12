@@ -1,0 +1,21 @@
+{
+  "object_type": "CatalogTrustExtension",
+  "schema_version": "1.0.0",
+  "extension_id": "catalog-trust-extension:fixture:prov-proof",
+  "host_profile": "PROV_ACTIVITY",
+  "host_record_ref": "fixture:catalog:prov:activity-proof",
+  "namespace": "kfm",
+  "hash_profile": "RFC8785-JCS",
+  "spec_hash": "sha256:1d01acd7abc895160db104a9d1705cb3e83d1287325624c7dcd738f8df7baf5f",
+  "kfm:run_receipt_ref": "fixture:run:prov-proof",
+  "kfm:proof_ref": "fixture:proof:prov-proof",
+  "kfm:trust_class": "proof",
+  "kfm:source_role": "modeled",
+  "governance": {
+    "catalog_authorized": false,
+    "promotion_authorized": false,
+    "release_authorized": false,
+    "publication_authorized": false,
+    "public_use_allowed": false
+  }
+}

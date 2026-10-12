@@ -1,0 +1,43 @@
+{
+  "cases": [
+    {
+      "case_id": "valid-documented-only",
+      "expected_findings": [],
+      "expected_outcome": "PASS",
+      "input": "valid/valid_documented_only_matrix.json"
+    },
+    {
+      "case_id": "active-without-bindings",
+      "expected_findings": [
+        "SCHEMA_INVALID"
+      ],
+      "expected_outcome": "ERROR",
+      "input": "invalid/invalid_active_without_bindings.json"
+    },
+    {
+      "case_id": "duplicate-authority",
+      "expected_findings": [
+        "AUTHORITY_ID_DUPLICATE",
+        "ENTRIES_NOT_CANONICAL"
+      ],
+      "expected_outcome": "ERROR",
+      "input": "semantic_invalid/semantic_duplicate_authority.json"
+    },
+    {
+      "case_id": "missing-repo-ref",
+      "expected_findings": [
+        "REPO_REF_MISSING"
+      ],
+      "expected_outcome": "ERROR",
+      "input": "semantic_invalid/semantic_missing_repo_ref.json"
+    },
+    {
+      "case_id": "unresolved-access-surface",
+      "expected_findings": [
+        "ACCESS_SURFACE_REF_UNRESOLVED"
+      ],
+      "expected_outcome": "ERROR",
+      "input": "semantic_invalid/semantic_unresolved_access_surface.json"
+    }
+  ]
+}

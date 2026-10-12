@@ -1,0 +1,104 @@
+{
+  "receipt_id": "genrec-noaa-fetch-admit-20260927",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/noaa-connector-offline.yml",
+    "connectors/noaa/README.md",
+    "connectors/noaa/pyproject.toml",
+    "connectors/noaa/src/noaa/README.md",
+    "connectors/noaa/src/noaa/admit.py",
+    "connectors/noaa/src/noaa/fetch.py",
+    "connectors/noaa/tests/README.md",
+    "connectors/noaa/tests/test_fetch_admit.py",
+    "tools/qa/scaffold_baseline.json"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/noaa-connector-offline.yml": "sha256:735e9461f082cfe7ec22f77457e7c4f1939c6285ce3eeef01a99072f9acf7c71",
+    "connectors/noaa/README.md": "sha256:4892b40e2e735eb9fbe1c57784d858ec480a14b13ee4543de2a18a9281fc4d9f",
+    "connectors/noaa/pyproject.toml": "sha256:4dc5243d2cab20081ac18e98e8480aaeea09611e8811b9ead1b858afd5464ee7",
+    "connectors/noaa/src/noaa/README.md": "sha256:ecea75601bf0be0355ea7ea4b4f19a7a94c494ab0b883cbfd8c197b296113bcc",
+    "connectors/noaa/src/noaa/admit.py": "sha256:395c163c0790db053fe75695eadbc68193f047d171c6f86385add54578e60ab2",
+    "connectors/noaa/src/noaa/fetch.py": "sha256:ba954ccee0f93cec1e1cd1fbf71dfb3669593c2cd3e2375802692ece236e13b7",
+    "connectors/noaa/tests/README.md": "sha256:8db6fab6cfd27c6fdf889a10a3606fc9d64e40265e20cb0bc71d80cf0eaffa12",
+    "connectors/noaa/tests/test_fetch_admit.py": "sha256:3264400882cd50f6aae81eb11b0aba5f4bd3141385b1cb41556cf3bd84eb0899",
+    "tools/qa/scaffold_baseline.json": "sha256:b0b03f93be18567d997a282d28aa76281dad6d22af5b98bdf1fbabff3fe29d74"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:45a0461237581e432c0c6c533f2092d1a6034096091e0530287393ebee929351",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/033c71c3a80ee09b547a7ed4ce5c3a2683cd7221",
+      "connectors/noaa/src/noaa/storm_events.py",
+      "connectors/noaa/src/noaa/uscrn_hourly.py",
+      "connectors/noaa/src/noaa/nws_alerts.py",
+      "connectors/census/src/census/fetch.py"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/noaa-connector-offline.yml": "PROPOSED",
+    "connectors/noaa/README.md": "PROPOSED",
+    "connectors/noaa/pyproject.toml": "CONFIRMED",
+    "connectors/noaa/src/noaa/README.md": "PROPOSED",
+    "connectors/noaa/src/noaa/admit.py": "CONFIRMED",
+    "connectors/noaa/src/noaa/fetch.py": "CONFIRMED",
+    "connectors/noaa/tests/README.md": "PROPOSED",
+    "connectors/noaa/tests/test_fetch_admit.py": "CONFIRMED",
+    "tools/qa/scaffold_baseline.json": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "NOAA connector suites",
+      "outcome": "PASS",
+      "reason": "test_storm_events, test_uscrn_hourly, test_nws_alerts and the new test_fetch_admit (43 tests total) pass under the noaa-connector-offline discover pattern."
+    },
+    {
+      "gate": "Targeted mutation testing",
+      "outcome": "PASS",
+      "reason": "11 NOAA fetch/admit mutations (admission URL re-check, three canonical-URL rules, USCRN fetch rule, gap/NWS/record flags, descriptor hold, media allowlist, product dispatch) applied, all caught, files verified restored."
+    },
+    {
+      "gate": "Shared and repository checks",
+      "outcome": "PASS",
+      "reason": "tests/packages/connectors_core and tests/qa pass (157); USGS/FEMA/GBIF/iNaturalist/Census suites pass; scaffold_inventory --check at 1276 (5 NOAA findings resolved); deny_test_runner PASS; connector gate scan PASS; non-publisher static test PASS; workflow-security PASS (486 workflows); docs-critical-structure 0 findings; ruff clean; committed-tree repository-topology findings identical to base."
+    },
+    {
+      "gate": "Hosted CI and independent review",
+      "outcome": "SKIPPED",
+      "reason": "Read after PR creation."
+    },
+    {
+      "gate": "Source activation, admission, release",
+      "outcome": "SKIPPED",
+      "reason": "No network library, descriptor change, lane-placement decision, lifecycle write, alert relay, admission, or publication; routes stay HOLD."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/033c71c3a80ee09b547a7ed4ce5c3a2683cd7221"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-09-27T14:14:55Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "pr_number": 4758,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Replaces NOAA fetch.py/admit.py/pyproject.toml placeholders: planner-canonical Storm Events, USCRN hourly02 and NWS alert URLs through the injected transport; admission bound to the episode's own source identity with the URL rule re-applied. Descriptor and lane placement unchanged; KFM relays no alert."
+}

@@ -1,0 +1,87 @@
+{
+  "receipt_id": "genrec-publication-deny-dry-run-mrts-successor-20260822",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "Makefile",
+    "tests/release/README.md",
+    "tests/release/test_publication_deny_dry_run.py",
+    "tools/release/README.md",
+    "tools/release/release_dry_run.py"
+  ],
+  "artifact_hashes": {
+    "Makefile": "sha256:29f93bb994f02f7af43dbc9767568a2ec0f924d9bc3832c0df70b136c5a7ebd5",
+    "tests/release/README.md": "sha256:f69b064bad7093bafe7f5d8faa330f6c9d45f465e5c3b6a176d990ed8fe37476",
+    "tests/release/test_publication_deny_dry_run.py": "sha256:41ac054d5b92e03f5f7b4900ccaf6cfcc5f34a1722e559163661bd62b3b2be50",
+    "tools/release/README.md": "sha256:d3e3a6e38e889ed52c7b65dd73060cb3a893d871a4423141b903ce83481454a4",
+    "tools/release/release_dry_run.py": "sha256:1b6aa53ebdde595e64f042ec41b24752431d168ff46c9568d1ff28004b8f358b"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5-session-2026-08-22"
+  },
+  "prompt_or_contract": "sha256:7f3a8dc38a3dc1e05581c50516d2b9aac824da53b12458e2e373c29d6a25cc7e",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "tools_enabled": [
+      "Google Drive connector",
+      "GitHub connector",
+      "local no-network validation"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/pull/3405",
+      "repo:main@db070e62a1f95d5edaaa088896a6e9ff3757a9a0",
+      "repo:historical-receipt:data/receipts/generated/genrec-publication-deny-dry-run-current-20260816.json"
+    ]
+  },
+  "truth_labels": {
+    "Makefile": "PROPOSED",
+    "tests/release/README.md": "CONFIRMED",
+    "tests/release/test_publication_deny_dry_run.py": "CONFIRMED",
+    "tools/release/README.md": "CONFIRMED",
+    "tools/release/release_dry_run.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "publication-denial-behavior",
+      "outcome": "PASS",
+      "reason": "The synthetic release dry run and four no-write tests remain unchanged and pass; this successor binds the Makefile after MRTS targets were added."
+    },
+    {
+      "gate": "historical-receipt-preservation",
+      "outcome": "PASS",
+      "reason": "All earlier publication-denial receipts remain unchanged as append-only process memory."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Independent human review remains pending and this receipt grants no publication authority."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "KFM-GDRIVE-AI-BUILD-CONTRACT",
+      "validated": true,
+      "evidence_ref": "https://docs.google.com/document/d/1yy3IaBJm9epC578w7Oak_12gVxT59vnw6IJYn0XIHKs/edit"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-22T19:51:12Z",
+  "emitter": "OpenAI Codex Work Mode",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Append-only current-byte successor after MRTS-02 and MRTS-03 changed Makefile. Release behavior remains synthetic, deny-by-default, and no-write. This receipt is not truth, policy, review, rollback, merge, release, deployment, promotion, or publication authority."
+}

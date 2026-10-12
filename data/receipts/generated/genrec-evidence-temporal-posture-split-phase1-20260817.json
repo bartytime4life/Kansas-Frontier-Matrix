@@ -1,0 +1,197 @@
+{
+  "receipt_id": "genrec-evidence-temporal-posture-split-phase1-20260817",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/evidence-temporal-posture-assessment.yml",
+    ".github/workflows/temporal-authority-envelope-conflict-assessment.yml",
+    ".github/workflows/temporal-authority-envelope.yml",
+    "contracts/evidence/evidence_temporal_posture_assessment.md",
+    "contracts/evidence/temporal_authority_envelope.md",
+    "schemas/contracts/v1/evidence/evidence_temporal_posture_assessment.schema.json",
+    "fixtures/contracts/v1/evidence/evidence_temporal_posture_assessment/README.md",
+    "fixtures/contracts/v1/evidence/evidence_temporal_posture_assessment/valid/current_observation.json",
+    "fixtures/contracts/v1/evidence/evidence_temporal_posture_assessment/invalid/inverted_validity.json",
+    "fixtures/contracts/v1/evidence/evidence_temporal_posture_assessment/invalid/source_after_retrieval.json",
+    "tools/validators/evidence/validate_evidence_temporal_posture_assessment.py",
+    "tools/validators/evidence/validate_temporal_authority_envelope.py",
+    "tools/validators/governance/assess_temporal_authority_envelope_conflict.py",
+    "tools/validators/governance/temporal_authority_split_support.py",
+    "tests/evidence/test_evidence_temporal_posture_assessment.py",
+    "tests/evidence/test_temporal_authority_envelope.py",
+    "tests/validators/governance/test_assess_temporal_authority_envelope_conflict.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/evidence-temporal-posture-assessment.yml": "sha256:668d9c70d4d47a4f8c0771f2ec38831610578db69f9e94d5998008421970d0a0",
+    ".github/workflows/temporal-authority-envelope-conflict-assessment.yml": "sha256:a8bc6d0f195d1dd0d570db736b802cc7ca2af4596a09a173eabecd339f50773a",
+    ".github/workflows/temporal-authority-envelope.yml": "sha256:338bad63b01565dd71cb635baf7a33ca2a17a6d18fbf0d1092e471070e7180bb",
+    "contracts/evidence/evidence_temporal_posture_assessment.md": "sha256:4439ec36f449fa305201113c819c6aa2d44644e2f84511a179cbdd1bfe03835f",
+    "contracts/evidence/temporal_authority_envelope.md": "sha256:5df2fc41ef6962ce69aeb30ab783b017711a539b0b9091b555d840a7bf619e97",
+    "schemas/contracts/v1/evidence/evidence_temporal_posture_assessment.schema.json": "sha256:1e94a7d93532a9c55f7f32cbc793defb58ebd951153b25c4e0d6852a52f92ce5",
+    "fixtures/contracts/v1/evidence/evidence_temporal_posture_assessment/README.md": "sha256:4dfc1862f9000ab551c7cff68bc7e7478e86369a30a286c46366fdb1c32d46c9",
+    "fixtures/contracts/v1/evidence/evidence_temporal_posture_assessment/valid/current_observation.json": "sha256:35d92cb6d118dced9e3403d56a714a535c1774014893026cf71c644ff4e0891c",
+    "fixtures/contracts/v1/evidence/evidence_temporal_posture_assessment/invalid/inverted_validity.json": "sha256:5a0eb7bb46bf49444a4690b22e11491e07ed653082e2fced57fb5dc054159635",
+    "fixtures/contracts/v1/evidence/evidence_temporal_posture_assessment/invalid/source_after_retrieval.json": "sha256:6ec80f14859117c9a1a0539a3525592b60f360fb87c67f52d14551b2d1861ef0",
+    "tools/validators/evidence/validate_evidence_temporal_posture_assessment.py": "sha256:2936bc30b8f8ee39de09e0b0789d1dd231c35b5282271c3d6fff220b84baf4d6",
+    "tools/validators/evidence/validate_temporal_authority_envelope.py": "sha256:2b391d734e6a0c3eba07f4d2c670c1d475d5a201281c34a35534fcd6c91e4c43",
+    "tools/validators/governance/assess_temporal_authority_envelope_conflict.py": "sha256:50862597ec86d8ee314b5ba52206df9ca2ca9cc4afa320afddec235b4602e3d6",
+    "tests/evidence/test_evidence_temporal_posture_assessment.py": "sha256:a44252c1aa0a5e73f5dc2ff0230c2e1ffac1f7544d6f559173befe9c6dc148fc",
+    "tests/evidence/test_temporal_authority_envelope.py": "sha256:f45c9ed01fb4200e8f09ab6b7a00281adc40a237fc0d265ea98cefb347d294b2",
+    "tests/validators/governance/test_assess_temporal_authority_envelope_conflict.py": "sha256:3546ef1333b52f025e4d69beb7f56e1bd8e220dc50d32434ec2c1f7608283f90",
+    "tools/validators/governance/temporal_authority_split_support.py": "sha256:24f9189697fb42e90798188b9b16cd0d98b41f3d3ede45cfb336fdf1eb77d798"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-17"
+  },
+  "prompt_or_contract": "sha256:4086489e7ea11f4299350438f79cf45d7b027d1542bcc5311703fac1e2d9c043",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector repository inspection and mutation",
+      "local deterministic Python validation",
+      "attached prompt inspection"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:c404981405a1e9d3147a5ff222145892e6951227fb44288ca849f3a478486e29",
+      "sha256:2d57bd04f509748acbbcb009c6f5ea61b5aa1aee92fba615a2c104740419c8bb",
+      "sha256:533d89e65d908a73ef3c12232c81594d9cd8b570f338cbedfad2cc4db7bac6d6",
+      "sha256:d156d1e818ace757a2450c17597019028a1a5f9200d6d5bdfe321bcee28858b3",
+      "sha256:6c2b66bc2662324abf9dd5cc8f21619822280fa3d2da62d86777a2ff0ab96fa6"
+    ],
+    "attached_docs": [
+      "KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/2bfd956d386152d149c654c40f600ba9132ff16b",
+      "github://bartytime4life/Kansas-Frontier-Matrix/issues/2930#issuecomment-5306261315",
+      "github://bartytime4life/Kansas-Frontier-Matrix/issues/2990",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2bfd956d386152d149c654c40f600ba9132ff16b/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "attachment:KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/evidence-temporal-posture-assessment.yml": "PROPOSED",
+    ".github/workflows/temporal-authority-envelope-conflict-assessment.yml": "PROPOSED",
+    ".github/workflows/temporal-authority-envelope.yml": "PROPOSED",
+    "contracts/evidence/evidence_temporal_posture_assessment.md": "PROPOSED",
+    "contracts/evidence/temporal_authority_envelope.md": "PROPOSED",
+    "schemas/contracts/v1/evidence/evidence_temporal_posture_assessment.schema.json": "PROPOSED",
+    "fixtures/contracts/v1/evidence/evidence_temporal_posture_assessment/README.md": "CONFIRMED",
+    "fixtures/contracts/v1/evidence/evidence_temporal_posture_assessment/valid/current_observation.json": "CONFIRMED",
+    "fixtures/contracts/v1/evidence/evidence_temporal_posture_assessment/invalid/inverted_validity.json": "CONFIRMED",
+    "fixtures/contracts/v1/evidence/evidence_temporal_posture_assessment/invalid/source_after_retrieval.json": "CONFIRMED",
+    "tools/validators/evidence/validate_evidence_temporal_posture_assessment.py": "CONFIRMED",
+    "tools/validators/evidence/validate_temporal_authority_envelope.py": "CONFIRMED",
+    "tools/validators/governance/assess_temporal_authority_envelope_conflict.py": "CONFIRMED",
+    "tests/evidence/test_evidence_temporal_posture_assessment.py": "CONFIRMED",
+    "tests/evidence/test_temporal_authority_envelope.py": "CONFIRMED",
+    "tests/validators/governance/test_assess_temporal_authority_envelope_conflict.py": "CONFIRMED",
+    "tools/validators/governance/temporal_authority_split_support.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Pinned main at 2bfd956d386152d149c654c40f600ba9132ff16b; no open pull request owned the migration seam."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "Meaning, shape, fixtures, validators, tests, read-only workflows, and generated process memory remain in existing responsibility roots under accepted ADR-0029."
+    },
+    {
+      "gate": "python-syntax-compilation",
+      "outcome": "PASS",
+      "reason": "Main and support modules compile."
+    },
+    {
+      "gate": "focused-unittest-suite-23-tests",
+      "outcome": "PASS",
+      "reason": "Canonical assessment, legacy wrapper, split support/assessment, cross-family denial, chronology, Advisory binding, deterministic replay, and no-network cases passed locally."
+    },
+    {
+      "gate": "legacy-versus-canonical-fixture-byte-replay",
+      "outcome": "PASS",
+      "reason": "All three canonical JSON fixtures have the exact Git blob identities of the corresponding legacy fixtures."
+    },
+    {
+      "gate": "common-versus-evidence-false-acceptance-denied",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "program-outcome-chain-reference-fenced",
+      "outcome": "PASS",
+      "reason": "The existing synthetic kfm:temporal-authority: reference is classified as legacy compatibility without inferring conformance; new unclassified runtime references fail closed."
+    },
+    {
+      "gate": "split-assessment-deterministic-hold",
+      "outcome": "PASS",
+      "reason": "Local assessment returned HOLD_COMPATIBILITY / SPLIT with no findings or scan gaps and all authority effects false."
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "central-validator-registry-self-validation",
+      "outcome": "SKIPPED",
+      "reason": "Requires the complete repository checkout; the new read-only workflow executes tools/validate_all.py --validate-registry on the exact PR head."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted validation begins after the draft pull request is opened."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human semantic, evidence, temporal, compatibility, and governance review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "github://bartytime4life/Kansas-Frontier-Matrix/issues/2930#issuecomment-5306261315"
+  ],
+  "citations": [
+    {
+      "id": "owner-directed-split-disposition",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/issues/2930#issuecomment-5306261315"
+    },
+    {
+      "id": "phase-one-implementation-issue",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/issues/2990"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/2bfd956d386152d149c654c40f600ba9132ff16b/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "implementation-forward-operating-contract",
+      "validated": true,
+      "evidence_ref": "attachment:KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-17T06:20:42Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": "issues/2990"
+  },
+  "notes": "Phase 1 implements the owner-directed SPLIT additively. The common TemporalAuthorityEnvelope remains unchanged and canonical. EvidenceTemporalPostureAssessment preserves the legacy evidence shape and diagnostics under a distinct name; the legacy schema, fixture bytes, identifier prefix, and wrapper remain available. No common/evidence translator is defined. ADR-0014 remains proposed. External persisted-record inventory remains a mandatory blocker to legacy removal. Rollback is a reviewed revert of this additive packet while the unchanged legacy schema remains the fallback; no source, evidence, policy, review, lifecycle, release, deployment, publication, access, or repository-setting authority is created."
+}

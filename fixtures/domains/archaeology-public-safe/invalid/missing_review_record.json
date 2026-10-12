@@ -1,0 +1,9 @@
+{
+  "fixture_id": "arc-public-safe-invalid-002",
+  "fixture_posture": "synthetic; public-safe; invalid; release-precheck",
+  "object_type": "ReleasePrecheckPayload",
+  "candidate_feature_id": "arc-candidate-public-safe-synthetic-002",
+  "policy_decision_ref": "kfm://policy/synthetic/archaeology-public-safe-002",
+  "review_ref": null,
+  "rollback_ref": "kfm://rollback/synthetic/archaeology-public-safe-002"
+}

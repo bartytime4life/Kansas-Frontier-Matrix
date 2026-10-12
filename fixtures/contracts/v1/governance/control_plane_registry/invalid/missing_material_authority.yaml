@@ -1,0 +1,37 @@
+meta:
+  status: PROPOSED
+  owner: UNKNOWN
+  description: Synthetic normalized registry fixture.
+  last_reviewed: 2026-08-22
+  related_doctrine:
+    - docs/doctrine/directory-rules.md
+
+schema_version: 1.0.0
+registry_id: document_registry
+status: PROPOSED
+authority_mode: projection_only
+implementation_status: PARTIAL
+completeness: partial
+base_ref: 568a95f025654d1ceb551f4d014674b736b5dbad
+owner_role: UNKNOWN
+non_effects:
+  - does_not_accept_or_supersede_documents
+  - does_not_activate_sources
+  - does_not_approve_policy
+  - does_not_create_authority
+  - does_not_release_deploy_or_publish
+  - does_not_replace_owning_objects
+entries:
+  - entry_id: fixture.document
+    subject_id: kfm://doc/doctrine/required-artifact-index
+    kind: doctrine_required_artifact_index
+    path: control_plane/document_registry_doctrine_required.yaml
+    path_sha256: sha256:af9467aaf406a886f350e2016a5ee83cff36f1c5081ea840fe8a06d034766755
+    authority_status: CONFLICTED
+    implementation_status: PARTIAL
+    owner_role: UNKNOWN
+    governing_refs: []
+    source_digests: []
+    reason_codes:
+      - fixture_entry
+    notes: Synthetic fixture entry for deterministic validation only.

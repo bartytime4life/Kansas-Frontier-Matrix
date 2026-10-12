@@ -1,0 +1,189 @@
+{
+  "receipt_id": "genrec-briefing-evidence-binding-chain-20260811",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/evidence-binding-chain-assessment.yml",
+    "contracts/evidence/evidence_binding_chain_assessment.md",
+    "docs/intake/exploratory/briefing-evidence-binding-chain-source-map.md",
+    "fixtures/contracts/v1/evidence/evidence_binding_chain_assessment/README.md",
+    "fixtures/contracts/v1/evidence/evidence_binding_chain_assessment/cases.json",
+    "fixtures/contracts/v1/evidence/evidence_binding_chain_assessment/valid_assessment.json",
+    "schemas/contracts/v1/evidence/evidence_binding_chain_assessment.schema.json",
+    "tests/validators/test_validate_evidence_binding_chain_assessment.py",
+    "tools/validators/validate_evidence_binding_chain_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/evidence-binding-chain-assessment.yml": "sha256:fd5bf95a8d018e94a786b7dd300cb8ebab0fceddfc02bcff750b2802eee6a765",
+    "contracts/evidence/evidence_binding_chain_assessment.md": "sha256:cb2c8d93c45d085b236def5ac543113d92ba6c61b9d860755d06eea1db66edd5",
+    "docs/intake/exploratory/briefing-evidence-binding-chain-source-map.md": "sha256:bf67ee3a35d616d432279c1377dc3a4e5686a4b4622f4c671f3f737a45599e13",
+    "fixtures/contracts/v1/evidence/evidence_binding_chain_assessment/README.md": "sha256:ffb0942d7190ad115d349f91bbeb9263a83661479ce2af248b0c348c761c4e82",
+    "fixtures/contracts/v1/evidence/evidence_binding_chain_assessment/cases.json": "sha256:464ec6735e52f6232ad80a19564bf1cd9773bd48e113e4474ddf4134f010a033",
+    "fixtures/contracts/v1/evidence/evidence_binding_chain_assessment/valid_assessment.json": "sha256:ee12fc5731737c6252715b4c27a8f1490a14052a9115b49efa38563f3568d0d3",
+    "schemas/contracts/v1/evidence/evidence_binding_chain_assessment.schema.json": "sha256:fc006a577c44c24590d4595b7b993b939b8bc52589ebd0cf333ff5700344d4ee",
+    "tests/validators/test_validate_evidence_binding_chain_assessment.py": "sha256:195c67e073e2b8fa7845732d9beaf6fa1e583fe0eef2961446e2e349e05a0418",
+    "tools/validators/validate_evidence_binding_chain_assessment.py": "sha256:80db515c3a8d1b6d40b9f2cdadb9cb23b843aee53a90854f02306efdaa50d472"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-11"
+  },
+  "prompt_or_contract": "sha256:cb2c8d93c45d085b236def5ac543113d92ba6c61b9d860755d06eea1db66edd5",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector source discovery and reading",
+      "GitHub connector repository inspection and draft pull-request publication",
+      "local deterministic Markdown, JSON, YAML, and Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:5131d5cfb889567dd3f4f4485348925d42fb11c0b6f4b093e78142fba8ad193a",
+      "sha256:9ab71fb30e988caeab41b10bef21caa7578316a850b1e16e1d46c499c61c1ea4",
+      "sha256:9c2540beff2fb66d95c71341ef67ef0a51eda64425fba8f40bdd25af7581a4f3",
+      "sha256:ab6ea49281d2585e4f5055638a9521bc064d4570194a4e8ae23dd00015117fd6",
+      "sha256:b4ad11e42dd2e6993247947c38ab49103fa19783536beee21bae6d2d7c2e531c"
+    ],
+    "attached_docs": [
+      "KFM_Briefing_to_System_Integration_Architecture.docx",
+      "Kansas Frontier Matrix — AI Build Operating Contract"
+    ],
+    "evidence_refs": [
+      "gdrive://1UnJ3dl9ZFvWHM01pYnqdoh0OOWinSFUg#evidence-binding-table",
+      "repo:docs/intake/exploratory/briefing-claim-field-binding-source-map.md@c4cb046829f72afd07e39d167c781fb7435a9ac4#next-sourced-ideas",
+      "repo:contracts/source/source_artifact.md@c4cb046829f72afd07e39d167c781fb7435a9ac4",
+      "repo:contracts/source/source_adapter.md@c4cb046829f72afd07e39d167c781fb7435a9ac4#finite-parser-outcomes",
+      "repo:contracts/evidence/evidence_ref.md@c4cb046829f72afd07e39d167c781fb7435a9ac4",
+      "repo:contracts/evidence/claim_field_binding.md@c4cb046829f72afd07e39d167c781fb7435a9ac4",
+      "repo:docs/doctrine/directory-rules.md@c4cb046829f72afd07e39d167c781fb7435a9ac4"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/evidence-binding-chain-assessment.yml": "PROPOSED",
+    "contracts/evidence/evidence_binding_chain_assessment.md": "PROPOSED",
+    "docs/intake/exploratory/briefing-evidence-binding-chain-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/evidence/evidence_binding_chain_assessment/README.md": "CONFIRMED",
+    "fixtures/contracts/v1/evidence/evidence_binding_chain_assessment/cases.json": "CONFIRMED",
+    "fixtures/contracts/v1/evidence/evidence_binding_chain_assessment/valid_assessment.json": "CONFIRMED",
+    "schemas/contracts/v1/evidence/evidence_binding_chain_assessment.schema.json": "PROPOSED",
+    "tests/validators/test_validate_evidence_binding_chain_assessment.py": "CONFIRMED",
+    "tools/validators/validate_evidence_binding_chain_assessment.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "draft-2020-12-schema-meta-validation-with-local-reference-registry",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "focused-unittest-suite",
+      "outcome": "PASS",
+      "reason": "Eight deterministic evidence-binding chain tests passed."
+    },
+    {
+      "gate": "exact-finite-outcome-fixture-replay",
+      "outcome": "PASS",
+      "reason": "All seventeen exact PASS, ABSTAIN, DENY, and ERROR cases matched their declared outcomes."
+    },
+    {
+      "gate": "existing-source-artifact-and-claim-field-binding-regressions",
+      "outcome": "PASS",
+      "reason": "All twenty-five existing component unittest cases passed."
+    },
+    {
+      "gate": "existing-executable-parse-result-regression",
+      "outcome": "PASS",
+      "reason": "All seven source-adapter protocol tests passed."
+    },
+    {
+      "gate": "documentation-metadata-and-local-link-validation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "workflow-yaml-and-json-parse",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "python-syntax-compilation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "network-and-candidate-file-write-surface-scan",
+      "outcome": "PASS",
+      "reason": "Focused tests denied network sockets and confirmed in-memory fixture replay without candidate file writes."
+    },
+    {
+      "gate": "evidence-bundle-policy-review-release-publication",
+      "outcome": "SKIPPED",
+      "reason": "The fixture-only assessment creates none of those governed surfaces."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed draft pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Source, evidence, contracts, schema, policy, security, and release review remain pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "gdrive:briefing-evidence-binding-table",
+      "validated": true,
+      "evidence_ref": "gdrive://1UnJ3dl9ZFvWHM01pYnqdoh0OOWinSFUg#evidence-binding-table"
+    },
+    {
+      "id": "repo:briefing-claim-field-binding-next-idea",
+      "validated": true,
+      "evidence_ref": "repo:docs/intake/exploratory/briefing-claim-field-binding-source-map.md@c4cb046829f72afd07e39d167c781fb7435a9ac4#next-sourced-ideas"
+    },
+    {
+      "id": "repo:source-artifact-contract",
+      "validated": true,
+      "evidence_ref": "repo:contracts/source/source_artifact.md@c4cb046829f72afd07e39d167c781fb7435a9ac4"
+    },
+    {
+      "id": "repo:source-adapter-parse-result",
+      "validated": true,
+      "evidence_ref": "repo:contracts/source/source_adapter.md@c4cb046829f72afd07e39d167c781fb7435a9ac4#finite-parser-outcomes"
+    },
+    {
+      "id": "repo:evidence-ref-contract",
+      "validated": true,
+      "evidence_ref": "repo:contracts/evidence/evidence_ref.md@c4cb046829f72afd07e39d167c781fb7435a9ac4"
+    },
+    {
+      "id": "repo:claim-field-binding-contract",
+      "validated": true,
+      "evidence_ref": "repo:contracts/evidence/claim_field_binding.md@c4cb046829f72afd07e39d167c781fb7435a9ac4"
+    },
+    {
+      "id": "repo:accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md@c4cb046829f72afd07e39d167c781fb7435a9ac4"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-11T20:40:32Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT Work GitHub and Google Drive connectors",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Additive inactive fixture-only EvidenceBindingChainAssessment derived from the connected briefing and the first next sourced idea in the existing ClaimFieldBinding source map. PASS proves only synthetic reference closure across SourceArtifact, executable ParseResult, pre-closure EvidenceRef, assessment-local EvidenceResolution, and ClaimFieldBinding. The slice does not fetch or activate a source, expose raw values, resolve EvidenceBundle sufficiency, authenticate transform receipts, evaluate rights, sensitivity or policy, write lifecycle state, approve review, create a ReleaseEvidenceIndex, release, render, answer, export, map, or publish."
+}

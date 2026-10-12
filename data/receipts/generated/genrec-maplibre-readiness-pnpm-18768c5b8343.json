@@ -1,0 +1,152 @@
+{
+  "receipt_id": "genrec-maplibre-readiness-pnpm-18768c5b8343",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/maplibre-perf-governance.yml"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/maplibre-perf-governance.yml": "sha256:18768c5b8343a6d8cec88f1223041b7f1846e79a7de6c8fd6d714ad0eff81a8f"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5.6 Work Mode 2026-08-01"
+  },
+  "prompt_or_contract": "sha256:21aa9001282d2c9385f7d42f1a356a56bda9e8055305bdeb915bfc16fe533e3d",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local repository inspection",
+      "Git",
+      "GitHub connector and Actions logs",
+      "PyYAML syntax validation",
+      "deterministic no-network shell validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:08d75840c97ab0e72d1d9b5b84a17e47a2e06cb159a5fbec5ee0a6a56682dad7",
+      "sha256:102e329bd208f48423ecc82354db8ab566b51e66c7d2266ddd8f64d72f4e5d8c",
+      "sha256:1f96f4b71fb7f2e93986130255c1ae0c11fd2966a0348d6cc344c95cc66dea33",
+      "sha256:425e998e5584a7e400e99c963aba019b33ff685f9fa26b5b474d8758a3160b2a",
+      "sha256:8246629f2dc84df95964e9085e8cf9e26d997e62b07667aa3451e68ea2be4adf",
+      "sha256:87376524cd5213bab72d6467321a22a5b9db5c133a04a1d39ec08ffb08b56ee1",
+      "sha256:abd332904fc7501bbfde026a819a32f54d2accfd2a3e7a85ecf620df90659838"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/1896",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/30688888431",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/1832",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/30479862372",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/7cff8ebd4bfb6fcba9a48b7ddf39abbe060e5df6",
+      ".github/workflows/maplibre-perf-governance.yml@7cff8ebd4bfb6fcba9a48b7ddf39abbe060e5df6",
+      "pnpm-lock.yaml@7cff8ebd4bfb6fcba9a48b7ddf39abbe060e5df6",
+      "pnpm-workspace.yaml@7cff8ebd4bfb6fcba9a48b7ddf39abbe060e5df6",
+      "package.json@7cff8ebd4bfb6fcba9a48b7ddf39abbe060e5df6",
+      "apps/explorer-web/package.json@7cff8ebd4bfb6fcba9a48b7ddf39abbe060e5df6",
+      "packages/maplibre/package.json@7cff8ebd4bfb6fcba9a48b7ddf39abbe060e5df6"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/maplibre-perf-governance.yml": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "pr-1896-path-and-relevant-blob-independence",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "pre-existing-lockfile-failure-in-pr-1832-run-30479862372",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "workflow-yaml-parse-and-name-job-identity-preservation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "repository-owned-node-and-python-syntax-checks",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "three-deterministic-maplibre-negative-path-tests",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "governed-runtime-readiness-inspection",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "explicit-workflow-hold-summary",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "deterministic-no-network-posture",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-schema-and-artifact-hash-validation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "pytest-maplibre-suite",
+      "outcome": "SKIPPED",
+      "reason": "pytest is absent from the primary runtime, and an existing isolated validator environment lacked a transitive Pygments module. The workflow intentionally invokes the three dependency-free test functions directly, and that exact path passed."
+    },
+    {
+      "gate": "hosted-checks",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks are observable only after the draft pull request is opened."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending and is not implied by this provenance receipt."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "PR-1896-8688af633e3d",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/1896"
+    },
+    {
+      "id": "RUN-30688888431",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/30688888431"
+    },
+    {
+      "id": "PR-1832-7d95e26dd050",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/1832"
+    },
+    {
+      "id": "RUN-30479862372",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/30479862372"
+    },
+    {
+      "id": "MAIN-7cff8ebd4bfb",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/7cff8ebd4bfb6fcba9a48b7ddf39abbe060e5df6"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-01T15:07:38Z",
+  "emitter": "openai/codex-gpt-5.6-work-mode",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Process-memory receipt for the bounded MapLibre readiness repair. PR #1896 was already merged when inspected, so its branch and thirteen-path diff were left unchanged. Runs 30479862372 and 30688888431 failed at the same readiness step after the Explorer baseline introduced the accepted pnpm workspace lock. The workflow now treats that lock only as reviewed dependency state while retaining a green-check-means-explicit-HOLD semantic and fail-closed guards for alternative lockfiles, workspace drift, MapLibre package dependencies, fixtures, schemas, validators, network posture, and trust-shaped outputs. No dependency was installed; no browser, external source, artifact, receipt beyond this provenance record, proof, release, deployment, publication, or repository setting was produced or changed. Rollback is to close the unmerged draft PR or transparently revert its single commit through a reviewed branch."
+}

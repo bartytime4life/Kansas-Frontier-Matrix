@@ -1,0 +1,103 @@
+{
+  "base": {
+    "object_type": "OfflineReleaseCapsuleAssessmentCandidate",
+    "schema_version": "1.0.0",
+    "profile": "kfm.offline-release-capsule-assessment.fixture.v1",
+    "assessment_id": "",
+    "spec_hash": "",
+    "assessed_at": "2026-08-09T23:00:00Z",
+    "capsule": {
+      "capsule_ref": "kfm:offline-capsule:synthetic-public-v2",
+      "release_id": "kfm:release:synthetic-public-v2",
+      "manifest_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "required_artifact_roles": [
+        "CITATION_SUMMARY",
+        "EVIDENCE_SUMMARY",
+        "GLYPH_MANIFEST",
+        "PMTILES",
+        "POLICY_SNAPSHOT",
+        "SPRITE_MANIFEST",
+        "STYLE",
+        "VERIFICATION_MATERIAL"
+      ],
+      "installed_at": "2026-08-09T20:00:00Z",
+      "last_verified_at": "2026-08-09T21:00:00Z",
+      "trust_valid_until": "2026-12-31T23:59:59Z",
+      "correction_delta_ref": null,
+      "withdrawal_delta_ref": null,
+      "rollback_release_ref": "kfm:release:synthetic-public-v1"
+    },
+    "observation": {
+      "observed_release_id": "kfm:release:synthetic-public-v2",
+      "observed_manifest_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "present_artifact_roles": [
+        "CITATION_SUMMARY",
+        "EVIDENCE_SUMMARY",
+        "GLYPH_MANIFEST",
+        "PMTILES",
+        "POLICY_SNAPSHOT",
+        "SPRITE_MANIFEST",
+        "STYLE",
+        "VERIFICATION_MATERIAL"
+      ],
+      "install_state": "ATOMIC_COMPLETE",
+      "connectivity": "OFFLINE",
+      "cache_scope": "PUBLIC_RELEASE_ONLY",
+      "correction_applied": false,
+      "withdrawal_applied": false
+    },
+    "capsule_assessment": {
+      "capsule_state": "READY_FOR_SEPARATE_INSTALL_REVIEW",
+      "finding_codes": [],
+      "missing_artifact_roles": [],
+      "purge_required": false,
+      "reconnect_sync_required": false,
+      "trusted_render_allowed": false,
+      "install_allowed": false,
+      "separate_release_review_required": true
+    },
+    "governance": {
+      "execution_mode": "FIXTURE_ONLY",
+      "network_attempted": false,
+      "artifact_bytes_read": false,
+      "digest_verified": false,
+      "signature_verified": false,
+      "trust_material_loaded": false,
+      "cache_mutated": false,
+      "cache_purged": false,
+      "install_performed": false,
+      "rollback_performed": false,
+      "render_performed": false,
+      "evidence_resolved": false,
+      "policy_evaluated": false,
+      "review_approved": false,
+      "release_authorized": false,
+      "publication_authorized": false,
+      "public_use_allowed": false
+    }
+  },
+  "cases": [
+    {"case_id": "ready-offline", "mutations": [], "recompute_assessment": true, "expected_status": "PASS", "expected_capsule_state": "READY_FOR_SEPARATE_INSTALL_REVIEW", "expected_findings": []},
+    {"case_id": "ready-reconnected", "mutations": [{"path": "/observation/connectivity", "value": "RECONNECTED"}], "recompute_assessment": true, "expected_status": "PASS", "expected_capsule_state": "READY_FOR_SEPARATE_INSTALL_REVIEW", "expected_findings": []},
+    {"case_id": "correction-pending-offline", "mutations": [{"path": "/capsule/correction_delta_ref", "value": "kfm:correction-delta:synthetic-001"}], "recompute_assessment": true, "expected_status": "PASS", "expected_capsule_state": "UPDATE_PENDING", "expected_findings": []},
+    {"case_id": "correction-pending-reconnected", "mutations": [{"path": "/capsule/correction_delta_ref", "value": "kfm:correction-delta:synthetic-002"}, {"path": "/observation/connectivity", "value": "RECONNECTED"}], "recompute_assessment": true, "expected_status": "PASS", "expected_capsule_state": "UPDATE_PENDING", "expected_findings": []},
+    {"case_id": "stale-trust", "mutations": [{"path": "/capsule/trust_valid_until", "value": "2026-08-09T22:00:00Z"}], "recompute_assessment": true, "expected_status": "PASS", "expected_capsule_state": "STALE", "expected_findings": []},
+    {"case_id": "missing-style", "mutations": [{"path": "/observation/present_artifact_roles", "value": ["CITATION_SUMMARY", "EVIDENCE_SUMMARY", "GLYPH_MANIFEST", "PMTILES", "POLICY_SNAPSHOT", "SPRITE_MANIFEST", "VERIFICATION_MATERIAL"]}], "recompute_assessment": true, "expected_status": "PASS", "expected_capsule_state": "INCOMPLETE", "expected_findings": []},
+    {"case_id": "release-mismatch", "mutations": [{"path": "/observation/observed_release_id", "value": "kfm:release:synthetic-public-v1"}], "recompute_assessment": true, "expected_status": "PASS", "expected_capsule_state": "INCOMPLETE", "expected_findings": []},
+    {"case_id": "manifest-mismatch", "mutations": [{"path": "/observation/observed_manifest_digest", "value": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"}], "recompute_assessment": true, "expected_status": "PASS", "expected_capsule_state": "INCOMPLETE", "expected_findings": []},
+    {"case_id": "interrupted-update", "mutations": [{"path": "/observation/install_state", "value": "INTERRUPTED"}], "recompute_assessment": true, "expected_status": "PASS", "expected_capsule_state": "ROLLBACK_REQUIRED", "expected_findings": []},
+    {"case_id": "withdrawn", "mutations": [{"path": "/capsule/withdrawal_delta_ref", "value": "kfm:withdrawal-delta:synthetic-001"}], "recompute_assessment": true, "expected_status": "PASS", "expected_capsule_state": "WITHDRAWN", "expected_findings": []},
+    {"case_id": "withdrawn-applied", "mutations": [{"path": "/capsule/withdrawal_delta_ref", "value": "kfm:withdrawal-delta:synthetic-002"}, {"path": "/observation/withdrawal_applied", "value": true}], "recompute_assessment": true, "expected_status": "PASS", "expected_capsule_state": "WITHDRAWN", "expected_findings": []},
+    {"case_id": "withdrawal-outranks-interruption", "mutations": [{"path": "/capsule/withdrawal_delta_ref", "value": "kfm:withdrawal-delta:synthetic-003"}, {"path": "/observation/install_state", "value": "INTERRUPTED"}], "recompute_assessment": true, "expected_status": "PASS", "expected_capsule_state": "WITHDRAWN", "expected_findings": []},
+    {"case_id": "deny-report-mismatch", "mutations": [{"path": "/capsule/correction_delta_ref", "value": "kfm:correction-delta:synthetic-003"}], "expected_status": "DENY", "expected_capsule_state": "UPDATE_PENDING", "expected_findings": [{"code": "OFFLINE_CAPSULE_REPORT_MISMATCH", "path": "/capsule_assessment"}]},
+    {"case_id": "deny-spec-hash", "mutations": [], "recompute_assessment": true, "spec_hash_override": "sha256:0000000000000000000000000000000000000000000000000000000000000000", "expected_status": "DENY", "expected_capsule_state": null, "expected_findings": [{"code": "OFFLINE_CAPSULE_SPEC_HASH_MISMATCH", "path": "/spec_hash"}]},
+    {"case_id": "deny-assessment-id", "mutations": [], "recompute_assessment": true, "assessment_id_override": "kfm:offline-capsule:000000000000000000000000", "expected_status": "DENY", "expected_capsule_state": null, "expected_findings": [{"code": "OFFLINE_CAPSULE_ID_MISMATCH", "path": "/assessment_id"}]},
+    {"case_id": "deny-required-roles-order", "mutations": [{"path": "/capsule/required_artifact_roles", "value": ["VERIFICATION_MATERIAL", "STYLE", "SPRITE_MANIFEST", "POLICY_SNAPSHOT", "PMTILES", "GLYPH_MANIFEST", "EVIDENCE_SUMMARY", "CITATION_SUMMARY"]}], "recompute_assessment": true, "expected_status": "DENY", "expected_capsule_state": null, "expected_findings": [{"code": "OFFLINE_CAPSULE_REQUIRED_ROLES_INVALID", "path": "/capsule/required_artifact_roles"}]},
+    {"case_id": "deny-inventory-order", "mutations": [{"path": "/observation/present_artifact_roles", "value": ["STYLE", "CITATION_SUMMARY", "EVIDENCE_SUMMARY", "GLYPH_MANIFEST", "PMTILES", "POLICY_SNAPSHOT", "SPRITE_MANIFEST", "VERIFICATION_MATERIAL"]}], "recompute_assessment": true, "expected_status": "DENY", "expected_capsule_state": null, "expected_findings": [{"code": "OFFLINE_CAPSULE_INVENTORY_NOT_CANONICAL", "path": "/observation/present_artifact_roles"}]},
+    {"case_id": "deny-time-order", "mutations": [{"path": "/capsule/last_verified_at", "value": "2026-08-09T19:00:00Z"}], "recompute_assessment": true, "expected_status": "DENY", "expected_capsule_state": null, "expected_findings": [{"code": "OFFLINE_CAPSULE_TIME_ORDER_INVALID", "path": "/capsule/last_verified_at"}]},
+    {"case_id": "deny-correction-binding", "mutations": [{"path": "/observation/correction_applied", "value": true}], "recompute_assessment": true, "expected_status": "DENY", "expected_capsule_state": null, "expected_findings": [{"code": "OFFLINE_CAPSULE_CORRECTION_BINDING_INVALID", "path": "/observation/correction_applied"}]},
+    {"case_id": "deny-withdrawal-binding", "mutations": [{"path": "/observation/withdrawal_applied", "value": true}], "recompute_assessment": true, "expected_status": "DENY", "expected_capsule_state": null, "expected_findings": [{"code": "OFFLINE_CAPSULE_WITHDRAWAL_BINDING_INVALID", "path": "/observation/withdrawal_applied"}]},
+    {"case_id": "deny-rollback-binding", "mutations": [{"path": "/observation/install_state", "value": "ROLLED_BACK"}, {"path": "/capsule/rollback_release_ref", "value": null}], "recompute_assessment": true, "expected_status": "DENY", "expected_capsule_state": null, "expected_findings": [{"code": "OFFLINE_CAPSULE_ROLLBACK_BINDING_INVALID", "path": "/capsule/rollback_release_ref"}]},
+    {"case_id": "deny-governance-effect", "mutations": [{"path": "/governance/cache_mutated", "value": true}], "recompute_assessment": true, "expected_status": "DENY", "expected_capsule_state": null, "expected_findings": [{"code": "OFFLINE_CAPSULE_SCHEMA_INVALID", "path": "/governance/cache_mutated"}]}
+  ]
+}

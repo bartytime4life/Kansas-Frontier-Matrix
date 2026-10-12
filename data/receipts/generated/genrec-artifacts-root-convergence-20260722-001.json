@@ -1,0 +1,170 @@
+{
+  "receipt_id": "genrec-artifacts-root-convergence-20260722-001",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "artifacts/README.md",
+    "docs/registers/DRIFT_REGISTER.md"
+  ],
+  "artifact_hashes": {
+    "artifacts/README.md": "sha256:86449d20df310218d128d7b96a30d80ddb14e732320d5ab3ca34e9254385b92d",
+    "docs/registers/DRIFT_REGISTER.md": "sha256:512e442e6f19818a1e28c35c80e1bc608b71ad41d6a694d4d7677eed096b242a"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5 family Work Mode session; exact deployment identifier unavailable"
+  },
+  "prompt_or_contract": "sha256:3eb3758943fe74f61e054197ab7f73a1658b4f7b542585fdccdc9e4a7eeee6a0",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "git",
+      "shell",
+      "apply_patch",
+      "PDF extraction and visual inspection"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:759de4fcb51cf0f55896089e397d9c47481d60d9fb80ac9a44d47b2f60a0a335",
+      "sha256:8e5d61b464ef6d04b8ccb881b14c1ed063784fad585a25936c27d0ef18ebdd36",
+      "sha256:48a3362ef4bf44e091288d50585397445a260ce5269e9a4c130eecaff794403b",
+      "sha256:67cf1408aad1f3e1f089922bc73b1d720f7199c9d3c7fb93eb0c787f397e529c",
+      "sha256:510ee7f3aea7610c853e429bc02a9dec32b64eee970115be7dd4df1c86cc2dc5",
+      "sha256:57b53c81a3609cc0a2832b385b41e4e4961b2e948c46f7e93e0089cf74bf64ad",
+      "sha256:931289e9db571fba73bbd22eaddaec9185ddbb82617d6ae0f87f065036298f11",
+      "sha256:0739e6f2a8228e48d55d895b7e7f74b6f93c59386572516de5f0337c6f0e83f6",
+      "sha256:abd332904fc7501bbfde026a819a32f54d2accfd2a3e7a85ecf620df90659838",
+      "sha256:5d781d20e1fc5da940ad84081d5ff6ae748774b2181770351a6c07c3c94a85be",
+      "sha256:c921cfdd2e8d6a8a5f112e9e0edb5ee5910d737b132b8ae7deda2c3a3997e690",
+      "sha256:235011e926c27648648acda234262c5e6f3051c394576994e295a59237cdc3d5",
+      "sha256:ac992131ecfaac8079402204db10e79056b9aa2a9fcab3ef8fac7c1203e6066c",
+      "sha256:425e998e5584a7e400e99c963aba019b33ff685f9fa26b5b474d8758a3160b2a"
+    ],
+    "attached_docs": [
+      "KFM Whole-Project Workflow Discovery, Completion, and Data Convergence Agent prompt",
+      "Directory Rules.pdf"
+    ],
+    "evidence_refs": [
+      "repository:bartytime4life/Kansas-Frontier-Matrix@86c039f9fda31eb2d4a75112911a5c400ae93a16",
+      "issue:https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1531#artifacts-discovery-and-claim-v1",
+      "path:artifacts/README.md@86c039f9fda31eb2d4a75112911a5c400ae93a16",
+      "tree:artifacts/@86c039f9fda31eb2d4a75112911a5c400ae93a16",
+      "path:docs/doctrine/directory-rules.md@86c039f9fda31eb2d4a75112911a5c400ae93a16",
+      "path:docs/registers/DRIFT_REGISTER.md@86c039f9fda31eb2d4a75112911a5c400ae93a16",
+      "path:.github/CODEOWNERS@86c039f9fda31eb2d4a75112911a5c400ae93a16",
+      "path:Makefile@86c039f9fda31eb2d4a75112911a5c400ae93a16",
+      "path:.github/workflows/docs-build.yml@86c039f9fda31eb2d4a75112911a5c400ae93a16",
+      "path:.github/workflows/policy-boundary-guards.yml@86c039f9fda31eb2d4a75112911a5c400ae93a16",
+      "path:.github/workflows/maplibre-perf-governance.yml@86c039f9fda31eb2d4a75112911a5c400ae93a16",
+      "path:docs/quality/maplibre-perf-governance.md@86c039f9fda31eb2d4a75112911a5c400ae93a16",
+      "path:scripts/attest-maplibre-perf.mjs@86c039f9fda31eb2d4a75112911a5c400ae93a16",
+      "path:scripts/build-maplibre-perf-proof-pack.mjs@86c039f9fda31eb2d4a75112911a5c400ae93a16",
+      "path:scripts/build-maplibre-perf-release-manifest.mjs@86c039f9fda31eb2d4a75112911a5c400ae93a16"
+    ]
+  },
+  "truth_labels": {
+    "artifacts/README.md": "CONFIRMED",
+    "docs/registers/DRIFT_REGISTER.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Directory Rules placement and compatibility-root preflight",
+      "outcome": "PASS",
+      "reason": "Directory Rules PDF page 12 was extracted and visually inspected; repository doctrine sections 8.2, 13.2, 15, and OPEN-DR-09-b were read. The batch changes documentation and a drift register only and does not create a parallel trust home."
+    },
+    {
+      "gate": "artifacts tracked-tree and consumer reconciliation",
+      "outcome": "PASS",
+      "reason": "The README records the exact 44 tracked files and 734,530 bytes at the pinned baseline, the four allowed lanes, tracked artifacts/release drift, and generated artifacts/perf outputs without asserting release or publication."
+    },
+    {
+      "gate": "Markdown, links, anchors, structure, and Mermaid",
+      "outcome": "PASS",
+      "reason": "One H1, balanced KFM meta block and fences, 12 required sections in order, 58 resolved local links/fragments, repository-compatible markdownlint with zero issues, and Mermaid 11.12.0 parse success."
+    },
+    {
+      "gate": "make validate",
+      "outcome": "PASS",
+      "reason": "Aggregate validators accepted configured valid fixtures and rejected configured invalid fixtures as expected; all 18 schema/contract tests passed in an isolated environment using the repository-declared dependency ranges."
+    },
+    {
+      "gate": "make boundary-guards",
+      "outcome": "PASS",
+      "reason": "All 15 control-plane, Explorer adapter, connector/pipeline non-publisher, and Governed API boundary tests passed."
+    },
+    {
+      "gate": "artifacts release/performance migration",
+      "outcome": "SKIPPED",
+      "reason": "Migration or retirement is blocked by OPEN-DR-09-b and the unresolved MapLibre artifact-placement conflict. This documentation batch does not make an ADR decision, move or delete files, or convert staging objects into trust authority."
+    },
+    {
+      "gate": "secret, sensitive-content, and publication-boundary diff scan",
+      "outcome": "PASS",
+      "reason": "The scoped documentation diff contains no credential, private-key, row-level personal, genomic, protected-location, source-activation, release-approval, or publication payload."
+    },
+    {
+      "gate": "human review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "directory-rules-pdf",
+      "validated": true,
+      "evidence_ref": "sha256:759de4fcb51cf0f55896089e397d9c47481d60d9fb80ac9a44d47b2f60a0a335"
+    },
+    {
+      "id": "kfm-main-snapshot",
+      "validated": true,
+      "evidence_ref": "repository:bartytime4life/Kansas-Frontier-Matrix@86c039f9fda31eb2d4a75112911a5c400ae93a16"
+    },
+    {
+      "id": "campaign-state-and-claim",
+      "validated": true,
+      "evidence_ref": "issue:https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1531#artifacts-discovery-and-claim-v1"
+    },
+    {
+      "id": "repository-directory-rules",
+      "validated": true,
+      "evidence_ref": "path:docs/doctrine/directory-rules.md@86c039f9fda31eb2d4a75112911a5c400ae93a16"
+    },
+    {
+      "id": "artifacts-tree",
+      "validated": true,
+      "evidence_ref": "tree:artifacts/@86c039f9fda31eb2d4a75112911a5c400ae93a16"
+    },
+    {
+      "id": "artifact-consumer-and-generator-surfaces",
+      "validated": true,
+      "evidence_ref": "path:.github/workflows/maplibre-perf-governance.yml@86c039f9fda31eb2d4a75112911a5c400ae93a16"
+    },
+    {
+      "id": "maplibre-placement-report",
+      "validated": true,
+      "evidence_ref": "path:docs/quality/maplibre-perf-governance.md@86c039f9fda31eb2d4a75112911a5c400ae93a16"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [
+      "@bartytime4life"
+    ],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-23T01:50:03Z",
+  "emitter": "OpenAI Codex Work Mode",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": "docs/registers/DRIFT_REGISTER.md (2026-07-22 artifacts authority drift)"
+  },
+  "notes": "Documentation and drift-register convergence for the artifacts compatibility root. The receipt records AI-authoring provenance and bounded validation only. It is not an EvidenceBundle, PolicyDecision, ReviewRecord, ReleaseManifest, PromotionDecision, correction approval, rollback approval, release authority, or publication authority. OPEN-DR-09-b and the MapLibre artifacts/perf placement conflict remain unresolved."
+}

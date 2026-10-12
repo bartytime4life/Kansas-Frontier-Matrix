@@ -1,0 +1,108 @@
+{
+  "artifact_hashes": {
+    "docs/architecture/briefing-integration.md": "sha256:065e4ed9db7f95b6e0b94c9193d0476178589982c1bd781245dce55a1086fd74"
+  },
+  "artifact_paths": [
+    "docs/architecture/briefing-integration.md"
+  ],
+  "citations": [
+    {
+      "id": "drive:briefing-lanes",
+      "validated": true,
+      "evidence_ref": "gdrive:KFM_Briefing_to_System_Integration_Architecture.docx#sections-12-16"
+    },
+    {
+      "id": "drive:distinctive-delta",
+      "validated": true,
+      "evidence_ref": "gdrive:KFM Circled Sources — Distinctive Delta Synthesis#3.3-five-briefing-lenses"
+    },
+    {
+      "id": "repository:briefing-source-map",
+      "validated": true,
+      "evidence_ref": "repo:docs/intake/exploratory/circled-whole-system-sources-distinctive-delta-source-map.md@91c90744753fdb81c1e6a11ae1a6f826dce267fa"
+    },
+    {
+      "id": "repository:directory-governance",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@91c90744753fdb81c1e6a11ae1a6f826dce267fa"
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-24T20:59:07Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Briefing_to_System_Integration_Architecture.docx",
+      "KFM Circled Sources — Distinctive Delta Synthesis"
+    ],
+    "evidence_hashes": [],
+    "evidence_refs": [
+      "gdrive:KFM_Briefing_to_System_Integration_Architecture.docx#sections-12-16",
+      "gdrive:KFM Circled Sources — Distinctive Delta Synthesis#3.3-five-briefing-lenses",
+      "repo:docs/architecture/briefing-integration.md@91c90744753fdb81c1e6a11ae1a6f826dce267fa"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-24"
+  },
+  "notes": "Adds a bounded human-readable reporting view to the existing briefing architecture. The five lenses are not domain types and create no schema, route, state, evidence, policy, review, release, publication, or public-use authority.",
+  "override_record": null,
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector repository inspection and draft-PR delivery",
+      "Google Drive read-only source inspection",
+      "local deterministic hashing and Markdown validation"
+    ]
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "receipt_id": "genrec-briefing-reporting-lenses-20260824",
+  "truth_labels": {
+    "docs/architecture/briefing-integration.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "The document retains one H1, one metadata block, balanced fences, and one bounded reporting-lenses section."
+    },
+    {
+      "gate": "source-reconciliation",
+      "outcome": "PASS",
+      "reason": "All five source lenses are represented with explicit anti-collapse boundaries and no machine authority."
+    },
+    {
+      "gate": "generated-receipt-byte-binding",
+      "outcome": "PASS",
+      "reason": "The receipt SHA-256 binds the intended briefing document bytes."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted validation starts after the draft pull request is created."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ]
+}

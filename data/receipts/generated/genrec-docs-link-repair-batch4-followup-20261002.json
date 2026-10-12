@@ -1,0 +1,74 @@
+{
+  "receipt_id": "genrec-docs-link-repair-batch4-followup-20261002",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/domains/settlements-infrastructure/CANONICAL_PATHS/README.md",
+    "docs/domains/settlements-infrastructure/README/README.md",
+    "docs/domains/settlements-infrastructure/sublanes/infrastructure.md"
+  ],
+  "artifact_hashes": {
+    "docs/domains/settlements-infrastructure/CANONICAL_PATHS/README.md": "sha256:1d82b02f5c93c593a7f6cf1d542bc9457c877a3745598fc2a266a83b2923d2ed",
+    "docs/domains/settlements-infrastructure/README/README.md": "sha256:48f3908cdacd9cc16773c991f83d809a88026b475914a6ee2d344c7341c5d4c6",
+    "docs/domains/settlements-infrastructure/sublanes/infrastructure.md": "sha256:5e7af59cfc039463e5670b39e610ba840bee6b90b9a9df59e4952510eb015c50"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:4b63854852fed5706a0cd906e6fdd15e3689703ff09ef00e398a5f3c7600ccd0",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/6c12d36c57beb0a4162ee65e43b40283ab458de2",
+      "repo:tools/validators/docs/link-check/check_links.py"
+    ]
+  },
+  "truth_labels": {
+    "docs/domains/settlements-infrastructure/CANONICAL_PATHS/README.md": "CONFIRMED",
+    "docs/domains/settlements-infrastructure/README/README.md": "CONFIRMED",
+    "docs/domains/settlements-infrastructure/sublanes/infrastructure.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Link check",
+      "outcome": "PASS",
+      "reason": "Three settlements-infrastructure documents regain four working links that batch 4 made plain text: three links to docs/doctrine/ai-build-operating-contract.md (the original ../../../ai-build-operating-contract.md landed on docs/, which the redirect map did not cover) and the infrastructure sublane footer's Parent dossier link, corrected from ./README.md to ../README.md because the document already names docs/domains/settlements-infrastructure/README.md. check_links.py reports no broken links."
+    },
+    {
+      "gate": "Metadata block, document graph, and stale docs",
+      "outcome": "PASS",
+      "reason": "check_meta_blocks.py, check_document_graph.py, and check_stale_docs.py report no FAIL findings for the diff."
+    },
+    {
+      "gate": "Hosted CI and independent review",
+      "outcome": "SKIPPED",
+      "reason": "Read after push."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/6c12d36c57beb0a4162ee65e43b40283ab458de2"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-10-02T15:42:04Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "The batch script now redirects any missing ai-build-operating-contract.md or directory-rules.md target to docs/doctrine/, and allows a ./ to ../ correction for a prose-labelled link only when the document already names the corrected file. Regenerating batch 4 with these rules changes only these three documents."
+}

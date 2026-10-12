@@ -1,0 +1,5 @@
+status: PROPOSED
+source_doc: docs/domains/archaeology/MISSING_OR_PLANNED_FILES.md
+path: data/registry/sources/archaeology/excavation_records.source.yaml
+notes:
+  - Placeholder created from docs/domains markdown inventory.

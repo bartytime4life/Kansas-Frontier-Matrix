@@ -1,0 +1,1 @@
+{"contains": "False was expected", "field": "/governance/publication_authority", "keyword": "const", "kind": "schema"}

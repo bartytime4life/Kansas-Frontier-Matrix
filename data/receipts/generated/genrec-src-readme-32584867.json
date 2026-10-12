@@ -1,0 +1,165 @@
+{
+  "receipt_id": "genrec:src-readme:325848674cf14ec4",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "src/README.md"
+  ],
+  "artifact_hashes": {
+    "src/README.md": "sha256:325848674cf14ec4407825dbf209fffd7d544c08014ed1c49ad72176d74b7eda"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08",
+    "parameter_hash": "sha256:c3b47c3e9f5fe984e8a6f3c323419cd15133ddf484f9fb65bdc06b6186df3228"
+  },
+  "prompt_or_contract": "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "file_search",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0"
+    ],
+    "evidence_refs": [
+      "CURRENT_USER_REQUEST:src/README.md",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@3a9715582adf17a682920ca98f15aa3582ee8cdc:src/README.md",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@3a9715582adf17a682920ca98f15aa3582ee8cdc:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@3a9715582adf17a682920ca98f15aa3582ee8cdc:docs/doctrine/directory-rules.md",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@3a9715582adf17a682920ca98f15aa3582ee8cdc:control_plane/root_registry.yaml",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@3a9715582adf17a682920ca98f15aa3582ee8cdc:docs/adr/INDEX.md",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@3a9715582adf17a682920ca98f15aa3582ee8cdc:pyproject.toml",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@3a9715582adf17a682920ca98f15aa3582ee8cdc:src/kfm/README.md",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@3a9715582adf17a682920ca98f15aa3582ee8cdc:src/kfm/__init__.py",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@3a9715582adf17a682920ca98f15aa3582ee8cdc:packages/README.md",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@3a9715582adf17a682920ca98f15aa3582ee8cdc:Makefile",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@3a9715582adf17a682920ca98f15aa3582ee8cdc:tools/validate_all.py",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@3a9715582adf17a682920ca98f15aa3582ee8cdc:tools/validators/_common/run_all.py",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@3a9715582adf17a682920ca98f15aa3582ee8cdc:tools/validators/validator_registry.json",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@3a9715582adf17a682920ca98f15aa3582ee8cdc:.github/workflows/schema-validation.yml",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@3a9715582adf17a682920ca98f15aa3582ee8cdc:.github/CODEOWNERS",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@3a9715582adf17a682920ca98f15aa3582ee8cdc:docs/registers/DRIFT_REGISTER.md",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@3a9715582adf17a682920ca98f15aa3582ee8cdc:schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    ]
+  },
+  "truth_labels": {
+    "src/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "same-path README placement and conditional-root activation separation",
+      "outcome": "PASS",
+      "reason": "Existing src/README.md receives a same-path PLACE update under ROOT_FULL; root.src remains HOLD for new implementation because the accepted facade ADR activation condition is unmet."
+    },
+    {
+      "gate": "remote branch byte identity and SHA-256 binding",
+      "outcome": "PASS",
+      "reason": "GitHub returned content blob 61b605591122a428b5e730a4750d9e782310cba6; local git hash-object produced the same blob identity for the 50,708-byte README, whose SHA-256 is 325848674cf14ec4407825dbf209fffd7d544c08014ed1c49ad72176d74b7eda."
+    },
+    {
+      "gate": "Directory Rules v2 ROOT_FULL structure",
+      "outcome": "PASS",
+      "reason": "The first twelve H2 sections implement the adopted ROOT_FULL field order; the directory map is limited to src/ and direct children."
+    },
+    {
+      "gate": "Markdown source, anchors, and no-loss ledger",
+      "outcome": "PASS",
+      "reason": "One H1, balanced fences, no heading jumps, unique explicit anchors, resolved internal fragments, no tabs or trailing whitespace, final newline, and preserved legacy anchors/material claims."
+    },
+    {
+      "gate": "current repository evidence and claim boundaries",
+      "outcome": "PASS",
+      "reason": "Packaging, validator, workflow, registry, ADR, CODEOWNERS, and child-path claims are pinned to main@3a9715582adf17a682920ca98f15aa3582ee8cdc and bounded from API, release, runtime, or publication claims."
+    },
+    {
+      "gate": "scope, secrets, rights, sensitivity, and public-path review",
+      "outcome": "PASS",
+      "reason": "Documentation-only target plus provenance receipt; no credentials, source payloads, protected coordinates, lifecycle mutation, runtime activation, release, deployment, or publication."
+    },
+    {
+      "gate": "generated receipt shape and artifact integrity",
+      "outcome": "PASS",
+      "reason": "Receipt JSON passed local structural, finite-enum, artifact-map, local-path, timestamp, and SHA-256 integrity checks against the current generated-receipt contract requirements."
+    },
+    {
+      "gate": "repository-native hosted CI",
+      "outcome": "SKIPPED",
+      "reason": "Not run at receipt emission; draft-PR hosted checks are reported separately and cannot become publication evidence."
+    },
+    {
+      "gate": "package, runtime, schema, policy, and workflow behavior tests",
+      "outcome": "SKIPPED",
+      "reason": "No package code, dependency, schema, contract, policy, fixture, test, workflow, lifecycle, runtime, release, deployment, or public behavior changed."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "current-user-request-src-readme",
+      "validated": true,
+      "evidence_ref": "attached:KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0"
+    },
+    {
+      "id": "base-target-readme",
+      "validated": true,
+      "evidence_ref": "repo:3a9715582adf17a682920ca98f15aa3582ee8cdc:src/README.md"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "repo:3a9715582adf17a682920ca98f15aa3582ee8cdc:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "directory-rules-v2-bytes",
+      "validated": true,
+      "evidence_ref": "repo:3a9715582adf17a682920ca98f15aa3582ee8cdc:docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "conditional-root-machine-projection",
+      "validated": true,
+      "evidence_ref": "repo:3a9715582adf17a682920ca98f15aa3582ee8cdc:control_plane/root_registry.yaml#root.src"
+    },
+    {
+      "id": "accepted-adr-inventory",
+      "validated": true,
+      "evidence_ref": "repo:3a9715582adf17a682920ca98f15aa3582ee8cdc:docs/adr/INDEX.md"
+    },
+    {
+      "id": "root-packaging-configuration",
+      "validated": true,
+      "evidence_ref": "repo:3a9715582adf17a682920ca98f15aa3582ee8cdc:pyproject.toml"
+    },
+    {
+      "id": "validator-orchestration-current-state",
+      "validated": true,
+      "evidence_ref": "repo:3a9715582adf17a682920ca98f15aa3582ee8cdc:tools/validators/validator_registry.json"
+    },
+    {
+      "id": "schema-validation-current-state",
+      "validated": true,
+      "evidence_ref": "repo:3a9715582adf17a682920ca98f15aa3582ee8cdc:.github/workflows/schema-validation.yml"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-09T16:42:17Z",
+  "emitter": "OpenAI GPT-5.6 Pro repository implementation agent",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Documentation-only same-path modernization. This receipt is process memory, not factual proof, human approval, policy permission, merge authorization, release authority, or publication authority. Before merge, rollback is abandonment of the draft PR and branch; after merge use a transparent revert or forward fix."
+}

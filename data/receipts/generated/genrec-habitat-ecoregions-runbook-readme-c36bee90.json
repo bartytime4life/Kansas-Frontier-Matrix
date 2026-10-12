@@ -1,0 +1,205 @@
+{
+  "receipt_id": "genrec-habitat-ecoregions-runbook-readme-c36bee90",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/runbooks/habitat/ecoregions/README.md"
+  ],
+  "artifact_hashes": {
+    "docs/runbooks/habitat/ecoregions/README.md": "sha256:c36bee9041d370d8a6b5c22f6c0a2b40aa33e4e5006b06fda4797d8f47a1b0a3"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-25-session"
+  },
+  "prompt_or_contract": "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Google Drive connector",
+      "file_search",
+      "Python"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb"
+    ],
+    "attached_docs": [
+      "Pasted text(20260825-174032).txt — KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0",
+      "kfm_habitat_architecture_pdf_only_blueprint_2026-04-21.pdf — Google Drive planning lineage"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/434195e8727e6e8649fd6a9e7de06808c3e15261",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/434195e8727e6e8649fd6a9e7de06808c3e15261/docs/runbooks/habitat/ecoregions/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/434195e8727e6e8649fd6a9e7de06808c3e15261/docs/runbooks/habitat/ecoregions/SOURCE_REFRESH.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/434195e8727e6e8649fd6a9e7de06808c3e15261/docs/runbooks/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/434195e8727e6e8649fd6a9e7de06808c3e15261/docs/runbooks/habitat/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/434195e8727e6e8649fd6a9e7de06808c3e15261/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/434195e8727e6e8649fd6a9e7de06808c3e15261/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/434195e8727e6e8649fd6a9e7de06808c3e15261/CONTRIBUTING.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/434195e8727e6e8649fd6a9e7de06808c3e15261/docs/domains/habitat/sublanes/ecoregions.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/434195e8727e6e8649fd6a9e7de06808c3e15261/data/registry/habitat/sources/ecoregions_omernik.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/434195e8727e6e8649fd6a9e7de06808c3e15261/data/registry/sources/habitat/ecoregions/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/434195e8727e6e8649fd6a9e7de06808c3e15261/contracts/domains/habitat/ecoregions/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/434195e8727e6e8649fd6a9e7de06808c3e15261/schemas/contracts/v1/domains/habitat/ecoregions/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/434195e8727e6e8649fd6a9e7de06808c3e15261/pipelines/domains/habitat/ecoregions/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/tree/434195e8727e6e8649fd6a9e7de06808c3e15261/fixtures/domains/habitat/ecoregions",
+      "github://bartytime4life/Kansas-Frontier-Matrix/tree/434195e8727e6e8649fd6a9e7de06808c3e15261/tests/domains/habitat/ecoregions",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/434195e8727e6e8649fd6a9e7de06808c3e15261/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "gdrive://1Ys9Z_AYfEz6oStxY0YqZjih9DFHc5GA6",
+      "attached://Pasted text(20260825-174032).txt#sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb"
+    ]
+  },
+  "truth_labels": {
+    "docs/runbooks/habitat/ecoregions/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-preflight",
+      "outcome": "PASS",
+      "reason": "Repository identity, default branch, current main at 434195e8727e6e8649fd6a9e7de06808c3e15261, target prior blob, direct children, parent and root runbook boundaries, Directory Rules, ADR-0029, CONTRIBUTING, receipt schema, relevant ecoregion responsibility lanes, open PRs, and related branches were inspected."
+    },
+    {
+      "gate": "coordination-and-overlap",
+      "outcome": "PASS",
+      "reason": "Current open-PR search found no ecoregions PR. Related historical branches were inspected; the similarly named 2026-07-25 branch/PR owned data/processed/habitat/ecoregions/README.md, not this runbook target. No exact-target overlap was found."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "The change completes an existing tracked README at the same docs/runbooks/habitat/ecoregions path. The paired provenance receipt uses the established data/receipts/generated lane. No root, authority home, lifecycle phase, move, rename, mirror, or migration is introduced."
+    },
+    {
+      "gate": "current-state-reconciliation",
+      "outcome": "PASS",
+      "reason": "Claims distinguish the blank target, SOURCE_REFRESH proposal scaffold, unresolved Omernik template, registry topology conflict, documentation-only contract/schema/pipeline lanes, and README-only fixture/test inventories from operational implementation."
+    },
+    {
+      "gate": "google-drive-lineage-boundary",
+      "outcome": "PASS",
+      "reason": "The Habitat architecture PDF was used only for planning lineage and doctrine pressure. Its explicit no-mounted-repository boundary is retained, and it is not used as proof of current paths, source activation, tests, runtime, release, or publication."
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "One H1, logical heading hierarchy, 35 internal anchor references, balanced fenced blocks, direct-child map, tables, callouts, maintenance contract, open-verification backlog, evidence basis, rollback, and final newline were checked."
+    },
+    {
+      "gate": "repository-relative-links",
+      "outcome": "PASS",
+      "reason": "Sixteen unique repository-relative targets were resolved against the pinned repository evidence; no speculative or absent path was linked as current."
+    },
+    {
+      "gate": "truth-and-authority-boundary",
+      "outcome": "PASS",
+      "reason": "The README keeps ecoregions as framework/versioned regionalization context, preserves source-role and cross-lane anti-collapse, and does not claim source admission, executable tests, operational refresh, promotion, release, deployment, rollback execution, or publication."
+    },
+    {
+      "gate": "sensitive-content-review",
+      "outcome": "PASS",
+      "reason": "No credentials, private endpoint, restricted source payload, exact species/plant/archaeological/cultural location, private-land identity, infrastructure vulnerability, or transform secret was introduced."
+    },
+    {
+      "gate": "workflow-change-impact",
+      "outcome": "PASS",
+      "reason": "No workflow, executable code, dependency, runtime, policy, schema, contract, fixture, test, source, lifecycle, release, or repository setting is modified. Hosted pull-request checks remain a separate post-delivery observation."
+    },
+    {
+      "gate": "repository-native-executable-tests",
+      "outcome": "SKIPPED",
+      "reason": "Documentation and its required provenance receipt are the only intended changes. No mounted checkout or executable ecoregion test module exists in the inspected target test lane; no runtime behavior claim is made."
+    },
+    {
+      "gate": "hosted-ci",
+      "outcome": "SKIPPED",
+      "reason": "The draft pull request had not been created at receipt emission time. Hosted checks will be reported separately after delivery."
+    },
+    {
+      "gate": "artifact-integrity",
+      "outcome": "PASS",
+      "reason": "README raw UTF-8 SHA-256 is c36bee9041d370d8a6b5c22f6c0a2b40aa33e4e5006b06fda4797d8f47a1b0a3; the receipt path is derived from the first eight digest characters."
+    },
+    {
+      "gate": "generated-receipt-schema",
+      "outcome": "PASS",
+      "reason": "Required fields, object/array types, hash patterns, semantic-version pattern, truth-label enum, validation-outcome enum, citation records, pending human-review state, ISO-8601 timestamp, links, and notes length were checked against the inspected Draft 2020-12 generated-receipt schema."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "KFM-BUILD-PROMPT-V6",
+      "validated": true,
+      "evidence_ref": "attached://Pasted text(20260825-174032).txt#sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb"
+    },
+    {
+      "id": "KFM-DIRECTORY-RULES",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/434195e8727e6e8649fd6a9e7de06808c3e15261/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "ADR-0029",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/434195e8727e6e8649fd6a9e7de06808c3e15261/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "KFM-CONTRIBUTING",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/434195e8727e6e8649fd6a9e7de06808c3e15261/CONTRIBUTING.md"
+    },
+    {
+      "id": "KFM-RUNBOOK-ROOT",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/434195e8727e6e8649fd6a9e7de06808c3e15261/docs/runbooks/README.md"
+    },
+    {
+      "id": "HABITAT-ECOREGIONS-DOMAIN-CHARTER",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/434195e8727e6e8649fd6a9e7de06808c3e15261/docs/domains/habitat/sublanes/ecoregions.md"
+    },
+    {
+      "id": "HABITAT-ECOREGIONS-SOURCE-REFRESH",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/434195e8727e6e8649fd6a9e7de06808c3e15261/docs/runbooks/habitat/ecoregions/SOURCE_REFRESH.md"
+    },
+    {
+      "id": "HABITAT-ECOREGIONS-SOURCE-REGISTRY",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/434195e8727e6e8649fd6a9e7de06808c3e15261/data/registry/sources/habitat/ecoregions/README.md"
+    },
+    {
+      "id": "HABITAT-ECOREGIONS-OMERNIK-TEMPLATE",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/434195e8727e6e8649fd6a9e7de06808c3e15261/data/registry/habitat/sources/ecoregions_omernik.yaml"
+    },
+    {
+      "id": "HABITAT-ECOREGIONS-DRIVE-BLUEPRINT",
+      "validated": true,
+      "evidence_ref": "gdrive://1Ys9Z_AYfEz6oStxY0YqZjih9DFHc5GA6"
+    },
+    {
+      "id": "GENERATED-RECEIPT-SCHEMA",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/434195e8727e6e8649fd6a9e7de06808c3e15261/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-25T17:59:45Z",
+  "emitter": "ai-builder/openai-gpt-5.6-pro",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored documentation-only same-path completion on a scoped review branch. The README reconciles the blank target, exact direct children, current ecoregion source/registry/contract/schema/pipeline/fixture/test posture, adopted Directory Rules, and Google Drive planning lineage. SOURCE_REFRESH.md remains a proposal scaffold. No live source access, source admission, connector, pipeline, test, policy, evidence, lifecycle transition, release, deployment, promotion, rollback execution, publication, or repository setting is created or changed. Human review remains pending; this receipt is not merge-, release-, or publication-authorizing."
+}

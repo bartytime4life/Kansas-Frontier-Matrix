@@ -1,0 +1,124 @@
+{
+  "receipt_id": "genrec-tools-validators-cross-domain-joins-readme-e0819958",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tools/validators/cross-domain-joins/README.md"
+  ],
+  "artifact_hashes": {
+    "tools/validators/cross-domain-joins/README.md": "sha256:e08199585f51d92e99ac767a02682a9ad7c2f65e249a452b638537e9288da4d8"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-16-session"
+  },
+  "prompt_or_contract": "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Python validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM GitHub Repository Documentation Implementation Agent — Full Operating Prompt v3.1",
+      "Directory Rules.pdf",
+      "Kansas Frontier Matrix — AI Build Operating Contract.md"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/ebdf9332c096facff23ff4379b576b6ae01c72b4",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ebdf9332c096facff23ff4379b576b6ae01c72b4/tools/validators/cross-domain-joins/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ebdf9332c096facff23ff4379b576b6ae01c72b4/docs/architecture/cross-domain/cross-lane-relations.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ebdf9332c096facff23ff4379b576b6ae01c72b4/docs/architecture/cross-domain/multi-domain-placement.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ebdf9332c096facff23ff4379b576b6ae01c72b4/docs/architecture/cross-domain/source-role-anti-collapse.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ebdf9332c096facff23ff4379b576b6ae01c72b4/docs/architecture/cross-domain/shared-kernel.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ebdf9332c096facff23ff4379b576b6ae01c72b4/docs/architecture/cross-domain/trust-membrane.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ebdf9332c096facff23ff4379b576b6ae01c72b4/tools/validators/joins/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ebdf9332c096facff23ff4379b576b6ae01c72b4/tools/validators/cross-lane/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ebdf9332c096facff23ff4379b576b6ae01c72b4/tools/validators/joins/agriculture-soil/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ebdf9332c096facff23ff4379b576b6ae01c72b4/tools/validators/joins/person-parcel/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ebdf9332c096facff23ff4379b576b6ae01c72b4/tools/validators/habitat-fauna/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ebdf9332c096facff23ff4379b576b6ae01c72b4/contracts/joins/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ebdf9332c096facff23ff4379b576b6ae01c72b4/contracts/crosswalks/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ebdf9332c096facff23ff4379b576b6ae01c72b4/schemas/contracts/v1/joins/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ebdf9332c096facff23ff4379b576b6ae01c72b4/schemas/contracts/v1/relations/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ebdf9332c096facff23ff4379b576b6ae01c72b4/schemas/contracts/v1/joins/habitat-fauna-join.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ebdf9332c096facff23ff4379b576b6ae01c72b4/tests/cross_domain/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ebdf9332c096facff23ff4379b576b6ae01c72b4/tools/validators/_common/run_all.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ebdf9332c096facff23ff4379b576b6ae01c72b4/.github/workflows/validator-suite.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ebdf9332c096facff23ff4379b576b6ae01c72b4/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ebdf9332c096facff23ff4379b576b6ae01c72b4/docs/doctrine/directory-rules.md",
+      "project://KFM Documentation Implementation Agent v3.1"
+    ]
+  },
+  "truth_labels": {
+    "tools/validators/cross-domain-joins/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-target-preflight",
+      "outcome": "PASS",
+      "reason": "Repository, current main commit, target path, prior blob, adjacent validator lanes, contracts, schemas, tests, and workflow surfaces were inspected."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "The validator README remains under tools/validators and creates no new authority root, domain, schema, policy, proof, test, or release home."
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "Exactly one H1, balanced fenced blocks, final newline, and no trailing whitespace or tabs."
+    },
+    {
+      "gate": "internal-fragment-links",
+      "outcome": "PASS",
+      "reason": "All internal fragment links resolve to explicit anchors."
+    },
+    {
+      "gate": "credential-and-sensitive-content-review",
+      "outcome": "PASS",
+      "reason": "No common credential patterns, private endpoints, signed URLs, sensitive coordinates, restricted payloads, hidden policy thresholds, or bypass instructions were included."
+    },
+    {
+      "gate": "executable-tests",
+      "outcome": "SKIPPED",
+      "reason": "Documentation-only change; no working direct cross-domain join executable surfaced or changed."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "cross-lane-four-invariants",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ebdf9332c096facff23ff4379b576b6ae01c72b4/docs/architecture/cross-domain/cross-lane-relations.md"
+    },
+    {
+      "id": "join-relation-crosswalk-placement-conflicts",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ebdf9332c096facff23ff4379b576b6ae01c72b4/schemas/contracts/v1/joins/README.md"
+    },
+    {
+      "id": "validator-and-test-runtime-maturity",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ebdf9332c096facff23ff4379b576b6ae01c72b4/tools/validators/_common/run_all.py"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-07-17T02:01:00Z",
+  "emitter": "OpenAI GPT-5.6 Thinking",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Documentation-only generated-work receipt. The README records confirmed repository evidence, proposed generic validator mechanics, unresolved join/relation/crosswalk and test-placement conflicts, validation performed, and rollback posture. Human review remains pending; this receipt is not approval, relation truth, evidence closure, policy permission, merge authorization, release approval, or publication authority."
+}

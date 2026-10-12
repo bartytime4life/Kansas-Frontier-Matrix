@@ -1,0 +1,117 @@
+{
+  "receipt_id": "genrec-kfm-hazard-decoder-20260922",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/kansas-frontier-matrix-explorer/app/bounded-json.ts",
+    "apps/kansas-frontier-matrix-explorer/app/usgs-earthquake-response.ts",
+    "apps/kansas-frontier-matrix-explorer/docs/usgs-earthquake-response-candidate.md",
+    "apps/kansas-frontier-matrix-explorer/tests/usgs-earthquake-response.test.mjs"
+  ],
+  "artifact_hashes": {
+    "apps/kansas-frontier-matrix-explorer/app/bounded-json.ts": "sha256:6d23cc9ecde3d652f993414f49f8d98544ee77a3e66d96656ac7c98626537ff0",
+    "apps/kansas-frontier-matrix-explorer/app/usgs-earthquake-response.ts": "sha256:34383a49948d076e1fae3055a5e91e285d4101782759147277a92c50eec6853c",
+    "apps/kansas-frontier-matrix-explorer/docs/usgs-earthquake-response-candidate.md": "sha256:ed0510ebf86a965e40744ea8ba4bc89b00273d0a43ef2aeff8c2279290161e99",
+    "apps/kansas-frontier-matrix-explorer/tests/usgs-earthquake-response.test.mjs": "sha256:0cb75aeeae73ad16a7be719f42cc8711b88ce4ec727c690bf7cf1ae28cb22ffc"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Astra Pro",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:03a16be1f3fe159c4d15ec77dffb33a35942b052d67ef64974a5875c0809b28f",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Firemap_Inspired_Hazard_Workspace_2026-09-22.md",
+      "REPAIR_HANDOFF.md",
+      "KFM_Explorer_Feed_Repair_Candidate_2026-09-22.zip"
+    ],
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/0305c98702cb7b48dfaa9598b3625cb027860855",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/c4e5ebe54cba9d7ca9bbee108b442bdf68763f58",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4418#issuecomment-5748226637"
+    ]
+  },
+  "truth_labels": {
+    "apps/kansas-frontier-matrix-explorer/app/bounded-json.ts": "CONFIRMED",
+    "apps/kansas-frontier-matrix-explorer/app/usgs-earthquake-response.ts": "CONFIRMED",
+    "apps/kansas-frontier-matrix-explorer/docs/usgs-earthquake-response-candidate.md": "PROPOSED",
+    "apps/kansas-frontier-matrix-explorer/tests/usgs-earthquake-response.test.mjs": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Changed Markdown metadata, structure and relative links",
+      "outcome": "PASS",
+      "reason": "1 documents; 4 local links resolved to new files or inspected exact-base paths. Local projection, not repository-native docs validator."
+    },
+    {
+      "gate": "Changed-file UTF-8, whitespace and artifact SHA-256 bindings",
+      "outcome": "PASS",
+      "reason": "Final authored files parsed and hashed; receipt excludes its own bytes."
+    },
+    {
+      "gate": "USGS decoder focused Node tests",
+      "outcome": "PASS",
+      "reason": "Node 22.16.0; 36 passed, zero failures or skips; fixture-only, no provider/browser proof."
+    },
+    {
+      "gate": "Candidate-only strict TypeScript",
+      "outcome": "PASS",
+      "reason": "TypeScript 5.8.3 --noEmit --strict --target ES2022 --module ESNext --moduleResolution bundler --lib ES2022,DOM; two files. Not the repository-pinned TypeScript 6 toolchain."
+    },
+    {
+      "gate": "Historical bounded-reader byte preservation",
+      "outcome": "PASS",
+      "reason": "Git blob equals e990fde4d7d7f64381abff060d12f9c394e9533f."
+    },
+    {
+      "gate": "Repository-native validators and full application build/suite",
+      "outcome": "SKIPPED",
+      "reason": "No complete local checkout or installed locked workspace; outbound container DNS unavailable. No inherited failure was waived."
+    },
+    {
+      "gate": "Exact-head hosted CI",
+      "outcome": "SKIPPED",
+      "reason": "Pending branch/PR delivery; must inspect final-head results separately."
+    },
+    {
+      "gate": "Active-Site source parity, route integration and browser/WebGL acceptance",
+      "outcome": "SKIPPED",
+      "reason": "Current hosted source and authenticated browser were not available; no deployment or provider health claim."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "exact-main",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/0305c98702cb7b48dfaa9598b3625cb027860855"
+    },
+    {
+      "id": "usgs-nodata-contract",
+      "validated": true,
+      "evidence_ref": "https://earthquake.usgs.gov/fdsnws/event/1/"
+    },
+    {
+      "id": "firemap-reference",
+      "validated": true,
+      "evidence_ref": "https://www.firemap.live/"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-09-23T00:15:48Z",
+  "emitter": "ChatGPT repository-authoring session",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Authoring provenance only. CONFIRMED code labels apply to local candidate bytes and focused behavior, not active Site integration. The monorepo app, standalone v40 mirror and recorded Site v53 are not equivalent. No ready, merge, source admission, activation, settings, release, deployment or publication authorization. Human review and #4024/#4228 boundaries remain separate. Canonical receipt schema fields were inspected; repository-native receipt validation remains not run."
+}

@@ -1,0 +1,11 @@
+{
+  "case_id": "tile-manifest-bounds-degenerate",
+  "expected": {
+    "issue_codes": [
+      "TILE_MANIFEST_BOUNDS_ORDER_INVALID"
+    ],
+    "status": "DENY"
+  },
+  "fixture_profile": "kfm.pmtiles.tile-artifact-manifest.compat.v1",
+  "mutation": "manifest_bounds_degenerate"
+}

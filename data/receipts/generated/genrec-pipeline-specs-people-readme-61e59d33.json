@@ -1,0 +1,180 @@
+{
+  "receipt_id": "genrec-pipeline-specs-people-readme-61e59d33",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "pipeline_specs/people/README.md"
+  ],
+  "artifact_hashes": {
+    "pipeline_specs/people/README.md": "sha256:61e59d33b7557d86bc02a78190103895b6db51f2d96213cbabdc7c27b2478bf8"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-17"
+  },
+  "prompt_or_contract": "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "repository code search",
+      "repository file reads",
+      "remote branch and contents writes",
+      "local deterministic content validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85"
+    ],
+    "attached_docs": [
+      "Pasted text(42).txt"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/dc30140567828b45d54426b0e55055ef8d83b5a7",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/dc30140567828b45d54426b0e55055ef8d83b5a7/pipeline_specs/people/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/c8d3c428b66104e7d44c32afa849513655980b49/pipeline_specs/people/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/dc30140567828b45d54426b0e55055ef8d83b5a7/pipeline_specs/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/dc30140567828b45d54426b0e55055ef8d83b5a7/pipeline_specs/people-dna-land/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/dc30140567828b45d54426b0e55055ef8d83b5a7/pipeline_specs/people-dna-land/ingest.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/dc30140567828b45d54426b0e55055ef8d83b5a7/pipeline_specs/people-dna-land/normalize.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/dc30140567828b45d54426b0e55055ef8d83b5a7/pipeline_specs/people-dna-land/validate.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/dc30140567828b45d54426b0e55055ef8d83b5a7/pipeline_specs/people-dna-land/catalog.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/dc30140567828b45d54426b0e55055ef8d83b5a7/pipeline_specs/people-dna-land/publish.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/dc30140567828b45d54426b0e55055ef8d83b5a7/pipelines/domains/people/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/dc30140567828b45d54426b0e55055ef8d83b5a7/pipelines/domains/people-dna-land/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/dc30140567828b45d54426b0e55055ef8d83b5a7/docs/domains/people-dna-land/CANONICAL_PATHS.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/dc30140567828b45d54426b0e55055ef8d83b5a7/docs/domains/people-dna-land/people.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/dc30140567828b45d54426b0e55055ef8d83b5a7/docs/architecture/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/dc30140567828b45d54426b0e55055ef8d83b5a7/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/dc30140567828b45d54426b0e55055ef8d83b5a7/docs/registers/DRIFT_REGISTER.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/dc30140567828b45d54426b0e55055ef8d83b5a7/docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/dc30140567828b45d54426b0e55055ef8d83b5a7/.github/CODEOWNERS",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/dc30140567828b45d54426b0e55055ef8d83b5a7/.github/PULL_REQUEST_TEMPLATE.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/dc30140567828b45d54426b0e55055ef8d83b5a7/.github/workflows/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/dc30140567828b45d54426b0e55055ef8d83b5a7/.github/workflows/domain-people-dna-land.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/dc30140567828b45d54426b0e55055ef8d83b5a7/data/receipts/generated/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/dc30140567828b45d54426b0e55055ef8d83b5a7/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    ]
+  },
+  "truth_labels": {
+    "pipeline_specs/people/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "task-contract-and-authority-preflight",
+      "outcome": "PASS",
+      "reason": "Repository identity, public visibility, authenticated admin/push permission, target path, immutable base, target blob, review-branch route, API-only profile, two-file change budget, acceptance criteria, and stop conditions were resolved before mutation."
+    },
+    {
+      "gate": "base-drift-reconciliation",
+      "outcome": "PASS",
+      "reason": "Main advanced from 1f6b4f867091f819969360f7d5187fcb41e39604 to dc30140567828b45d54426b0e55055ef8d83b5a7 through an unrelated evidence-correction issue-template merge. The target retained blob 205ff71859698f66b0f0243e3ed7c62c2d0ca78c and the branch was created from the newer base."
+    },
+    {
+      "gate": "directory-adr-drift-and-path-instruction-preflight",
+      "outcome": "PASS",
+      "reason": "Both live Directory Rules artifacts, the proposed schema-home ADR, drift register, parent README, CODEOWNERS, contribution and PR contracts, canonical path register, and relevant workflow documentation were inspected. AGENTS.md was not found at the repository root, pipeline_specs/, or pipeline_specs/people/ checked paths. The Directory Rules placement conflict is surfaced rather than resolved."
+    },
+    {
+      "gate": "document-authority-and-supersession-graph",
+      "outcome": "PASS",
+      "reason": "The target doc_id was unique in bounded repository search. The revised README remains a compatibility alias subordinate to pipeline_specs/people-dna-land/README.md and preserves its v0.1 identity and created date while declaring v0.2 supersession."
+    },
+    {
+      "gate": "repository-inventory-and-no-overclaim",
+      "outcome": "PASS",
+      "reason": "Bounded search and direct probes established a README-only checked alias lane, absent checked alias YAML/test/fixture paths, five canonical companion YAML stubs with empty stages arrays, and a TODO-only People/DNA/Land workflow. The README labels exhaustive inventory, active schema/parser/registry/consumer, branch protection, and production behavior as unresolved."
+    },
+    {
+      "gate": "no-loss-and-sensitive-domain-boundary",
+      "outcome": "PASS",
+      "reason": "The prior alias, assertion-first, living-person, consent, DNA, assessor-versus-title, parcel-versus-title-boundary, evidence, release, correction, and rollback controls were retained and strengthened without creating active specs or alternate authority."
+    },
+    {
+      "gate": "workflow-trigger-threat-preflight",
+      "outcome": "PASS",
+      "reason": "The relevant People/DNA/Land, docs-control-plane, docs-build, and link-check workflows use pull_request/main-push triggers and are TODO-only echo scaffolds. No indexed pull_request_target or workflow_run trigger was found; no workflow self-hosted runner match was found. The only inspected id-token: write workflow is path-scoped away from this diff. Effective default token permissions, branch protection, required checks, and immutable action pinning remain NEEDS VERIFICATION."
+    },
+    {
+      "gate": "markdown-meta-and-navigation",
+      "outcome": "PASS",
+      "reason": "The final README has one H1, unique heading slugs, working internal navigation targets, balanced code fences, parseable KFM Meta Block YAML, no trailing whitespace, and a final newline."
+    },
+    {
+      "gate": "repository-relative-link-validation",
+      "outcome": "PASS",
+      "reason": "Every repository-relative file link added to the README was verified through GitHub file reads or exact repository search at the pinned base."
+    },
+    {
+      "gate": "security-rights-and-sensitive-content",
+      "outcome": "PASS",
+      "reason": "The change contains no credentials, real personal records, raw DNA/genomic material, raw kit/vendor identifiers, private person-parcel joins, exact sensitive locations, restricted source payloads, or publication action. Examples are abstract and fail-closed."
+    },
+    {
+      "gate": "remote-readback-and-scope",
+      "outcome": "PASS",
+      "reason": "GitHub returned target blob f285be1d692d1705fed29b40afd77f390fb807a8 on commit c8d3c428b66104e7d44c32afa849513655980b49, matching the locally recomputed Git blob SHA. The pre-receipt compare showed exactly one modified path: pipeline_specs/people/README.md."
+    },
+    {
+      "gate": "repository-native-execution",
+      "outcome": "SKIPPED",
+      "reason": "API_ONLY_STRICT was selected. The repository was not cloned and repository-native test commands were not executed locally. Pull-request workflow results will be inspected after PR creation; pending or unavailable checks will not be reported as passing."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "uploaded-documentation-implementation-prompt-v3-1",
+      "validated": true,
+      "evidence_ref": "attachment://Pasted text(42).txt#sha256=b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85"
+    },
+    {
+      "id": "target-baseline-and-remote-readback",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/c8d3c428b66104e7d44c32afa849513655980b49/pipeline_specs/people/README.md"
+    },
+    {
+      "id": "pipeline-spec-root-and-canonical-companion",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/dc30140567828b45d54426b0e55055ef8d83b5a7/pipeline_specs/people-dna-land/README.md"
+    },
+    {
+      "id": "people-alias-and-domain-path-authority",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/dc30140567828b45d54426b0e55055ef8d83b5a7/docs/domains/people-dna-land/CANONICAL_PATHS.md"
+    },
+    {
+      "id": "directory-rules-and-schema-home",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/dc30140567828b45d54426b0e55055ef8d83b5a7/docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md"
+    },
+    {
+      "id": "workflow-and-codeowner-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/dc30140567828b45d54426b0e55055ef8d83b5a7/.github/workflows/README.md"
+    },
+    {
+      "id": "generated-receipt-machine-shape",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/dc30140567828b45d54426b0e55055ef8d83b5a7/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-17T17:49:30Z",
+  "emitter": "openai-chatgpt/gpt-5.6-thinking",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored documentation-only revision on a scoped API-only review branch. The README replaces speculative alias-file planning with current repository evidence, preserves sensitive-domain controls, and keeps the people alias subordinate to the people-dna-land bounded context. This receipt is process provenance only; it is not factual proof, policy permission, human approval, release authority, or publication authority."
+}

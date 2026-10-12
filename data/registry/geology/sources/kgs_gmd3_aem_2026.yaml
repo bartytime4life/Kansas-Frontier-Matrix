@@ -1,0 +1,47 @@
+# source descriptor: kgs_gmd3_aem_2026
+# domain: geology, hydrology
+# status: PROPOSED — disabled/proposed; connector-disabled, noncanonical
+#
+# Campaign: 2026 Southwest Kansas GMD 3 Airborne Electromagnetic Survey
+# Partners: Kansas Geological Survey (KGS), GMD 3, Aqua Geo Frameworks
+# Target: geologic structures affecting groundwater flow, ~1,600 ft BLS
+# Counties: Hamilton, Kearny, Finney, Gray, Ford, Stanton, Grant, Haskell,
+#            Morton, Stevens, Seward, Meade
+# Reference: https://news.ku.edu/news/article/airborne-electromagnetic-survey-of-ogallala-aquifer-conditions-planned-in-southwest-kansas-ARTICLE-B0R8YR-ARTICLE-B0R8YR
+# Observed: 2026-08-03 — documentation review only
+#
+# Product availability: UNKNOWN / NEEDS VERIFICATION
+# No official flight-line, inversion volume, resistivity section/voxel, or
+# interpreted hydrostratigraphic product has been observed.
+id: kgs_gmd3_aem_2026
+source_id: src:kgs-gmd3-aem-2026
+domain:
+  - geology
+  - hydrology
+role: primary_authority
+authority: Kansas Geological Survey (KGS) / GMD 3
+rights:
+  license: NEEDS VERIFICATION
+  attribution_required: true
+  attribution_text: >-
+    Kansas Geological Survey (KGS) and Groundwater Management District No. 3 (GMD 3),
+    2026 Southwest Kansas Airborne Electromagnetic Survey.
+  redistribution: NEEDS VERIFICATION
+sensitivity_floor: internal
+update_cadence: one_time
+access_posture: restricted            # no endpoint established
+activation_state: disabled
+citation_template: >-
+  Kansas Geological Survey (KGS) and Groundwater Management District No. 3 (GMD 3),
+  2026 Southwest Kansas Airborne Electromagnetic Survey ({source_id}), accessed {accessed_at}.
+ingest_receipt_template: "data/receipts/ingest/geology/kgs_gmd3_aem_2026/<run_id>.json"
+registry_state: proposed
+review_state: needs_review
+release_state: not_released
+created_at: "2026-08-03T00:00:00Z"
+updated_at: "2026-08-03T00:00:00Z"
+governance_issue: "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1944"
+notes: >-
+  Connector, schedule, endpoint, credentials, and activation are all disabled.
+  Cross-domain consumers (geology and hydrology) must reference this single
+  source identity — do not create duplicate source authorities.

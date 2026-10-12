@@ -1,0 +1,74 @@
+{
+  "receipt_id": "genrec-pass30-non-container-provenance-predicate-20260809",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/non-container-provenance-predicate-profile.yml",
+    "contracts/evidence/non_container_provenance_predicate_profile.md",
+    "docs/intake/exploratory/pass-30-non-container-provenance-predicate-source-map.md",
+    "fixtures/contracts/v1/evidence/non_container_provenance_predicate_profile/cases.json",
+    "schemas/contracts/v1/evidence/non_container_provenance_predicate_profile.schema.json",
+    "tests/validators/evidence/test_non_container_provenance_predicate_profile.py",
+    "tools/validators/evidence/validate_non_container_provenance_predicate_profile.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/non-container-provenance-predicate-profile.yml": "sha256:e2e13e9f1312ff98d3ff26ee83e6d3aa9624da7429dee6d71bfc816a231a26cf",
+    "contracts/evidence/non_container_provenance_predicate_profile.md": "sha256:7bce16e6b4d550de3fb67b405b4e3e1f7fae452d9fbbe36df056238a486b3ca0",
+    "docs/intake/exploratory/pass-30-non-container-provenance-predicate-source-map.md": "sha256:2e73608fab6c7b88fb0903e21eac6495a3a477873300e67fbb8ce2dcdfc93a9d",
+    "fixtures/contracts/v1/evidence/non_container_provenance_predicate_profile/cases.json": "sha256:977c215a2b2d1b7da8cc1eb09fa4accd1bf79efce0b7091e6546f8f864bd4aea",
+    "schemas/contracts/v1/evidence/non_container_provenance_predicate_profile.schema.json": "sha256:e1ebe4339d869abeb06410f17516322584a6cd6c4a7abb64df8be8d822718a29",
+    "tests/validators/evidence/test_non_container_provenance_predicate_profile.py": "sha256:df9e82c808d765f0a87fecbd7fefcda26e42c3109efb6e1692405d3a5665840a",
+    "tools/validators/evidence/validate_non_container_provenance_predicate_profile.py": "sha256:394d6a2cae00c24b055bd5db77514bdeef4cbad208fbb9070ea68f3feb942fff"
+  },
+  "model_identity": {"provider": "OpenAI", "model": "Codex", "version": "GPT-5"},
+  "prompt_or_contract": "sha256:4e7f38f7e2f3e76715b9036cb6e3cde774e0b713b4a62b3a2c1798dcdacaf8b7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": ["GitHub connector", "Google Drive connector", "PDF extraction and rendering", "local deterministic validation"]
+  },
+  "inputs": {
+    "evidence_hashes": ["sha256:020a1207c2a6d193dc23defca40d24d429acd1273da17c2494582116ec8e9639"],
+    "attached_docs": ["KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf"],
+    "evidence_refs": [
+      "google-drive:1w7Qrf5Na7PSvwdTuplZnFbyueToPtQaa#KFM-P30-PROG-0023",
+      "google-drive:1w7Qrf5Na7PSvwdTuplZnFbyueToPtQaa#KFM-P30-PROG-0024",
+      "github:bartytime4life/Kansas-Frontier-Matrix@1ab34018d7fb13ad41cfe8a79aed5d4763e58bf8",
+      "github:bartytime4life/Kansas-Frontier-Matrix@1ab34018d7fb13ad41cfe8a79aed5d4763e58bf8:contracts/runtime/run_receipt.md",
+      "github:bartytime4life/Kansas-Frontier-Matrix@1ab34018d7fb13ad41cfe8a79aed5d4763e58bf8:docs/standards/PROVENANCE.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/non-container-provenance-predicate-profile.yml": "PROPOSED",
+    "contracts/evidence/non_container_provenance_predicate_profile.md": "PROPOSED",
+    "docs/intake/exploratory/pass-30-non-container-provenance-predicate-source-map.md": "PROPOSED",
+    "fixtures/contracts/v1/evidence/non_container_provenance_predicate_profile/cases.json": "PROPOSED",
+    "schemas/contracts/v1/evidence/non_container_provenance_predicate_profile.schema.json": "PROPOSED",
+    "tests/validators/evidence/test_non_container_provenance_predicate_profile.py": "PROPOSED",
+    "tools/validators/evidence/validate_non_container_provenance_predicate_profile.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {"gate": "source-assay", "outcome": "PASS", "reason": "Cards KFM-P30-PROG-0023 and KFM-P30-PROG-0024 were resolved in the consolidated atlas and remained active and unchanged through Pass 32."},
+    {"gate": "repository-gap-assay", "outcome": "PASS", "reason": "Exact card IDs, titles, branch, pull-request, and proposed contract/schema paths were absent at the recorded base."},
+    {"gate": "directory-rules-placement", "outcome": "PASS", "reason": "Proposed evidence-projection meaning is separated from RunReceipt, schema, fixture, validator, test, workflow, intake, trust, and receipt responsibilities."},
+    {"gate": "draft-2020-12-meta", "outcome": "PASS"},
+    {"gate": "focused-local-tests", "outcome": "PASS", "reason": "Eight unit tests and seventeen positive/negative fixture cases passed without artifact, network, signature, transparency, or policy access."},
+    {"gate": "adjacent-local-tests", "outcome": "PASS", "reason": "Twenty existing RunReceipt and Cosign attestation-plan tests passed unchanged."},
+    {"gate": "hosted-exact-head-checks", "outcome": "SKIPPED", "reason": "Recorded before the draft pull request existed; GitHub Actions remains authoritative for the branch head."},
+    {"gate": "human-review", "outcome": "SKIPPED", "reason": "Awaiting an authorized repository reviewer."}
+  ],
+  "policy_decisions": ["docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md", "docs/doctrine/directory-rules.md"],
+  "citations": [
+    {"id": "KFM-P30-PROG-0023", "validated": true, "evidence_ref": "google-drive:1w7Qrf5Na7PSvwdTuplZnFbyueToPtQaa"},
+    {"id": "KFM-P30-PROG-0024", "validated": true, "evidence_ref": "google-drive:1w7Qrf5Na7PSvwdTuplZnFbyueToPtQaa"},
+    {"id": "KFM-P30-PROG-0023-0024-PASS32-UNCHANGED", "validated": true, "evidence_ref": "sha256:020a1207c2a6d193dc23defca40d24d429acd1273da17c2494582116ec8e9639"},
+    {"id": "ADR-0029", "validated": true, "evidence_ref": "github:bartytime4life/Kansas-Frontier-Matrix@1ab34018d7fb13ad41cfe8a79aed5d4763e58bf8:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"}
+  ],
+  "human_review": {"reviewer_ids": [], "state": "pending", "timestamp": null},
+  "override_record": null,
+  "created_at": "2026-08-10T02:38:23Z",
+  "emitter": "OpenAI Codex",
+  "links": {"pr_number": null, "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md", "drift_register_entry": null},
+  "notes": "Fixture-only proposed profile. It performs no artifact read, signing, transparency lookup, policy evaluation, evidence admission, approval, release, or publication effect. Rollback is deletion of the eight files introduced by the draft change."
+}

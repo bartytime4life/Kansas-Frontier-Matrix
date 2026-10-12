@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "kfm://schemas/contracts/v1/review/review_record.schema.json",
+  "title": "Review Record",
+  "description": "PROPOSED scaffold created from the current docs/domains markdown inventory.",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {},
+  "x-kfm": {
+    "status": "PROPOSED",
+    "path": "schemas/contracts/v1/review/review_record.schema.json",
+    "source_docs": [
+      "docs/domains/agriculture/API_CONTRACTS.md",
+      "docs/domains/archaeology/API_CONTRACTS.md"
+    ],
+    "contract_doc": null
+  }
+}

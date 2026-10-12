@@ -1,0 +1,231 @@
+{
+  "object_type": "SpatialModelFamilyAssessmentFixtureManifest",
+  "schema_version": "1.0.0",
+  "profile": "kfm.common.spatial-model-family-assessment.fixture.v1",
+  "base_candidate": {
+    "object_type": "SpatialModelFamilyAssessmentCandidate",
+    "schema_version": "1.0.0",
+    "profile": "kfm.common.spatial-model-family-assessment.fixture.v1",
+    "assessment_id": "kfm:spatial-family:000000000000000000000000",
+    "profile_spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "source_card": "KFM-P18-INV-054",
+    "observed_at": "2026-08-11T18:00:00Z",
+    "subject_ref": "kfm://feature/synthetic/well/001",
+    "subject_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "declared_family": "POSITION",
+    "characteristics": {
+      "position_identity": true,
+      "node_edge_topology": false,
+      "continuous_support": false,
+      "input_output_derivation": false
+    },
+    "family_evidence": {
+      "position_method_refs": ["kfm://method/synthetic/coordinate-survey/v1"],
+      "network_topology_refs": [],
+      "field_support_refs": [],
+      "transformation_lineage_refs": [],
+      "component_assessment_refs": []
+    },
+    "uncertainty": {
+      "shared_uncertainty_refs": ["kfm://uncertainty/synthetic/well-position/v1"],
+      "partitioned_by_family": false,
+      "family_partition_refs": []
+    },
+    "review": {
+      "state": "COMPLETE_FOR_DECLARED_SCOPE",
+      "record_refs": ["kfm://review/synthetic/spatial-family/well-001"]
+    },
+    "limitations": [
+      "ASSESSMENT_ONLY",
+      "NO_FITNESS_OR_SCIENTIFIC_VALIDATION",
+      "NO_REGISTRY_OR_LAYER_MUTATION",
+      "NO_RELEASE_DEPLOYMENT_OR_PUBLICATION_AUTHORITY",
+      "NO_VALIDATOR_DISPATCH_AUTHORITY"
+    ],
+    "authority_claims": {
+      "source_authority": false,
+      "evidence_authority": false,
+      "scientific_authority": false,
+      "policy_authority": false,
+      "review_authority": false,
+      "registry_authority": false,
+      "lifecycle_authority": false,
+      "release_authority": false,
+      "deployment_authority": false,
+      "publication_authority": false
+    }
+  },
+  "cases": [
+    {
+      "name": "pass_position_family",
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_network_family",
+      "patch": {
+        "subject_ref": "kfm://network/synthetic/trail/v1",
+        "declared_family": "NETWORK",
+        "characteristics": {"position_identity": false, "node_edge_topology": true},
+        "family_evidence": {
+          "position_method_refs": [],
+          "network_topology_refs": ["kfm://topology/synthetic/trail-directed/v1"]
+        }
+      },
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_field_family",
+      "patch": {
+        "subject_ref": "kfm://field/synthetic/soil-moisture/v1",
+        "declared_family": "FIELD",
+        "characteristics": {"position_identity": false, "continuous_support": true},
+        "family_evidence": {
+          "position_method_refs": [],
+          "field_support_refs": ["kfm://support/synthetic/soil-moisture-grid/v1"]
+        }
+      },
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_transformation_family",
+      "patch": {
+        "subject_ref": "kfm://transformation/synthetic/reprojection/v1",
+        "declared_family": "TRANSFORMATION",
+        "characteristics": {"position_identity": false, "input_output_derivation": true},
+        "family_evidence": {
+          "position_method_refs": [],
+          "transformation_lineage_refs": ["kfm://lineage/synthetic/reprojection/run-001"]
+        }
+      },
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_decomposed_composite",
+      "patch": {
+        "subject_ref": "kfm://composite/synthetic/wells-over-field/v1",
+        "declared_family": "COMPOSITE",
+        "characteristics": {"continuous_support": true},
+        "family_evidence": {
+          "field_support_refs": ["kfm://support/synthetic/soil-moisture-grid/v1"],
+          "component_assessment_refs": [
+            "kfm://assessment/synthetic/field-component/v1",
+            "kfm://assessment/synthetic/position-component/v1"
+          ]
+        },
+        "uncertainty": {
+          "partitioned_by_family": true,
+          "family_partition_refs": [
+            "kfm://uncertainty/synthetic/field-partition/v1",
+            "kfm://uncertainty/synthetic/position-partition/v1"
+          ]
+        }
+      },
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "abstain_family_unresolved",
+      "patch": {
+        "declared_family": "UNRESOLVED",
+        "characteristics": {"position_identity": false},
+        "family_evidence": {"position_method_refs": []},
+        "uncertainty": {"shared_uncertainty_refs": []},
+        "review": {"state": "UNKNOWN", "record_refs": []}
+      },
+      "expected": {"outcome": "ABSTAIN", "codes": ["REVIEW_UNKNOWN", "SPATIAL_FAMILY_UNRESOLVED"]}
+    },
+    {
+      "name": "abstain_review_pending",
+      "patch": {"review": {"state": "PENDING", "record_refs": []}},
+      "expected": {"outcome": "ABSTAIN", "codes": ["REVIEW_PENDING"]}
+    },
+    {
+      "name": "deny_family_characteristics_mismatch",
+      "patch": {"characteristics": {"position_identity": false, "node_edge_topology": true}},
+      "expected": {"outcome": "DENY", "codes": ["FAMILY_CHARACTERISTICS_INCOHERENT"]}
+    },
+    {
+      "name": "deny_family_evidence_missing",
+      "patch": {"family_evidence": {"position_method_refs": []}},
+      "expected": {"outcome": "DENY", "codes": ["FAMILY_EVIDENCE_REQUIRED"]}
+    },
+    {
+      "name": "deny_cross_family_evidence",
+      "patch": {"family_evidence": {"network_topology_refs": ["kfm://topology/synthetic/unclaimed/v1"]}},
+      "expected": {"outcome": "DENY", "codes": ["CROSS_FAMILY_EVIDENCE_UNDECLARED"]}
+    },
+    {
+      "name": "deny_base_family_components",
+      "patch": {"family_evidence": {"component_assessment_refs": ["kfm://assessment/synthetic/unexpected/v1"]}},
+      "expected": {"outcome": "DENY", "codes": ["BASE_FAMILY_COMPONENTS_DENIED"]}
+    },
+    {
+      "name": "deny_composite_underdecomposed",
+      "patch": {
+        "declared_family": "COMPOSITE",
+        "family_evidence": {"component_assessment_refs": ["kfm://assessment/synthetic/only-one/v1"]},
+        "uncertainty": {
+          "partitioned_by_family": true,
+          "family_partition_refs": ["kfm://uncertainty/synthetic/only-one/v1"]
+        }
+      },
+      "expected": {"outcome": "DENY", "codes": ["COMPOSITE_COMPONENTS_REQUIRED", "COMPOSITE_FAMILIES_REQUIRED", "COMPOSITE_UNCERTAINTY_PARTITION_REQUIRED"]}
+    },
+    {
+      "name": "deny_composite_uncertainty_flattened",
+      "patch": {
+        "declared_family": "COMPOSITE",
+        "characteristics": {"continuous_support": true},
+        "family_evidence": {
+          "field_support_refs": ["kfm://support/synthetic/field/v1"],
+          "component_assessment_refs": [
+            "kfm://assessment/synthetic/field/v1",
+            "kfm://assessment/synthetic/position/v1"
+          ]
+        }
+      },
+      "expected": {"outcome": "DENY", "codes": ["COMPOSITE_UNCERTAINTY_PARTITION_REQUIRED"]}
+    },
+    {
+      "name": "deny_uncertainty_reference_missing",
+      "patch": {"uncertainty": {"shared_uncertainty_refs": []}},
+      "expected": {"outcome": "DENY", "codes": ["UNCERTAINTY_REFERENCE_REQUIRED"]}
+    },
+    {
+      "name": "deny_review_record_missing",
+      "patch": {"review": {"record_refs": []}},
+      "expected": {"outcome": "DENY", "codes": ["REVIEW_RECORD_REQUIRED"]}
+    },
+    {
+      "name": "deny_noncanonical_references",
+      "patch": {
+        "uncertainty": {
+          "shared_uncertainty_refs": [
+            "kfm://uncertainty/synthetic/z/v1",
+            "kfm://uncertainty/synthetic/a/v1"
+          ]
+        }
+      },
+      "expected": {"outcome": "DENY", "codes": ["REFERENCES_NOT_CANONICAL"]}
+    },
+    {
+      "name": "deny_direct_store_reference",
+      "patch": {"subject_ref": "kfm://data/raw/synthetic/well/001"},
+      "expected": {"outcome": "DENY", "codes": ["DIRECT_STORE_REFERENCE_DENIED"]}
+    },
+    {
+      "name": "deny_profile_hash_tamper",
+      "tamper": "profile_hash",
+      "expected": {"outcome": "DENY", "codes": ["PROFILE_SPEC_HASH_MISMATCH"]}
+    },
+    {
+      "name": "deny_assessment_id_tamper",
+      "tamper": "assessment_id",
+      "expected": {"outcome": "DENY", "codes": ["ASSESSMENT_ID_MISMATCH"]}
+    },
+    {
+      "name": "error_unknown_field",
+      "patch": {"validator_dispatch_authorized": true},
+      "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}
+    }
+  ]
+}

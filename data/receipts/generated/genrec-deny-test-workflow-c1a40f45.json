@@ -1,0 +1,48 @@
+{
+  "receipt_id": "genrec-deny-test-workflow-c1a40f45",
+  "contract_version": "3.0.0",
+  "receipt_type": "GenerationReceipt",
+  "status": "PROPOSED",
+  "generated_at": "2026-07-18T00:00:00-05:00",
+  "repository": "bartytime4life/Kansas-Frontier-Matrix",
+  "base_commit": "0bce5c7662a0ed37a6b3cc71133329fcdf44c17a",
+  "branch": "agent/deny-test-workflow-20260718",
+  "target_path": ".github/workflows/deny-test.yml",
+  "previous_blob": "d2dd40c274d55a33488b7f601ee33440911431b9",
+  "new_blob": "9042554d4d9f74bebf3bb580b1be34fbb1455959",
+  "sha256": "c1a40f4519128abfc346d7cd0d4f8c8a23dc470a00add1e6df85d9aae4c6224c",
+  "truth_labels": {
+    "confirmed": [
+      "The prior workflow only executed TODO echo steps.",
+      "The governed API boundary test file contains route rejection, internal-store literal, and forbidden runtime import checks.",
+      "Workflow name deny-test and all three job ids are preserved."
+    ],
+    "proposed": [
+      "The selected node-level tests are the current executable deny-path checks for these three lanes."
+    ],
+    "needs_verification": [
+      "Final-head GitHub Actions conclusions.",
+      "Branch-protection dependencies.",
+      "Independent policy and security review.",
+      "Whether action references should be pinned to immutable SHAs.",
+      "Broader runtime payload, authentication, authorization, network, and model-policy denial coverage."
+    ]
+  },
+  "changes": [
+    "Added workflow_dispatch.",
+    "Added contents: read permission.",
+    "Added concurrency cancellation and timeouts.",
+    "Added deterministic Python and pip environment settings.",
+    "Disabled persisted checkout credentials.",
+    "Replaced three TODO echoes with narrow repository-owned pytest node selections.",
+    "Added bounded always-run job summaries."
+  ],
+  "authority_boundary": "A green run is evidence only for the selected repository-owned denial checks. It is not complete policy proof, release approval, lifecycle promotion, source admission, or publication authority.",
+  "rollback": {
+    "strategy": "Revert the receipt commit and workflow commit in reverse order or close the pull request without merge.",
+    "restores_blob": "d2dd40c274d55a33488b7f601ee33440911431b9"
+  },
+  "human_review": {
+    "state": "pending"
+  }
+}

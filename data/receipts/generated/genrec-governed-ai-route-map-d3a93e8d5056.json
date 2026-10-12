@@ -1,0 +1,208 @@
+{
+  "receipt_id": "genrec-governed-ai-route-map-d3a93e8d5056",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/architecture/governed-ai/ROUTE_MAP.md"
+  ],
+  "artifact_hashes": {
+    "docs/architecture/governed-ai/ROUTE_MAP.md": "sha256:d3a93e8d5056274fe5a85523ebac397c43e2f4e7339fc264cdf4230c9a51f3ce"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-19"
+  },
+  "prompt_or_contract": "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector (read/write branch and draft-PR action surface)",
+      "attached-file search",
+      "local deterministic Markdown, hash, and receipt validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb",
+      "sha256:2b8db8901f893d9aabb94bb32db5cbc2e0bb0c881bf74068551e9b3b76602893"
+    ],
+    "attached_docs": [
+      "KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0",
+      "KFM Directory Governance Standard v2.0.0-draft.1"
+    ],
+    "evidence_refs": [
+      "repo:commit/e13f99b623e53d710d64dc2328eeb1471abf7f84",
+      "repo:docs/architecture/governed-ai/ROUTE_MAP.md@e13f99b623e53d710d64dc2328eeb1471abf7f84",
+      "repo:blob/d7284c1129629925e2c54b90382932d7775581d6",
+      "repo:branch/agent/ground-governed-ai-route-map-20260819",
+      "repo:docs/architecture/governed-ai/README.md@e13f99b623e53d710d64dc2328eeb1471abf7f84",
+      "repo:docs/architecture/governed-ai.md@e13f99b623e53d710d64dc2328eeb1471abf7f84",
+      "repo:docs/architecture/governed-api/ENVELOPES.md@e13f99b623e53d710d64dc2328eeb1471abf7f84",
+      "repo:docs/architecture/governed-api/AUDIENCE_CLASSES.md@e13f99b623e53d710d64dc2328eeb1471abf7f84",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@e13f99b623e53d710d64dc2328eeb1471abf7f84",
+      "repo:docs/doctrine/directory-rules.md@e13f99b623e53d710d64dc2328eeb1471abf7f84",
+      "repo:.github/CODEOWNERS@e13f99b623e53d710d64dc2328eeb1471abf7f84",
+      "repo:apps/governed-api/src/governed_api/main.py@e13f99b623e53d710d64dc2328eeb1471abf7f84",
+      "repo:apps/governed-api/src/governed_api/routes/registry.py@e13f99b623e53d710d64dc2328eeb1471abf7f84",
+      "repo:apps/governed-api/src/governed_api/stub.py@e13f99b623e53d710d64dc2328eeb1471abf7f84",
+      "repo:apps/governed-api/tests/test_abstain_routes.py@e13f99b623e53d710d64dc2328eeb1471abf7f84",
+      "repo:apps/governed-api/tests/test_boundary_guards.py@e13f99b623e53d710d64dc2328eeb1471abf7f84",
+      "repo:apps/governed-api/src/ai/README.md@e13f99b623e53d710d64dc2328eeb1471abf7f84",
+      "repo:apps/explorer-web/src/features/focus_panel/resolver.ts@e13f99b623e53d710d64dc2328eeb1471abf7f84",
+      "repo:apps/explorer-web/src/features/focus_panel/types.ts@e13f99b623e53d710d64dc2328eeb1471abf7f84",
+      "repo:apps/explorer-web/tests/focus-composed-claim.test.ts@e13f99b623e53d710d64dc2328eeb1471abf7f84",
+      "repo:apps/explorer-web/src/adapters/GovernedClient.ts@e13f99b623e53d710d64dc2328eeb1471abf7f84",
+      "repo:runtime/model_adapters/MockAdapter.py@e13f99b623e53d710d64dc2328eeb1471abf7f84",
+      "repo:runtime/model_adapters/OllamaAdapter.py@e13f99b623e53d710d64dc2328eeb1471abf7f84",
+      "repo:tests/runtime_proof/test_mock_adapter_finite_outcomes.py@e13f99b623e53d710d64dc2328eeb1471abf7f84",
+      "repo:contracts/runtime/ai_receipt.md@e13f99b623e53d710d64dc2328eeb1471abf7f84",
+      "repo:schemas/contracts/v1/focus/focus_request.schema.json@e13f99b623e53d710d64dc2328eeb1471abf7f84",
+      "repo:schemas/contracts/v1/focus/focus_response.schema.json@e13f99b623e53d710d64dc2328eeb1471abf7f84",
+      "repo:apps/workers/src/ai_focus_worker/main.py@e13f99b623e53d710d64dc2328eeb1471abf7f84",
+      "repo:.github/workflows/focus-mock-test.yml@e13f99b623e53d710d64dc2328eeb1471abf7f84",
+      "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@e13f99b623e53d710d64dc2328eeb1471abf7f84",
+      "attachment:KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0",
+      "attachment:KFM Directory Governance Standard v2.0.0-draft.1"
+    ]
+  },
+  "truth_labels": {
+    "docs/architecture/governed-ai/ROUTE_MAP.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main-and-overlap-inspection",
+      "outcome": "PASS",
+      "reason": "Pinned main at e13f99b623e53d710d64dc2328eeb1471abf7f84, verified prior target blob c99296e4676e6a587ae6e6d003d163d31e217ee4, inspected the complete target, and found no open pull request claiming the exact path."
+    },
+    {
+      "gate": "directory-rules-and-authority-boundary",
+      "outcome": "PASS",
+      "reason": "Accepted ADR-0029 and Directory Rules v2 support the existing docs/architecture/governed-ai/ placement for human architecture while route behavior, contracts, schemas, policy, runtime, clients, receipts, review, release, and deployment remain in their owning roots."
+    },
+    {
+      "gate": "current-route-registry-inventory",
+      "outcome": "PASS",
+      "reason": "Inspected the WSGI dispatcher, route registry, handlers, stubs, and app-local tests. Exactly /bootstrap, /layers, and /evidence are registered; all are GET-only ABSTAIN / NOT_IMPLEMENTED stubs with safe 404/405 ERROR behavior and no audience/capability metadata."
+    },
+    {
+      "gate": "legacy-route-family-reconciliation",
+      "outcome": "PASS",
+      "reason": "Retained the six historical API-family labels as lineage while removing unsupported claims that they are an accepted enum, the current route registry, or a complete governed-AI runtime."
+    },
+    {
+      "gate": "bounded-ai-component-inventory",
+      "outcome": "PASS",
+      "reason": "Inspected the no-I/O MockAdapter and proof tests, placeholder Ollama adapter and worker, proposed AIReceipt profile, permissive Focus schemas, app-local Explorer Focus projection source/tests, and fixture-only GovernedClient; each component is bounded from transport, provider, evidence, policy, citation, receipt-emission, release, and deployment claims."
+    },
+    {
+      "gate": "audience-envelope-and-profile-crosswalk",
+      "outcome": "PASS",
+      "reason": "Reconciled the target against modernized governed-api audience and envelope guidance: no canonical audience enum is enforced, DENY is not an audience, RuntimeResponseEnvelope and DecisionEnvelope are separate profiles, and DomainFeatureEnvelope remains proposal-only."
+    },
+    {
+      "gate": "markdown-structure-anchor-and-link-check",
+      "outcome": "PASS",
+      "reason": "Verified a YAML-readable KFM meta block, one semantic H1, 17 unique explicit anchors including all legacy numbered section anchors, 39 resolved local fragments, 16 balanced fence markers, 6 balanced details blocks, 25 stable tables, no tabs or trailing whitespace, final newline, and 25 unique repository-relative references against inspected paths."
+    },
+    {
+      "gate": "remote-artifact-hash-binding",
+      "outcome": "PASS",
+      "reason": "Remote branch blob d7284c1129629925e2c54b90382932d7775581d6 matches the locally computed Git blob; final document SHA-256 is d3a93e8d5056274fe5a85523ebac397c43e2f4e7339fc264cdf4230c9a51f3ce."
+    },
+    {
+      "gate": "generated-receipt-shape",
+      "outcome": "PASS",
+      "reason": "Receipt JSON was checked for required fields, finite enums, hash patterns, artifact path/hash closure, allowed top-level properties, pending human review, and a bounded notes field."
+    },
+    {
+      "gate": "repository-native-documentation-and-runtime-tests",
+      "outcome": "SKIPPED",
+      "reason": "No mounted repository dependency environment was available. The change is documentation-only; deterministic source checks and remote blob verification were completed, while repository-native runtime and aggregate commands remain separate execution evidence."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Pending draft pull request creation and hosted execution at receipt emission time."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending; this receipt creates no route, contract, schema, policy, provider admission, receipt emission, access grant, review decision, release, deployment, publication, or public-use authority."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "pinned-main-baseline",
+      "validated": true,
+      "evidence_ref": "repo:commit/e13f99b623e53d710d64dc2328eeb1471abf7f84"
+    },
+    {
+      "id": "accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@e13f99b623e53d710d64dc2328eeb1471abf7f84"
+    },
+    {
+      "id": "current-route-registry",
+      "validated": true,
+      "evidence_ref": "repo:apps/governed-api/src/governed_api/routes/registry.py@e13f99b623e53d710d64dc2328eeb1471abf7f84"
+    },
+    {
+      "id": "current-dispatcher",
+      "validated": true,
+      "evidence_ref": "repo:apps/governed-api/src/governed_api/main.py@e13f99b623e53d710d64dc2328eeb1471abf7f84"
+    },
+    {
+      "id": "current-negative-runtime",
+      "validated": true,
+      "evidence_ref": "repo:apps/governed-api/src/governed_api/stub.py@e13f99b623e53d710d64dc2328eeb1471abf7f84"
+    },
+    {
+      "id": "governed-api-envelope-reconciliation",
+      "validated": true,
+      "evidence_ref": "repo:docs/architecture/governed-api/ENVELOPES.md@e13f99b623e53d710d64dc2328eeb1471abf7f84"
+    },
+    {
+      "id": "audience-vocabulary-reconciliation",
+      "validated": true,
+      "evidence_ref": "repo:docs/architecture/governed-api/AUDIENCE_CLASSES.md@e13f99b623e53d710d64dc2328eeb1471abf7f84"
+    },
+    {
+      "id": "bounded-focus-client",
+      "validated": true,
+      "evidence_ref": "repo:apps/explorer-web/src/features/focus_panel/resolver.ts@e13f99b623e53d710d64dc2328eeb1471abf7f84"
+    },
+    {
+      "id": "bounded-mock-adapter",
+      "validated": true,
+      "evidence_ref": "repo:runtime/model_adapters/MockAdapter.py@e13f99b623e53d710d64dc2328eeb1471abf7f84"
+    },
+    {
+      "id": "ai-receipt-profile",
+      "validated": true,
+      "evidence_ref": "repo:contracts/runtime/ai_receipt.md@e13f99b623e53d710d64dc2328eeb1471abf7f84"
+    },
+    {
+      "id": "implementation-contract",
+      "validated": true,
+      "evidence_ref": "attachment:KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-20T00:16:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0019-ai-adapter-contract-and-finite-envelopes.md",
+    "drift_register_entry": null
+  },
+  "notes": "Same-path documentation modernization. It preserves the stable document ID, H1, top anchor, numbered sections 1–16, and legacy section anchors; grounds the executable route surface to three GET-only ABSTAIN stubs plus safe 404/405 ERROR behavior; reclassifies the historical six-family catalogue as lineage; separates API families, routes, declarations, client projections, contracts/schemas, adapters, workers, and deployments; records bounded Explorer Focus, Evidence Drawer, RuntimeResponseEnvelope, MockAdapter, and AIReceipt evidence without promoting components into an end-to-end route; removes unsupported audience, URL, DomainFeatureEnvelope, provider, receipt-emission, and review-route claims; and adds HOLDs, graduation evidence, forbidden paths, validation entrypoints, and rollback. It changes no route, app, package, contract, schema, policy, fixture, validator, test, workflow, provider, receipt, release, deployment, or publication state."
+}

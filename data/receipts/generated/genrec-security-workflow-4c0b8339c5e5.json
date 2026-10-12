@@ -1,0 +1,191 @@
+{
+  "receipt_id": "genrec-security-workflow-4c0b8339c5e5",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/security.yml"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/security.yml": "sha256:4c0b8339c5e59840ba27406cd03089a01d47cbae0bbbcb64746610ea23f98f72"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-10"
+  },
+  "prompt_or_contract": "sha256:12cef93c38ba8c2908a391224589356b880e610240370b2c1de723faaab3f04c",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "repository evidence inspection",
+      "YAML parsing",
+      "Bash syntax validation",
+      "immutable action-pin verification",
+      "content-hash validation",
+      "generated receipt validation",
+      "remote repository verification"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [],
+    "attached_docs": [
+      "KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/97b9cb77bf57b1d1cf75c2768f8e550e399a1345",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/97b9cb77bf57b1d1cf75c2768f8e550e399a1345/.github/workflows/codeql.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/97b9cb77bf57b1d1cf75c2768f8e550e399a1345/.github/workflows/dependency-scan.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/97b9cb77bf57b1d1cf75c2768f8e550e399a1345/.github/workflows/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/97b9cb77bf57b1d1cf75c2768f8e550e399a1345/.github/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/97b9cb77bf57b1d1cf75c2768f8e550e399a1345/SECURITY.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/97b9cb77bf57b1d1cf75c2768f8e550e399a1345/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/97b9cb77bf57b1d1cf75c2768f8e550e399a1345/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/97b9cb77bf57b1d1cf75c2768f8e550e399a1345/infra/docker/Dockerfile.explorer-web",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/97b9cb77bf57b1d1cf75c2768f8e550e399a1345/infra/docker/Dockerfile.governed-api",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/97b9cb77bf57b1d1cf75c2768f8e550e399a1345/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "github://actions/dependency-review-action/commit/a1d282b36b6f3519aa1f3fc636f609c47dddb294",
+      "github://aquasecurity/trivy-action/commit/57a97c7e7821a5776cebc9bb87c984fa69cba8f1",
+      "github://aquasecurity/trivy/release/v0.73.0"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/security.yml": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-base-preflight",
+      "outcome": "PASS",
+      "reason": "Pinned repository bartytime4life/Kansas-Frontier-Matrix at main@97b9cb77bf57b1d1cf75c2768f8e550e399a1345; confirmed security.yml was absent, no overlapping open pull request was found, and .github/workflows/ is the adopted platform-integration home."
+    },
+    {
+      "gate": "dependency-closure-and-overlap",
+      "outcome": "PASS",
+      "reason": "Preserved existing codeql.yml and dependency-scan.yml as companion lanes; the new workflow adds only missing pull-request dependency-diff review, repository vulnerability/misconfiguration/secret scanning, and the two existing Docker image scans."
+    },
+    {
+      "gate": "yaml-and-shell-syntax",
+      "outcome": "PASS",
+      "reason": "Parsed the complete YAML locally with quoted GitHub Actions on-key and validated every embedded Bash run block with bash -n."
+    },
+    {
+      "gate": "trigger-permission-and-fork-safety",
+      "outcome": "PASS",
+      "reason": "Uses pull_request rather than pull_request_target, declares global contents:read, gives the summary job no token permissions, references no secrets or OIDC, uses GitHub-hosted runners, and makes no repository write."
+    },
+    {
+      "gate": "immutable-action-pins",
+      "outcome": "PASS",
+      "reason": "Every external uses reference is pinned to a verified forty-hex commit: actions/checkout v7.0.1, dependency-review-action v5.0.0, and trivy-action 0.35.0. Trivy is explicitly version-pinned to v0.73.0."
+    },
+    {
+      "gate": "finite-failure-semantics",
+      "outcome": "PASS",
+      "reason": "The final security-result job accepts only successful repository/container scans, requires dependency review on pull requests, accepts an explicit skipped dependency review on other events, and fails on every other outcome."
+    },
+    {
+      "gate": "security-reporting-boundary",
+      "outcome": "PASS",
+      "reason": "SECURITY.md and GitHub private vulnerability reporting remain the reporting route; the workflow does not create public security issue intake or expose findings outside job logs and summaries."
+    },
+    {
+      "gate": "documentation-boundary",
+      "outcome": "PASS",
+      "reason": "The parent and workflow READMEs were inspected. Their exact counts are explicitly pinned to an older historical tree and were already stale against the current 379-file workflow tree; a complete inventory reconciliation is intentionally left outside this single-workflow implementation slice and is disclosed in the pull request."
+    },
+    {
+      "gate": "artifact-hash-local",
+      "outcome": "PASS",
+      "reason": "Computed SHA-256 4c0b8339c5e59840ba27406cd03089a01d47cbae0bbbcb64746610ea23f98f72 for the complete prepared security.yml bytes."
+    },
+    {
+      "gate": "generated-receipt-shape-and-integrity",
+      "outcome": "PASS",
+      "reason": "Validated JSON syntax, required fields, semantic-version and digest patterns, artifact/hash/truth-label key parity, citation presence, finite validation outcomes, pending human review, and artifact digest binding."
+    },
+    {
+      "gate": "repository-native-actionlint-and-full-validation",
+      "outcome": "SKIPPED",
+      "reason": "No mounted repository or actionlint binary was available. Hosted exact-head checks and repository-native validation remain the post-push evidence."
+    },
+    {
+      "gate": "container-build-and-live-scanner-execution",
+      "outcome": "SKIPPED",
+      "reason": "The Dockerfiles and build contexts were inspected, but container builds and network-backed scanner databases were not executed locally. The workflow itself is the exact-head execution surface."
+    },
+    {
+      "gate": "remote-readback-pr-and-hosted-checks",
+      "outcome": "SKIPPED",
+      "reason": "This receipt records the pre-push bytes. Branch readback, draft pull-request state, and hosted checks are verified separately after remote mutation."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "current-base",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/97b9cb77bf57b1d1cf75c2768f8e550e399a1345"
+    },
+    {
+      "id": "existing-codeql-workflow",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/97b9cb77bf57b1d1cf75c2768f8e550e399a1345/.github/workflows/codeql.yml"
+    },
+    {
+      "id": "existing-dependency-scan-workflow",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/97b9cb77bf57b1d1cf75c2768f8e550e399a1345/.github/workflows/dependency-scan.yml"
+    },
+    {
+      "id": "security-reporting-policy",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/97b9cb77bf57b1d1cf75c2768f8e550e399a1345/SECURITY.md"
+    },
+    {
+      "id": "accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/97b9cb77bf57b1d1cf75c2768f8e550e399a1345/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "directory-rules-adoption",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/97b9cb77bf57b1d1cf75c2768f8e550e399a1345/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "generated-receipt-schema",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/97b9cb77bf57b1d1cf75c2768f8e550e399a1345/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    },
+    {
+      "id": "dependency-review-action-pin",
+      "validated": true,
+      "evidence_ref": "github://actions/dependency-review-action/commit/a1d282b36b6f3519aa1f3fc636f609c47dddb294"
+    },
+    {
+      "id": "trivy-action-pin",
+      "validated": true,
+      "evidence_ref": "github://aquasecurity/trivy-action/commit/57a97c7e7821a5776cebc9bb87c984fa69cba8f1"
+    },
+    {
+      "id": "trivy-version",
+      "validated": true,
+      "evidence_ref": "github://aquasecurity/trivy/release/v0.73.0"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-11T03:58:26Z",
+  "emitter": "openai/gpt-5.6-pro",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored supplemental security workflow. It preserves existing CodeQL and full dependency-audit workflows, adds least-privilege PR dependency review plus Trivy repository and container scans, and does not merge, release, deploy, publish, alter repository settings, activate sources, or claim vulnerability absence. Human review remains pending."
+}

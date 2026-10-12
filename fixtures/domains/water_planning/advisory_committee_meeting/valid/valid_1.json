@@ -1,0 +1,13 @@
+{
+  "meeting_id": "kwo-rac-01-mtg-2026-08",
+  "meeting_type": "advisory_committee_meeting",
+  "planning_region_ref": "kwo-rac-01",
+  "title": "RAC 1 Southwestern Kansas — August 2026 Meeting",
+  "starts_at": "2026-08-15T09:00:00-05:00",
+  "ends_at": "2026-08-15T11:00:00-05:00",
+  "location_description": "Garden City, KS",
+  "virtual_access_posture": "in_person",
+  "cancellation_state": "scheduled",
+  "source_publication_time": "2026-07-15T00:00:00Z",
+  "source_ref": "kwo:rac:01:meeting:2026-08"
+}

@@ -1,0 +1,42 @@
+{
+  "profile_id": "kfm.nhdplus-network-revision.synthetic.v1",
+  "fixture_only": true,
+  "source": {
+    "source_ref": "fixture://source/usgs-nhdplus-hr",
+    "product": "NHDPlus HR",
+    "product_version": "VPU-10.1",
+    "metadata_timestamp": "2026-04-02T00:00:00Z",
+    "source_role": "derived_topology_context",
+    "rights_state": "public_domain_fixture"
+  },
+  "flowlines": [
+    {
+      "comid": 1002,
+      "reachcode": "10240002000002",
+      "hydroseq": 5002,
+      "from_measure": 0.0,
+      "to_measure": 100.0,
+      "vpuid": "10",
+      "huc12": "102400020102",
+      "geometry_metrics": {
+        "catchment_area_m2": 2000000.0,
+        "centroid_easting_m": 501000.0,
+        "centroid_northing_m": 4301000.0
+      }
+    },
+    {
+      "comid": 1001,
+      "reachcode": "10240002000001",
+      "hydroseq": 5001,
+      "from_measure": 0.0,
+      "to_measure": 100.0,
+      "vpuid": "10",
+      "huc12": "102400020101",
+      "geometry_metrics": {
+        "catchment_area_m2": 1000000.0,
+        "centroid_easting_m": 500000.0,
+        "centroid_northing_m": 4300000.0
+      }
+    }
+  ]
+}

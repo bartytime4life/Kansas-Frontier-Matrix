@@ -1,0 +1,234 @@
+{
+  "coverage": [
+    {
+      "checkedAt": "2026-10-08T17:52:29.936880+00:00",
+      "discoveredCount": 0,
+      "expectedCount": null,
+      "reason": "Kansas bounding rectangle of index points; not exact state membership, mine footprints or exhaustive archival coverage. URLError: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:997)>",
+      "recordCount": 1,
+      "seedReferenceCount": 1,
+      "sourceId": "osmre-nmmr",
+      "state": "unavailable",
+      "title": "OSMRE National Mine Map Repository"
+    },
+    {
+      "checkedAt": "2026-10-08T17:52:29.936880+00:00",
+      "discoveredCount": 944,
+      "expectedCount": 944,
+      "reason": "Explicit publisher subset of the full Kansas search; URL publisher filter is not trusted. Reconciled 2270 total search IDs; retained 944 matching publications.",
+      "recordCount": 951,
+      "seedReferenceCount": 7,
+      "sourceId": "ngmdb-usgs",
+      "state": "complete",
+      "title": "NGMDB Kansas — USGS"
+    },
+    {
+      "checkedAt": "2026-10-08T17:52:29.936880+00:00",
+      "discoveredCount": 741,
+      "expectedCount": 741,
+      "reason": "Explicit publisher subset of the full Kansas search; URL publisher filter is not trusted. Reconciled 2270 total search IDs; retained 741 matching publications.",
+      "recordCount": 743,
+      "seedReferenceCount": 2,
+      "sourceId": "ngmdb-kgs",
+      "state": "complete",
+      "title": "NGMDB Kansas — Kansas Geological Survey"
+    }
+  ],
+  "discovery": {
+    "kansasBounds": "-102.052,36.993,-94.588,40.003",
+    "mapBytesDownloaded": 0,
+    "metadataBytes": 1407916,
+    "ngmdbExcludedPublisherCount": 585,
+    "ngmdbTotalCount": 2270,
+    "receipts": [
+      {
+        "bytes": 62038,
+        "checkedAt": "2026-10-08T17:52:10.246126+00:00",
+        "sha256": "dfcc618122f8f34002af744fb760316126e778045b3c433a8b17767f235488d1",
+        "url": "https://ngmdb.usgs.gov/ngm-bin/ngm_search_json.pl?Title=&Author=&map_number=&State=KS&bc_ule=&bc_lre=&g_center=-97.35000%2C+37.82177&g_zoom=2.324&useextents=false&bc_ul=&bc_lr=&publisher_list=usgs&scale=&scale2=&datebgn=&dateend=&format="
+      },
+      {
+        "bytes": 60996,
+        "checkedAt": "2026-10-08T17:52:11.072600+00:00",
+        "sha256": "1fcbc1fc99b99d9c3a68d558367055f64c6dcebc52921ce45b64470c986142f9",
+        "url": "https://ngmdb.usgs.gov/ngm-bin/ngm_search_json.pl?Title=&Author=&map_number=&State=KS&bc_ule=&bc_lre=&g_center=-97.35000%2C+37.82177&g_zoom=2.324&useextents=false&bc_ul=&bc_lr=&publisher_list=usgs&scale=&scale2=&datebgn=&dateend=&format=&start=101"
+      },
+      {
+        "bytes": 60032,
+        "checkedAt": "2026-10-08T17:52:11.933559+00:00",
+        "sha256": "7663249685f46e8a52418e2b7005e0b3113ffc54a083169dd6586334061888a8",
+        "url": "https://ngmdb.usgs.gov/ngm-bin/ngm_search_json.pl?Title=&Author=&map_number=&State=KS&bc_ule=&bc_lre=&g_center=-97.35000%2C+37.82177&g_zoom=2.324&useextents=false&bc_ul=&bc_lr=&publisher_list=usgs&scale=&scale2=&datebgn=&dateend=&format=&start=201"
+      },
+      {
+        "bytes": 57647,
+        "checkedAt": "2026-10-08T17:52:12.897450+00:00",
+        "sha256": "092c7b2ad7dbe6a197bb997a0038cd0cc79fc27d7961261fe91d89b51bb60782",
+        "url": "https://ngmdb.usgs.gov/ngm-bin/ngm_search_json.pl?Title=&Author=&map_number=&State=KS&bc_ule=&bc_lre=&g_center=-97.35000%2C+37.82177&g_zoom=2.324&useextents=false&bc_ul=&bc_lr=&publisher_list=usgs&scale=&scale2=&datebgn=&dateend=&format=&start=301"
+      },
+      {
+        "bytes": 60476,
+        "checkedAt": "2026-10-08T17:52:13.902129+00:00",
+        "sha256": "739a3fd9a48e779b247f23050c3f12afaa3f7dd94520ac51d9d8db143bebc1b4",
+        "url": "https://ngmdb.usgs.gov/ngm-bin/ngm_search_json.pl?Title=&Author=&map_number=&State=KS&bc_ule=&bc_lre=&g_center=-97.35000%2C+37.82177&g_zoom=2.324&useextents=false&bc_ul=&bc_lr=&publisher_list=usgs&scale=&scale2=&datebgn=&dateend=&format=&start=401"
+      },
+      {
+        "bytes": 61272,
+        "checkedAt": "2026-10-08T17:52:14.939269+00:00",
+        "sha256": "89ec52fbe00723931043cc2a235ae40772d78e0fb92e44d7b1c436c2b4df39dc",
+        "url": "https://ngmdb.usgs.gov/ngm-bin/ngm_search_json.pl?Title=&Author=&map_number=&State=KS&bc_ule=&bc_lre=&g_center=-97.35000%2C+37.82177&g_zoom=2.324&useextents=false&bc_ul=&bc_lr=&publisher_list=usgs&scale=&scale2=&datebgn=&dateend=&format=&start=501"
+      },
+      {
+        "bytes": 64288,
+        "checkedAt": "2026-10-08T17:52:15.840278+00:00",
+        "sha256": "9bfb332d541fc2d5c3bf2034d0f8da63af9b8187fcb9f9f7feb32226e3f82ad8",
+        "url": "https://ngmdb.usgs.gov/ngm-bin/ngm_search_json.pl?Title=&Author=&map_number=&State=KS&bc_ule=&bc_lre=&g_center=-97.35000%2C+37.82177&g_zoom=2.324&useextents=false&bc_ul=&bc_lr=&publisher_list=usgs&scale=&scale2=&datebgn=&dateend=&format=&start=601"
+      },
+      {
+        "bytes": 62344,
+        "checkedAt": "2026-10-08T17:52:16.786336+00:00",
+        "sha256": "232c83b839cabefe0b2801ddb489dad889ca4a24c45fc26ede766042e048b84c",
+        "url": "https://ngmdb.usgs.gov/ngm-bin/ngm_search_json.pl?Title=&Author=&map_number=&State=KS&bc_ule=&bc_lre=&g_center=-97.35000%2C+37.82177&g_zoom=2.324&useextents=false&bc_ul=&bc_lr=&publisher_list=usgs&scale=&scale2=&datebgn=&dateend=&format=&start=701"
+      },
+      {
+        "bytes": 63826,
+        "checkedAt": "2026-10-08T17:52:17.664148+00:00",
+        "sha256": "9e18bb59da6f326371b1746d40962769bf21572300b775a9fe2b09a5605c260f",
+        "url": "https://ngmdb.usgs.gov/ngm-bin/ngm_search_json.pl?Title=&Author=&map_number=&State=KS&bc_ule=&bc_lre=&g_center=-97.35000%2C+37.82177&g_zoom=2.324&useextents=false&bc_ul=&bc_lr=&publisher_list=usgs&scale=&scale2=&datebgn=&dateend=&format=&start=801"
+      },
+      {
+        "bytes": 65531,
+        "checkedAt": "2026-10-08T17:52:18.585907+00:00",
+        "sha256": "8b1a3de39dc6721f8e32b84b374e44636ca02a66aa934620c07fb90f6519bf67",
+        "url": "https://ngmdb.usgs.gov/ngm-bin/ngm_search_json.pl?Title=&Author=&map_number=&State=KS&bc_ule=&bc_lre=&g_center=-97.35000%2C+37.82177&g_zoom=2.324&useextents=false&bc_ul=&bc_lr=&publisher_list=usgs&scale=&scale2=&datebgn=&dateend=&format=&start=901"
+      },
+      {
+        "bytes": 63205,
+        "checkedAt": "2026-10-08T17:52:19.409152+00:00",
+        "sha256": "a1b5100c830c0c00431e4d48e0f1f9f5c71065ed28b17da801a59aded1e7168d",
+        "url": "https://ngmdb.usgs.gov/ngm-bin/ngm_search_json.pl?Title=&Author=&map_number=&State=KS&bc_ule=&bc_lre=&g_center=-97.35000%2C+37.82177&g_zoom=2.324&useextents=false&bc_ul=&bc_lr=&publisher_list=usgs&scale=&scale2=&datebgn=&dateend=&format=&start=1001"
+      },
+      {
+        "bytes": 64497,
+        "checkedAt": "2026-10-08T17:52:20.177938+00:00",
+        "sha256": "ecfc4039856d6140bc06248835a2c86db67c9215d2f6bf77501da79aa3d2a2ac",
+        "url": "https://ngmdb.usgs.gov/ngm-bin/ngm_search_json.pl?Title=&Author=&map_number=&State=KS&bc_ule=&bc_lre=&g_center=-97.35000%2C+37.82177&g_zoom=2.324&useextents=false&bc_ul=&bc_lr=&publisher_list=usgs&scale=&scale2=&datebgn=&dateend=&format=&start=1101"
+      },
+      {
+        "bytes": 62449,
+        "checkedAt": "2026-10-08T17:52:21.048347+00:00",
+        "sha256": "dd41e7e96f9f5030487dc866464993141cbbf305113a5cc8367e5b092a1b6152",
+        "url": "https://ngmdb.usgs.gov/ngm-bin/ngm_search_json.pl?Title=&Author=&map_number=&State=KS&bc_ule=&bc_lre=&g_center=-97.35000%2C+37.82177&g_zoom=2.324&useextents=false&bc_ul=&bc_lr=&publisher_list=usgs&scale=&scale2=&datebgn=&dateend=&format=&start=1201"
+      },
+      {
+        "bytes": 63688,
+        "checkedAt": "2026-10-08T17:52:21.922427+00:00",
+        "sha256": "1a6574979f0244e8e0bef07e91a57bbdac42d3815e92cc0c8a259388c98f3351",
+        "url": "https://ngmdb.usgs.gov/ngm-bin/ngm_search_json.pl?Title=&Author=&map_number=&State=KS&bc_ule=&bc_lre=&g_center=-97.35000%2C+37.82177&g_zoom=2.324&useextents=false&bc_ul=&bc_lr=&publisher_list=usgs&scale=&scale2=&datebgn=&dateend=&format=&start=1301"
+      },
+      {
+        "bytes": 64589,
+        "checkedAt": "2026-10-08T17:52:22.827389+00:00",
+        "sha256": "c03fbe7023be2f9b2589ab56bdb5f60c9d77870e16266f509d89c9f13b65bf63",
+        "url": "https://ngmdb.usgs.gov/ngm-bin/ngm_search_json.pl?Title=&Author=&map_number=&State=KS&bc_ule=&bc_lre=&g_center=-97.35000%2C+37.82177&g_zoom=2.324&useextents=false&bc_ul=&bc_lr=&publisher_list=usgs&scale=&scale2=&datebgn=&dateend=&format=&start=1401"
+      },
+      {
+        "bytes": 65293,
+        "checkedAt": "2026-10-08T17:52:23.733524+00:00",
+        "sha256": "dcb91b8bead5a2c34792827a38702bd77032722b0447290a8defe6025ef7e53e",
+        "url": "https://ngmdb.usgs.gov/ngm-bin/ngm_search_json.pl?Title=&Author=&map_number=&State=KS&bc_ule=&bc_lre=&g_center=-97.35000%2C+37.82177&g_zoom=2.324&useextents=false&bc_ul=&bc_lr=&publisher_list=usgs&scale=&scale2=&datebgn=&dateend=&format=&start=1501"
+      },
+      {
+        "bytes": 66083,
+        "checkedAt": "2026-10-08T17:52:24.590856+00:00",
+        "sha256": "f33d6638532e026248576800c122a45d9073d7c1a6ff8c2bb638b03c09f1e6b4",
+        "url": "https://ngmdb.usgs.gov/ngm-bin/ngm_search_json.pl?Title=&Author=&map_number=&State=KS&bc_ule=&bc_lre=&g_center=-97.35000%2C+37.82177&g_zoom=2.324&useextents=false&bc_ul=&bc_lr=&publisher_list=usgs&scale=&scale2=&datebgn=&dateend=&format=&start=1601"
+      },
+      {
+        "bytes": 65361,
+        "checkedAt": "2026-10-08T17:52:25.518040+00:00",
+        "sha256": "f1bacc0f4f12952a080717aedcc94a347b44fcb78b3d44d5dffc8041513c5ece",
+        "url": "https://ngmdb.usgs.gov/ngm-bin/ngm_search_json.pl?Title=&Author=&map_number=&State=KS&bc_ule=&bc_lre=&g_center=-97.35000%2C+37.82177&g_zoom=2.324&useextents=false&bc_ul=&bc_lr=&publisher_list=usgs&scale=&scale2=&datebgn=&dateend=&format=&start=1701"
+      },
+      {
+        "bytes": 59073,
+        "checkedAt": "2026-10-08T17:52:26.366267+00:00",
+        "sha256": "f7cb6d2d5845f7926b2cd1d30bbcbc40cd8da536b37df8b27384109fde0812c8",
+        "url": "https://ngmdb.usgs.gov/ngm-bin/ngm_search_json.pl?Title=&Author=&map_number=&State=KS&bc_ule=&bc_lre=&g_center=-97.35000%2C+37.82177&g_zoom=2.324&useextents=false&bc_ul=&bc_lr=&publisher_list=usgs&scale=&scale2=&datebgn=&dateend=&format=&start=1801"
+      },
+      {
+        "bytes": 58392,
+        "checkedAt": "2026-10-08T17:52:27.091216+00:00",
+        "sha256": "bf3ebd18530e9e25fe2c2d1d9c39d09a759df957a08d886a178cf511e0d3b231",
+        "url": "https://ngmdb.usgs.gov/ngm-bin/ngm_search_json.pl?Title=&Author=&map_number=&State=KS&bc_ule=&bc_lre=&g_center=-97.35000%2C+37.82177&g_zoom=2.324&useextents=false&bc_ul=&bc_lr=&publisher_list=usgs&scale=&scale2=&datebgn=&dateend=&format=&start=1901"
+      },
+      {
+        "bytes": 57802,
+        "checkedAt": "2026-10-08T17:52:28.063762+00:00",
+        "sha256": "2dec8d9593aa74eded3dd17f8054dbf20de31db93718083ba5304fb0858f6450",
+        "url": "https://ngmdb.usgs.gov/ngm-bin/ngm_search_json.pl?Title=&Author=&map_number=&State=KS&bc_ule=&bc_lre=&g_center=-97.35000%2C+37.82177&g_zoom=2.324&useextents=false&bc_ul=&bc_lr=&publisher_list=usgs&scale=&scale2=&datebgn=&dateend=&format=&start=2001"
+      },
+      {
+        "bytes": 58412,
+        "checkedAt": "2026-10-08T17:52:29.049810+00:00",
+        "sha256": "f2bc9dbfd857682d25690c92610da65d50e361b2ad9648224a3877c5a4f26420",
+        "url": "https://ngmdb.usgs.gov/ngm-bin/ngm_search_json.pl?Title=&Author=&map_number=&State=KS&bc_ule=&bc_lre=&g_center=-97.35000%2C+37.82177&g_zoom=2.324&useextents=false&bc_ul=&bc_lr=&publisher_list=usgs&scale=&scale2=&datebgn=&dateend=&format=&start=2101"
+      },
+      {
+        "bytes": 40622,
+        "checkedAt": "2026-10-08T17:52:29.935907+00:00",
+        "sha256": "4cbcf63810cd1056a23fb6f9e25bc1ec1b4c72966a54cc33ab48f445cbdb47c9",
+        "url": "https://ngmdb.usgs.gov/ngm-bin/ngm_search_json.pl?Title=&Author=&map_number=&State=KS&bc_ule=&bc_lre=&g_center=-97.35000%2C+37.82177&g_zoom=2.324&useextents=false&bc_ul=&bc_lr=&publisher_list=usgs&scale=&scale2=&datebgn=&dateend=&format=&start=2201"
+      }
+    ],
+    "requests": 24
+  },
+  "generatedAt": "2026-10-08T17:52:29.936880+00:00",
+  "index": {
+    "bytes": 888046,
+    "file": "public-map-metadata-20261008.jsonl",
+    "recordCount": 1685,
+    "sha256": "480a6c2d92f294e37ee461afb5e55af8f2fa3c344b71d760621646351c89ad24"
+  },
+  "lifecycle": "candidate-metadata-only",
+  "rights": {
+    "admission": "not-granted",
+    "kgsReview": "held",
+    "mapOriginalsDownloaded": 0
+  },
+  "schema": "kfm-public-map-discovery-review/v1",
+  "scope": "Kansas search results explicitly filtered to USGS and KGS publishers. NMMR coverage and failures are separate. Online/GIS metadata flags do not verify files, download rights, georeferencing, or local availability.",
+  "seedAugmentation": {
+    "appliedAt": "2026-10-08T18:29:28.910744+00:00",
+    "discoveryRefreshed": false,
+    "normalizationDefaultsApplied": 0,
+    "seedGeneratedAt": "2026-10-08T18:07:23Z",
+    "seedSha256": "56879bf21ce9a03c9ffb4779b13c14631499f1974068bd3cd507eb097da3f076",
+    "updatedRecordIds": [
+      "usgs-lamar-p9mnqfy6",
+      "usgs-limon-p9djg0o3"
+    ]
+  },
+  "seedReferenceIds": [
+    "kgs-m118-2008",
+    "kgs-m97-bourbon-2020",
+    "osmre-nmmr-index",
+    "usgs-cngm-earth-p146vgvm",
+    "usgs-cngm-precambrian-p13tsv2j",
+    "usgs-cngm-prequaternary-p147sgss",
+    "usgs-cngm-quaternary-p16sjac6",
+    "usgs-coal-fields-2013",
+    "usgs-lamar-p9mnqfy6",
+    "usgs-limon-p9djg0o3"
+  ],
+  "snapshot": {
+    "bytes": 2704458,
+    "recordCount": 1695,
+    "schema": "kfm-public-map-catalog/v1",
+    "sha256": "aa1a6df511f89fdefa6e8011a4db3f8d044980f7505dd8977fd0e3d282b8c0ae"
+  },
+  "sourceUrls": [
+    "https://mmr.osmre.gov/",
+    "https://experience.arcgis.com/experience/d84e5b88af674f588645f153e2127910#widget_2702=active_datasource_id:dataSource_4,center:-10971121.85551685%2C4674675.97959652%2C102100,scale:1469721.0749880797,level:8.728154117370744,rotation:0,viewpoint:%7B%22rotation%22%3A0%2C%22scale%22%3A1469721.0749880797%2C%22targetGeometry%22%3A%7B%22spatialReference%22%3A%7B%22latestWkid%22%3A3857%2C%22wkid%22%3A102100%7D%2C%22x%22%3A-10971121.85551685%2C%22y%22%3A4674675.97959652%7D%7D",
+    "https://ngmdb.usgs.gov/ngm-bin/ngm_search_dbi.pl?Title=&Author=&map_number=&State=KS&bc_ule=&bc_lre=&g_center=-97.35000%2C+37.82177&g_zoom=2.324&useextents=false&bc_ul=&bc_lr=&publisher_list=usgs&scale=&scale2=&datebgn=&dateend=&format="
+  ]
+}

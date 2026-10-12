@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/domains/water_planning/funding_agreement.schema.json",
+  "title": "funding_agreement",
+  "type": "object",
+  "description": "A funding agreement associated with an Award. A funding agreement is not a project, construction milestone, or proof of payment. The paid_amount is distinct from the awarded_amount.",
+  "x-kfm": {
+    "status": "PROPOSED",
+    "contract_doc": "contracts/domains/water_planning/funding_agreement.md",
+    "fixtures_root": "fixtures/domains/water_planning/funding_agreement/",
+    "policy": "policy/domains/water_planning/"
+  },
+  "properties": {
+    "agreement_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_:.-]*$"
+    },
+    "award_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "fiscal_year": {
+      "type": "string",
+      "pattern": "^FY[0-9]{4}$"
+    },
+    "paid_amount": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "description": "Amount paid under this agreement as stated by the source. Null if not publicly disclosed. Distinct from awarded_amount."
+    },
+    "effective_date": {
+      "type": ["string", "null"],
+      "format": "date"
+    },
+    "source_ref": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "required": [
+    "agreement_id",
+    "award_ref",
+    "fiscal_year",
+    "source_ref"
+  ],
+  "additionalProperties": false
+}

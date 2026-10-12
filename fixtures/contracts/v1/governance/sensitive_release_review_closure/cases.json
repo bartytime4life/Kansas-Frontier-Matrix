@@ -1,0 +1,232 @@
+{
+  "schema_version": "1.0.0",
+  "scope": "governance.sensitive_release_review_closure",
+  "base_document": {
+    "schema_version": "1.0.0",
+    "object_type": "SensitiveReleaseReviewClosure",
+    "profile": "kfm.governance.sensitive-release-review-closure.v1",
+    "profile_status": "PROPOSED_INACTIVE",
+    "execution_mode": "FIXTURE_ONLY",
+    "authority": "NONE",
+    "closure_id": "kfm:sensitive-release-review-closure:0000000000000000000000000000000000000000000000000000000000000000",
+    "subject": {
+      "ref": "kfm:release-candidate:fixture-sensitive-001",
+      "spec_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+      "sensitivity_tier": "T3",
+      "author_actor_ref": "kfm:actor:fixture-author",
+      "author_role_chain_actor_refs": ["kfm:actor:fixture-author"]
+    },
+    "release_context": {
+      "promotion_decision_ref": "kfm:promotion-decision:fixture-sensitive-001",
+      "promotion_decision_spec_hash": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+      "policy_decision_ref": "kfm:policy-decision:fixture-sensitive-allow",
+      "policy_decision_spec_hash": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+      "policy_outcome": "ALLOW",
+      "release_manifest_candidate_ref": "kfm:release-manifest-candidate:fixture-sensitive-001",
+      "release_manifest_candidate_spec_hash": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+      "release_state": "CANDIDATE",
+      "evidence_bundle_refs": ["kfm:evidence-bundle:fixture-sensitive-001"],
+      "correction_path_ref": "kfm:correction-path:fixture-sensitive-001",
+      "rollback_card_ref": "kfm:rollback-card:fixture-sensitive-001"
+    },
+    "review_binding": {
+      "schema_version": "1.0.0",
+      "object_type": "ReviewAuthorityBinding",
+      "profile": "kfm.governance.review-authority-binding.v1",
+      "profile_status": "PROPOSED_INACTIVE",
+      "execution_mode": "FIXTURE_ONLY",
+      "authority": "NONE",
+      "binding_id": "kfm:review-authority-binding:0000000000000000000000000000000000000000000000000000000000000000",
+      "subject": {
+        "ref": "kfm:release-candidate:fixture-sensitive-001",
+        "spec_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "author_actor_ref": "kfm:actor:fixture-author"
+      },
+      "review": {
+        "review_ref": "kfm:review-record:fixture-sensitive-001",
+        "review_spec_hash": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+        "reviewed_at": "2026-08-09T18:00:00Z",
+        "reviewer_actor_ref": "kfm:actor:fixture-independent-reviewer",
+        "reviewer_role": "sensitivity_reviewer",
+        "disposition": "APPROVE",
+        "conditions": [],
+        "basis_refs": [
+          "kfm:evidence-bundle:fixture-sensitive-001",
+          "kfm:validation-report:fixture-sensitive-001"
+        ],
+        "policy_context_refs": ["kfm:policy-decision:fixture-sensitive-allow"],
+        "independent_review_required": true,
+        "author_reviewer_distinct": true
+      },
+      "assignment": {
+        "assignment_ref": "kfm:stewardship-assignment:fixture-sensitive-001",
+        "assignment_spec_hash": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+        "target_ref": "kfm:release-candidate:fixture-sensitive-001",
+        "steward_actor_ref": "kfm:actor:fixture-independent-reviewer",
+        "steward_role": "sensitivity_reviewer",
+        "status": "ACTIVE",
+        "starts_at": "2026-01-01T00:00:00Z",
+        "expires_at": "2027-01-01T00:00:00Z",
+        "authority_basis_refs": [
+          "kfm:authority:adr-0029",
+          "kfm:authority:fixture-sensitive-review"
+        ],
+        "responsibility_actions": ["PREFLIGHT_WORK_APPLY", "RELEASE_REVIEW"],
+        "required_partner_roles": ["release_authority", "validation_steward"],
+        "escalation_ref": "kfm:governance:escalation-sensitive-release"
+      },
+      "checks": {
+        "actor_match": false,
+        "role_match": false,
+        "subject_match": false,
+        "effective_window_match": false,
+        "active_assignment": false,
+        "approved_review": false,
+        "separation_of_duties_satisfied": false
+      },
+      "outcome": "DENY",
+      "reason_codes": [
+        "ACTOR_MISMATCH",
+        "ASSIGNMENT_NOT_ACTIVE",
+        "EFFECTIVE_WINDOW_MISMATCH",
+        "REVIEW_NOT_APPROVED",
+        "ROLE_MISMATCH",
+        "SOD_FAILED",
+        "SUBJECT_MISMATCH"
+      ],
+      "spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "permissions": {
+        "repository_write_allowed": false,
+        "lifecycle_write_allowed": false,
+        "canonical_write_allowed": false,
+        "promotion_allowed": false,
+        "release_allowed": false,
+        "deployment_allowed": false,
+        "publication_allowed": false,
+        "public_use_allowed": false
+      },
+      "non_effects": [
+        "does_not_authenticate_actor_or_platform_identity",
+        "does_not_authorize_apply_or_emit_write_request",
+        "does_not_create_policy_promotion_or_release_authority",
+        "does_not_merge_release_deploy_or_publish",
+        "does_not_write_repository_or_lifecycle_state"
+      ]
+    },
+    "checks": {
+      "review_binding_valid": false,
+      "review_bound": false,
+      "subject_bound": false,
+      "author_bound": false,
+      "author_in_role_chain": false,
+      "author_reviewer_distinct": false,
+      "reviewer_outside_author_role_chain": false,
+      "release_review_responsibility": false,
+      "policy_allows": false,
+      "evidence_present": false,
+      "correction_path_present": false,
+      "rollback_present": false,
+      "no_authority": false
+    },
+    "outcome": "DENY",
+    "reason_codes": [
+      "AUTHOR_MISMATCH",
+      "AUTHOR_NOT_IN_ROLE_CHAIN",
+      "CORRECTION_PATH_PRESENT",
+      "EVIDENCE_PRESENT",
+      "NO_AUTHORITY",
+      "POLICY_DENIES",
+      "RELEASE_REVIEW_RESPONSIBILITY_MISSING",
+      "REVIEW_BINDING_INVALID",
+      "ROLLBACK_PRESENT",
+      "SELF_REVIEW_DENIED",
+      "SUBJECT_MISMATCH"
+    ],
+    "permissions": {
+      "repository_write_allowed": false,
+      "lifecycle_write_allowed": false,
+      "policy_override_allowed": false,
+      "promotion_allowed": false,
+      "release_allowed": false,
+      "deployment_allowed": false,
+      "publication_allowed": false,
+      "public_use_allowed": false
+    },
+    "non_effects": [
+      "does_not_authenticate_actor_or_signature",
+      "does_not_create_or_override_policy",
+      "does_not_create_promotion_or_release_authority",
+      "does_not_expose_sensitive_material",
+      "does_not_release_deploy_or_publish",
+      "does_not_write_repository_or_lifecycle_state"
+    ],
+    "spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  "cases": [
+    {
+      "case_id": "closed-t3",
+      "expected": {"status": "PASS", "closure_outcome": "CLOSED_FOR_SEPARATE_RELEASE_GATE", "finding_codes": []}
+    },
+    {
+      "case_id": "closed-t4",
+      "mutations": [{"path": "subject.sensitivity_tier", "value": "T4"}],
+      "expected": {"status": "PASS", "closure_outcome": "CLOSED_FOR_SEPARATE_RELEASE_GATE", "finding_codes": []}
+    },
+    {
+      "case_id": "hold-conditional-review",
+      "review_mutations": [
+        {"path": "review.disposition", "value": "APPROVE_WITH_CONDITIONS"},
+        {"path": "review.conditions", "value": ["Resolve independent release authority before gate evaluation."]}
+      ],
+      "expected": {"status": "PASS", "closure_outcome": "HOLD", "finding_codes": []}
+    },
+    {
+      "case_id": "hold-policy",
+      "mutations": [{"path": "release_context.policy_outcome", "value": "HOLD"}],
+      "expected": {"status": "PASS", "closure_outcome": "HOLD", "finding_codes": []}
+    },
+    {
+      "case_id": "hold-policy-abstain",
+      "mutations": [{"path": "release_context.policy_outcome", "value": "ABSTAIN"}],
+      "expected": {"status": "PASS", "closure_outcome": "HOLD", "finding_codes": []}
+    },
+    {
+      "case_id": "deny-policy",
+      "mutations": [{"path": "release_context.policy_outcome", "value": "DENY"}],
+      "expected": {"status": "PASS", "closure_outcome": "DENY", "finding_codes": []}
+    },
+    {
+      "case_id": "invalid-reviewer-in-author-role-chain",
+      "mutations": [{"path": "subject.author_role_chain_actor_refs", "value": ["kfm:actor:fixture-author", "kfm:actor:fixture-independent-reviewer"]}],
+      "expected": {"status": "DENY", "closure_outcome": "DENY", "finding_codes": ["REVIEWER_IN_AUTHOR_ROLE_CHAIN"]}
+    },
+    {
+      "case_id": "invalid-missing-release-review-responsibility",
+      "review_mutations": [{"path": "assignment.responsibility_actions", "value": ["PREFLIGHT_WORK_APPLY"]}],
+      "expected": {"status": "DENY", "closure_outcome": "DENY", "finding_codes": ["RELEASE_REVIEW_RESPONSIBILITY_MISSING"]}
+    },
+    {
+      "case_id": "invalid-subject-mismatch",
+      "mutations": [{"path": "subject.ref", "value": "kfm:release-candidate:fixture-other"}],
+      "expected": {"status": "DENY", "closure_outcome": "DENY", "finding_codes": ["SUBJECT_MISMATCH"]}
+    },
+    {
+      "case_id": "invalid-self-review",
+      "review_mutations": [
+        {"path": "subject.author_actor_ref", "value": "kfm:actor:fixture-independent-reviewer"},
+        {"path": "review.author_reviewer_distinct", "value": false}
+      ],
+      "expected": {"status": "DENY", "closure_outcome": "DENY", "finding_codes": ["AUTHOR_MISMATCH", "REVIEW_BINDING_INVALID", "SELF_REVIEW_DENIED"]}
+    },
+    {
+      "case_id": "invalid-authority-overclaim",
+      "tamper": [{"path": "permissions.release_allowed", "value": true}],
+      "expected": {"status": "DENY", "closure_outcome": null, "finding_codes": ["SCHEMA_INVALID"]}
+    },
+    {
+      "case_id": "invalid-spec-hash",
+      "tamper": [{"path": "spec_hash", "value": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"}],
+      "expected": {"status": "DENY", "closure_outcome": "CLOSED_FOR_SEPARATE_RELEASE_GATE", "finding_codes": ["CLOSURE_SPEC_HASH_MISMATCH"]}
+    }
+  ]
+}

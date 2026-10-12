@@ -1,0 +1,16 @@
+.card { margin: 1rem 0; padding: 1.1rem 1.25rem; color: #dbe6e8; background: #101e25; border: 1px solid #31444d; border-radius: 12px; scroll-margin-top: 1rem; }
+.heading { display: flex; align-items: start; justify-content: space-between; gap: 1rem; }
+.card h2 { margin: 0 0 .35rem; color: #f3f6ed; font-size: 1.1rem; }
+.card p { margin: .5rem 0; color: #afc3ca; font-size: .88rem; line-height: 1.55; }
+.card button { min-height: 42px; padding: .6rem .9rem; border: 1px solid #56747e; border-radius: 7px; background: #21363e; color: #e5f0f1; font: inherit; cursor: pointer; }
+.card button:disabled { opacity: .55; cursor: default; }
+.card button:focus-visible, .card input:focus-visible { outline: 2px solid #9bddd6; outline-offset: 3px; }
+.stats { display: flex; flex-wrap: wrap; gap: 1rem 2.5rem; margin: 1rem 0; }
+.stats dt { color: #afc3ca; font-size: .8rem; }
+.stats dd { margin: .3rem 0 0; font-size: 1.1rem; font-variant-numeric: tabular-nums; }
+.form { display: flex; flex-wrap: wrap; align-items: end; gap: .75rem; margin-bottom: .9rem; }
+.form label { display: grid; gap: .4rem; font-size: .85rem; }
+.form input { width: 14rem; max-width: 100%; min-height: 42px; box-sizing: border-box; padding: .6rem .7rem; background: #09151b; color: #f3f6ed; border: 1px solid #56747e; border-radius: 7px; font: inherit; }
+.form button { background: #c4b478; color: #131c21; border-color: #c4b478; font-weight: 650; }
+.notice { min-height: 1.4em; }
+@media(max-width: 600px) { .heading { flex-direction: column; } .card { padding: 1rem; } .form, .form label, .form input, .form button { width: 100%; } .stats { gap: 1rem; } }

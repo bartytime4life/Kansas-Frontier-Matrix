@@ -1,0 +1,151 @@
+{
+  "receipt_id": "genrec-common-contract-fixtures-readme-93d66922",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "fixtures/contracts/v1/common/README.md"
+  ],
+  "artifact_hashes": {
+    "fixtures/contracts/v1/common/README.md": "sha256:93d669221a6dbf76737e64160a3383597cf98985f8882c303cb85075c8f548c1"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-19"
+  },
+  "prompt_or_contract": "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Python"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85"
+    ],
+    "attached_docs": [
+      "Pasted text(52).txt"
+    ],
+    "evidence_refs": [
+      "github:bartytime4life/Kansas-Frontier-Matrix@860ccaececd0562dad22694a046215807495f1dc:fixtures/contracts/v1/common/README.md",
+      "github:bartytime4life/Kansas-Frontier-Matrix@860ccaececd0562dad22694a046215807495f1dc:fixtures/contracts/v1/common/spec_hash/README.md",
+      "github:bartytime4life/Kansas-Frontier-Matrix@860ccaececd0562dad22694a046215807495f1dc:fixtures/contracts/v1/common/spec_hash/valid/valid_1.json",
+      "github:bartytime4life/Kansas-Frontier-Matrix@860ccaececd0562dad22694a046215807495f1dc:fixtures/contracts/v1/common/spec_hash/invalid/invalid_1.json",
+      "github:bartytime4life/Kansas-Frontier-Matrix@860ccaececd0562dad22694a046215807495f1dc:fixtures/contracts/v1/common/spec_hash/invalid/invalid_1.expected_error.txt",
+      "github:bartytime4life/Kansas-Frontier-Matrix@860ccaececd0562dad22694a046215807495f1dc:schemas/contracts/v1/common/spec_hash.schema.json",
+      "github:bartytime4life/Kansas-Frontier-Matrix@860ccaececd0562dad22694a046215807495f1dc:schemas/contracts/v1/common/identity_token.schema.json",
+      "github:bartytime4life/Kansas-Frontier-Matrix@860ccaececd0562dad22694a046215807495f1dc:schemas/contracts/v1/common/temporal_window.schema.json",
+      "github:bartytime4life/Kansas-Frontier-Matrix@860ccaececd0562dad22694a046215807495f1dc:schemas/contracts/v1/common/spatial_geometry.schema.json",
+      "github:bartytime4life/Kansas-Frontier-Matrix@860ccaececd0562dad22694a046215807495f1dc:contracts/common/spec_hash.md",
+      "github:bartytime4life/Kansas-Frontier-Matrix@860ccaececd0562dad22694a046215807495f1dc:contracts/common/identity_token.md",
+      "github:bartytime4life/Kansas-Frontier-Matrix@860ccaececd0562dad22694a046215807495f1dc:contracts/common/temporal_window.md",
+      "github:bartytime4life/Kansas-Frontier-Matrix@860ccaececd0562dad22694a046215807495f1dc:contracts/common/spatial_geometry.md",
+      "github:bartytime4life/Kansas-Frontier-Matrix@860ccaececd0562dad22694a046215807495f1dc:tests/schemas/test_common_contracts.py",
+      "github:bartytime4life/Kansas-Frontier-Matrix@860ccaececd0562dad22694a046215807495f1dc:docs/doctrine/directory-rules.md",
+      "github:bartytime4life/Kansas-Frontier-Matrix@860ccaececd0562dad22694a046215807495f1dc:.github/workflows/contracts-validate.yml",
+      "github:bartytime4life/Kansas-Frontier-Matrix@860ccaececd0562dad22694a046215807495f1dc:.github/workflows/schema-validation.yml",
+      "github:bartytime4life/Kansas-Frontier-Matrix@860ccaececd0562dad22694a046215807495f1dc:.github/workflows/validator-suite.yml"
+    ]
+  },
+  "truth_labels": {
+    "fixtures/contracts/v1/common/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "Existing fixture index retained under fixtures/contracts/v1/common; no root, authority home, lifecycle boundary, or schema-home decision changed."
+    },
+    {
+      "gate": "repository-evidence-and-inventory",
+      "outcome": "PASS",
+      "reason": "README distinguishes four directly verified schemas/contracts, one verified populated fixture family, three unestablished fixture families, placeholder validators, and an absent schema-declared identity validator path."
+    },
+    {
+      "gate": "harness-coverage-interpretation",
+      "outcome": "PASS",
+      "reason": "README accurately records that test_common_contracts.py skips absent fixture directories and does not require non-empty valid and invalid lanes."
+    },
+    {
+      "gate": "fixture-schema-polarity",
+      "outcome": "PASS",
+      "reason": "The exact spec_hash valid object produced zero Draft 2020-12 errors; the exact invalid object produced the reviewed missing-value error."
+    },
+    {
+      "gate": "markdown-structure-and-anchors",
+      "outcome": "PASS",
+      "reason": "Closed KFM meta block, one H1, consecutive heading hierarchy, balanced fences, valid internal anchors, no tabs/trailing whitespace, and final newline."
+    },
+    {
+      "gate": "repository-relative-links",
+      "outcome": "PASS",
+      "reason": "Linked repository targets were verified through current GitHub reads; absent or unverified future paths remain code literals rather than active links."
+    },
+    {
+      "gate": "workflow-trigger-threat-preflight",
+      "outcome": "PASS",
+      "reason": "Relevant pull-request workflows use GitHub-hosted runners, read-only contents permission, no persisted checkout credentials, and no secret, OIDC, deployment, release, or publication authority; floating major action tags remain a documented separate hardening gap."
+    },
+    {
+      "gate": "sensitive-content-and-secrets",
+      "outcome": "PASS",
+      "reason": "No credentials, private identifiers, live source payloads, exact sensitive coordinates, or restricted material were introduced."
+    },
+    {
+      "gate": "repository-native-pytest",
+      "outcome": "SKIPPED",
+      "reason": "No full repository checkout was available; bounded schema/fixture polarity and documentation checks were performed locally, and pull-request CI will provide repository-level execution evidence."
+    },
+    {
+      "gate": "remote-ci",
+      "outcome": "SKIPPED",
+      "reason": "Pending draft pull request creation."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "directory-rules",
+      "validated": true,
+      "evidence_ref": "github:bartytime4life/Kansas-Frontier-Matrix@860ccaececd0562dad22694a046215807495f1dc:docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "common-schema-harness",
+      "validated": true,
+      "evidence_ref": "github:bartytime4life/Kansas-Frontier-Matrix@860ccaececd0562dad22694a046215807495f1dc:tests/schemas/test_common_contracts.py"
+    },
+    {
+      "id": "spec-hash-fixture-family",
+      "validated": true,
+      "evidence_ref": "github:bartytime4life/Kansas-Frontier-Matrix@860ccaececd0562dad22694a046215807495f1dc:fixtures/contracts/v1/common/spec_hash/README.md"
+    },
+    {
+      "id": "common-schema-set",
+      "validated": true,
+      "evidence_ref": "github:bartytime4life/Kansas-Frontier-Matrix@860ccaececd0562dad22694a046215807495f1dc:schemas/contracts/v1/common/spec_hash.schema.json"
+    },
+    {
+      "id": "workflow-threat-preflight",
+      "validated": true,
+      "evidence_ref": "github:bartytime4life/Kansas-Frontier-Matrix@860ccaececd0562dad22694a046215807495f1dc:.github/workflows/schema-validation.yml"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-19T18:14:03Z",
+  "emitter": "OpenAI GPT-5.6 Thinking via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Documentation-only update to the common contract fixture index. The receipt records provenance and bounded validation; it is not schema authority, semantic meaning, fixture completeness, validator proof, policy approval, release approval, or publication authority."
+}

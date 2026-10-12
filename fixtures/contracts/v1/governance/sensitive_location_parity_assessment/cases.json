@@ -1,0 +1,400 @@
+{
+  "schema_version": "kfm.sensitive-location-parity-assessment-fixtures.v1",
+  "profile": "kfm.governance.sensitive-location-parity-assessment.v1",
+  "description": "Public-safe synthetic cases proving exact-deny and generalized-with-receipt-candidate declaration polarity without coordinates, source payloads, policy execution, access grants, or publication.",
+  "bases": {
+    "exact_nest": {
+      "profile": "kfm.governance.sensitive-location-parity-assessment.v1",
+      "status": "PROPOSED_INACTIVE",
+      "version": "1.0.0",
+      "request": {
+        "request_ref": "kfm://fixture-request/sensitive-location/nest/exact",
+        "subject_family": "ECOLOGICAL_NEST",
+        "subject_ref": "kfm://fixture-subject/ecological-nest/opaque-001",
+        "owner_domain": "fauna",
+        "audience": "PUBLIC",
+        "requested_precision": "EXACT",
+        "requested_at": "2026-08-10T17:40:00Z"
+      },
+      "support": {
+        "domain_contract_refs": [
+          "kfm://contract/domains/fauna/sensitive-site"
+        ],
+        "sensitivity_registry_refs": [
+          "kfm://registry-candidate/sensitivity/synthetic-fixture-only"
+        ],
+        "policy_refs": [
+          "kfm://policy-candidate/sensitive-location/generalization",
+          "kfm://policy-candidate/sensitive-location/public-exact-deny"
+        ],
+        "source_snapshot_refs": [
+          "kfm:source-snapshot:1111111111111111111111111111111111111111111111111111111111111111"
+        ],
+        "evidence_refs": [
+          "kfm://evidence-ref/synthetic/sensitive-location-parity"
+        ]
+      },
+      "disposition": {
+        "outcome": "EXACT_DENIED",
+        "reason_codes": [
+          "EXACT_LOCATION_PUBLIC_DENY",
+          "REVIEW_REQUIRED_FOR_EXCEPTION"
+        ],
+        "review_required": true
+      },
+      "transform": {
+        "receipt_ref": null,
+        "method_profile_ref": null,
+        "target_precision": "NONE",
+        "status": "DECLARED_NOT_EXECUTED"
+      },
+      "output": {
+        "exact_location_included": false,
+        "source_payload_included": false,
+        "generalized_output_candidate": false,
+        "public_output_created": false
+      },
+      "limitations": [
+        "DECLARATION_ONLY",
+        "NO_ACCESS_AUTHORITY",
+        "NO_COORDINATES_OR_SOURCE_PAYLOADS",
+        "NO_POLICY_OR_STEWARD_DECISION",
+        "NO_RELEASE_OR_PUBLICATION",
+        "NO_TRANSFORM_EXECUTED"
+      ],
+      "effects": {
+        "access_granted": false,
+        "evidence_resolved": false,
+        "lifecycle_mutated": false,
+        "policy_evaluated": false,
+        "promoted": false,
+        "public_output_created": false,
+        "published": false,
+        "released": false,
+        "source_activated": false,
+        "steward_reviewed": false,
+        "transform_executed": false
+      }
+    },
+    "generalized_nest": {
+      "profile": "kfm.governance.sensitive-location-parity-assessment.v1",
+      "status": "PROPOSED_INACTIVE",
+      "version": "1.0.0",
+      "request": {
+        "request_ref": "kfm://fixture-request/sensitive-location/nest/generalized",
+        "subject_family": "ECOLOGICAL_NEST",
+        "subject_ref": "kfm://fixture-subject/ecological-nest/opaque-001",
+        "owner_domain": "fauna",
+        "audience": "PUBLIC",
+        "requested_precision": "GENERALIZED",
+        "requested_at": "2026-08-10T17:40:00Z"
+      },
+      "support": {
+        "domain_contract_refs": [
+          "kfm://contract/domains/fauna/sensitive-site"
+        ],
+        "sensitivity_registry_refs": [
+          "kfm://registry-candidate/sensitivity/synthetic-fixture-only"
+        ],
+        "policy_refs": [
+          "kfm://policy-candidate/sensitive-location/generalization",
+          "kfm://policy-candidate/sensitive-location/public-exact-deny"
+        ],
+        "source_snapshot_refs": [
+          "kfm:source-snapshot:1111111111111111111111111111111111111111111111111111111111111111"
+        ],
+        "evidence_refs": [
+          "kfm://evidence-ref/synthetic/sensitive-location-parity"
+        ]
+      },
+      "disposition": {
+        "outcome": "GENERALIZED_WITH_RECEIPT_CANDIDATE",
+        "reason_codes": [
+          "GENERALIZED_OUTPUT_REQUIRES_RECEIPT",
+          "REVIEW_REQUIRED_BEFORE_RELEASE"
+        ],
+        "review_required": true
+      },
+      "transform": {
+        "receipt_ref": "kfm://spatial-transform-receipt/synthetic/generalized-nest-001",
+        "method_profile_ref": "kfm://transform-method-candidate/generalize-sensitive-location/v1",
+        "target_precision": "GENERALIZED",
+        "status": "DECLARED_NOT_EXECUTED"
+      },
+      "output": {
+        "exact_location_included": false,
+        "source_payload_included": false,
+        "generalized_output_candidate": true,
+        "public_output_created": false
+      },
+      "limitations": [
+        "DECLARATION_ONLY",
+        "NO_ACCESS_AUTHORITY",
+        "NO_COORDINATES_OR_SOURCE_PAYLOADS",
+        "NO_POLICY_OR_STEWARD_DECISION",
+        "NO_RELEASE_OR_PUBLICATION",
+        "NO_TRANSFORM_EXECUTED"
+      ],
+      "effects": {
+        "access_granted": false,
+        "evidence_resolved": false,
+        "lifecycle_mutated": false,
+        "policy_evaluated": false,
+        "promoted": false,
+        "public_output_created": false,
+        "published": false,
+        "released": false,
+        "source_activated": false,
+        "steward_reviewed": false,
+        "transform_executed": false
+      }
+    }
+  },
+  "cases": [
+    {
+      "name": "valid_exact_nest_denied",
+      "base": "exact_nest",
+      "mutations": [],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "valid_exact_den_denied",
+      "base": "exact_nest",
+      "mutations": [
+        {"path": "/request/request_ref", "value": "kfm://fixture-request/sensitive-location/den/exact"},
+        {"path": "/request/subject_family", "value": "ECOLOGICAL_DEN"},
+        {"path": "/request/subject_ref", "value": "kfm://fixture-subject/ecological-den/opaque-001"}
+      ],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "valid_exact_roost_denied",
+      "base": "exact_nest",
+      "mutations": [
+        {"path": "/request/request_ref", "value": "kfm://fixture-request/sensitive-location/roost/exact"},
+        {"path": "/request/subject_family", "value": "ECOLOGICAL_ROOST"},
+        {"path": "/request/subject_ref", "value": "kfm://fixture-subject/ecological-roost/opaque-001"}
+      ],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "valid_exact_archaeological_site_denied",
+      "base": "exact_nest",
+      "mutations": [
+        {"path": "/request/request_ref", "value": "kfm://fixture-request/sensitive-location/archaeological-site/exact"},
+        {"path": "/request/subject_family", "value": "ARCHAEOLOGICAL_SITE"},
+        {"path": "/request/subject_ref", "value": "kfm://fixture-subject/archaeological-site/opaque-001"},
+        {"path": "/request/owner_domain", "value": "archaeology"},
+        {"path": "/support/domain_contract_refs", "value": ["kfm://contract/domains/archaeology/sensitivity-transform"]}
+      ],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "valid_exact_critical_infrastructure_denied",
+      "base": "exact_nest",
+      "mutations": [
+        {"path": "/request/request_ref", "value": "kfm://fixture-request/sensitive-location/critical-infrastructure/exact"},
+        {"path": "/request/subject_family", "value": "CRITICAL_INFRASTRUCTURE"},
+        {"path": "/request/subject_ref", "value": "kfm://fixture-subject/critical-infrastructure/opaque-001"},
+        {"path": "/request/owner_domain", "value": "settlements-infrastructure"},
+        {"path": "/support/domain_contract_refs", "value": ["kfm://contract/domains/settlements-infrastructure/sensitivity-boundary"]}
+      ],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "valid_generalized_nest_with_receipt_candidate",
+      "base": "generalized_nest",
+      "mutations": [],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "valid_generalized_den_with_receipt_candidate",
+      "base": "generalized_nest",
+      "mutations": [
+        {"path": "/request/request_ref", "value": "kfm://fixture-request/sensitive-location/den/generalized"},
+        {"path": "/request/subject_family", "value": "ECOLOGICAL_DEN"},
+        {"path": "/request/subject_ref", "value": "kfm://fixture-subject/ecological-den/opaque-001"},
+        {"path": "/transform/receipt_ref", "value": "kfm://spatial-transform-receipt/synthetic/generalized-den-001"}
+      ],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "valid_generalized_roost_with_receipt_candidate",
+      "base": "generalized_nest",
+      "mutations": [
+        {"path": "/request/request_ref", "value": "kfm://fixture-request/sensitive-location/roost/generalized"},
+        {"path": "/request/subject_family", "value": "ECOLOGICAL_ROOST"},
+        {"path": "/request/subject_ref", "value": "kfm://fixture-subject/ecological-roost/opaque-001"},
+        {"path": "/transform/receipt_ref", "value": "kfm://spatial-transform-receipt/synthetic/generalized-roost-001"}
+      ],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "valid_generalized_archaeological_site_with_receipt_candidate",
+      "base": "generalized_nest",
+      "mutations": [
+        {"path": "/request/request_ref", "value": "kfm://fixture-request/sensitive-location/archaeological-site/generalized"},
+        {"path": "/request/subject_family", "value": "ARCHAEOLOGICAL_SITE"},
+        {"path": "/request/subject_ref", "value": "kfm://fixture-subject/archaeological-site/opaque-001"},
+        {"path": "/request/owner_domain", "value": "archaeology"},
+        {"path": "/support/domain_contract_refs", "value": ["kfm://contract/domains/archaeology/sensitivity-transform"]},
+        {"path": "/transform/receipt_ref", "value": "kfm://spatial-transform-receipt/synthetic/generalized-archaeological-site-001"}
+      ],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "valid_generalized_critical_infrastructure_with_receipt_candidate",
+      "base": "generalized_nest",
+      "mutations": [
+        {"path": "/request/request_ref", "value": "kfm://fixture-request/sensitive-location/critical-infrastructure/generalized"},
+        {"path": "/request/subject_family", "value": "CRITICAL_INFRASTRUCTURE"},
+        {"path": "/request/subject_ref", "value": "kfm://fixture-subject/critical-infrastructure/opaque-001"},
+        {"path": "/request/owner_domain", "value": "settlements-infrastructure"},
+        {"path": "/support/domain_contract_refs", "value": ["kfm://contract/domains/settlements-infrastructure/sensitivity-boundary"]},
+        {"path": "/transform/receipt_ref", "value": "kfm://spatial-transform-receipt/synthetic/generalized-critical-infrastructure-001"}
+      ],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "exact_wrong_disposition",
+      "base": "exact_nest",
+      "mutations": [
+        {"path": "/disposition/outcome", "value": "GENERALIZED_WITH_RECEIPT_CANDIDATE"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["PRECISION_DISPOSITION_MISMATCH"]
+    },
+    {
+      "name": "exact_with_transform_receipt",
+      "base": "exact_nest",
+      "mutations": [
+        {"path": "/transform/receipt_ref", "value": "kfm://spatial-transform-receipt/synthetic/not-allowed-on-exact"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["EXACT_REQUEST_TRANSFORM_CONFLICT"]
+    },
+    {
+      "name": "exact_with_generalized_output_candidate",
+      "base": "exact_nest",
+      "mutations": [
+        {"path": "/output/generalized_output_candidate", "value": true}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["EXACT_REQUEST_OUTPUT_CONFLICT"]
+    },
+    {
+      "name": "generalized_wrong_disposition",
+      "base": "generalized_nest",
+      "mutations": [
+        {"path": "/disposition/outcome", "value": "EXACT_DENIED"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["PRECISION_DISPOSITION_MISMATCH"]
+    },
+    {
+      "name": "generalized_missing_receipt",
+      "base": "generalized_nest",
+      "mutations": [
+        {"path": "/transform/receipt_ref", "value": null}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["GENERALIZATION_RECEIPT_REQUIRED"]
+    },
+    {
+      "name": "generalized_missing_method",
+      "base": "generalized_nest",
+      "mutations": [
+        {"path": "/transform/method_profile_ref", "value": null}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["GENERALIZATION_METHOD_REQUIRED"]
+    },
+    {
+      "name": "generalized_wrong_target",
+      "base": "generalized_nest",
+      "mutations": [
+        {"path": "/transform/target_precision", "value": "NONE"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["GENERALIZATION_TARGET_MISMATCH"]
+    },
+    {
+      "name": "generalized_output_candidate_missing",
+      "base": "generalized_nest",
+      "mutations": [
+        {"path": "/output/generalized_output_candidate", "value": false}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["GENERALIZATION_OUTPUT_CANDIDATE_REQUIRED"]
+    },
+    {
+      "name": "subject_owner_mismatch",
+      "base": "exact_nest",
+      "mutations": [
+        {"path": "/request/owner_domain", "value": "archaeology"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["SUBJECT_OWNER_MISMATCH"]
+    },
+    {
+      "name": "noncanonical_policy_refs",
+      "base": "exact_nest",
+      "mutations": [
+        {
+          "path": "/support/policy_refs",
+          "value": [
+            "kfm://policy-candidate/sensitive-location/public-exact-deny",
+            "kfm://policy-candidate/sensitive-location/generalization"
+          ]
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["NONCANONICAL_REFERENCE_ARRAY"]
+    },
+    {
+      "name": "effect_overclaim",
+      "base": "exact_nest",
+      "mutations": [
+        {"path": "/effects/policy_evaluated", "value": true}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["EFFECT_OVERCLAIM"]
+    },
+    {
+      "name": "coordinate_member_denied",
+      "base": "exact_nest",
+      "mutations": [
+        {"path": "/request/exact_coordinates", "value": "intentionally-omitted"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["SCHEMA_INVALID"]
+    },
+    {
+      "name": "unknown_subject_family_denied",
+      "base": "exact_nest",
+      "mutations": [
+        {"path": "/request/subject_family", "value": "PRIVATE_RESIDENCE"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["SCHEMA_INVALID"]
+    },
+    {
+      "name": "identity_tamper_is_error",
+      "base": "exact_nest",
+      "mutations": [],
+      "identity_mode": "MISMATCH_SPEC_HASH",
+      "expected_outcome": "ERROR",
+      "expected_findings": ["SPEC_HASH_MISMATCH"]
+    }
+  ]
+}

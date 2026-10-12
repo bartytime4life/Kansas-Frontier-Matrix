@@ -1,0 +1,92 @@
+{
+  "object_type": "SourceDescriptor",
+  "schema_version": "v1",
+  "source_id": "src:synthetic-fixture-atmosphere",
+  "descriptor_version": "1.0.0",
+  "title": "Synthetic Fixture Source (atmosphere)",
+  "description": "Synthetic, non-production fixture used only to exercise domain_scope membership checks. It does not describe a real source.",
+  "domain_scope": [
+    "atmosphere"
+  ],
+  "source_type": "synthetic_fixture",
+  "source_role": "fixture_only",
+  "authority_rank": "fixture_only",
+  "authority_notes": "Synthetic fixture; carries no real authority.",
+  "publisher": {
+    "name": "KFM Fixture Authoring",
+    "jurisdiction": "N/A",
+    "contact": {
+      "contact_status": "not_applicable"
+    }
+  },
+  "owner_or_steward": {
+    "name": "KFM Fixture Authoring",
+    "jurisdiction": "N/A",
+    "contact": {
+      "contact_status": "not_applicable"
+    }
+  },
+  "rights": {
+    "rights_status": "noassertion",
+    "license_or_terms": "Not applicable; synthetic fixture only.",
+    "attribution_required": false,
+    "redistribution_allowed": "no",
+    "commercial_use_allowed": "no",
+    "last_verified_at": "2026-01-15T00:00:00Z",
+    "verified_by": "kfm-fixture-authoring"
+  },
+  "sensitivity_default": "public",
+  "cadence": {
+    "update_cadence": "static",
+    "freshness_expectation": "Fixture content never changes.",
+    "staleness_policy": "mark_stale"
+  },
+  "access": {
+    "access_method": "internal_fixture",
+    "access_posture": "closed",
+    "endpoints": [
+      {
+        "label": "Synthetic fixture placeholder",
+        "uri": "urn:kfm:fixture:not-a-real-endpoint",
+        "purpose": "fixture"
+      }
+    ]
+  },
+  "citation": {
+    "citation_required": false,
+    "citation_template": "Synthetic fixture; no citation required.",
+    "citation_guidance": "Do not cite this fixture as a real source."
+  },
+  "source_head": {
+    "observed_at": "2026-01-15T00:00:00Z",
+    "method": "not_applicable",
+    "content_identity": {
+      "not_applicable_reason": "Synthetic fixture has no upstream content to observe."
+    }
+  },
+  "admissibility_limits": {
+    "allowed_claim_roles": [
+      "fixture_only"
+    ],
+    "prohibited_claim_roles": [
+      "observation",
+      "operational_context",
+      "not_for_life_safety"
+    ],
+    "limitations": "Fixture-only; must not support any claim.",
+    "confidence_posture": "fixture_only"
+  },
+  "public_release": {
+    "allowed": false,
+    "requires_review": true,
+    "redaction_required": false,
+    "release_conditions": []
+  },
+  "review_state": "draft",
+  "release_state": "not_released",
+  "lifecycle": {
+    "registry_state": "active",
+    "created_at": "2026-01-15T00:00:00Z",
+    "updated_at": "2026-01-15T00:00:00Z"
+  }
+}

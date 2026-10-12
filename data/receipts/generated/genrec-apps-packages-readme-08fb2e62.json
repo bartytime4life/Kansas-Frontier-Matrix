@@ -1,0 +1,154 @@
+{
+  "receipt_id": "genrec-apps-packages-readme-08fb2e62",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/packages/README.md"
+  ],
+  "artifact_hashes": {
+    "apps/packages/README.md": "sha256:08fb2e622b665bc3d2b45eea893ac4e9a12c2f486ddbd2fa8d8245a9bacd5059"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-19"
+  },
+  "prompt_or_contract": "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "container"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85"
+    ],
+    "attached_docs": [
+      "Pasted text(47).txt — KFM GitHub Repository Documentation Implementation Agent v3.1"
+    ],
+    "evidence_refs": [
+      "repo:bartytime4life/Kansas-Frontier-Matrix:apps/packages/README.md@5cf7386b17a85feeadbb82a0eb9ec92bded68279",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:apps/README.md@5cf7386b17a85feeadbb82a0eb9ec92bded68279",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:packages/README.md@5cf7386b17a85feeadbb82a0eb9ec92bded68279",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:docs/architecture/directory-rules.md@5cf7386b17a85feeadbb82a0eb9ec92bded68279",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:package.json@5cf7386b17a85feeadbb82a0eb9ec92bded68279",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:pyproject.toml@5cf7386b17a85feeadbb82a0eb9ec92bded68279",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:.github/workflows/ui-build.yml@5cf7386b17a85feeadbb82a0eb9ec92bded68279",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:.github/workflows/docs-build.yml@5cf7386b17a85feeadbb82a0eb9ec92bded68279",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:.github/CODEOWNERS@5cf7386b17a85feeadbb82a0eb9ec92bded68279",
+      "commit:bartytime4life/Kansas-Frontier-Matrix:8e262da92f3d5d7620b75fa169e46f0bad681a8e",
+      "commit:bartytime4life/Kansas-Frontier-Matrix:c9c1b7efabc82ba5e59d9ccc8806256a1b6604b4"
+    ]
+  },
+  "truth_labels": {
+    "apps/packages/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "markdown-and-meta-structure",
+      "outcome": "PASS",
+      "reason": "One rendered H1, one closed KFM Meta Block v2, balanced code fences, unique heading slugs, resolved internal anchors, final newline, and no trailing whitespace."
+    },
+    {
+      "gate": "directory-rules-and-authority-preflight",
+      "outcome": "PASS",
+      "reason": "Existing anomalous path retained only as a drift guard; apps remains the deployable root and top-level packages remains the shared-library root."
+    },
+    {
+      "gate": "workspace-and-import-activation-preflight",
+      "outcome": "PASS",
+      "reason": "Root apps/* workspace selector and current src/kfm Python wheel target were inspected; checked activation paths package.json, pyproject.toml, and __init__.py were absent."
+    },
+    {
+      "gate": "repository-relative-link-preflight",
+      "outcome": "PASS",
+      "reason": "High-signal parent, canonical package, architecture, app, package, test, workflow, and ownership links were verified through exact repository reads."
+    },
+    {
+      "gate": "duplicate-and-open-work-preflight",
+      "outcome": "PASS",
+      "reason": "No matching open pull request or branch surfaced in bounded searches; stable document identity was retained."
+    },
+    {
+      "gate": "recursive-checkout-inventory",
+      "outcome": "SKIPPED",
+      "reason": "Sparse checkout could not run because the execution environment could not resolve github.com; recursive inventory remains NEEDS VERIFICATION and was not presented as fact."
+    },
+    {
+      "gate": "workflow-trigger-threat-preflight",
+      "outcome": "PASS",
+      "reason": "Inspected ui-build and docs-build use hosted runners and contents: read without deployment or publication authority; known readiness failures and major-tag action pinning are disclosed."
+    },
+    {
+      "gate": "sensitive-content-review",
+      "outcome": "PASS",
+      "reason": "Documentation contains no credentials, private payloads, precise protected locations, living-person records, genomic data, or source secrets."
+    },
+    {
+      "gate": "repository-native-test-run",
+      "outcome": "SKIPPED",
+      "reason": "No mounted repository or network-resolvable sparse checkout was available; remote CI is observed separately and no local test result is claimed."
+    },
+    {
+      "gate": "generated-receipt-schema",
+      "outcome": "PASS",
+      "reason": "Receipt validated against the repository GENERATED_RECEIPT Draft 2020-12 schema with format checking."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "repo:apps/packages/README.md",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:apps/packages/README.md@5cf7386b17a85feeadbb82a0eb9ec92bded68279"
+    },
+    {
+      "id": "repo:apps/README.md",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:apps/README.md@5cf7386b17a85feeadbb82a0eb9ec92bded68279"
+    },
+    {
+      "id": "repo:packages/README.md",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:packages/README.md@5cf7386b17a85feeadbb82a0eb9ec92bded68279"
+    },
+    {
+      "id": "repo:directory-rules",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:docs/architecture/directory-rules.md@5cf7386b17a85feeadbb82a0eb9ec92bded68279"
+    },
+    {
+      "id": "repo:package.json",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:package.json@5cf7386b17a85feeadbb82a0eb9ec92bded68279"
+    },
+    {
+      "id": "repo:pyproject.toml",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:pyproject.toml@5cf7386b17a85feeadbb82a0eb9ec92bded68279"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-19T16:17:14Z",
+  "emitter": "OpenAI GPT-5.6 Thinking via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Documentation-only update. This receipt records AI-authored provenance and bounded preflight outcomes; it is not package activation, app authority, policy approval, evidence, proof, human review, release approval, or publication authority."
+}

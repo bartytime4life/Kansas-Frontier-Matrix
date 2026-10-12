@@ -1,0 +1,5 @@
+status: PROPOSED
+source_doc: docs/domains/agriculture/FILE_SYSTEM_PLAN.md
+path: data/registry/sources/agriculture/kansas-mesonet.yaml
+notes:
+  - Placeholder created from docs/domains markdown inventory.

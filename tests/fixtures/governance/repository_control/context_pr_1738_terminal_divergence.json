@@ -1,0 +1,26 @@
+{
+  "scenario_id": "confirmed-pr-1738-terminal-divergence",
+  "evidence_refs": [
+    "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/1738",
+    "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1675#issuecomment-5081829181"
+  ],
+  "repository": "bartytime4life/Kansas-Frontier-Matrix",
+  "default_branch": "main",
+  "base_sha": "7d8689a9df753582852debb8f9a527438c9df9d3",
+  "head_sha": "7298209ef13c61f303f9a1f1be13e0a4949ab4c5",
+  "head_branch": "docs/modernize-published-agriculture-aggregate-readme-20260725",
+  "pr_number": 1738,
+  "pr_state": "MERGED",
+  "merge_commit_sha": "466db6157ca00d54001d31c1e86b017d079cae9d",
+  "changed_paths": [
+    "data/published/layers/agriculture/aggregate/README.md"
+  ],
+  "requested_operations": [
+    "update"
+  ],
+  "open_pull_requests": [],
+  "active_review_prs": [
+    1738
+  ],
+  "now": "2026-07-26T03:37:03Z"
+}

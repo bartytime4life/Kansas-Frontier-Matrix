@@ -1,0 +1,96 @@
+{
+  "receipt_id": "genrec-terrain-contour-budget-20261010",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/site/source/app/terrain-drawing.ts",
+    "apps/site/source/app/terrain-drawing-runtime.ts",
+    "apps/site/source/tests/terrain-drawing.test.mjs"
+  ],
+  "artifact_hashes": {
+    "apps/site/source/app/terrain-drawing.ts": "sha256:e1a2f47c2540cd7e5903c21bed02e902df5421022bfcb4b97b267aaf323135f8",
+    "apps/site/source/app/terrain-drawing-runtime.ts": "sha256:bbf531bf5476497363b58e74274b3469c8598041267c929d960a6715f532bf48",
+    "apps/site/source/tests/terrain-drawing.test.mjs": "sha256:944bfbf5b04ac1a7c71dc4c2ef86d508142554de6273b4d72acbe62a16b6f28f"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6",
+    "version": "session-reported; exact build unavailable"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "temperature": null,
+    "seed": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "bartytime4life/Kansas-Frontier-Matrix@abeebec6c81a86723cba04918e8c0f9adb6303df",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4987",
+      "apps/site/source/app/terrain-drawing.ts@abeebec6c81a86723cba04918e8c0f9adb6303df",
+      "apps/site/source/app/terrain-drawing-runtime.ts@abeebec6c81a86723cba04918e8c0f9adb6303df",
+      "apps/site/source/tests/terrain-drawing.test.mjs@abeebec6c81a86723cba04918e8c0f9adb6303df",
+      "apps/site/source/app/scene-effects-controls.tsx@abeebec6c81a86723cba04918e8c0f9adb6303df",
+      "apps/site/source/app/page.tsx@abeebec6c81a86723cba04918e8c0f9adb6303df"
+    ]
+  },
+  "truth_labels": {
+    "apps/site/source/app/terrain-drawing.ts": "CONFIRMED",
+    "apps/site/source/app/terrain-drawing-runtime.ts": "CONFIRMED",
+    "apps/site/source/tests/terrain-drawing.test.mjs": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Original-main regression reproduction",
+      "outcome": "PASS",
+      "reason": "At 5bf89030651f33b59ea303e13a3a47bcb04f9ee1, contour-only options still emit 8320 hidden grid edges; focused regression fails as expected."
+    },
+    {
+      "gate": "node --test tests/terrain-drawing.test.mjs",
+      "outcome": "PASS",
+      "reason": "32 tests pass; 65x65 high variation, selected roles, overall cap, exact-fit clipping, deterministic batches, holes, cached mode switches, cancellation and DEM refresh."
+    },
+    {
+      "gate": "npm test",
+      "outcome": "PASS",
+      "reason": "Final production build and Site suite on abeebec6c81a86723cba04918e8c0f9adb6303df plus this patch: 906 passed, zero failed, 3 skipped."
+    },
+    {
+      "gate": "node_modules/.bin/tsc --noEmit -p .",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "npm run lint",
+      "outcome": "PASS",
+      "reason": "Zero errors; 45 existing warnings."
+    },
+    {
+      "gate": "git diff --check",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "Hosted exact-head CI and independent review",
+      "outcome": "SKIPPED",
+      "reason": "Pending draft PR creation; no review approval inferred."
+    },
+    {
+      "gate": "Browser/WebGL, physical-device and long-session performance acceptance",
+      "outcome": "SKIPPED",
+      "reason": "This change uses deterministic geometry and runtime tests; no installed Explorer was restarted and no deployment acceptance is claimed."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-10-10T00:34:13.056158Z",
+  "emitter": "Codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Only selected contour/grid roles spend the existing 16000 total line-segment budget. Both retains deterministic grid-first allocation. Lines regenerate from at most 4225 cached loaded DEM samples with cooperative four-row turns and source/camera/generation guards. Clipping requires an omitted visible segment. Existing source admission, MIRROR_REVIEW_REQUIRED, deployment/publication holds and stored data are unchanged. Original full-suite failure from an expired earthquake fixture was resolved by already-merged upstream PR #4989; no unrelated fix is included. Revert the focused change to roll back; human review remains pending."
+}

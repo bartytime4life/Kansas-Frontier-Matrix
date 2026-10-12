@@ -1,0 +1,119 @@
+{
+  "receipt_id": "kfm_gen_pipeline_retry_after_floor_20261001",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "contracts/runtime/pipeline_resilience_plan.md",
+    "fixtures/contracts/v1/runtime/pipeline_resilience_plan/valid/allow_retry.expected.json",
+    "packages/pipelines-core/src/pipelines_core/_pipeline_resilience_admission.py",
+    "tests/packages/pipelines_core/test_pipeline_resilience.py"
+  ],
+  "artifact_hashes": {
+    "contracts/runtime/pipeline_resilience_plan.md": "sha256:b780f115fad7c44a38c44bbc39fedfe3c9d73803cd18a44d24adaa9b8f46d778",
+    "fixtures/contracts/v1/runtime/pipeline_resilience_plan/valid/allow_retry.expected.json": "sha256:6e307b9f0b4680f4cb901cb124de52b673db90e7dc91d15e3e3c5c3fbdb7c287",
+    "packages/pipelines-core/src/pipelines_core/_pipeline_resilience_admission.py": "sha256:1f992b7ccc7914689981678e2b62425e3684b5355e5a59711ac2310d750579ff",
+    "tests/packages/pipelines_core/test_pipeline_resilience.py": "sha256:4ad392cdf0805dd4d989f06a8736f14b00e99c1ee36080afd887fa10da03bd6b"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 (Codex)",
+    "version": "Exact runtime build not exposed"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "tools_enabled": [
+      "Codex workspace tools",
+      "GitHub REST API readback",
+      "Python 3.12",
+      "KFM repository checks"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:3c4ed28a1299785fa7aa14e6cb843ad4625c1eee3fe9e35f8b04297fbacc809f",
+      "sha256:0a4c01e67e620132d121df8b33717e4c1dade472293cdff1eee0bb806dee690a",
+      "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+      "sha256:dfceb93ffc4191d329d1943338ef8d8f31a021312330a622b46780ac213fc1e0"
+    ],
+    "attached_docs": [
+      ".github/PULL_REQUEST_TEMPLATE.md",
+      "CONTRIBUTING.md",
+      "docs/doctrine/ai-build-operating-contract.md",
+      "docs/runbooks/pipeline-resilience.md"
+    ],
+    "evidence_refs": [
+      "KFM PR #4825 head 71d813bab3d38a719b1cbbffc2655bd89242cf65; merged as 64919a2f0579c6aa7f3363335aadae1e9ed60033 at 2026-10-01T19:46:56Z",
+      "KFM main base bc4b3ca4ad4defa390166741b21b714b6ab85f87 observed at 2026-10-01T20:53:36Z",
+      "GitHub Actions water-pilot run 36914779571"
+    ]
+  },
+  "truth_labels": {
+    "contracts/runtime/pipeline_resilience_plan.md": "PROPOSED",
+    "fixtures/contracts/v1/runtime/pipeline_resilience_plan/valid/allow_retry.expected.json": "CONFIRMED",
+    "packages/pipelines-core/src/pipelines_core/_pipeline_resilience_admission.py": "CONFIRMED",
+    "tests/packages/pipelines_core/test_pipeline_resilience.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "exact-head-manual-review-of-PR-4825",
+      "outcome": "PASS",
+      "reason": "Reviewed head 71d813bab3d38a719b1cbbffc2655bd89242cf65 for tiny bases, overflowing exponents, caps, jitter, deadlines, and zero base; zero base and the log-space cap path were sound. The adjacent rate-limit minimum issue is corrected by this follow-up."
+    },
+    {
+      "gate": "pipeline-resilience-and-cli",
+      "outcome": "PASS",
+      "reason": "38 focused tests passed on follow-up commit 90d1d1737a1dd7c6925210ad0198921f619a428e."
+    },
+    {
+      "gate": "workflow-security",
+      "outcome": "PASS",
+      "reason": "28 tests passed; scan covered 490 workflows with zero invariant findings and zero new drift."
+    },
+    {
+      "gate": "repository-topology",
+      "outcome": "PASS",
+      "reason": "6 target tests, 81 validator tests, and 29 correction-register tests passed; 13,703 tracked paths, zero invariant findings, zero new drift, and 115 baselined warnings."
+    },
+    {
+      "gate": "git-diff-check",
+      "outcome": "PASS",
+      "reason": "Passed on follow-up commit 90d1d1737a1dd7c6925210ad0198921f619a428e."
+    },
+    {
+      "gate": "PR-4825-water-pilot-hosted-check",
+      "outcome": "FAIL",
+      "reason": "Run 36914779571 completed 248 tests and fixture regeneration, then failed only with MIRROR_REVIEW_REQUIRED at site_mirror.py --check; inherited mirror hold, outside this follow-up's paths."
+    },
+    {
+      "gate": "follow-up-branch-hosted-checks",
+      "outcome": "SKIPPED",
+      "reason": "Not available before publishing the follow-up draft branch; inspect exact-head results after GitHub starts the runs."
+    },
+    {
+      "gate": "generated-receipt-validation",
+      "outcome": "PASS",
+      "reason": "The repository validator confirmed schema validity and all four SHA-256 artifact bindings; the positive and negative fixture lanes also passed."
+    },
+    {
+      "gate": "independent-human-review",
+      "outcome": "SKIPPED",
+      "reason": "No independent review was submitted on #4825; this follow-up remains pending human review."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "retry-after-minimum-delay-contract",
+      "validated": true,
+      "evidence_ref": "docs/runbooks/pipeline-resilience.md#retry-procedure; contracts/runtime/pipeline_resilience_plan.md#retry-taxonomy"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-10-01T21:02:17Z",
+  "emitter": "Codex (OpenAI GPT-6; exact runtime build not exposed)",
+  "notes": "Provenance for a follow-up to PR #4825, which was already merged without submitted reviews. This draft changes RATE_LIMITED planning so downward jitter cannot shorten a bounded Retry-After value; it still caps the delay and applies the deadline afterward. The inherited Site mirror review hold remains separate. Merge, activation, release, deployment, publication, and acceptance are not authorized by this receipt or by tests."
+}

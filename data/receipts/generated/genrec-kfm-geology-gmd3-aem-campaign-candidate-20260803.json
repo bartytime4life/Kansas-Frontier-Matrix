@@ -1,0 +1,313 @@
+{
+  "receipt_id": "genrec-kfm-geology-gmd3-aem-campaign-candidate-20260803",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/domain-geology.yml",
+    "contracts/domains/geology/AemSurveyCampaign.md",
+    "fixtures/contracts/v1/source/source_descriptor/README.md",
+    "fixtures/contracts/v1/source/source_descriptor/valid/README.md",
+    "fixtures/contracts/v1/source/source_descriptor/valid/valid_ku_news_gmd3_aem_announcement_2026_05_11.json",
+    "fixtures/domains/geology/README.md",
+    "fixtures/domains/geology/aem_survey_campaign/README.md",
+    "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_acquisition_claim.expected_error.txt",
+    "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_acquisition_claim.json",
+    "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_campaign_state_completed.expected_error.txt",
+    "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_campaign_state_completed.json",
+    "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_correction_ref_scheme.expected_error.txt",
+    "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_correction_ref_scheme.json",
+    "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_downstream_stage_field.expected_error.txt",
+    "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_downstream_stage_field.json",
+    "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_false_release_state.expected_error.txt",
+    "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_false_release_state.json",
+    "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_missing_supporting_reference.expected_error.txt",
+    "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_missing_supporting_reference.json",
+    "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_non_fixture_reference.expected_error.txt",
+    "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_non_fixture_reference.json",
+    "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_required_limitation_missing.expected_error.txt",
+    "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_required_limitation_missing.json",
+    "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_self_supersession.expected_error.txt",
+    "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_self_supersession.json",
+    "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_silent_supersession.expected_error.txt",
+    "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_silent_supersession.json",
+    "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_unscoped_planning_field.expected_error.txt",
+    "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_unscoped_planning_field.json",
+    "fixtures/domains/geology/aem_survey_campaign/valid/valid_1.json",
+    "schemas/contracts/v1/domains/geology/aem_survey_campaign.schema.json",
+    "tests/domains/geology/README.md",
+    "tests/domains/geology/test_aem_campaign.py",
+    "tests/schemas/test_gmd3_aem_survey_contracts.py",
+    "tools/validators/domains/geology/README.md",
+    "tools/validators/domains/geology/validate_aem_campaign.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/domain-geology.yml": "sha256:469fcab0345d3e2761bc128b8383ae2b2728169402836ce66040771b4f7c6d52",
+    "contracts/domains/geology/AemSurveyCampaign.md": "sha256:fb0fee0ca563a9bbbaf7a08b96685d89f8a20a5ce9fdc2df82d18c879f510045",
+    "fixtures/contracts/v1/source/source_descriptor/README.md": "sha256:febcad24b1854da1956139b39d393b2729f7049dfb1d74921338a676bf62c90e",
+    "fixtures/contracts/v1/source/source_descriptor/valid/README.md": "sha256:b662073154ecc21f8a6f7cda6e564936e13f9b2fe87a13c6d160563ef425ec3a",
+    "fixtures/contracts/v1/source/source_descriptor/valid/valid_ku_news_gmd3_aem_announcement_2026_05_11.json": "sha256:31c9517dc042817fa280c19f370e9c3ef48e55855c421da983dcdadfff4e0e26",
+    "fixtures/domains/geology/README.md": "sha256:df021f49776550ad075aeec163ab6147adc56d3cc487f04353d9676b364dba02",
+    "fixtures/domains/geology/aem_survey_campaign/README.md": "sha256:9d5be7043b71d9a940cb44ad550cd61e0948f112ed3ff65eede4d5a4e8a1f15a",
+    "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_acquisition_claim.expected_error.txt": "sha256:a809aa931305c96837ad630001d40139c4c553b62cc5f14af343071abdc838bb",
+    "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_acquisition_claim.json": "sha256:50c184bcb6a4755e0c525a33c729b9e84e0176dc76470439b1e4f2b410865dcb",
+    "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_campaign_state_completed.expected_error.txt": "sha256:f065893a13708e4a8a413bdb408de9aae5da2790ba198c3a559ac570851cae3f",
+    "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_campaign_state_completed.json": "sha256:bdc5419e7ffa54ae4b9042899c9c8eb41ee8b32c9e56cd44fa131010d8ec8087",
+    "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_correction_ref_scheme.expected_error.txt": "sha256:06cfc572db4f94f250b9d38d47871edb167b9fcf939364dcaf488490d055ac47",
+    "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_correction_ref_scheme.json": "sha256:e21f9458ef67e900531042678a3a3de51b7b63a53435bde1576b436aac6bc1db",
+    "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_downstream_stage_field.expected_error.txt": "sha256:004c9cca6cbceb5e6abf5b2cb5c4f1eff8de4fb391e0eb8fb3d33847b4308e40",
+    "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_downstream_stage_field.json": "sha256:08b9697b33f78b60055b1c9c3f81c98d8d1009860cf4cafed05e6a5cbea99c80",
+    "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_false_release_state.expected_error.txt": "sha256:34de1d8339c6c0bf56ed5b4bd55b8fd02476e01b9ce25d2dbbf2201476f763fd",
+    "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_false_release_state.json": "sha256:81b9273cc5c6a5d91c5a6a2edf2b46ebbfb646273685ab6f004049aa027ea862",
+    "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_missing_supporting_reference.expected_error.txt": "sha256:8a748f280f3e946283752df10b0a258d50a490f0aa22e8e929ab9d1f7819ef7a",
+    "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_missing_supporting_reference.json": "sha256:4bdcc77fd81c2b48a20da3d4675606557f1931f1b21441a8cec5575cc516d6ec",
+    "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_non_fixture_reference.expected_error.txt": "sha256:7a46328aa0dc3dff3cf62b83d13e981b65c581bf0baa8fbdde93b3f2715154e4",
+    "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_non_fixture_reference.json": "sha256:ff79522adce697402e364ba1c1e9bc53a74d419ef633ab68a4c6492e58f729f7",
+    "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_required_limitation_missing.expected_error.txt": "sha256:cbffd17e481af475ae2adf0543987956fcfbc610f04f74b5966dea09922a171c",
+    "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_required_limitation_missing.json": "sha256:e7e13e80f7b17ddbc96fd06cc0b572ede47408bdc6253c0b86ad3d04812f0753",
+    "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_self_supersession.expected_error.txt": "sha256:1a126f37107b46d9e8109a6958abaee4dd253645595e88e159dd6f0b4c969c58",
+    "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_self_supersession.json": "sha256:0ef099fdfc6e945bdaa9f78a0fc3b33f1c0aa0ed6dd7d0f270850dbb13062732",
+    "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_silent_supersession.expected_error.txt": "sha256:5ec87608944a607b1575c24c88a10fca0f698e25f681ca0859c7e6bb53823bfb",
+    "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_silent_supersession.json": "sha256:d3c7834587010d285affe5be0dbec9e0bffd596323be55423f89228d862b25ab",
+    "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_unscoped_planning_field.expected_error.txt": "sha256:63f0aee7a01d2beed2e1cea128cfd798ba6a544c2c4bd4c18d46541048efa03a",
+    "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_unscoped_planning_field.json": "sha256:828b9716ff13f8a71164fe09f1d5adc457b8805c6e95a99c1e7a184af6c2c526",
+    "fixtures/domains/geology/aem_survey_campaign/valid/valid_1.json": "sha256:a0588212e1a33901574ed19cd058bc3e7454264eb0cd0385062cb3fccb62ebcb",
+    "schemas/contracts/v1/domains/geology/aem_survey_campaign.schema.json": "sha256:a4cc50fed5356cab5bbb02e8b88870e266473bce6fb0df92ee12b5c7f5a7c9c0",
+    "tests/domains/geology/README.md": "sha256:6d6eba0a3e86b45dcc3aba2432668727feeed5d5abe82bb90776e34d5ccd3ef0",
+    "tests/domains/geology/test_aem_campaign.py": "sha256:5ac3a1a0817f3586f6503062f48c4f5a7d2135560b1aa15276a784571b7897ef",
+    "tests/schemas/test_gmd3_aem_survey_contracts.py": "sha256:452be6b981281712100b7c45b207a713eedd5e5e883f274abd5ddba8c08a7213",
+    "tools/validators/domains/geology/README.md": "sha256:1efa589cd22ca8ae857a789f25ebd0fcde2d07f4924edd545a781caa675fa702",
+    "tools/validators/domains/geology/validate_aem_campaign.py": "sha256:c1472dc418dbfc07f45e3b53b6ea57365f59e350d0ffcb2f3a527799f28bfae3"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "Work Mode 2026-08-03"
+  },
+  "prompt_or_contract": "sha256:1ea18172aa52cd6a4797380c6f215f17b72b7d18416de68446a67f33eacdaa0e",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local supplied-document and PDF inspection",
+      "parallel domain, platform, and repository gap assays",
+      "official-source web verification",
+      "GitHub connector read and write operations",
+      "deterministic standard-library Python validation",
+      "Ajv Draft 2020-12 schema validation",
+      "local YAML and generated-receipt schema validation"
+    ],
+    "base_ref": "main",
+    "base_commit": "3d324250d9e06e0af46e8d16c9a24669cb971280",
+    "profile_id": "kfm-geology-gmd3-aem-campaign-candidate-fixture-v1",
+    "deleted_base_paths": [
+      "fixtures/contracts/v1/source/source_descriptor/valid/valid_gmd3_aem_2026.json",
+      "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_ambiguous_depth_convention.json",
+      "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_missing_units.json",
+      "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_missing_vertical_datum.json",
+      "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_product_source_identity_collapse.json",
+      "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_raw_lineage_break.json",
+      "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_unbound_evidence_ref.json",
+      "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_uncertainty_omission.json",
+      "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_unversioned_processing.json"
+    ],
+    "validator_runtime_network_access": false,
+    "generation_connector_network_access": true,
+    "publication": false
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:d334f43df8fd74f17115cc0f51861cf8238c9cb99d37adaf95f5e4e1655fdf51",
+      "sha256:e92500f9b40007e8b69d183ecaa6247c542ffec25857875ecd2dbd00709785b1",
+      "sha256:afe08af316d1f89779bab0d39888cdc65ee989907806a4126c331c50e4a0aa3a"
+    ],
+    "attached_docs": [
+      "KFM_Geology_Natural_Resources_Architecture_PDF_Only_Report_2026-04-21.pdf",
+      "Unified Implementation Architecture Build Manual.md",
+      "Repository Structure Guiding Document.md"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/3d324250d9e06e0af46e8d16c9a24669cb971280",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/3d324250d9e06e0af46e8d16c9a24669cb971280/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/3d324250d9e06e0af46e8d16c9a24669cb971280/contracts/domains/geology/AemSurveyCampaign.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/3d324250d9e06e0af46e8d16c9a24669cb971280/schemas/contracts/v1/domains/geology/aem_survey_campaign.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/3d324250d9e06e0af46e8d16c9a24669cb971280/fixtures/contracts/v1/source/source_descriptor/valid/valid_gmd3_aem_2026.json",
+      "https://news.ku.edu/news/article/airborne-electromagnetic-survey-of-ogallala-aquifer-conditions-planned-in-southwest-kansas-ARTICLE-B0R8YR-ARTICLE-B0R8YR",
+      "attachment://KFM-Geology-Natural-Resources-Architecture-PDF-Only-Report-2026-04-21:sha256:d334f43df8fd74f17115cc0f51861cf8238c9cb99d37adaf95f5e4e1655fdf51",
+      "attachment://Unified-Implementation-Architecture-Build-Manual:sha256:e92500f9b40007e8b69d183ecaa6247c542ffec25857875ecd2dbd00709785b1",
+      "attachment://Repository-Structure-Guiding-Document:sha256:afe08af316d1f89779bab0d39888cdc65ee989907806a4126c331c50e4a0aa3a"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/domain-geology.yml": "PROPOSED",
+    "contracts/domains/geology/AemSurveyCampaign.md": "PROPOSED",
+    "fixtures/contracts/v1/source/source_descriptor/README.md": "PROPOSED",
+    "fixtures/contracts/v1/source/source_descriptor/valid/README.md": "PROPOSED",
+    "fixtures/contracts/v1/source/source_descriptor/valid/valid_ku_news_gmd3_aem_announcement_2026_05_11.json": "PROPOSED",
+    "fixtures/domains/geology/README.md": "PROPOSED",
+    "fixtures/domains/geology/aem_survey_campaign/README.md": "PROPOSED",
+    "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_acquisition_claim.expected_error.txt": "CONFIRMED",
+    "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_acquisition_claim.json": "CONFIRMED",
+    "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_campaign_state_completed.expected_error.txt": "CONFIRMED",
+    "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_campaign_state_completed.json": "CONFIRMED",
+    "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_correction_ref_scheme.expected_error.txt": "CONFIRMED",
+    "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_correction_ref_scheme.json": "CONFIRMED",
+    "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_downstream_stage_field.expected_error.txt": "CONFIRMED",
+    "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_downstream_stage_field.json": "CONFIRMED",
+    "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_false_release_state.expected_error.txt": "CONFIRMED",
+    "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_false_release_state.json": "CONFIRMED",
+    "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_missing_supporting_reference.expected_error.txt": "CONFIRMED",
+    "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_missing_supporting_reference.json": "CONFIRMED",
+    "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_non_fixture_reference.expected_error.txt": "CONFIRMED",
+    "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_non_fixture_reference.json": "CONFIRMED",
+    "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_required_limitation_missing.expected_error.txt": "CONFIRMED",
+    "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_required_limitation_missing.json": "CONFIRMED",
+    "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_self_supersession.expected_error.txt": "CONFIRMED",
+    "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_self_supersession.json": "CONFIRMED",
+    "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_silent_supersession.expected_error.txt": "CONFIRMED",
+    "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_silent_supersession.json": "CONFIRMED",
+    "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_unscoped_planning_field.expected_error.txt": "CONFIRMED",
+    "fixtures/domains/geology/aem_survey_campaign/invalid/invalid_unscoped_planning_field.json": "CONFIRMED",
+    "fixtures/domains/geology/aem_survey_campaign/valid/valid_1.json": "CONFIRMED",
+    "schemas/contracts/v1/domains/geology/aem_survey_campaign.schema.json": "PROPOSED",
+    "tests/domains/geology/README.md": "PROPOSED",
+    "tests/domains/geology/test_aem_campaign.py": "CONFIRMED",
+    "tests/schemas/test_gmd3_aem_survey_contracts.py": "CONFIRMED",
+    "tools/validators/domains/geology/README.md": "PROPOSED",
+    "tools/validators/domains/geology/validate_aem_campaign.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-authority-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "The GitHub connector confirmed current main at 3d324250d9e06e0af46e8d16c9a24669cb971280, no open pull requests, and no existing branch named agent/geology-gmd3-aem-campaign-candidate-repair-20260803. Comparison from the previously validated 53c3d0ce base showed only 17 roads/rail corridor files and no overlap with this Geology repair. Merged drought and AEM slices were inspected and not duplicated."
+    },
+    {
+      "gate": "source-assay-and-directory-placement",
+      "outcome": "PASS",
+      "reason": "The supplied Geology architecture, unified build manual, repository structure guidance, current directory rules, merged AEM seed, and official 2026-05-11 KU News announcement were reconciled. The repair stays in existing contract, schema, fixture, test, validator, workflow, and generated-receipt roots."
+    },
+    {
+      "gate": "announcement-time-and-source-identity-repair",
+      "outcome": "PASS",
+      "reason": "The candidate now records the source-reported historical planned posture and 2026-05-11 publication date, keeps current campaign state unknown, and binds no acquisition evidence. County coverage and depth claims were removed. The SourceDescriptor uses a document-specific identity distinct from the broader domain-first compatibility YAML, which remains unchanged and unbound."
+    },
+    {
+      "gate": "descriptor-access-and-content-drift-closure",
+      "outcome": "PASS",
+      "reason": "The validator pins the exact descriptor SHA-256 and exact documentation endpoint, permits no credential block or connector reference, requires manual-review source-head posture and nonempty release conditions, and rejects role, authority, rights, claim-role, activation, review, release, endpoint, credential, connector, source-head, and prose drift."
+    },
+    {
+      "gate": "focused-aem-campaign-suite",
+      "outcome": "PASS",
+      "reason": "Sixteen standard-library tests passed for one sparse positive candidate, eleven exact negatives, exact campaign/source/date/reference identity, current-state and acquisition-evidence upcast denial, ambiguous and downstream field denial, typed correction lineage, descriptor drift and access regressions, bounded duplicate/nonfinite/nonobject/oversized input handling, deterministic non-echoing findings, explicit network denial, and CLI exits 0/1/2."
+    },
+    {
+      "gate": "existing-geology-resource-class-regression",
+      "outcome": "PASS",
+      "reason": "All sixteen existing resource-class/source-role anti-collapse tests passed unchanged under the same no-network posture."
+    },
+    {
+      "gate": "draft-2020-12-schema-validation",
+      "outcome": "PASS",
+      "reason": "Ajv 8.17.1 in strict Draft 2020-12 mode accepted the positive campaign and rejected all ten structurally invalid negatives; the self-supersession negative is intentionally schema-valid and rejected semantically. The document-specific SourceDescriptor fixture conformed with all validation constraints active; only the shared schema's pre-existing strictTypes and strictRequired lint checks were disabled."
+    },
+    {
+      "gate": "source-descriptor-fixture-family-inventory",
+      "outcome": "PASS",
+      "reason": "The parent and valid-lane READMEs now inventory the existing valid_1.json plus the document-specific announcement candidate and explicitly distinguish schema validity from source admission, campaign truth, product truth, and release authority."
+    },
+    {
+      "gate": "geology-workflow-boundary-and-command",
+      "outcome": "PASS",
+      "reason": "The workflow YAML parses; its domain-geology name and three stable job IDs remain intact; both accepted tests and validators classify as executable; required paths include both SourceDescriptor inventory READMEs and the document-specific fixture; proof and release jobs remain held."
+    },
+    {
+      "gate": "python-and-json-integrity",
+      "outcome": "PASS",
+      "reason": "The edited Python modules compile and all campaign, descriptor, and schema JSON files parse. The local primary runtime lacks pytest, so the committed pytest module is delegated to hosted CI after equivalent direct schema and semantic checks passed."
+    },
+    {
+      "gate": "artifact-integrity",
+      "outcome": "PASS",
+      "reason": "This receipt excludes its own bytes and SHA-256 binds all 36 extant authored or substantively modified artifacts. The proposed tree also deletes exactly nine base files: eight obsolete technical negative JSON fixtures and the ambiguous campaign-wide SourceDescriptor fixture. No old sidecars are claimed as base deletions."
+    },
+    {
+      "gate": "generated-receipt-schema",
+      "outcome": "PASS",
+      "reason": "The repository generated-receipt Draft 2020-12 schema accepted this receipt; created_at, artifact path/hash/truth-label identity, and all referenced artifact hashes were checked."
+    },
+    {
+      "gate": "canonical-authority-roots-unchanged",
+      "outcome": "PASS",
+      "reason": "No canonical source registry, connector, pipeline implementation, lifecycle data, EvidenceBundle, PolicyDecision, proof, release, or published path changes. The domain-first compatibility YAML remains unchanged and is not read, endorsed, or bound. The fixture cannot prove current campaign state or a product, admit a source, resolve rights or evidence, activate a connector, release, or publish."
+    },
+    {
+      "gate": "local-pytest-runner",
+      "outcome": "SKIPPED",
+      "reason": "The provided primary runtime does not include pytest. The committed pytest module compiled, and equivalent strict-schema plus semantic checks passed directly."
+    },
+    {
+      "gate": "full-repository-aggregate-suite",
+      "outcome": "SKIPPED",
+      "reason": "The connector-only workflow did not materialize a full repository checkout. Focused suites, compilation, strict schemas, JSON parsing, and workflow checks passed; aggregate coverage is delegated to hosted pull-request checks."
+    },
+    {
+      "gate": "hosted-exact-head-checks",
+      "outcome": "SKIPPED",
+      "reason": "The draft pull request had not been created at receipt emission time, so hosted exact-head checks were not yet observable."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending and is not authored or inferred by the agent."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/3d324250d9e06e0af46e8d16c9a24669cb971280/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "merged-aem-seed-contract",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/3d324250d9e06e0af46e8d16c9a24669cb971280/contracts/domains/geology/AemSurveyCampaign.md"
+    },
+    {
+      "id": "official-ku-news-gmd3-announcement",
+      "validated": true,
+      "evidence_ref": "https://news.ku.edu/news/article/airborne-electromagnetic-survey-of-ogallala-aquifer-conditions-planned-in-southwest-kansas-ARTICLE-B0R8YR-ARTICLE-B0R8YR"
+    },
+    {
+      "id": "geology-method-and-stage-separation-evidence",
+      "validated": true,
+      "evidence_ref": "attachment://KFM-Geology-Natural-Resources-Architecture-PDF-Only-Report-2026-04-21:sha256:d334f43df8fd74f17115cc0f51861cf8238c9cb99d37adaf95f5e4e1655fdf51"
+    },
+    {
+      "id": "unified-build-manual",
+      "validated": true,
+      "evidence_ref": "attachment://Unified-Implementation-Architecture-Build-Manual:sha256:e92500f9b40007e8b69d183ecaa6247c542ffec25857875ecd2dbd00709785b1"
+    },
+    {
+      "id": "repository-structure-guidance",
+      "validated": true,
+      "evidence_ref": "attachment://Repository-Structure-Guiding-Document:sha256:afe08af316d1f89779bab0d39888cdc65ee989907806a4126c331c50e4a0aa3a"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-03T18:26:16Z",
+  "emitter": "OpenAI Codex via ChatGPT Work Mode",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "This repair converts the merged GMD 3 AEM seed into one document-specific, time-scoped announcement candidate. It removes unsupported county/depth and downstream technical claims, keeps current campaign state unknown, and binds no acquisition or product evidence. A document-specific SourceDescriptor replaces the ambiguous campaign-wide fixture identity and is pinned byte-for-byte; the existing domain-first registry compatibility YAML remains unchanged and unbound. Eight obsolete technical negative JSON fixtures are deleted and replaced by exact state, identity, stage, correction, and release negatives; no old sidecars are represented as base deletions. No live endpoint, credential, connector, source admission, current campaign claim, product, evidence closure, release, deployment, or publication is established. Rollback is a focused revert of the one proposed commit."
+}

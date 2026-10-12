@@ -1,0 +1,51 @@
+{
+  "cases": [
+    {
+      "case_id": "valid-spec",
+      "expected_findings": [],
+      "expected_outcome": "PASS",
+      "input": "valid/valid_spec.json"
+    },
+    {
+      "case_id": "source-role-collapse",
+      "expected_findings": [
+        "SOIL_SOURCE_ROLE_INVALID"
+      ],
+      "expected_outcome": "ERROR",
+      "input": "semantic_invalid/source_role_collapse.json"
+    },
+    {
+      "case_id": "phase-order",
+      "expected_findings": [
+        "SOIL_PHASE_ORDER_INVALID"
+      ],
+      "expected_outcome": "ERROR",
+      "input": "semantic_invalid/phase_order.json"
+    },
+    {
+      "case_id": "materiality-missing-family",
+      "expected_findings": [
+        "SOIL_MATERIALITY_FAMILY_DUPLICATE",
+        "SOIL_MATERIALITY_PROFILE_MISSING"
+      ],
+      "expected_outcome": "ERROR",
+      "input": "semantic_invalid/materiality_missing_family.json"
+    },
+    {
+      "case_id": "spec-hash-mismatch",
+      "expected_findings": [
+        "SOIL_SPEC_HASH_MISMATCH"
+      ],
+      "expected_outcome": "ERROR",
+      "input": "semantic_invalid/spec_hash_mismatch.json"
+    },
+    {
+      "case_id": "network-authorized",
+      "expected_findings": [
+        "SCHEMA_INVALID"
+      ],
+      "expected_outcome": "ERROR",
+      "input": "schema_invalid/network_authorized.json"
+    }
+  ]
+}

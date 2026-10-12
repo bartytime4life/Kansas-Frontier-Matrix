@@ -1,0 +1,192 @@
+{
+  "receipt_id": "kfm:genrec:fixtures-readme-merge-closure:2cb7c28be91b9327",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "fixtures/README.md"
+  ],
+  "artifact_hashes": {
+    "fixtures/README.md": "sha256:2cb7c28be91b9327627b2fb8330327fafa8a0fb02f38be03f85775602ccad19c"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-08",
+    "parameter_hash": "sha256:a87b5232841e0acc11c792cba08469376eb77c0c9ddf1db96e4b95960a74fc19"
+  },
+  "prompt_or_contract": "sha256:90602a8feffda3d3a970fd844a045d279db8edf69f21ef338bc265119f005665",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub",
+      "python"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:90602a8feffda3d3a970fd844a045d279db8edf69f21ef338bc265119f005665"
+    ],
+    "attached_docs": [
+      "KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0 supplied in the current user request"
+    ],
+    "evidence_refs": [
+      "CURRENT_USER_REQUEST",
+      "github:bartytime4life/Kansas-Frontier-Matrix@733293682b9cdab83261215546474c2c62ea17dd:fixtures/README.md",
+      "github:bartytime4life/Kansas-Frontier-Matrix@d60bcc09c8c754adde0ef084983905882f2d94a8:fixtures/README.md",
+      "github:bartytime4life/Kansas-Frontier-Matrix@733293682b9cdab83261215546474c2c62ea17dd:docs/doctrine/directory-rules.md",
+      "github:bartytime4life/Kansas-Frontier-Matrix@733293682b9cdab83261215546474c2c62ea17dd:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github:bartytime4life/Kansas-Frontier-Matrix@733293682b9cdab83261215546474c2c62ea17dd:control_plane/root_registry.yaml",
+      "github:bartytime4life/Kansas-Frontier-Matrix@733293682b9cdab83261215546474c2c62ea17dd:tools/validators/validator_registry.json",
+      "github:bartytime4life/Kansas-Frontier-Matrix@733293682b9cdab83261215546474c2c62ea17dd:Makefile",
+      "github:bartytime4life/Kansas-Frontier-Matrix@733293682b9cdab83261215546474c2c62ea17dd:.github/CODEOWNERS",
+      "github:bartytime4life/Kansas-Frontier-Matrix@733293682b9cdab83261215546474c2c62ea17dd:.github/workflows/validator-suite.yml",
+      "github:bartytime4life/Kansas-Frontier-Matrix@733293682b9cdab83261215546474c2c62ea17dd:tests/fixtures/README.md",
+      "github-pr:bartytime4life/Kansas-Frontier-Matrix#2283"
+    ]
+  },
+  "truth_labels": {
+    "fixtures/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "baseline-target-read",
+      "outcome": "PASS",
+      "reason": "Complete target was inspected before authoring at the pinned base."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "Same-path canonical ROOT_FULL update under adopted ADR-0029 and Directory Rules v2."
+    },
+    {
+      "gate": "overlap-reconciliation",
+      "outcome": "PASS",
+      "reason": "No open same-path pull request was found before authoring; later base drift did not change target bytes."
+    },
+    {
+      "gate": "metadata-parse",
+      "outcome": "PASS",
+      "reason": "KFM meta block parsed as YAML."
+    },
+    {
+      "gate": "markdown-parse",
+      "outcome": "PASS",
+      "reason": "Complete artifact parsed with markdown-it CommonMark plus tables and HTML."
+    },
+    {
+      "gate": "heading-contract",
+      "outcome": "PASS",
+      "reason": "One rendered H1 and the twelve ROOT_FULL H2 sections appear in required order."
+    },
+    {
+      "gate": "anchor-closure",
+      "outcome": "PASS",
+      "reason": "All 24 internal fragment references resolve."
+    },
+    {
+      "gate": "relative-link-existence",
+      "outcome": "PASS",
+      "reason": "All 10 repository-relative Markdown targets were verified at the pinned base."
+    },
+    {
+      "gate": "remote-readback",
+      "outcome": "PASS",
+      "reason": "Merged main retains Git blob 1781219befe9e47064fd9dee4cfdf81058db80ee for the authored README."
+    },
+    {
+      "gate": "artifact-sha256-binding",
+      "outcome": "PASS",
+      "reason": "Merged README SHA-256 is 2cb7c28be91b9327627b2fb8330327fafa8a0fb02f38be03f85775602ccad19c."
+    },
+    {
+      "gate": "post-merge-reconciliation",
+      "outcome": "PASS",
+      "reason": "PR 2283 merged at d60bcc09c8c754adde0ef084983905882f2d94a8 before the planned receipt commit; this append-only receipt closes that provenance gap without rewriting the artifact."
+    },
+    {
+      "gate": "hosted-ci",
+      "outcome": "SKIPPED",
+      "reason": "Exact-head checks for the receipt-only follow-up are evaluated after its draft PR opens."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending and is not inferred from generation, validation, or the prior merge."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "current-user-request-v6",
+      "validated": true,
+      "evidence_ref": "CURRENT_USER_REQUEST"
+    },
+    {
+      "id": "merged-pr-2283",
+      "validated": true,
+      "evidence_ref": "github-pr:bartytime4life/Kansas-Frontier-Matrix#2283"
+    },
+    {
+      "id": "merged-readme-bytes",
+      "validated": true,
+      "evidence_ref": "fixtures/README.md@d60bcc09c8c754adde0ef084983905882f2d94a8"
+    },
+    {
+      "id": "directory-rules-v2",
+      "validated": true,
+      "evidence_ref": "docs/doctrine/directory-rules.md@733293682b9cdab83261215546474c2c62ea17dd"
+    },
+    {
+      "id": "adr-0029",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@733293682b9cdab83261215546474c2c62ea17dd"
+    },
+    {
+      "id": "root-registry-fixtures",
+      "validated": true,
+      "evidence_ref": "control_plane/root_registry.yaml@733293682b9cdab83261215546474c2c62ea17dd"
+    },
+    {
+      "id": "fixtures-tree",
+      "validated": true,
+      "evidence_ref": "git-tree:e787a6278847f9638347669783e2f1d4289ff45d"
+    },
+    {
+      "id": "validator-registry-full",
+      "validated": true,
+      "evidence_ref": "tools/validators/validator_registry.json@733293682b9cdab83261215546474c2c62ea17dd"
+    },
+    {
+      "id": "makefile-command-surface",
+      "validated": true,
+      "evidence_ref": "Makefile@733293682b9cdab83261215546474c2c62ea17dd"
+    },
+    {
+      "id": "codeowners-route",
+      "validated": true,
+      "evidence_ref": ".github/CODEOWNERS@733293682b9cdab83261215546474c2c62ea17dd"
+    },
+    {
+      "id": "tests-fixtures-split",
+      "validated": true,
+      "evidence_ref": "tests/fixtures/README.md@733293682b9cdab83261215546474c2c62ea17dd"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-09T01:04:03Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": 2283,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Append-only merge-context closure for AI-authored fixtures/README.md. PR 2283 merged as d60bcc09c8c754adde0ef084983905882f2d94a8 before the planned generated-receipt commit; the merge was observed after it occurred and was not performed by this receipt-emitting agent. The artifact bytes remain bound to sha256:2cb7c28be91b9327627b2fb8330327fafa8a0fb02f38be03f85775602ccad19c. This receipt is process memory, not evidence, proof, human approval, merge authorization, release, promotion, deployment, publication, or fixture-runtime validation."
+}

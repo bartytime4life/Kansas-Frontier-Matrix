@@ -1,0 +1,16 @@
+{
+  "invalid_approval_unverified_attestation.json": [
+    "APPROVAL_REQUIRES_VERIFIED_ATTESTATION"
+  ],
+  "invalid_digest_mismatch.json": [
+    "PAYLOAD_DIGEST_MISMATCH"
+  ],
+  "invalid_no_effect.json": [
+    "DELTA_NO_EFFECT",
+    "RUN_RECEIPT_REUSED"
+  ],
+  "invalid_rollback_missing_target.json": [
+    "APPROVAL_REQUIRES_ROLLBACK_TARGET",
+    "ROLLBACK_TARGET_REQUIRED"
+  ]
+}

@@ -1,0 +1,217 @@
+{
+  "receipt_id": "genrec-focus-mode-map-context-state-3a6e732fae30",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/focus-mode/state/map-context-state.md"
+  ],
+  "artifact_hashes": {
+    "docs/focus-mode/state/map-context-state.md": "sha256:3a6e732fae30a6609b43d002b2b62ceb9ad4b4f565782c2af49b7f524ad63ae6"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "exact serving revision not exposed"
+  },
+  "prompt_or_contract": "sha256:ccefa147e79855122e2a601caa202095ffc690456464ca3564ed88cedeee606c",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "bounded current-repository inspection",
+      "local deterministic Markdown validation",
+      "SHA-256 and Git-blob verification",
+      "bounded generated-receipt structural validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:ccefa147e79855122e2a601caa202095ffc690456464ca3564ed88cedeee606c",
+      "sha256:3a6e732fae30a6609b43d002b2b62ceb9ad4b4f565782c2af49b7f524ad63ae6"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/ec58517b74a02f5ce7dda3f407769c31d1393bb7",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ec58517b74a02f5ce7dda3f407769c31d1393bb7/docs/focus-mode/state/map-context-state.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ec58517b74a02f5ce7dda3f407769c31d1393bb7/docs/focus-mode/state/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ec58517b74a02f5ce7dda3f407769c31d1393bb7/contracts/ui/map_context_envelope.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ec58517b74a02f5ce7dda3f407769c31d1393bb7/contracts/ui/map_context_envelope/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ec58517b74a02f5ce7dda3f407769c31d1393bb7/schemas/contracts/v1/ui/map_context_envelope.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ec58517b74a02f5ce7dda3f407769c31d1393bb7/fixtures/ui/map_context_envelope/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ec58517b74a02f5ce7dda3f407769c31d1393bb7/fixtures/ui/map_context_envelope/base_viewport.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ec58517b74a02f5ce7dda3f407769c31d1393bb7/fixtures/ui/map_context_envelope/base_geography.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ec58517b74a02f5ce7dda3f407769c31d1393bb7/fixtures/ui/map_context_envelope/cases.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ec58517b74a02f5ce7dda3f407769c31d1393bb7/tools/validators/ui/validate_map_context_envelope.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ec58517b74a02f5ce7dda3f407769c31d1393bb7/tests/validators/test_validate_map_context_envelope.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ec58517b74a02f5ce7dda3f407769c31d1393bb7/schemas/contracts/v1/focus/focus_request.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ec58517b74a02f5ce7dda3f407769c31d1393bb7/tools/validators/validator_registry.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ec58517b74a02f5ce7dda3f407769c31d1393bb7/contracts/runtime/runtime_response_envelope.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ec58517b74a02f5ce7dda3f407769c31d1393bb7/schemas/contracts/v1/runtime/runtime_response_envelope.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ec58517b74a02f5ce7dda3f407769c31d1393bb7/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ec58517b74a02f5ce7dda3f407769c31d1393bb7/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ec58517b74a02f5ce7dda3f407769c31d1393bb7/data/receipts/generated/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ec58517b74a02f5ce7dda3f407769c31d1393bb7/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ec58517b74a02f5ce7dda3f407769c31d1393bb7/.github/PULL_REQUEST_TEMPLATE.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/f8d84773d20fae3df60a62ef1340b2ecff9f6b6f"
+    ]
+  },
+  "truth_labels": {
+    "docs/focus-mode/state/map-context-state.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main-target-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Pinned authoring base at main@ec58517b74a02f5ce7dda3f407769c31d1393bb7. The target was blob 5707de7d264724dc6afc85eb397e3815f2a8cdf1. Exact open-pull-request and task-branch searches found no overlapping map-context-state work before branch creation. The intervening merged PR #3329 changed only docs/focus-mode/state/transitions/README.md."
+    },
+    {
+      "gate": "same-path-placement-and-adr-0029",
+      "outcome": "PASS",
+      "reason": "The existing tracked documentation remains at docs/focus-mode/state/map-context-state.md. Accepted ADR-0029 adopts Directory Rules v2. No move, rename, split, mirror, deletion, new root, lifecycle change, or parallel semantic/schema authority is introduced; structural state-tree convergence remains on HOLD."
+    },
+    {
+      "gate": "complete-prior-document-material-reconciliation",
+      "outcome": "PASS",
+      "reason": "The complete v0.1 document was inspected and reconciled. Stable document identity, H1, numbered section headings, and legacy anchors were preserved while stale nonexistent focus_mode paths, old field names, caller roles, fixed 60-second TTL, runtime rebinding, viewport_pull, and envelope-level closure claims were corrected against current repository evidence."
+    },
+    {
+      "gate": "current-contract-schema-fixture-validator-test-alignment",
+      "outcome": "PASS",
+      "reason": "The README now aligns to the current proposed/inactive UI semantic contract, closed Draft 2020-12 schema, two valid fixture bases, sixteen-case no-network matrix, deterministic validator, and focused unit test. It keeps tracked shape separate from operational adoption, runtime wiring, evidence, policy, release, and public-use authority."
+    },
+    {
+      "gate": "markdown-structure-and-diff-hygiene",
+      "outcome": "PASS",
+      "reason": "The README has 48,883 UTF-8 bytes, 927 lines, one H1, 45 headings with no level jumps, 12 unique explicit anchors, 22 resolving same-document fragments, 8 balanced fenced blocks, LF endings, no tabs or trailing whitespace, and a final newline."
+    },
+    {
+      "gate": "repository-relative-target-closure",
+      "outcome": "PASS",
+      "reason": "Every distinct repository-relative target linked by the rewritten README was inspected at the pinned base, including the state parent, UI contract/schema, fixture family, validator/test, Focus request scaffold, runtime response surfaces, validator registry, Directory Rules/ADR, generated-receipt lane, and pull-request template."
+    },
+    {
+      "gate": "authority-and-result-family-separation",
+      "outcome": "PASS",
+      "reason": "The document separates MapContextEnvelope request context from EvidenceBundle, PolicyDecision, ReviewRecord, RuntimeResponseEnvelope, release, correction, rollback, and publication authority. It also separates validator PASS/FAIL from runtime ANSWER/ABSTAIN/DENY/ERROR and governance HOLD/PLACE."
+    },
+    {
+      "gate": "artifact-byte-and-sha256-closure",
+      "outcome": "PASS",
+      "reason": "README SHA-256 3a6e732fae30a6609b43d002b2b62ceb9ad4b4f565782c2af49b7f524ad63ae6; Git blob b305f8bbad71be06fa566906c3ffb58e11f3253e; 48,883 bytes. The connector-reported remote content blob matches the locally computed Git blob."
+    },
+    {
+      "gate": "external-runtime-evidence-policy-release-checks",
+      "outcome": "SKIPPED",
+      "reason": "No live map, governed API request, evidence or release resolver, policy evaluator, producer attestation, model call, deployment, public endpoint, correction propagation, or rollback drill was exercised. Those claims remain UNKNOWN or NEEDS VERIFICATION."
+    },
+    {
+      "gate": "repository-native-map-context-validator-and-tests",
+      "outcome": "SKIPPED",
+      "reason": "Connector-only execution did not run repository code, and no contract, schema, fixture, validator, or test bytes changed. The documented commands were inspected but not executed; hosted checks are reported separately."
+    },
+    {
+      "gate": "generated-receipt-bounded-structure",
+      "outcome": "PASS",
+      "reason": "The receipt was checked for required fields, finite enums, canonical repository-relative artifact paths, artifact-map parity, SHA-256 patterns, unique arrays, pending human review, non-self-reference, citation shape, and bounded notes."
+    },
+    {
+      "gate": "repository-native-generated-receipt-validator",
+      "outcome": "SKIPPED",
+      "reason": "Connector-only execution did not run repository code. The committed receipt remains subject to the repository-owned generated-receipt validator and hosted checks."
+    },
+    {
+      "gate": "pull-request-delivery-readback",
+      "outcome": "SKIPPED",
+      "reason": "The draft pull request did not exist at receipt emission time; branch, diff, and PR state are verified separately after creation."
+    },
+    {
+      "gate": "hosted-exact-head-workflows",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks begin after pull-request creation and are reported separately; no success is inferred at receipt emission time."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending. This receipt records provenance and bounded validation only; it is not approval, policy, proof, merge, release, or publication authority."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "current-user-request",
+      "validated": true,
+      "evidence_ref": "sha256:ccefa147e79855122e2a601caa202095ffc690456464ca3564ed88cedeee606c"
+    },
+    {
+      "id": "pinned-authoring-base",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/ec58517b74a02f5ce7dda3f407769c31d1393bb7"
+    },
+    {
+      "id": "prior-map-context-state",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ec58517b74a02f5ce7dda3f407769c31d1393bb7/docs/focus-mode/state/map-context-state.md"
+    },
+    {
+      "id": "state-parent-readme",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ec58517b74a02f5ce7dda3f407769c31d1393bb7/docs/focus-mode/state/README.md"
+    },
+    {
+      "id": "map-context-semantic-contract",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ec58517b74a02f5ce7dda3f407769c31d1393bb7/contracts/ui/map_context_envelope.md"
+    },
+    {
+      "id": "map-context-schema",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ec58517b74a02f5ce7dda3f407769c31d1393bb7/schemas/contracts/v1/ui/map_context_envelope.schema.json"
+    },
+    {
+      "id": "map-context-fixture-matrix",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ec58517b74a02f5ce7dda3f407769c31d1393bb7/fixtures/ui/map_context_envelope/cases.json"
+    },
+    {
+      "id": "map-context-validator",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ec58517b74a02f5ce7dda3f407769c31d1393bb7/tools/validators/ui/validate_map_context_envelope.py"
+    },
+    {
+      "id": "map-context-focused-test",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ec58517b74a02f5ce7dda3f407769c31d1393bb7/tests/validators/test_validate_map_context_envelope.py"
+    },
+    {
+      "id": "accepted-adr-0029",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ec58517b74a02f5ce7dda3f407769c31d1393bb7/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "generated-receipt-contract",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ec58517b74a02f5ce7dda3f407769c31d1393bb7/data/receipts/generated/README.md"
+    },
+    {
+      "id": "remote-readme-commit",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/f8d84773d20fae3df60a62ef1340b2ecff9f6b6f"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-22T08:18:36Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored documentation provenance only. This receipt binds the Focus Mode MapContextEnvelope state README bytes and records bounded validation at the pinned authoring base. It does not activate the proposed UI contract or schema; run repository code; resolve evidence or release refs; authenticate caller roles, governance declarations, review, rights, sensitivity, policy, runtime, CI coupling, deployment, correction, rollback, or public use; approve merge; or create release, promotion, publication, or settings authority. The parent state README, contracts, schemas, fixtures, validators, tests, registry, workflows, and all non-receipt repository files remain byte-unchanged."
+}

@@ -1,0 +1,147 @@
+{
+  "receipt_id": "genrec:briefing-campaign-record:e5f55aadeac6c5b8b806cffa",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/architecture/briefing-implementation-campaign-20260806.md"
+  ],
+  "artifact_hashes": {
+    "docs/architecture/briefing-implementation-campaign-20260806.md": "sha256:e5f55aadeac6c5b8b806cffa1c2bf97401715e8c3e115aa1727dc42f534c29fa"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-19"
+  },
+  "prompt_or_contract": "sha256:808c8c7fd25c10ddd98d8eb379f68773628e8971850b0d2c540a46395b04005b",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "deterministic local Markdown validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:3a919fc37c20943c89885b78083e0e0bdc527e678d5437337767935589bbaf19"
+    ],
+    "attached_docs": [
+      "KFM Briefing-to-System Integration Architecture — planning lineage"
+    ],
+    "evidence_refs": [
+      "repo:main@4f222c5b7ef852d2f3577b2a27c146d3d3641225",
+      "repo:docs/architecture/briefing-implementation-campaign-20260806.md@4f222c5b7ef852d2f3577b2a27c146d3d3641225",
+      "repo:docs/architecture/briefing-integration.md@4f222c5b7ef852d2f3577b2a27c146d3d3641225",
+      "repo:docs/architecture/document-convergence-plan.md@4f222c5b7ef852d2f3577b2a27c146d3d3641225",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@4f222c5b7ef852d2f3577b2a27c146d3d3641225",
+      "repo:.github/workflows/briefing-implementation-campaign.yml@4f222c5b7ef852d2f3577b2a27c146d3d3641225",
+      "repo:tools/experiments/temporal_slice_store.py@4f222c5b7ef852d2f3577b2a27c146d3d3641225",
+      "repo:tools/validators/validate_trace_temporal_closure.py@4f222c5b7ef852d2f3577b2a27c146d3d3641225",
+      "repo:tools/validators/maplibre/validate_v6_readiness.py@4f222c5b7ef852d2f3577b2a27c146d3d3641225",
+      "repo:tools/validators/domains/hazards/validate_usdm_materiality.py@4f222c5b7ef852d2f3577b2a27c146d3d3641225",
+      "github:pull/2056",
+      "github:pull/3017",
+      "github:issue/2906",
+      "github:issue/2957"
+    ]
+  },
+  "truth_labels": {
+    "docs/architecture/briefing-implementation-campaign-20260806.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "same-path-directory-governance-preflight",
+      "outcome": "PASS",
+      "reason": "Accepted ADR-0029 and the current convergence ledger support same-path correction while keeping any structural migration on HOLD."
+    },
+    {
+      "gate": "repository-evidence-reconciliation",
+      "outcome": "PASS",
+      "reason": "The document was reconciled against current campaign components, contracts, tests, workflow, historical receipts, PR lineage, and open MapLibre HOLD issues at the pinned base."
+    },
+    {
+      "gate": "markdown-source-structure",
+      "outcome": "PASS",
+      "reason": "One H1, balanced metadata block, unique explicit anchors, resolved internal fragments, no trailing whitespace, and a final newline were verified over the final bytes."
+    },
+    {
+      "gate": "relative-link-target-inspection",
+      "outcome": "PASS",
+      "reason": "Every repository-relative link introduced by the document was matched to an inspected repository path at the pinned base."
+    },
+    {
+      "gate": "generated-receipt-json-and-artifact-parity",
+      "outcome": "PASS",
+      "reason": "The receipt parses as JSON and its single artifact path/hash/truth-label sets match the finalized document bytes."
+    },
+    {
+      "gate": "repository-native-documentation-and-aggregate-validation",
+      "outcome": "SKIPPED",
+      "reason": "No mounted checkout was available in the connector-only authoring session; hosted exact-head checks start after draft PR creation."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@4f222c5b7ef852d2f3577b2a27c146d3d3641225"
+    },
+    {
+      "id": "current-campaign-record",
+      "validated": true,
+      "evidence_ref": "repo:docs/architecture/briefing-implementation-campaign-20260806.md@4f222c5b7ef852d2f3577b2a27c146d3d3641225"
+    },
+    {
+      "id": "durable-briefing-architecture",
+      "validated": true,
+      "evidence_ref": "repo:docs/architecture/briefing-integration.md@4f222c5b7ef852d2f3577b2a27c146d3d3641225"
+    },
+    {
+      "id": "architecture-convergence-hold",
+      "validated": true,
+      "evidence_ref": "repo:docs/architecture/document-convergence-plan.md@4f222c5b7ef852d2f3577b2a27c146d3d3641225"
+    },
+    {
+      "id": "original-campaign-lineage",
+      "validated": true,
+      "evidence_ref": "github:pull/2056"
+    },
+    {
+      "id": "maplibre-6-4-successor",
+      "validated": true,
+      "evidence_ref": "github:pull/3017"
+    },
+    {
+      "id": "maplibre-architecture-hold",
+      "validated": true,
+      "evidence_ref": "github:issue/2957"
+    },
+    {
+      "id": "maplibre-browser-probe-hold",
+      "validated": true,
+      "evidence_ref": "github:issue/2906"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-19T18:39:03Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": "docs/architecture/document-convergence-plan.md"
+  },
+  "notes": "Documentation-only modernization of the dated August 6 campaign record. The receipt binds the new Markdown bytes and records authoring provenance only. It does not rewrite the original campaign receipt, authenticate evidence, approve review, accept MapLibre ADRs, activate USDM or telemetry, authorize dependency admission, change lifecycle state, or create release, deployment, publication, or public-use authority."
+}

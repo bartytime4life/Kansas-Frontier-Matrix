@@ -1,0 +1,167 @@
+{
+  "receipt_id": "genrec-tests-domains-atmosphere-knowledge-character-readme-8e4c17b1",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tests/domains/atmosphere/knowledge-character/README.md"
+  ],
+  "artifact_hashes": {
+    "tests/domains/atmosphere/knowledge-character/README.md": "sha256:8e4c17b1ab909c8f594ebc3becf644cc8137189a6b606fba73f88511a995939c"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-16-session"
+  },
+  "prompt_or_contract": "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "container validation",
+      "temporary branch-only integrity workflow"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM GitHub Repository Documentation Implementation Agent — Full Operating Prompt v3.1",
+      "Directory Rules.pdf",
+      "Kansas Frontier Matrix — AI Build Operating Contract.md"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/0bc925d42301025dbf5e5ce08a154bbc35388bca",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0bc925d42301025dbf5e5ce08a154bbc35388bca/tests/domains/atmosphere/knowledge-character/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0bc925d42301025dbf5e5ce08a154bbc35388bca/tests/domains/atmosphere/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0bc925d42301025dbf5e5ce08a154bbc35388bca/tests/domains/atmosphere/test_knowledge_character_registry.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0bc925d42301025dbf5e5ce08a154bbc35388bca/docs/domains/atmosphere/KNOWLEDGE_CHARACTERS.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0bc925d42301025dbf5e5ce08a154bbc35388bca/docs/domains/atmosphere/KNOWLEDGE_CHARACTER_REGISTRY.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0bc925d42301025dbf5e5ce08a154bbc35388bca/contracts/domains/atmosphere/knowledge_character.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0bc925d42301025dbf5e5ce08a154bbc35388bca/contracts/cross_domain/knowledge_character.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0bc925d42301025dbf5e5ce08a154bbc35388bca/schemas/contracts/v1/domains/atmosphere/knowledge_character.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0bc925d42301025dbf5e5ce08a154bbc35388bca/data/registry/sources/atmosphere/knowledge_character.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0bc925d42301025dbf5e5ce08a154bbc35388bca/policy/domains/atmosphere/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0bc925d42301025dbf5e5ce08a154bbc35388bca/fixtures/domains/atmosphere/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0bc925d42301025dbf5e5ce08a154bbc35388bca/tools/validators/domains/atmosphere/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0bc925d42301025dbf5e5ce08a154bbc35388bca/.github/workflows/domain-atmosphere.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0bc925d42301025dbf5e5ce08a154bbc35388bca/Makefile"
+    ]
+  },
+  "truth_labels": {
+    "tests/domains/atmosphere/knowledge-character/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "The target remains under tests/, the enforceability root; docs, contracts, schemas, registry, policy, validators, fixtures, evidence, lifecycle data, release state, and public implementation remain in their owning roots."
+    },
+    {
+      "gate": "target-precondition-and-drift",
+      "outcome": "PASS",
+      "reason": "The target prior blob was rechecked on the authoring base; intervening main changes were unrelated to the target and inspected Atmosphere evidence. No matching task branch or duplicate document ID surfaced before mutation; the open-PR search endpoint was intermittently unavailable."
+    },
+    {
+      "gate": "knowledge-character-authority-split",
+      "outcome": "PASS",
+      "reason": "The README preserves the canonical prose explainer, thin registry index, domain and cross-domain semantic contracts, permissive schema, machine-registry placeholder, policy scaffold, validator boundary, fixture root, and test lane as distinct authority surfaces."
+    },
+    {
+      "gate": "open-enum-and-registry-posture",
+      "outcome": "PASS",
+      "reason": "The README does not freeze canonical enum values, casing, umbrella-term handling, or machine-registry placement while those decisions remain open and ADR-class."
+    },
+    {
+      "gate": "placeholder-and-executable-maturity",
+      "outcome": "PASS",
+      "reason": "The direct child is documented as README-only; the adjacent parent-level test is recorded as a one-line PROPOSED placeholder; schema, registry, policy, validator, workflow, fixture, and collection maturity are not overstated."
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "The committed README has one H1, twenty-two fenced-block delimiter lines, a final newline, unique local heading anchors, and all checked internal fragment links resolve."
+    },
+    {
+      "gate": "remote-byte-integrity",
+      "outcome": "PASS",
+      "reason": "A temporary branch-only verification workflow measured the committed artifact as Git blob 4c8e0aa3c246eb76624eb635bff2024cb4d5f2b6, 69745 bytes, 1219 lines, and SHA-256 8e4c17b1ab909c8f594ebc3becf644cc8137189a6b606fba73f88511a995939c; the workflow was then removed."
+    },
+    {
+      "gate": "secret-sensitive-and-life-safety-review",
+      "outcome": "PASS",
+      "reason": "No common credential patterns, real source payloads, private endpoints, current advisory text, protected location data, official warnings, health guidance, emergency instructions, or production trust artifacts were introduced."
+    },
+    {
+      "gate": "executable-knowledge-character-tests",
+      "outcome": "SKIPPED",
+      "reason": "This change is documentation-only; the direct lane has no established executable tests, and the adjacent named test is a placeholder."
+    },
+    {
+      "gate": "ci-status",
+      "outcome": "SKIPPED",
+      "reason": "Final repository workflows had not completed when this receipt was emitted; status must be read from the final pull-request head."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "tests/domains/atmosphere/knowledge-character/README.md@0bc925d4",
+      "validated": true
+    },
+    {
+      "id": "tests/domains/atmosphere/test_knowledge_character_registry.py@0bc925d4",
+      "validated": true
+    },
+    {
+      "id": "docs/domains/atmosphere/KNOWLEDGE_CHARACTERS.md@0bc925d4",
+      "validated": true
+    },
+    {
+      "id": "docs/domains/atmosphere/KNOWLEDGE_CHARACTER_REGISTRY.md@0bc925d4",
+      "validated": true
+    },
+    {
+      "id": "contracts/domains/atmosphere/knowledge_character.md@0bc925d4",
+      "validated": true
+    },
+    {
+      "id": "contracts/cross_domain/knowledge_character.md@0bc925d4",
+      "validated": true
+    },
+    {
+      "id": "schemas/contracts/v1/domains/atmosphere/knowledge_character.schema.json@0bc925d4",
+      "validated": true
+    },
+    {
+      "id": "data/registry/sources/atmosphere/knowledge_character.json@0bc925d4",
+      "validated": true
+    },
+    {
+      "id": "docs/doctrine/directory-rules.md@0bc925d4",
+      "validated": true
+    },
+    {
+      "id": "policy/domains/atmosphere/README.md@0bc925d4",
+      "validated": true
+    },
+    {
+      "id": "tools/validators/domains/atmosphere/README.md@0bc925d4",
+      "validated": true
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-16T23:04:57Z",
+  "emitter": "OpenAI GPT-5.6 Thinking via GitHub connector",
+  "links": {
+    "pr_number": 1326,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Generated provenance receipt for the repository-grounded v0.2 Atmosphere knowledge-character test README. The README records direct-lane README-only maturity, the adjacent placeholder test, open enum and registry decisions, authority separation, anti-collapse test contracts, no-network and life-safety boundaries, correction and rollback, and changes no executable tests, fixture payloads, registry artifacts, schemas, contracts, policy, validators, workflows, lifecycle objects, releases, alerts, or public outputs. Human review remains pending."
+}

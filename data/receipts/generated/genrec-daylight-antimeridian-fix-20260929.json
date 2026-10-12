@@ -1,0 +1,129 @@
+{
+  "receipt_id": "genrec-daylight-antimeridian-fix-20260929",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/site/source/README.md",
+    "apps/site/source/app/daylight-layer.ts",
+    "apps/site/source/package-lock.json",
+    "apps/site/source/package.json",
+    "apps/site/source/tests/daylight-layer.test.mjs",
+    "apps/site/source/tests/snapshot-workflows.test.mjs",
+    "apps/site/source/tests/wind-arrow-terrain.test.mjs"
+  ],
+  "artifact_hashes": {
+    "apps/site/source/README.md": "sha256:eeecf703c16e846dbd1f473ee5bed0da9b778cce6c9aa64647ea4f902b8ab84d",
+    "apps/site/source/app/daylight-layer.ts": "sha256:49e9ffd302db88e2cbd4516584e6cd256c9444c6b321c8d6a4fb370773f7f1ef",
+    "apps/site/source/package-lock.json": "sha256:8b846f381074c74f58de544ae222f1367b4e4e21f7c0bab7f3ff7cb992e68cb9",
+    "apps/site/source/package.json": "sha256:67c363c8ee20a589c97661fec19c78227e092293df7f26b660c2d5a5a4695d98",
+    "apps/site/source/tests/daylight-layer.test.mjs": "sha256:0e128d5a2384d2a18b36b8845b2aa605b9abf4973a0a37e22055fc65b8fc205d",
+    "apps/site/source/tests/snapshot-workflows.test.mjs": "sha256:9d4756f692b426c44aeda36f65716e38ee867bea1c4031316572ee4f6940ea64",
+    "apps/site/source/tests/wind-arrow-terrain.test.mjs": "sha256:63ffea8cc725d367d1075fae83a826507f8ccf6bfe32d242026bbf65fcd4118e"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6",
+    "version": "Codex session, 2026-09-29"
+  },
+  "prompt_or_contract": "sha256:1afab9d4b47a7e7629cb578dfa9e3a6316abfec1d8ca6c4405e4dbb124e255e2",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "repo:bartytime4life/Kansas-Frontier-Matrix@2e58abae3f7efa5e267668c32134197f5a84e000 (merged daylight feature base)",
+      "repo:Kansas Frontier Matrix Explorer Site@62e2fa0cc1e26e4ba13038ccde4e6f0b743594c0 (same-Site version 119 source)",
+      "GitHub PR #4802 automated review: antimeridian solar polygon rendering finding",
+      "https://www.nrel.gov/docs/fy08osti/34302.pdf",
+      "https://aa.usno.navy.mil/data/api"
+    ],
+    "attached_docs": [
+      "AGENTS.md",
+      "apps/site/source/AGENTS.md",
+      "docs/doctrine/directory-rules.md"
+    ]
+  },
+  "truth_labels": {
+    "apps/site/source/README.md": "CONFIRMED",
+    "apps/site/source/app/daylight-layer.ts": "CONFIRMED",
+    "apps/site/source/package-lock.json": "CONFIRMED",
+    "apps/site/source/package.json": "CONFIRMED",
+    "apps/site/source/tests/daylight-layer.test.mjs": "CONFIRMED",
+    "apps/site/source/tests/snapshot-workflows.test.mjs": "CONFIRMED",
+    "apps/site/source/tests/wind-arrow-terrain.test.mjs": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Monorepo Site npm test (production build and full suite)",
+      "outcome": "PASS",
+      "reason": "Production build passed and all 221 tests passed, including antimeridian seam checks across six seasonal dates."
+    },
+    {
+      "gate": "Monorepo targeted ESLint",
+      "outcome": "PASS",
+      "reason": "Zero errors; six existing warnings are in unrelated page code."
+    },
+    {
+      "gate": "Standalone same-Site npm test (production build and full suite)",
+      "outcome": "PASS",
+      "reason": "Production build passed and all 213 Site tests passed."
+    },
+    {
+      "gate": "Standalone Site targeted ESLint",
+      "outcome": "PASS",
+      "reason": "Zero errors in the changed daylight and test files."
+    },
+    {
+      "gate": "Same-Site source push and archive packaging",
+      "outcome": "PASS",
+      "reason": "Published source commit c0b2acbb98ec4b1a90c51d766af28693ec19fa13 and packaged matching deployment archive."
+    },
+    {
+      "gate": "Owner-only production Site deployment",
+      "outcome": "PASS",
+      "reason": "Saved version appgprj_6aa0b1c41bc08191bfd86003920f1631~appgver_dc02f780d37c8191b84f5bf7aa6579a1 deployed successfully as appgdep_6abc352a3f4c81919bcb99bcd6332d1b."
+    },
+    {
+      "gate": "Rendered map visual acceptance",
+      "outcome": "SKIPPED",
+      "reason": "A supported browser visual check was unavailable; build and automated geometry tests do not prove rendered appearance."
+    },
+    {
+      "gate": "GitHub exact-head hosted checks and independent review",
+      "outcome": "SKIPPED",
+      "reason": "Follow-up draft review and hosted checks remain pending after branch publication."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "NREL-Solar-Position-Algorithm",
+      "validated": true,
+      "evidence_ref": "https://www.nrel.gov/docs/fy08osti/34302.pdf"
+    },
+    {
+      "id": "USNO-daily-sun-data-API",
+      "validated": true,
+      "evidence_ref": "https://aa.usno.navy.mil/data/api"
+    },
+    {
+      "id": "polygon-clipping-0.15.7",
+      "validated": true,
+      "evidence_ref": "https://www.npmjs.com/package/polygon-clipping?activeTab=code"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-09-29T22:03:56.379337Z",
+  "emitter": "Codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Follow-up repair for the antimeridian defect found in review of the merged calculated daylight layer. Solar bands are clipped into canonical world strips; tests check seam continuity and agreement with solar position calculations. Site deployment is confirmed. Visual browser acceptance, exact-head hosted checks, and independent human review remain pending."
+}

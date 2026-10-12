@@ -1,0 +1,162 @@
+{
+  "receipt_id": "genrec-validation-report-validator-20260823",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "fixtures/data/validation_report/README.md",
+    "fixtures/data/validation_report/invalid/missing_id.json",
+    "fixtures/data/validation_report/valid/minimal.json",
+    "tests/validators/test_validate_validation_report.py",
+    "tools/validators/data/validate_validation_report.py"
+  ],
+  "artifact_hashes": {
+    "fixtures/data/validation_report/README.md": "sha256:24afbadf085986c589f390af667b1f5adba842db5c7660249cab7a8bdb0702a4",
+    "fixtures/data/validation_report/invalid/missing_id.json": "sha256:a870f91f7e88ffaffd13d501f080592b3254c701f62dd61efa8dcb6c0bd3d56a",
+    "fixtures/data/validation_report/valid/minimal.json": "sha256:2131acdb62602aa56074298ae8a99a1443706f87be80a861b8b1fe7864748649",
+    "tests/validators/test_validate_validation_report.py": "sha256:2e8d6dec965a443f8589744604996b362e32244aa662ef37fb031a0a3a44d265",
+    "tools/validators/data/validate_validation_report.py": "sha256:58ebe0b5509fd0ba854d3ea0e7f8e98c1682259ca811a5ebabdc511ff8003fb5"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-22"
+  },
+  "prompt_or_contract": "sha256:20cdee04ece6b1c84aea2f327675999f60d66cb5415d7f9ec5c99e310ebb0c59",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Google Drive connector",
+      "attached-file inspection",
+      "no-network Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:20cdee04ece6b1c84aea2f327675999f60d66cb5415d7f9ec5c99e310ebb0c59",
+      "sha256:2b8db8901f893d9aabb94bb32db5cbc2e0bb0c881bf74068551e9b3b76602893",
+      "sha256:43d0c6fea4cc64edb87238a13ac49b639934a82dcef0fab2ef49217add0ba8cf"
+    ],
+    "attached_docs": [
+      "Kansas Frontier Matrix — AI Build Operating Contract.md",
+      "KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf",
+      "Kansas_Frontier_Matrix_Pipeline_Living_Implementation_Manual_v0.3.pdf",
+      "Kansas Frontier Matrix — Connected-Dots Architecture Brief.md"
+    ],
+    "evidence_refs": [
+      "repo:campaign-baseline@101f9ca6983ffb8427855db60b9b4b30c82cb164",
+      "repo:slice-baseline@9fa9d72c3e5150398c07aea6b0cb6bff0d586b17",
+      "repo:contracts/data/validation_report.md@9fa9d72c3e5150398c07aea6b0cb6bff0d586b17",
+      "repo:schemas/contracts/v1/data/validation_report.schema.json@9fa9d72c3e5150398c07aea6b0cb6bff0d586b17",
+      "repo:control_plane/object_family_register.yaml@9fa9d72c3e5150398c07aea6b0cb6bff0d586b17",
+      "github://bartytime4life/Kansas-Frontier-Matrix/pulls/3422",
+      "github://bartytime4life/Kansas-Frontier-Matrix/issues/3360",
+      "github://bartytime4life/Kansas-Frontier-Matrix/issues/3363"
+    ]
+  },
+  "truth_labels": {
+    "fixtures/data/validation_report/README.md": "PROPOSED",
+    "fixtures/data/validation_report/invalid/missing_id.json": "PROPOSED",
+    "fixtures/data/validation_report/valid/minimal.json": "PROPOSED",
+    "tests/validators/test_validate_validation_report.py": "PROPOSED",
+    "tools/validators/data/validate_validation_report.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "authority_ownership_and_overlap_reconciliation",
+      "outcome": "PASS",
+      "reason": "Accepted ADR-0029, adopted Directory Rules, the generic contract/schema metadata, issues #3360/#3363, current draft PR #3422, and the soil-specific extension were inspected. Main advanced through merged security PR #3420 to 9fa9d72 without path or behavior overlap; no remaining open PR owns this slice."
+    },
+    {
+      "gate": "validation_report_focused_tests",
+      "outcome": "PASS",
+      "reason": "Seven no-network unit tests passed, covering Draft 2020-12 schema validity, fixture polarity, duplicate keys, non-object roots, non-finite values, and the CLI fixture profile."
+    },
+    {
+      "gate": "validation_report_fixture_profile",
+      "outcome": "PASS",
+      "reason": "The schema-declared CLI returned VALIDATION_REPORT_FIXTURES_VALID with one positive and one negative synthetic fixture."
+    },
+    {
+      "gate": "artifact_sha256_integrity",
+      "outcome": "PASS",
+      "reason": "All five AI-authored artifacts are bound to final SHA-256 values; this receipt intentionally does not bind itself."
+    },
+    {
+      "gate": "generic_domain_extension_reconciliation",
+      "outcome": "SKIPPED",
+      "reason": "Issue #3360 owns the catalog relationship between generic ValidationReport and the soil-specific DomainValidationReport; this slice does not collapse or supersede either family."
+    },
+    {
+      "gate": "cross_family_trust_spine_fixture",
+      "outcome": "SKIPPED",
+      "reason": "Issue #3363 owns the broader deterministic trust-spine fixture flow; this PR contributes only the missing generic validation primitive."
+    },
+    {
+      "gate": "repository_wide_hosted_checks",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks run only after the draft pull-request head is published."
+    },
+    {
+      "gate": "accountable_human_review",
+      "outcome": "SKIPPED",
+      "reason": "Human data/evidence/validation/root-owner review remains pending and cannot be inferred from the receipt or draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "kfm://adr/ADR-0029"
+  ],
+  "citations": [
+    {
+      "id": "KFM-VALIDATION-REPORT-CONTRACT",
+      "validated": true,
+      "evidence_ref": "repo:contracts/data/validation_report.md@101f9ca6983ffb8427855db60b9b4b30c82cb164"
+    },
+    {
+      "id": "KFM-VALIDATION-REPORT-SCHEMA",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/data/validation_report.schema.json@101f9ca6983ffb8427855db60b9b4b30c82cb164"
+    },
+    {
+      "id": "KFM-DIRECTORY-RULES-V2",
+      "validated": true,
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md@101f9ca6983ffb8427855db60b9b4b30c82cb164"
+    },
+    {
+      "id": "KFM-MRTS-03",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3360"
+    },
+    {
+      "id": "KFM-MRTS-05",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3363"
+    },
+    {
+      "id": "KFM-AI-BUILD-CONTRACT-24",
+      "validated": true,
+      "evidence_ref": "attachment:Kansas Frontier Matrix — AI Build Operating Contract.md#24"
+    },
+    {
+      "id": "KFM-DIRECTORY-STANDARD-19.5",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf#page=26"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-23T01:07:49Z",
+  "emitter": "OpenAI GPT-5.6 Pro",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Campaign baseline was 101f9ca; this independent slice was refreshed onto current main 9fa9d72 after disjoint security PR #3420 merged. It adds the missing generic ValidationReport schema validator, synthetic fixture polarity, and focused tests without changing the proposed schema, choosing between generic and soil-specific candidates, evaluating policy, closing proof, changing release state, activating sources, deploying, publishing, or widening access."
+}

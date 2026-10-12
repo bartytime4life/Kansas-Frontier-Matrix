@@ -1,0 +1,174 @@
+{
+  "receipt_id": "genrec-pipelines-archaeology-normalize-readme-2d3c2cf6",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "pipelines/domains/archaeology/normalize/README.md"
+  ],
+  "artifact_hashes": {
+    "pipelines/domains/archaeology/normalize/README.md": "sha256:2d3c2cf69ed489ba8884b2e0ec65e3a766cd106344bb7b099e95f9dc81d1156b"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-19"
+  },
+  "prompt_or_contract": "sha256:c0b477f6437be82d508d62e96f29661fef49d84dc928f33a6fc6670fff676ebd",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "repository commit search",
+      "repository file and history reads",
+      "remote branch and contents writes",
+      "local deterministic content validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:c0b477f6437be82d508d62e96f29661fef49d84dc928f33a6fc6670fff676ebd"
+    ],
+    "attached_docs": [
+      "Pasted text(51).txt — KFM GitHub Repository Documentation Implementation Agent v3.1"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/7bf8b8d6e797bb9930ae73830029dccfbbda3846",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7bf8b8d6e797bb9930ae73830029dccfbbda3846/pipelines/domains/archaeology/normalize/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7bf8b8d6e797bb9930ae73830029dccfbbda3846/pipelines/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7bf8b8d6e797bb9930ae73830029dccfbbda3846/pipelines/domains/archaeology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7bf8b8d6e797bb9930ae73830029dccfbbda3846/pipelines/domains/archaeology/ingest/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7bf8b8d6e797bb9930ae73830029dccfbbda3846/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7bf8b8d6e797bb9930ae73830029dccfbbda3846/pipeline_specs/archaeology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7bf8b8d6e797bb9930ae73830029dccfbbda3846/pipeline_specs/archaeology/normalize.spec.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7bf8b8d6e797bb9930ae73830029dccfbbda3846/data/registry/sources/archaeology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7bf8b8d6e797bb9930ae73830029dccfbbda3846/contracts/domains/archaeology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7bf8b8d6e797bb9930ae73830029dccfbbda3846/schemas/contracts/v1/domains/archaeology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7bf8b8d6e797bb9930ae73830029dccfbbda3846/policy/domains/archaeology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7bf8b8d6e797bb9930ae73830029dccfbbda3846/tests/domains/archaeology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7bf8b8d6e797bb9930ae73830029dccfbbda3846/tools/validators/archaeology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7bf8b8d6e797bb9930ae73830029dccfbbda3846/.github/workflows/domain-archaeology.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7bf8b8d6e797bb9930ae73830029dccfbbda3846/docs/adr/ADR-0010-deny-by-default-for-dna-rare-species-archaeology-infrastructure.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7bf8b8d6e797bb9930ae73830029dccfbbda3846/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/2f3e587080cdab2d9e0ae7aadd5f7bdc795628a3"
+    ]
+  },
+  "truth_labels": {
+    "pipelines/domains/archaeology/normalize/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "task-contract-and-change-budget",
+      "outcome": "PASS",
+      "reason": "Scope is limited to one existing Archaeology normalize README plus this generated-work receipt; no executable, source activation, specification, contract, schema, policy, fixture, test, workflow, lifecycle, proof, release, runtime, route, map, AI, or protected-data behavior is changed."
+    },
+    {
+      "gate": "directory-authority-and-duplicate-preflight",
+      "outcome": "PASS",
+      "reason": "The existing pipelines/domains/archaeology/normalize path and stable document identity were retained. Directory Rules and parent pipeline, ingest, spec, source-registry, contract, schema, policy, test, validator, lifecycle, release, and public-serving boundaries were inspected without creating parallel authority."
+    },
+    {
+      "gate": "base-drift-and-concurrency-preflight",
+      "outcome": "PASS",
+      "reason": "Main was pinned and rechecked at 7bf8b8d6e797bb9930ae73830029dccfbbda3846, the target blob remained f39c3f5878aac160305a57887851f8fa859db3cb before mutation, and bounded commit search surfaced no later normalize-specific implementation commit."
+    },
+    {
+      "gate": "repository-inventory-and-no-overclaim",
+      "outcome": "PASS",
+      "reason": "The README distinguishes repository-present documentation and placeholder specifications from executable behavior, active mapping profiles, substantive tests, validators, CI, receipts, runtime traces, monitoring, deployment, and production use."
+    },
+    {
+      "gate": "normalization-and-candidate-boundary",
+      "outcome": "PASS",
+      "reason": "The revision preserves original-field recovery, source-role and candidate-not-site separation, time kinds, deterministic identity, geometry sensitivity, rights, cultural and sovereignty review, consent and revocation, and safe diagnostics."
+    },
+    {
+      "gate": "authority-and-lifecycle-separation",
+      "outcome": "PASS",
+      "reason": "Source access, admission, normalization, validation, evidence, proof, policy, review, catalog, release, lifecycle storage, public serving, and generated interpretation remain separate authorities and states."
+    },
+    {
+      "gate": "markdown-meta-anchor-and-structure",
+      "outcome": "PASS",
+      "reason": "The final README has one H1, 59 headings with no hierarchy jumps or duplicate generated slugs, 38 resolved internal links, balanced code fences, only seven intentional Markdown hard-break lines with trailing spaces, and a final newline."
+    },
+    {
+      "gate": "repository-relative-link-validation",
+      "outcome": "PASS",
+      "reason": "The README contains 28 repository-relative links to 17 unique existing authority and companion paths represented in the checked repository evidence."
+    },
+    {
+      "gate": "security-and-protected-output",
+      "outcome": "PASS",
+      "reason": "The change contains no exact sites, protected cultural content, private-owner detail, consent secret, transformation offset, credential, source payload, lifecycle record, proof, release record, or public output."
+    },
+    {
+      "gate": "remote-readback-and-content-hash",
+      "outcome": "PASS",
+      "reason": "GitHub returned README blob f7cbb1864de836f9ab8468738173ee39cddc8ed6 on commit 2f3e587080cdab2d9e0ae7aadd5f7bdc795628a3, matching the locally recomputed Git blob and SHA-256 2d3c2cf69ed489ba8884b2e0ec65e3a766cd106344bb7b099e95f9dc81d1156b."
+    },
+    {
+      "gate": "repository-native-execution",
+      "outcome": "SKIPPED",
+      "reason": "The API-only workflow did not clone or execute repository code, and current evidence establishes no accepted Archaeology normalization runner or substantive no-network command. Pull-request workflows are observed separately."
+    },
+    {
+      "gate": "generated-receipt-shape",
+      "outcome": "PASS",
+      "reason": "The receipt includes every required generated-receipt field, valid hash patterns, allowed truth labels and gate outcomes, ISO-8601 time, pending human review, and no unknown top-level properties."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human governance review remains pending and separate from generation, normalization semantics, cultural authority, policy approval, lifecycle promotion, release, and publication."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "user-request",
+      "validated": true,
+      "evidence_ref": "conversation://current#update-pipelines-domains-archaeology-normalize-readme"
+    },
+    {
+      "id": "uploaded-operating-prompt",
+      "validated": true,
+      "evidence_ref": "attachment://Pasted text(51).txt"
+    },
+    {
+      "id": "target-baseline",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/7bf8b8d6e797bb9930ae73830029dccfbbda3846/pipelines/domains/archaeology/normalize/README.md"
+    },
+    {
+      "id": "pipeline-spec-index",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/7bf8b8d6e797bb9930ae73830029dccfbbda3846/pipeline_specs/archaeology/README.md"
+    },
+    {
+      "id": "archaeology-readiness-workflow",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/7bf8b8d6e797bb9930ae73830029dccfbbda3846/.github/workflows/domain-archaeology.yml"
+    },
+    {
+      "id": "remote-readback",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/2f3e587080cdab2d9e0ae7aadd5f7bdc795628a3"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-19T13:42:09-05:00",
+  "emitter": "OpenAI GPT-5.6 Thinking via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Task kfm-pipelines-archaeology-normalize-readme-v0-2-20260719. Documentation-only repository-grounded revision. This receipt records provenance and bounded validation; it is not archaeological evidence, cultural or rights-holder authority, policy approval, source admission, normalization execution, validation or proof closure, lifecycle promotion, release approval, or publication authority."
+}

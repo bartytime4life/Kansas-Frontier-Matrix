@@ -1,0 +1,6 @@
+[
+  {"name": "missing_evidence", "mutations": {"evidence_bundle_ref": ""}, "expected": "DENY"},
+  {"name": "hidden_public_correction", "mutations": {"negative_states": ["ABSTAIN", "DENY", "ERROR", "STALE"]}, "expected": "DENY"},
+  {"name": "authority_overreach", "mutations": {"effects.publishes": true}, "expected": "DENY"},
+  {"name": "identity_drift", "mutations": {"assessment_id": "kfm:claim-carrier:0000000000000000000000000000000000000000000000000000000000000000"}, "expected": "ERROR"}
+]

@@ -1,0 +1,163 @@
+{
+  "receipt_id": "genrec-inaturalist-fetch-admit-20260927",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/inaturalist-observations-offline.yml",
+    "connectors/fema/src/fema/admit.py",
+    "connectors/fema/tests/test_fetch_admit.py",
+    "connectors/gbif/src/gbif/README.md",
+    "connectors/gbif/src/gbif/admit.py",
+    "connectors/gbif/src/gbif/fetch.py",
+    "connectors/gbif/tests/README.md",
+    "connectors/gbif/tests/test_fetch_admit.py",
+    "connectors/inaturalist/README.md",
+    "connectors/inaturalist/pyproject.toml",
+    "connectors/inaturalist/src/inaturalist/README.md",
+    "connectors/inaturalist/src/inaturalist/admit.py",
+    "connectors/inaturalist/src/inaturalist/fetch.py",
+    "connectors/inaturalist/tests/README.md",
+    "connectors/inaturalist/tests/test_fetch_admit.py",
+    "connectors/usgs/src/usgs/admit.py",
+    "connectors/usgs/tests/test_fetch_admit.py",
+    "packages/connectors-core/src/connectors_core/descriptor-gate.md",
+    "packages/connectors-core/src/connectors_core/descriptor_gate.py",
+    "packages/connectors-core/src/connectors_core/retrieval-episode.md",
+    "packages/connectors-core/src/connectors_core/retrieval_episode.py",
+    "tests/packages/connectors_core/test_descriptor_gate.py",
+    "tests/packages/connectors_core/test_retrieval_episode.py",
+    "tools/qa/scaffold_baseline.json"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/inaturalist-observations-offline.yml": "sha256:56b68bdd36e07b600450f1164f96a3ed735de78b856dba8875c5c6373aa64309",
+    "connectors/fema/src/fema/admit.py": "sha256:728fa2e27b2570b4517f4f174a094145fcdc6db2f493b725db4a2e4f1becf52c",
+    "connectors/fema/tests/test_fetch_admit.py": "sha256:dee4741b75df300694e213ee2d0dfce9d0209fe4d26b4f35f6132d72d766d462",
+    "connectors/gbif/src/gbif/README.md": "sha256:7743f6886882731ba7dd383de22b92c09f7b89402a98d02a9e11e90574db9f65",
+    "connectors/gbif/src/gbif/admit.py": "sha256:8b161395ec25c522f4eb6168b652e490bebf2243d1d28aa7159fc4a47b5accea",
+    "connectors/gbif/src/gbif/fetch.py": "sha256:46577a5ed28f3e4418ec79c6b5145bd5660b06df440480aed511292106af3efc",
+    "connectors/gbif/tests/README.md": "sha256:29f9db3f66d6433bfb38dbe1ddf04bb80cbc0f8638dddb14966ac602856ec37f",
+    "connectors/gbif/tests/test_fetch_admit.py": "sha256:d21b82da45a91273a0ea16badb0432763506648d5aa11d367a628d84cbe1a0fa",
+    "connectors/inaturalist/README.md": "sha256:348199e0dc8e52257eb57c68f872376b4962b6668bdbbdc23d6dab18ed7f06c1",
+    "connectors/inaturalist/pyproject.toml": "sha256:e57c404c5f742a9a7052faa4d1e903b6552ac385786529575b9e8824651f8254",
+    "connectors/inaturalist/src/inaturalist/README.md": "sha256:afe4ef6e0f0a989106f13e43e520e4a8d013112f0013ff74af3a0c220997a83b",
+    "connectors/inaturalist/src/inaturalist/admit.py": "sha256:8c966c70fd8ab39421d889676c685573703fe8d9f5928c5e830036ae2ce05886",
+    "connectors/inaturalist/src/inaturalist/fetch.py": "sha256:aa6ed3937a712c1ac6965402cfc38374ecfc8aa5ff119f7d5477675df458cf13",
+    "connectors/inaturalist/tests/README.md": "sha256:42e9a608671b89fe68fa2f32a82fb389f938e557a20ac030c1a7cfdc9ae97fd0",
+    "connectors/inaturalist/tests/test_fetch_admit.py": "sha256:3b6bb6e9e4f3dfd9e7b54ae3e55ab5a2f40695aea52cce75be7d613e658a6b23",
+    "connectors/usgs/src/usgs/admit.py": "sha256:ab9732cd7f0565be5a3e3e3f296c67ac3eaf299cdebf3b3dd6223ea4c8d45fcd",
+    "connectors/usgs/tests/test_fetch_admit.py": "sha256:8a32e69317145bfedf295327f7b8d67ad432a5ac91c2c726b5c399968ef16efc",
+    "packages/connectors-core/src/connectors_core/descriptor-gate.md": "sha256:958521722f768a895285b005f67271a7718610e4bd1c28936fbbe9c6dd4b157c",
+    "packages/connectors-core/src/connectors_core/descriptor_gate.py": "sha256:7a9a696d3af3b1f4196c119329c6adb8976ea61393e8c74deb6dfdd3fb245ec6",
+    "packages/connectors-core/src/connectors_core/retrieval-episode.md": "sha256:34b58f8759ded8d22a7ef33417b57a184ddcf7f6a3dffc2d385b4c3c48986429",
+    "packages/connectors-core/src/connectors_core/retrieval_episode.py": "sha256:33680aae82beb33dff22b3dd242f4fdcfad503cbdece049862948bcab42a5057",
+    "tests/packages/connectors_core/test_descriptor_gate.py": "sha256:40dea16ee2e545f4b35f499a830d6111e28d701fdadc236d8011b8b531f16838",
+    "tests/packages/connectors_core/test_retrieval_episode.py": "sha256:e3c41d83b05ee59fbbb92c7806973cac63f6bdd3d027124b2510ba6930c7e2cb",
+    "tools/qa/scaffold_baseline.json": "sha256:899280f21ea1b7d18da74cf6565e3119acc11975b5474e59f8378c6a8614dbc5"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:e95fb3bd57ddceff30c68f31fef1d6d34657cbc7a42a2bb15ff07f852327a6e5",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/5f2e726d39037965b28b3a08ff06e4b63a644800",
+      "connectors/inaturalist/README.md",
+      "connectors/inaturalist/src/inaturalist/observations_api.py",
+      "schemas/contracts/v1/source/source_descriptor.schema.json"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/inaturalist-observations-offline.yml": "PROPOSED",
+    "connectors/fema/src/fema/admit.py": "CONFIRMED",
+    "connectors/fema/tests/test_fetch_admit.py": "CONFIRMED",
+    "connectors/gbif/src/gbif/README.md": "PROPOSED",
+    "connectors/gbif/src/gbif/admit.py": "CONFIRMED",
+    "connectors/gbif/src/gbif/fetch.py": "CONFIRMED",
+    "connectors/gbif/tests/README.md": "PROPOSED",
+    "connectors/gbif/tests/test_fetch_admit.py": "CONFIRMED",
+    "connectors/inaturalist/README.md": "PROPOSED",
+    "connectors/inaturalist/pyproject.toml": "CONFIRMED",
+    "connectors/inaturalist/src/inaturalist/README.md": "PROPOSED",
+    "connectors/inaturalist/src/inaturalist/admit.py": "CONFIRMED",
+    "connectors/inaturalist/src/inaturalist/fetch.py": "CONFIRMED",
+    "connectors/inaturalist/tests/README.md": "PROPOSED",
+    "connectors/inaturalist/tests/test_fetch_admit.py": "CONFIRMED",
+    "connectors/usgs/src/usgs/admit.py": "CONFIRMED",
+    "connectors/usgs/tests/test_fetch_admit.py": "CONFIRMED",
+    "packages/connectors-core/src/connectors_core/descriptor-gate.md": "PROPOSED",
+    "packages/connectors-core/src/connectors_core/descriptor_gate.py": "CONFIRMED",
+    "packages/connectors-core/src/connectors_core/retrieval-episode.md": "PROPOSED",
+    "packages/connectors-core/src/connectors_core/retrieval_episode.py": "CONFIRMED",
+    "tests/packages/connectors_core/test_descriptor_gate.py": "CONFIRMED",
+    "tests/packages/connectors_core/test_retrieval_episode.py": "CONFIRMED",
+    "tools/qa/scaffold_baseline.json": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Connector suites",
+      "outcome": "PASS",
+      "reason": "iNaturalist test_observations_api (18) and test_fetch_admit (13) pass, including acceptance of next_page_url output and rejection of unscoped/non-canonical URLs; GBIF, FEMA and USGS suites pass with GBIF on the shared floor gate."
+    },
+    {
+      "gate": "Targeted mutation testing",
+      "outcome": "PASS",
+      "reason": "14 mutations across inaturalist fetch/admit and descriptor_gate applied and verified restored; all non-equivalent mutants caught (the floor-allowlist mutant re-verified in isolation after a stale loop result)."
+    },
+    {
+      "gate": "GBIF page-window fix (review finding on #4750)",
+      "outcome": "PASS",
+      "reason": "Non-planner windows (offset=1/limit=300, 301/300, 150/200, 7/299, 299/300) raise SOURCE_URL_SCOPE; every plan_pages window, including short final pages, is accepted; three mutations of the window check caught."
+    },
+    {
+      "gate": "Source binding (review finding on #4751)",
+      "outcome": "PASS",
+      "reason": "require_source rejects episodes whose source_id, source_descriptor_ref or retrieval_profile_ref differ from the connector's (EPISODE_SOURCE_MISMATCH); tests in connectors_core and all four connector suites; disabling the check or the descriptor-ref comparison is caught."
+    },
+    {
+      "gate": "Shared and repository checks",
+      "outcome": "PASS",
+      "reason": "tests/packages/connectors_core and tests/qa pass (156); scaffold_inventory --check at 1286 (5 iNaturalist findings resolved); deny_test_runner PASS; connector gate scan PASS; workflow-security PASS; docs-critical-structure 0 findings; committed-tree repository-topology identical to base."
+    },
+    {
+      "gate": "Hosted CI and independent review",
+      "outcome": "SKIPPED",
+      "reason": "Read after PR creation."
+    },
+    {
+      "gate": "Source activation, admission, sensitivity, release",
+      "outcome": "SKIPPED",
+      "reason": "No network library, descriptor change, sensitivity evaluation, de-obscuring, lifecycle write, admission, or publication; routes stay HOLD."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/5f2e726d39037965b28b3a08ff06e4b63a644800"
+    },
+    {
+      "id": "inat-public-floor-unsafe",
+      "validated": true,
+      "evidence_ref": "repo:connectors/inaturalist/README.md@5f2e726d39037965b28b3a08ff06e4b63a644800"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-09-27T05:56:34Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "pr_number": 4751,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Replaces iNaturalist fetch.py/admit.py/pyproject.toml placeholders; extracts the sensitivity-floor allowlist into connectors_core.descriptor_gate (second consumer) and switches GBIF to it. Observed: observations_api DATE accepts impossible calendar dates (format-only check) \u2014 not changed here. Also carries the GBIF offset/limit window check from the post-merge review finding on #4750. Also binds every connector's admit() to its own episode source and profile via connectors_core.retrieval_episode.require_source."
+}

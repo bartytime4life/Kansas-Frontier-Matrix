@@ -1,0 +1,125 @@
+{
+  "profile": "kfm.geography-version.fixture-suite.v1",
+  "base": {
+    "object_type": "GeographyVersion",
+    "schema_version": "1.0.0",
+    "profile": "kfm.geography-version.fixture.v1",
+    "geography_version_id": "kfm:geography-version:000000000000000000000000",
+    "geography": {
+      "geography_key": "synthetic_county_v1",
+      "label": "Synthetic county geography version",
+      "geography_kind": "SYNTHETIC_AREA",
+      "unit_level": "COUNTY",
+      "jurisdiction_code": "US-KS-SYNTHETIC",
+      "authority_role": "SYNTHETIC",
+      "source_descriptor_ref": "kfm://source/synthetic-county@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "definition_ref": "kfm://definition/geography/synthetic-county@sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+    },
+    "version": {
+      "version_key": "v1",
+      "revision": 1,
+      "valid_from": "2020-01-01",
+      "valid_to": "2020-12-31",
+      "published_at": "2021-01-15T00:00:00Z",
+      "retrieved_at": "2026-08-10T00:00:00Z",
+      "identity_scope": "VERSION_LOCAL"
+    },
+    "representation": {
+      "geometry_role": "SYNTHETIC_FIXTURE",
+      "boundary_artifact_ref": "kfm://artifact/geography/synthetic-county-v1@sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "crs_ref": "kfm://crs/synthetic-planar@sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "feature_id_scheme_ref": "kfm://identity-scheme/synthetic-county-v1@sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+      "transform_receipt_ref": null
+    },
+    "lineage": {
+      "predecessor_ref": null,
+      "crosswalk_state": "NOT_APPLICABLE",
+      "crosswalk_ref": null,
+      "different_version_join_policy": "CROSSWALK_REQUIRED"
+    },
+    "support": {
+      "evidence_state": "REFERENCED_NOT_RESOLVED",
+      "evidence_refs": [
+        "kfm://evidence-ref/geography/synthetic-boundary@sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "kfm://evidence-ref/geography/synthetic-definition@sha256:1111111111111111111111111111111111111111111111111111111111111111"
+      ],
+      "rights_state": "REFERENCED_NOT_EVALUATED",
+      "sensitivity_state": "REFERENCED_NOT_EVALUATED"
+    },
+    "disclosure": {
+      "interpretation_limits": [
+        "NOT_CURRENTNESS_PROOF",
+        "NO_CROSSWALK_INFERENCE",
+        "NO_CROSS_VERSION_IDENTITY_INFERENCE",
+        "NO_PUBLICATION_AUTHORITY",
+        "SOURCE_ROLE_PRESERVED",
+        "VERSION_BOUND"
+      ]
+    },
+    "governance": {
+      "execution_mode": "FIXTURE_ONLY",
+      "network_attempted": false,
+      "geometry_resolved": false,
+      "crosswalk_resolved": false,
+      "evidence_resolved": false,
+      "rights_evaluated": false,
+      "sensitivity_evaluated": false,
+      "policy_evaluated": false,
+      "review_approved": false,
+      "promotion_authorized": false,
+      "release_authorized": false,
+      "public_use_allowed": false,
+      "publication_authorized": false
+    },
+    "spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  "variants": {
+    "first": [],
+    "successor": [
+      { "path": "/version/version_key", "value": "v2" },
+      { "path": "/version/valid_from", "value": "2021-01-01" },
+      { "path": "/version/valid_to", "value": null },
+      { "path": "/version/published_at", "value": "2021-02-01T00:00:00Z" },
+      { "path": "/representation/boundary_artifact_ref", "value": "kfm://artifact/geography/synthetic-county-v2@sha256:2222222222222222222222222222222222222222222222222222222222222222" },
+      { "path": "/representation/feature_id_scheme_ref", "value": "kfm://identity-scheme/synthetic-county-v2@sha256:3333333333333333333333333333333333333333333333333333333333333333" },
+      { "path": "/lineage/predecessor_ref", "value": "kfm://geography-version/synthetic-county-v1@sha256:4444444444444444444444444444444444444444444444444444444444444444" },
+      { "path": "/lineage/crosswalk_state", "value": "REFERENCED_NOT_RESOLVED" },
+      { "path": "/lineage/crosswalk_ref", "value": "kfm://crosswalk/synthetic-county-v1-v2@sha256:5555555555555555555555555555555555555555555555555555555555555555" }
+    ],
+    "unresolved_successor": [
+      { "path": "/version/version_key", "value": "v2-unresolved" },
+      { "path": "/version/valid_from", "value": "2021-01-01" },
+      { "path": "/version/valid_to", "value": null },
+      { "path": "/version/published_at", "value": "2021-02-01T00:00:00Z" },
+      { "path": "/lineage/predecessor_ref", "value": "kfm://geography-version/synthetic-county-v1@sha256:4444444444444444444444444444444444444444444444444444444444444444" },
+      { "path": "/lineage/crosswalk_state", "value": "UNRESOLVED" }
+    ],
+    "generalized": [
+      { "path": "/representation/geometry_role", "value": "GENERALIZED_DERIVATIVE" },
+      { "path": "/representation/transform_receipt_ref", "value": "kfm://receipt/transform/synthetic-generalization@sha256:6666666666666666666666666666666666666666666666666666666666666666" }
+    ]
+  },
+  "cases": [
+    { "case_id": "first_version_valid", "base": "first", "expected_outcome": "PASS", "expected_findings": [] },
+    { "case_id": "successor_with_crosswalk_valid", "base": "successor", "expected_outcome": "PASS", "expected_findings": [] },
+    { "case_id": "successor_crosswalk_unresolved_valid", "base": "unresolved_successor", "expected_outcome": "PASS", "expected_findings": [] },
+    { "case_id": "generalized_with_transform_valid", "base": "generalized", "expected_outcome": "PASS", "expected_findings": [] },
+
+    { "case_id": "valid_interval_inverted", "base": "first", "mutations": [{ "path": "/version/valid_to", "value": "2019-12-31" }], "expected_outcome": "DENY", "expected_findings": [{ "code": "GEOGRAPHY_VALID_INTERVAL_INVALID", "path": "/version/valid_to" }] },
+    { "case_id": "retrieval_precedes_publication", "base": "first", "mutations": [{ "path": "/version/retrieved_at", "value": "2020-01-01T00:00:00Z" }], "expected_outcome": "DENY", "expected_findings": [{ "code": "GEOGRAPHY_RETRIEVAL_PRECEDES_PUBLICATION", "path": "/version/retrieved_at" }] },
+    { "case_id": "evidence_order_invalid", "base": "first", "mutations": [{ "path": "/support/evidence_refs", "value": ["kfm://evidence-ref/geography/synthetic-definition@sha256:1111111111111111111111111111111111111111111111111111111111111111", "kfm://evidence-ref/geography/synthetic-boundary@sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"] }], "expected_outcome": "DENY", "expected_findings": [{ "code": "GEOGRAPHY_EVIDENCE_ORDER_INVALID", "path": "/support/evidence_refs" }] },
+    { "case_id": "evidence_duplicate", "base": "first", "mutations": [{ "path": "/support/evidence_refs", "value": ["kfm://evidence-ref/geography/synthetic-boundary@sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", "kfm://evidence-ref/geography/synthetic-boundary@sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"] }], "expected_outcome": "DENY", "expected_findings": [{ "code": "GEOGRAPHY_SCHEMA_INVALID", "path": "/support/evidence_refs" }] },
+    { "case_id": "required_limit_missing", "base": "first", "mutations": [{ "path": "/disclosure/interpretation_limits", "value": ["NOT_CURRENTNESS_PROOF", "NO_CROSSWALK_INFERENCE", "NO_CROSS_VERSION_IDENTITY_INFERENCE", "NO_PUBLICATION_AUTHORITY", "VERSION_BOUND"] }], "expected_outcome": "DENY", "expected_findings": [{ "code": "GEOGRAPHY_REQUIRED_LIMIT_MISSING", "path": "/disclosure/interpretation_limits" }] },
+    { "case_id": "limit_order_invalid", "base": "first", "mutations": [{ "path": "/disclosure/interpretation_limits", "value": ["VERSION_BOUND", "SOURCE_ROLE_PRESERVED", "NOT_CURRENTNESS_PROOF", "NO_PUBLICATION_AUTHORITY", "NO_CROSSWALK_INFERENCE", "NO_CROSS_VERSION_IDENTITY_INFERENCE"] }], "expected_outcome": "DENY", "expected_findings": [{ "code": "GEOGRAPHY_LIMIT_ORDER_INVALID", "path": "/disclosure/interpretation_limits" }] },
+    { "case_id": "predecessor_requires_crosswalk_state", "base": "first", "mutations": [{ "path": "/lineage/predecessor_ref", "value": "kfm://geography-version/synthetic-prior@sha256:7777777777777777777777777777777777777777777777777777777777777777" }], "expected_outcome": "DENY", "expected_findings": [{ "code": "GEOGRAPHY_CROSSWALK_STATE_REQUIRED", "path": "/lineage/crosswalk_state" }] },
+    { "case_id": "referenced_crosswalk_requires_ref", "base": "successor", "mutations": [{ "path": "/lineage/crosswalk_ref", "value": null }], "expected_outcome": "DENY", "expected_findings": [{ "code": "GEOGRAPHY_CROSSWALK_REF_REQUIRED", "path": "/lineage/crosswalk_ref" }] },
+    { "case_id": "crosswalk_ref_unexpected", "base": "first", "mutations": [{ "path": "/lineage/crosswalk_ref", "value": "kfm://crosswalk/synthetic-unexpected@sha256:8888888888888888888888888888888888888888888888888888888888888888" }], "expected_outcome": "DENY", "expected_findings": [{ "code": "GEOGRAPHY_CROSSWALK_REF_UNEXPECTED", "path": "/lineage/crosswalk_ref" }] },
+    { "case_id": "generalized_requires_transform", "base": "generalized", "mutations": [{ "path": "/representation/transform_receipt_ref", "value": null }], "expected_outcome": "DENY", "expected_findings": [{ "code": "GEOGRAPHY_TRANSFORM_RECEIPT_REQUIRED", "path": "/representation/transform_receipt_ref" }] },
+    { "case_id": "transform_unexpected", "base": "first", "mutations": [{ "path": "/representation/transform_receipt_ref", "value": "kfm://receipt/transform/synthetic-unexpected@sha256:9999999999999999999999999999999999999999999999999999999999999999" }], "expected_outcome": "DENY", "expected_findings": [{ "code": "GEOGRAPHY_TRANSFORM_RECEIPT_UNEXPECTED", "path": "/representation/transform_receipt_ref" }] },
+    { "case_id": "feature_scheme_not_digest_bound", "base": "first", "mutations": [{ "path": "/representation/feature_id_scheme_ref", "value": "kfm://identity-scheme/synthetic-county-v1" }], "expected_outcome": "DENY", "expected_findings": [{ "code": "GEOGRAPHY_SCHEMA_INVALID", "path": "/representation/feature_id_scheme_ref" }] },
+    { "case_id": "inline_coordinates_denied", "base": "first", "mutations": [{ "path": "/representation/coordinates", "value": [0, 0] }], "expected_outcome": "DENY", "expected_findings": [{ "code": "GEOGRAPHY_SCHEMA_INVALID", "path": "/representation" }] },
+    { "case_id": "spec_hash_mismatch", "base": "first", "spec_hash_override": "sha256:1111111111111111111111111111111111111111111111111111111111111111", "expected_outcome": "DENY", "expected_findings": [{ "code": "GEOGRAPHY_SPEC_HASH_MISMATCH", "path": "/spec_hash" }] },
+    { "case_id": "version_id_mismatch", "base": "successor", "geography_version_id_override": "kfm:geography-version:111111111111111111111111", "expected_outcome": "DENY", "expected_findings": [{ "code": "GEOGRAPHY_VERSION_ID_MISMATCH", "path": "/geography_version_id" }] },
+    { "case_id": "public_use_forbidden", "base": "first", "mutations": [{ "path": "/governance/public_use_allowed", "value": true }], "expected_outcome": "DENY", "expected_findings": [{ "code": "GEOGRAPHY_SCHEMA_INVALID", "path": "/governance/public_use_allowed" }] }
+  ]
+}

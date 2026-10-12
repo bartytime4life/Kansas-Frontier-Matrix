@@ -1,0 +1,9 @@
+{
+  "status": "PROPOSED",
+  "tool": "ruff",
+  "path": "artifacts/qa/lint/ruff.json",
+  "results": [],
+  "notes": [
+    "Illustrative placeholder for Ruff lint output. Replace with generated output when available."
+  ]
+}

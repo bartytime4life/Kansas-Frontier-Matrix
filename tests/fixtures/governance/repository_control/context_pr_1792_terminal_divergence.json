@@ -1,0 +1,24 @@
+{
+  "scenario_id": "confirmed-pr-1792-terminal-divergence",
+  "evidence_refs": [
+    "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/1792",
+    "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1675#issuecomment-5088064638"
+  ],
+  "repository": "bartytime4life/Kansas-Frontier-Matrix",
+  "default_branch": "main",
+  "base_sha": "0b0309664313543b6816e8e5dcefc9593366aba5",
+  "head_sha": "db1f6a43d2a3fd70e4e90ff281a1ade8f6cf68be",
+  "head_branch": "docs/modernize-agriculture-contract-readme-20260727",
+  "pr_number": 1792,
+  "pr_state": "MERGED",
+  "merge_commit_sha": "0fb6e9a0acb0c1a8e2bdb04f110a6b779d03edb1",
+  "changed_paths": [
+    "contracts/agriculture/README.md"
+  ],
+  "requested_operations": [
+    "update"
+  ],
+  "open_pull_requests": [],
+  "active_review_prs": [],
+  "now": "2026-07-27T06:19:15Z"
+}

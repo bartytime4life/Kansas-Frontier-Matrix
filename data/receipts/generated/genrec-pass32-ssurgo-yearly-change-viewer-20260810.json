@@ -1,0 +1,200 @@
+{
+  "receipt_id": "genrec-pass32-ssurgo-yearly-change-viewer-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/explorer-web/src/adapters/SoilYearlyChangeProjection.ts",
+    "apps/explorer-web/src/features/soil_yearly_change_viewer/README.md",
+    "apps/explorer-web/src/features/soil_yearly_change_viewer/index.ts",
+    "apps/explorer-web/tests/browser/soil-yearly-change-viewer.fixture.ts",
+    "apps/explorer-web/tests/browser/soil-yearly-change-viewer.html",
+    "apps/explorer-web/tests/browser/soil-yearly-change-viewer.spec.ts",
+    "apps/explorer-web/tests/soil-yearly-change-viewer.test.ts",
+    "docs/intake/exploratory/pass-32-ssurgo-yearly-change-viewer-source-map.md",
+    "fixtures/ui/soil_yearly_change_projection/README.md",
+    "fixtures/ui/soil_yearly_change_projection/invalid/extra-field.json",
+    "fixtures/ui/soil_yearly_change_projection/invalid/incoherent-diff.json",
+    "fixtures/ui/soil_yearly_change_projection/valid/available.json",
+    "fixtures/ui/soil_yearly_change_projection/valid/denied.json",
+    "fixtures/ui/soil_yearly_change_projection/valid/error.json",
+    "fixtures/ui/soil_yearly_change_projection/valid/missing.json"
+  ],
+  "artifact_hashes": {
+    "apps/explorer-web/src/adapters/SoilYearlyChangeProjection.ts": "sha256:e62cb57564236d1a67489709816bce0336b4f3f3ecd63c9a2b5180297fd9b619",
+    "apps/explorer-web/src/features/soil_yearly_change_viewer/README.md": "sha256:8b5213c9cd0e050806e4799335f73193b3846acde92be6d2d408c396ae1d3203",
+    "apps/explorer-web/src/features/soil_yearly_change_viewer/index.ts": "sha256:65dc7f31e0e0f693de1c79a8cdc0122d356aec12d5ec519f7d8897104c435b90",
+    "apps/explorer-web/tests/browser/soil-yearly-change-viewer.fixture.ts": "sha256:8939e3724600cd0647fa02c0c98831a22441397885882a011db61003a6db5287",
+    "apps/explorer-web/tests/browser/soil-yearly-change-viewer.html": "sha256:8906875274ea40657b28d8e167758c2543d0442d120042212458b0b2d31ea7a8",
+    "apps/explorer-web/tests/browser/soil-yearly-change-viewer.spec.ts": "sha256:6b513db280763ad203a769dda93eb8dd3a3b689109cdc114c379dd71a70a7c48",
+    "apps/explorer-web/tests/soil-yearly-change-viewer.test.ts": "sha256:8af2be0d1d6f25e3b89e53a7d840a835fdb03d37a79383a34458da0de40adc54",
+    "docs/intake/exploratory/pass-32-ssurgo-yearly-change-viewer-source-map.md": "sha256:f367b8579581de5602bb4daf32a330da25937888c83eb6221322c9772dcb592b",
+    "fixtures/ui/soil_yearly_change_projection/README.md": "sha256:da628128e9149ea6dfc91bfa1968f34efac36938339d5207ae1f52567d3d2c6c",
+    "fixtures/ui/soil_yearly_change_projection/invalid/extra-field.json": "sha256:54d2cc4d4f0d27e0cc3e6747089d6d0c01e538f980403d09afec42aa126fd1c6",
+    "fixtures/ui/soil_yearly_change_projection/invalid/incoherent-diff.json": "sha256:644564b353f2d2c2380917a62086d2c2db094460d060513fab11f7a900be1b7f",
+    "fixtures/ui/soil_yearly_change_projection/valid/available.json": "sha256:25c9845be35fc2cdcff871c31dd7fb609adeb7a00d3346a0580c635808700038",
+    "fixtures/ui/soil_yearly_change_projection/valid/denied.json": "sha256:a8c62eafce19e4c0fd28867e787a6470a400c239ad00273c691bca70ed16b60b",
+    "fixtures/ui/soil_yearly_change_projection/valid/error.json": "sha256:31e3f7c9cc80d03b46d94d95c875571f3cab690bf6ef83fa47abfe0eeb916155",
+    "fixtures/ui/soil_yearly_change_projection/valid/missing.json": "sha256:2049516f9930af482b85a69e8040a3f506b244a259f805bd677c74c0ae7d172d"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "2026-08-10"
+  },
+  "prompt_or_contract": "sha256:d9185e867349cee54c0566c6bde1ef0ff24547d322f002f9c0d3f1911c4f329a",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector",
+      "GitHub connector",
+      "Poppler PDF renderer",
+      "TypeScript 7.0.2",
+      "Vitest 4.1.10",
+      "Playwright 1.62.1"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:47692941391f2953d215ec3938bf5262b521772c68a83e810272c6eeb63ac859"
+    ],
+    "attached_docs": [
+      "KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf",
+      "KFM_Full_Atlas_seed_cards",
+      "Directory Rules"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#KFM-P32-FEAT-0018",
+      "gdrive:1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho",
+      "gdrive:1uTqdIEFZE2cq3gyISetoRYM6LIlnKqTc3FobtEx7Cbs",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@457e4fba09ef641efbddc0639bd8127e4c464b5a",
+      "repo:contracts/domains/soil/ssurgo_yearly_diff_profile.md",
+      "repo:tools/generators/build_soil_yearly_diff.py",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "truth_labels": {
+    "apps/explorer-web/src/adapters/SoilYearlyChangeProjection.ts": "PROPOSED",
+    "apps/explorer-web/src/features/soil_yearly_change_viewer/README.md": "PROPOSED",
+    "apps/explorer-web/src/features/soil_yearly_change_viewer/index.ts": "PROPOSED",
+    "apps/explorer-web/tests/browser/soil-yearly-change-viewer.fixture.ts": "PROPOSED",
+    "apps/explorer-web/tests/browser/soil-yearly-change-viewer.html": "PROPOSED",
+    "apps/explorer-web/tests/browser/soil-yearly-change-viewer.spec.ts": "PROPOSED",
+    "apps/explorer-web/tests/soil-yearly-change-viewer.test.ts": "PROPOSED",
+    "docs/intake/exploratory/pass-32-ssurgo-yearly-change-viewer-source-map.md": "PROPOSED",
+    "fixtures/ui/soil_yearly_change_projection/README.md": "PROPOSED",
+    "fixtures/ui/soil_yearly_change_projection/invalid/extra-field.json": "PROPOSED",
+    "fixtures/ui/soil_yearly_change_projection/invalid/incoherent-diff.json": "PROPOSED",
+    "fixtures/ui/soil_yearly_change_projection/valid/available.json": "PROPOSED",
+    "fixtures/ui/soil_yearly_change_projection/valid/denied.json": "PROPOSED",
+    "fixtures/ui/soil_yearly_change_projection/valid/error.json": "PROPOSED",
+    "fixtures/ui/soil_yearly_change_projection/valid/missing.json": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-pr-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Current main, open pull requests, and historical titles were searched for the selected card ID and feature terms; no viewer implementation overlap was found."
+    },
+    {
+      "gate": "source-pdf-visual-inspection",
+      "outcome": "PASS",
+      "reason": "The consolidated atlas page carrying KFM-P32-FEAT-0018 was rendered and visually inspected before implementation."
+    },
+    {
+      "gate": "policy-boundary-guards",
+      "outcome": "PASS",
+      "reason": "Adapter and component tests prove exact-field, negative-state, no-transport, no-persistence, and no-lifecycle-mutation boundaries."
+    },
+    {
+      "gate": "explorer-production-build",
+      "outcome": "PASS",
+      "reason": "Explorer TypeScript checking and Vite production build completed locally. Node 24 emitted the expected engine warning; hosted CI uses the repository-pinned Node 22 line."
+    },
+    {
+      "gate": "ssurgo-yearly-change-targeted-unit-suite",
+      "outcome": "PASS",
+      "reason": "The targeted viewer unit file passed all 8 tests."
+    },
+    {
+      "gate": "explorer-full-unit-suite",
+      "outcome": "PASS",
+      "reason": "All 149 tests in the local Explorer working tree passed."
+    },
+    {
+      "gate": "soil-yearly-diff-foundation-suite",
+      "outcome": "PASS",
+      "reason": "All 16 existing SSURGO yearly-diff builder and validator tests passed against the same base."
+    },
+    {
+      "gate": "browser-fixture-typecheck",
+      "outcome": "PASS",
+      "reason": "The browser fixture and Playwright spec passed an isolated strict TypeScript no-emit check."
+    },
+    {
+      "gate": "playwright-spec-discovery",
+      "outcome": "PASS",
+      "reason": "Playwright discovered both viewer browser scenarios."
+    },
+    {
+      "gate": "local-playwright-browser",
+      "outcome": "SKIPPED",
+      "reason": "No Chromium executable is installed in this workspace; the existing hosted UI workflow installs Chrome and must validate the pushed exact head."
+    },
+    {
+      "gate": "generated-receipt-integrity",
+      "outcome": "PASS",
+      "reason": "The v3 generated-receipt validator bound all 15 declared artifacts to their final local SHA-256 digests."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:pass32-ssurgo-yearly-change-viewer",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#KFM-P32-FEAT-0018"
+    },
+    {
+      "id": "gdrive:kfm-full-atlas-seed-cards",
+      "validated": true,
+      "evidence_ref": "gdrive:1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho"
+    },
+    {
+      "id": "gdrive:directory-rules",
+      "validated": true,
+      "evidence_ref": "gdrive:1uTqdIEFZE2cq3gyISetoRYM6LIlnKqTc3FobtEx7Cbs"
+    },
+    {
+      "id": "repository:ssurgo-yearly-diff-profile",
+      "validated": true,
+      "evidence_ref": "repo:contracts/domains/soil/ssurgo_yearly_diff_profile.md"
+    },
+    {
+      "id": "repository:adr-0029-directory-rules-v2",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-10T18:25:00Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-first implementation derived from Pass 32 card KFM-P32-FEAT-0018. It is an unmounted read-only display projection and grants no source, data, lifecycle, evidence, policy, promotion, release, deployment, publication, or public-use authority."
+}

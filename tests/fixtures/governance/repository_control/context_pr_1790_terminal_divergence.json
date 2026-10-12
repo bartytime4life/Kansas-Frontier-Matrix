@@ -1,0 +1,29 @@
+{
+  "scenario_id": "confirmed-pr-1790-terminal-divergence",
+  "evidence_refs": [
+    "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/1790",
+    "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1675#issuecomment-5086585750"
+  ],
+  "repository": "bartytime4life/Kansas-Frontier-Matrix",
+  "default_branch": "main",
+  "base_sha": "93b40ebae595ac3131459f55f6e804a0f21f6a0e",
+  "head_sha": "c99917505d4ae9187a14b626c51457c225029f9a",
+  "head_branch": "agent/reconcile-repository-control-after-pr-1789-20260727",
+  "pr_number": 1790,
+  "pr_state": "MERGED",
+  "merge_commit_sha": "b85d05c37d88cf2dcd89042c9df77483fa38d2a9",
+  "changed_paths": [
+    "control_plane/repository_control_state.yaml",
+    "tests/fixtures/governance/repository_control/README.md",
+    "tests/fixtures/governance/repository_control/context_pr_1789_terminal_divergence.json",
+    "tests/validators/test_repository_control_incident_1789.py"
+  ],
+  "requested_operations": [
+    "create",
+    "update",
+    "modify_control_logic"
+  ],
+  "open_pull_requests": [],
+  "active_review_prs": [],
+  "now": "2026-07-27T02:06:49Z"
+}

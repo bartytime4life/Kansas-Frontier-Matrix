@@ -1,0 +1,71 @@
+{
+  "receipt_id": "genrec-pass30-graph-migration-declaration-20260809",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/graph-migration-declaration.yml",
+    "contracts/governance/graph_migration_declaration.md",
+    "docs/intake/exploratory/pass-30-graph-migration-declaration-source-map.md",
+    "fixtures/contracts/v1/governance/graph_migration_declaration/cases.json",
+    "schemas/contracts/v1/governance/graph_migration_declaration.schema.json",
+    "tests/validators/governance/test_graph_migration_declaration.py",
+    "tools/validators/governance/validate_graph_migration_declaration.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/graph-migration-declaration.yml": "sha256:140ae8c53fa5641ccc6439babbd14c3ec4bbf6fac8e7150e65779b6ef04e3deb",
+    "contracts/governance/graph_migration_declaration.md": "sha256:d79602440c41b062eca3c6645253d582bf693c1f842a92aaa7b5d3412995b69c",
+    "docs/intake/exploratory/pass-30-graph-migration-declaration-source-map.md": "sha256:1fe873ef7a31adfd2cd2764545534e5f6011a2629de3688ed0e9a8673c7eb7ad",
+    "fixtures/contracts/v1/governance/graph_migration_declaration/cases.json": "sha256:515e55a3a1b44ae7c4c376f99fb7cabcdba7296fcced56f67cf7519da346e88b",
+    "schemas/contracts/v1/governance/graph_migration_declaration.schema.json": "sha256:eb91a4f4eab60318ba5257670f3097df4a5d6d5548c9aac6ddfe5d368e80602a",
+    "tests/validators/governance/test_graph_migration_declaration.py": "sha256:ac9891dad8e1ac42e8b5253986bfb97ce8b24901ab0925a18fe30a9cf56be333",
+    "tools/validators/governance/validate_graph_migration_declaration.py": "sha256:d630f8103b2b88b5a3ae18ec5ffbbcf000d432b1996e50bc143d9b539251fad3"
+  },
+  "model_identity": {"provider": "OpenAI", "model": "Codex", "version": "GPT-5"},
+  "prompt_or_contract": "sha256:d7ff1f7a60bfc3911c276e3e01ef8945629262eaf0f7942134098dde3c3287e9",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": ["GitHub connector", "Google Drive connector", "PDF extraction and rendering", "local deterministic validation"]
+  },
+  "inputs": {
+    "evidence_hashes": ["sha256:020a1207c2a6d193dc23defca40d24d429acd1273da17c2494582116ec8e9639"],
+    "attached_docs": ["KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf"],
+    "evidence_refs": [
+      "google-drive:1w7Qrf5Na7PSvwdTuplZnFbyueToPtQaa#KFM-P30-PROG-0008",
+      "github:bartytime4life/Kansas-Frontier-Matrix@76da0a048590710bd927891d43075d989568bf7d",
+      "github:bartytime4life/Kansas-Frontier-Matrix@76da0a048590710bd927891d43075d989568bf7d:contracts/governance/README.md",
+      "github:bartytime4life/Kansas-Frontier-Matrix@76da0a048590710bd927891d43075d989568bf7d:migrations/graph/README.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/graph-migration-declaration.yml": "PROPOSED",
+    "contracts/governance/graph_migration_declaration.md": "PROPOSED",
+    "docs/intake/exploratory/pass-30-graph-migration-declaration-source-map.md": "PROPOSED",
+    "fixtures/contracts/v1/governance/graph_migration_declaration/cases.json": "PROPOSED",
+    "schemas/contracts/v1/governance/graph_migration_declaration.schema.json": "PROPOSED",
+    "tests/validators/governance/test_graph_migration_declaration.py": "PROPOSED",
+    "tools/validators/governance/validate_graph_migration_declaration.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {"gate": "source-assay", "outcome": "PASS", "reason": "Card KFM-P30-PROG-0008 was resolved in the consolidated atlas and remained active and unchanged through Pass 32."},
+    {"gate": "repository-gap-assay", "outcome": "PASS", "reason": "Exact card ID, title, branch, and proposed contract/schema paths were absent at the recorded base."},
+    {"gate": "directory-rules-placement", "outcome": "PASS", "reason": "Pre-execution governance meaning is separated from migrations/graph mechanics and from schema, fixture, validator, test, workflow, intake, and receipt responsibilities."},
+    {"gate": "draft-2020-12-meta", "outcome": "PASS"},
+    {"gate": "focused-local-tests", "outcome": "PASS", "reason": "Seven tests and ten positive/negative fixture cases passed without network or graph access."},
+    {"gate": "hosted-exact-head-checks", "outcome": "SKIPPED", "reason": "Recorded before the draft pull request existed; GitHub Actions remains authoritative for the branch head."},
+    {"gate": "human-review", "outcome": "SKIPPED", "reason": "Awaiting an authorized repository reviewer."}
+  ],
+  "policy_decisions": ["docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md", "docs/doctrine/directory-rules.md"],
+  "citations": [
+    {"id": "KFM-P30-PROG-0008", "validated": true, "evidence_ref": "google-drive:1w7Qrf5Na7PSvwdTuplZnFbyueToPtQaa"},
+    {"id": "KFM-P30-PROG-0008-PASS32-UNCHANGED", "validated": true, "evidence_ref": "sha256:020a1207c2a6d193dc23defca40d24d429acd1273da17c2494582116ec8e9639"},
+    {"id": "ADR-0029", "validated": true, "evidence_ref": "github:bartytime4life/Kansas-Frontier-Matrix@76da0a048590710bd927891d43075d989568bf7d:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"}
+  ],
+  "human_review": {"reviewer_ids": [], "state": "pending", "timestamp": null},
+  "override_record": null,
+  "created_at": "2026-08-09T21:17:30Z",
+  "emitter": "OpenAI Codex",
+  "links": {"pr_number": null, "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md", "drift_register_entry": null},
+  "notes": "Fixture-only proposed profile. It performs no graph access, query, migration, policy evaluation, approval, release, or publication effect. Rollback is deletion of the eight files introduced by the draft change."
+}

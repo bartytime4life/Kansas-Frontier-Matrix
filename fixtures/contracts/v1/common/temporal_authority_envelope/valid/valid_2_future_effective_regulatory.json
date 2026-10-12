@@ -1,0 +1,51 @@
+{
+  "schema_version": "1.0.0",
+  "identity": {
+    "object_id": "kfm:advisory:synthetic-regulation-001",
+    "object_type": "RegulatoryAdvisory",
+    "native_id": "regulation:synthetic-001",
+    "revision_id": "kfm:revision:synthetic-regulation-001:20260803T130000Z"
+  },
+  "source": {
+    "source_descriptor_ref": "src:synthetic:regulatory-feed",
+    "source_role_ref": "src:synthetic:regulatory-feed#/source_role",
+    "issuing_authority_ref": "authority:synthetic:regulator",
+    "authority_scope": "Synthetic future-effective regulatory fixture only"
+  },
+  "time": {
+    "issued_at": "2026-08-03T12:00:00Z",
+    "effective_at": "2026-09-01T00:00:00Z",
+    "valid_from": "2026-09-01T00:00:00Z",
+    "valid_to": "2026-09-30T23:59:59Z",
+    "observed_at": null,
+    "retrieved_at": "2026-08-03T13:00:00Z",
+    "corrected_at": null,
+    "superseded_at": null
+  },
+  "space": {
+    "native_geography_text": "Synthetic district",
+    "geography_ref": "kfm:geometry:synthetic-district-001",
+    "geometry_role": "operational",
+    "geometry_confidence": "high"
+  },
+  "state": {
+    "native_state": "issued",
+    "normalized_state": "scheduled",
+    "certainty": "confirmed"
+  },
+  "lineage": {
+    "supersedes": [],
+    "superseded_by": [],
+    "correction_refs": [],
+    "withdrawal_refs": []
+  },
+  "governance": {
+    "evidence_refs": [
+      "evidence:synthetic:regulatory-notice"
+    ],
+    "policy_refs": [],
+    "review_refs": [],
+    "release_ref": null,
+    "public_use_allowed": false
+  }
+}

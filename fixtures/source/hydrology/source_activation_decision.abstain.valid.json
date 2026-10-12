@@ -1,8 +1,0 @@
-{
-  "id": "SAD-HYD-002",
-  "knowledge_character": "SYNTHETIC_TEST",
-  "source_id": "SRC-HYD-3DHP-CANDIDATE",
-  "decision": "ABSTAIN",
-  "source_activation_state": "CANDIDATE",
-  "reason": "missing probe receipt"
-}

@@ -1,0 +1,108 @@
+{
+  "receipt_id": "genrec-docs-local-dev-currentness-handoff-20260906",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/runbooks/ui_LOCAL_DEV.md"
+  ],
+  "artifact_hashes": {
+    "docs/runbooks/ui_LOCAL_DEV.md": "sha256:8c006e3daa8c5762bbc94cfa21c69e19b4d9eac5603b25e1325742e17c753754"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5"
+  },
+  "prompt_or_contract": "sha256:e38f9d8309033c5886a1cdd9e2d4b22a5aae9462f10fc44c27af62bd8fd19d76",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub",
+      "Notion",
+      "Google Drive"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/11cb4b51125db18d952d9f00e997beab89791cea/docs/runbooks/ui_LOCAL_DEV.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/11cb4b51125db18d952d9f00e997beab89791cea/pnpm-workspace.yaml",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/11cb4b51125db18d952d9f00e997beab89791cea/pnpm-lock.yaml",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/11cb4b51125db18d952d9f00e997beab89791cea/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4320",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4312",
+      "https://docs.google.com/document/d/1uTqdIEFZE2cq3gyISetoRYM6LIlnKqTc3FobtEx7Cbs/edit?usp=drivesdk",
+      "https://app.notion.com/p/3c9a92021bf68195b8b1f3a8d694b447?pvs=204"
+    ]
+  },
+  "truth_labels": {
+    "docs/runbooks/ui_LOCAL_DEV.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "merged-runbook-readback",
+      "outcome": "PASS",
+      "reason": "Current main contains the intended runbook currentness correction from observed PR #4320; the stale checkpoint is absent and the exact current-main pin is present."
+    },
+    {
+      "gate": "receipt-schema-shape-preflight",
+      "outcome": "PASS",
+      "reason": "The receipt conforms to the current generated-receipt required-field, digest, citation, and pending-review constraints; its artifact digest is computed from current-main runbook bytes."
+    },
+    {
+      "gate": "artifact-digest-preflight",
+      "outcome": "PASS",
+      "reason": "SHA-256 of the current-main runbook readback is bound exactly in artifact_hashes and the receipt intentionally excludes its own bytes."
+    },
+    {
+      "gate": "hosted-receipt-validation",
+      "outcome": "SKIPPED",
+      "reason": "The repository-native validator was not runnable in the authoring runtime because its jsonschema dependency was unavailable; hosted validation and independent human review remain pending on the draft PR."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "current-main-runbook",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/11cb4b51125db18d952d9f00e997beab89791cea/docs/runbooks/ui_LOCAL_DEV.md"
+    },
+    {
+      "id": "current-main-pnpm-workspace-policy",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/11cb4b51125db18d952d9f00e997beab89791cea/pnpm-workspace.yaml"
+    },
+    {
+      "id": "current-main-pnpm-lock-dependency-path",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/11cb4b51125db18d952d9f00e997beab89791cea/pnpm-lock.yaml"
+    },
+    {
+      "id": "observed-runbook-pr",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4320"
+    },
+    {
+      "id": "accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/11cb4b51125db18d952d9f00e997beab89791cea/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "drive-directory-rules-lineage",
+      "validated": true,
+      "evidence_ref": "https://docs.google.com/document/d/1uTqdIEFZE2cq3gyISetoRYM6LIlnKqTc3FobtEx7Cbs/edit?usp=drivesdk"
+    },
+    {
+      "id": "notion-repository-workbench",
+      "validated": true,
+      "evidence_ref": "https://app.notion.com/p/3c9a92021bf68195b8b1f3a8d694b447?pvs=204"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-09-06T05:08:19Z",
+  "emitter": "kfm-docs-local-dev-currentness-receipt-agent",
+  "notes": "This follow-up adds the generated provenance receipt omitted when the runbook-only PR #4320 was observed merged externally. The receipt binds the merged docs/runbooks/ui_LOCAL_DEV.md bytes and preserves pending human review. No runbook, lockfile, dependency, workflow, application, source, release, deployment, publication, settings, or policy bytes are changed by this follow-up. This is not M06 closure, dependency/security approval, or merge authorization."
+}

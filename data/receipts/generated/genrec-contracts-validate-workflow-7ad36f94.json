@@ -1,0 +1,49 @@
+{
+  "receipt_id": "genrec-contracts-validate-workflow-7ad36f94",
+  "contract_version": "3.0.0",
+  "receipt_type": "GenerationReceipt",
+  "status": "PROPOSED",
+  "generated_at": "2026-07-18T00:00:00-05:00",
+  "repository": "bartytime4life/Kansas-Frontier-Matrix",
+  "base_commit": "3fcb35d82dee8a7a3c6dddc85862fd52f5209223",
+  "branch": "agent/contracts-validate-workflow-20260718",
+  "target_path": ".github/workflows/contracts-validate.yml",
+  "previous_blob": "fba63efbae13c665a04d699f0651937dfbf633b3",
+  "new_blob": "6dce524f4f2faf044cfed8712ead9a7815f47332",
+  "sha256": "7ad36f9494ccdce5821cf7aecbf8df54e1f26326546e8d2126374fc3d7dba8f0",
+  "truth_labels": {
+    "confirmed": [
+      "The prior workflow executed make test.",
+      "The Makefile currently scopes make test to tests/schemas and tests/contracts.",
+      "Workflow name contracts-validate and job id validate are preserved."
+    ],
+    "proposed": [
+      "The hardened workflow is suitable as the current contracts validation lane."
+    ],
+    "needs_verification": [
+      "Final-head GitHub Actions conclusion.",
+      "Branch-protection dependencies.",
+      "Independent contract/schema review.",
+      "Whether action references should be pinned to immutable SHAs.",
+      "Whether contracts-validate and contract-drift should remain separate required checks."
+    ]
+  },
+  "changes": [
+    "Added workflow_dispatch.",
+    "Added contents: read permission.",
+    "Added concurrency cancellation and timeout.",
+    "Added deterministic Python and pip environment settings.",
+    "Disabled persisted checkout credentials.",
+    "Added pip caching and python -m pip.",
+    "Preserved make test.",
+    "Added bounded always-run summary."
+  ],
+  "authority_boundary": "A green run is test evidence for the selected repository-owned tests only. It is not release, deployment, lifecycle promotion, source admission, policy, or publication authority.",
+  "rollback": {
+    "strategy": "Revert the receipt commit and workflow commit in reverse order or close the pull request without merge.",
+    "restores_blob": "fba63efbae13c665a04d699f0651937dfbf633b3"
+  },
+  "human_review": {
+    "state": "pending"
+  }
+}

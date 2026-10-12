@@ -1,0 +1,213 @@
+{
+  "receipt_id": "genrec-map-build-sustainability-telemetry-20260811",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/map-build-sustainability-telemetry.yml",
+    ".github/workflows/telemetry-policy.yml",
+    "contracts/telemetry/README.md",
+    "contracts/telemetry/map_build_sustainability.md",
+    "docs/dashboards/observability/energy-carbon-footprint.md",
+    "docs/intake/exploratory/pass-18-map-build-sustainability-source-map.md",
+    "fixtures/contracts/v1/telemetry/map_build_sustainability/README.md",
+    "fixtures/contracts/v1/telemetry/map_build_sustainability/cases.json",
+    "schemas/contracts/v1/telemetry/README.md",
+    "schemas/contracts/v1/telemetry/map_build_sustainability.schema.json",
+    "tests/validators/telemetry/README.md",
+    "tests/validators/telemetry/test_map_build_sustainability.py",
+    "tools/validators/telemetry/README.md",
+    "tools/validators/telemetry/validate_map_build_sustainability.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/map-build-sustainability-telemetry.yml": "sha256:765cb914f1676c8f1726b9908a36223114e5fa864bd0c438fe2b5e39641d735d",
+    ".github/workflows/telemetry-policy.yml": "sha256:6109037915e4cad7e4e0aff621e6cb4ab484b4540658c99eba41b95e448fb18e",
+    "contracts/telemetry/README.md": "sha256:1109455655716680cd5b339181e65f800b818879468a8cb1a2bc1c445f0abeed",
+    "contracts/telemetry/map_build_sustainability.md": "sha256:593ec42b91e0a997331483b4c2c34bfcf7ba0872f96197052fbeaad9466fe764",
+    "docs/dashboards/observability/energy-carbon-footprint.md": "sha256:ba09d6c5345883b60116ca7c17c3ef2c9847b03a2ed0e93de92b21734ce678a7",
+    "docs/intake/exploratory/pass-18-map-build-sustainability-source-map.md": "sha256:c6844e214e6a7f34a73beda2607f0c6d85055d03bddf0eb94b04f420e3a320d1",
+    "fixtures/contracts/v1/telemetry/map_build_sustainability/README.md": "sha256:e2d07fd4d5f7f9ebc993b9efb6f769c71283fbef6e4aaa5fa8c1ea3ec03747f6",
+    "fixtures/contracts/v1/telemetry/map_build_sustainability/cases.json": "sha256:80d2e5b155c6427a3209ee28f0f025058dd81c14d113428fd3487867ca05619c",
+    "schemas/contracts/v1/telemetry/README.md": "sha256:fe414f4b22664802683d86087ff120f8c59977c9326e63ea6d42c4e250ead8f9",
+    "schemas/contracts/v1/telemetry/map_build_sustainability.schema.json": "sha256:52ccb83757bcd5251eee906d817631e3d2cf36081a7d4a52e853dc5394375dbb",
+    "tests/validators/telemetry/README.md": "sha256:a77360f8b166ddec72b3ea9c4b56405ddc5aca93837945dbd4fc21fe30949541",
+    "tests/validators/telemetry/test_map_build_sustainability.py": "sha256:ec7287add9fc8ba93c7c9603355d2e448c5e025bf040b8f65f4dfccd4ec4400a",
+    "tools/validators/telemetry/README.md": "sha256:1dccb16597d9bad9d75da2569dc34323e4afdc19162241fa0a605681db8c49bf",
+    "tools/validators/telemetry/validate_map_build_sustainability.py": "sha256:37bf6c9c303cd8f8fd4d6dd010f7942cce42bce27308bfa9a4db57335ac14573"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5 Codex",
+    "version": "2026-08-11"
+  },
+  "prompt_or_contract": "sha256:f3f1179c6a2d6baebed40bf2dbac9ef0fd9e7284b4f0c1598e34d08fc2e3d9c7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Google Drive connector",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:efc0d159761581b5ae043c607dfa28bbc58b3ca5423c9d18a659e650271d73b9",
+      "sha256:309cf67311059c549e144ae9961b2f49eddf1caab8739a51b47ae88c2f5c1c90"
+    ],
+    "attached_docs": [
+      "KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf",
+      "Master MapLibre Components-Functions-Features.pdf",
+      "Google Drive: New Ideas 6",
+      "Google Drive: KFM_Full_Atlas_seed_cards"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P18-INV-424",
+      "attachment:Master MapLibre Components-Functions-Features.pdf#SRC-P18-039",
+      "gdrive://1icv4N9lh7m9AkkWjiyXA5n2svrmuxGM9",
+      "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho",
+      "repo:docs/doctrine/directory-rules.md@e2119bcd81d2f34df5a16f729918d12b7d84478e",
+      "repo:docs/adr/ADR-0016-telemetry-redaction-posture.md@e2119bcd81d2f34df5a16f729918d12b7d84478e",
+      "repo:docs/dashboards/observability/energy-carbon-footprint.md@e2119bcd81d2f34df5a16f729918d12b7d84478e",
+      "repo:contracts/telemetry/README.md@e2119bcd81d2f34df5a16f729918d12b7d84478e"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/map-build-sustainability-telemetry.yml": "PROPOSED",
+    ".github/workflows/telemetry-policy.yml": "PROPOSED",
+    "contracts/telemetry/README.md": "PROPOSED",
+    "contracts/telemetry/map_build_sustainability.md": "PROPOSED",
+    "docs/dashboards/observability/energy-carbon-footprint.md": "PROPOSED",
+    "docs/intake/exploratory/pass-18-map-build-sustainability-source-map.md": "PROPOSED",
+    "fixtures/contracts/v1/telemetry/map_build_sustainability/README.md": "PROPOSED",
+    "fixtures/contracts/v1/telemetry/map_build_sustainability/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/telemetry/README.md": "PROPOSED",
+    "schemas/contracts/v1/telemetry/map_build_sustainability.schema.json": "PROPOSED",
+    "tests/validators/telemetry/README.md": "PROPOSED",
+    "tests/validators/telemetry/test_map_build_sustainability.py": "CONFIRMED",
+    "tools/validators/telemetry/README.md": "PROPOSED",
+    "tools/validators/telemetry/validate_map_build_sustainability.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "source-and-repository-assay",
+      "outcome": "PASS",
+      "reason": "Pass 18 card KFM-P18-INV-424, its cited MapLibre source, two Google Drive sources, accepted Directory Rules, telemetry doctrine, current dashboard proposal, and main@e2119bcd81d2f34df5a16f729918d12b7d84478e were inspected; no matching PR or branch existed at authoring start, and the intervening spatial-normalization repair did not overlap this slice."
+    },
+    {
+      "gate": "draft-2020-12-schema-meta-validation",
+      "outcome": "PASS",
+      "reason": "The closed map-build sustainability candidate schema passed Draft 2020-12 meta-validation."
+    },
+    {
+      "gate": "fixture-polarity",
+      "outcome": "PASS",
+      "reason": "Eleven synthetic cases matched exact PASS, ABSTAIN, and DENY outcomes and finding-code sets."
+    },
+    {
+      "gate": "focused-deterministic-tests",
+      "outcome": "PASS",
+      "reason": "Fifteen focused no-network tests passed for shape, arithmetic, uncertainty, abstention, input safety, non-authority, determinism, and workflow safety."
+    },
+    {
+      "gate": "telemetry-regression-tests",
+      "outcome": "PASS",
+      "reason": "All forty-one tests in tests/validators/telemetry passed, including existing OpenLineage and remote-sensing profiles."
+    },
+    {
+      "gate": "schema-and-contract-harness",
+      "outcome": "PASS",
+      "reason": "The repository schema/contract harness passed 428 tests and 29 subtests."
+    },
+    {
+      "gate": "validator-orchestrator",
+      "outcome": "PASS",
+      "reason": "The registered eight-validator orchestrator completed with ALL_SELECTED_VALIDATORS_PASSED."
+    },
+    {
+      "gate": "ci-readiness-regression",
+      "outcome": "PASS",
+      "reason": "The focused CI-readiness suite passed 42 tests."
+    },
+    {
+      "gate": "documentation-validation",
+      "outcome": "PASS",
+      "reason": "Bounded local-link validation passed 21 local targets and abstained on two Google Drive URLs; the exact docs-meta-block workflow command had zero failures and two review-only registry-add warnings."
+    },
+    {
+      "gate": "workflow-safety-static",
+      "outcome": "PASS",
+      "reason": "Both changed workflow YAML files parsed with read-only contents permission, immutable action pins, no persisted checkout credentials, no secrets, and no artifact upload."
+    },
+    {
+      "gate": "telemetry-policy-cross-profile-boundary",
+      "outcome": "PASS",
+      "reason": "The existing telemetry-policy workflow now explicitly inventories and validates TraceReceiptLink plus the inactive OpenLineage, remote-sensing lineage, and map-build sustainability profiles; its raw-payload, prompt, and restricted-coordinate boundary scripts passed locally."
+    },
+    {
+      "gate": "generated-receipt-integrity",
+      "outcome": "PASS",
+      "reason": "Fourteen non-self artifact paths and SHA-256 digests were recomputed from final local bytes."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks require the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Methodology, factor provenance, sensitivity, retention, thresholds, receipt/release integration, activation, and publication remain held for human review on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "docs/adr/ADR-0016-telemetry-redaction-posture.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:pass18-inv-424",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P18-INV-424"
+    },
+    {
+      "id": "attachment:master-maplibre",
+      "validated": true,
+      "evidence_ref": "attachment:Master MapLibre Components-Functions-Features.pdf#SRC-P18-039"
+    },
+    {
+      "id": "gdrive:new-ideas-6",
+      "validated": true,
+      "evidence_ref": "gdrive://1icv4N9lh7m9AkkWjiyXA5n2svrmuxGM9"
+    },
+    {
+      "id": "gdrive:kfm-full-atlas-seed-cards",
+      "validated": true,
+      "evidence_ref": "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho"
+    },
+    {
+      "id": "repository:directory-rules-v2",
+      "validated": true,
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md@e2119bcd81d2f34df5a16f729918d12b7d84478e"
+    },
+    {
+      "id": "repository:telemetry-redaction-posture",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0016-telemetry-redaction-posture.md@e2119bcd81d2f34df5a16f729918d12b7d84478e"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-11T16:44:30Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "links": {
+    "pr_number": 2548,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Authoring provenance for an additive, inactive, fixture-only map-build sustainability telemetry profile. It validates synthetic decimal energy/carbon estimates, explicit method/factor versions, uncertainty, bounded arithmetic tolerance, and safe abstention while creating no live measurement, provider call, mapped environmental truth, methodology choice, threshold, policy decision, review, promotion, release, deployment, dashboard feed, publication, or public-use authority."
+}

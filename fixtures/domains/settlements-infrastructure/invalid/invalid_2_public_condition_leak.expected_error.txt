@@ -1,0 +1,11 @@
+TARGET (not yet enforced by the current PROPOSED schema stub):
+DENY
+reason_code: CONDITION_DETAIL_NOT_PUBLIC_TIER
+field: condition_observation
+detail: Condition/vulnerability detail on an InfrastructureAsset defaults to
+tier T4 per docs/domains/settlements-infrastructure/sublanes/infrastructure.md
+§7.1/§7.2. It may never be exposed at sensitivity_tier T0/T1 without an
+aggregation or status-only transform; this fixture carries no such transform.
+
+CURRENT: this fixture passes today's permissive schema stub (only "id" is
+required). It is kept to document the target policy-helper gap.

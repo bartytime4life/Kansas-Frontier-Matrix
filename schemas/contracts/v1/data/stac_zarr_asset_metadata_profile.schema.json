@@ -1,0 +1,173 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/data/stac_zarr_asset_metadata_profile.schema.json",
+  "title": "StacZarrAssetMetadataProfileCandidate",
+  "description": "Fixture-only STAC projection of declared Zarr array metadata. It does not access a store, resolve an asset, verify bytes, mutate a catalog, evaluate policy, promote, release, or publish.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "profile_id",
+    "spec_hash",
+    "status",
+    "stac",
+    "zarr",
+    "provenance",
+    "controls",
+    "non_effects"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "profile_id": {"type": "string", "pattern": "^kfm:stac-zarr-asset-metadata:[a-f0-9]{24}$"},
+    "spec_hash": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "status": {"const": "PROPOSED_INACTIVE"},
+    "stac": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["stac_version", "collection_id", "item_id", "asset_key", "asset_ref", "media_type", "roles"],
+      "properties": {
+        "stac_version": {"enum": ["1.0.0", "1.1.0"]},
+        "collection_id": {"$ref": "#/$defs/identifier"},
+        "item_id": {"$ref": "#/$defs/identifier"},
+        "asset_key": {"$ref": "#/$defs/identifier"},
+        "asset_ref": {"type": "string", "pattern": "^fixture://stac/[a-z0-9][a-z0-9/._-]{0,255}$"},
+        "media_type": {"$ref": "#/$defs/nonempty"},
+        "roles": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^[a-z][a-z0-9_-]{0,63}$"}
+        }
+      }
+    },
+    "zarr": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "store_version",
+        "shape",
+        "chunk_shape",
+        "dimension_names",
+        "dtype",
+        "order",
+        "codecs",
+        "fill_value",
+        "nodata_semantics"
+      ],
+      "properties": {
+        "store_version": {"type": "string", "pattern": "^(2|3)(\\.[0-9]+){0,2}$"},
+        "shape": {"$ref": "#/$defs/dimensions"},
+        "chunk_shape": {"$ref": "#/$defs/dimensions"},
+        "dimension_names": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_-]{0,63}$"}
+        },
+        "dtype": {"type": "string", "pattern": "^[A-Za-z0-9_<>=|.-]{1,64}$"},
+        "order": {"enum": ["C", "F", "NOT_APPLICABLE"]},
+        "codecs": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["name", "configuration_ref"],
+            "properties": {
+              "name": {"type": "string", "pattern": "^[a-z][a-z0-9._-]{0,63}$"},
+              "configuration_ref": {"oneOf": [{"type": "string", "pattern": "^fixture://codec/[a-z0-9][a-z0-9/._-]{0,255}$"}, {"type": "null"}]}
+            }
+          }
+        },
+        "fill_value": {"type": ["string", "number", "boolean", "null"]},
+        "nodata_semantics": {"enum": ["FILL_VALUE", "MASK_ASSET", "NAN", "NONE", "UNRESOLVED"]}
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_descriptor_ref",
+        "metadata_evidence_refs",
+        "derivation_method_ref",
+        "declared_at",
+        "metadata_claim_status"
+      ],
+      "properties": {
+        "source_descriptor_ref": {"type": "string", "pattern": "^source://[^\\s]{1,1000}$"},
+        "metadata_evidence_refs": {"$ref": "#/$defs/ref_array_nonempty"},
+        "derivation_method_ref": {"type": "string", "pattern": "^method://[^\\s]{1,1000}$"},
+        "declared_at": {"$ref": "#/$defs/aware_datetime"},
+        "metadata_claim_status": {"const": "DECLARED_NOT_VERIFIED"}
+      }
+    },
+    "controls": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "fixture_only",
+        "store_accessed",
+        "asset_resolved",
+        "bytes_verified",
+        "catalog_mutated",
+        "policy_evaluated",
+        "review_approved",
+        "promotion_eligible",
+        "release_authorized",
+        "publication_authorized"
+      ],
+      "properties": {
+        "fixture_only": {"const": true},
+        "store_accessed": {"const": false},
+        "asset_resolved": {"const": false},
+        "bytes_verified": {"const": false},
+        "catalog_mutated": {"const": false},
+        "policy_evaluated": {"const": false},
+        "review_approved": {"const": false},
+        "promotion_eligible": {"const": false},
+        "release_authorized": {"const": false},
+        "publication_authorized": {"const": false}
+      }
+    },
+    "non_effects": {
+      "const": [
+        "NO_ASSET_RESOLUTION",
+        "NO_BYTE_VERIFICATION",
+        "NO_CATALOG_MUTATION",
+        "NO_POLICY_DECISION",
+        "NO_PROMOTION",
+        "NO_PUBLICATION",
+        "NO_RELEASE",
+        "NO_STORE_ACCESS"
+      ]
+    }
+  },
+  "$defs": {
+    "nonempty": {"type": "string", "minLength": 1, "maxLength": 1024, "pattern": "\\S"},
+    "identifier": {"type": "string", "minLength": 1, "maxLength": 160, "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,159}$"},
+    "aware_datetime": {"type": "string", "format": "date-time", "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$"},
+    "dimensions": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 16,
+      "items": {"type": "integer", "minimum": 1, "maximum": 9007199254740991}
+    },
+    "ref_array_nonempty": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": {"type": "string", "pattern": "^evidence://[^\\s]{1,1000}$"}
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED_INACTIVE",
+    "source_card": "KFM-P30-PROG-0005",
+    "contract_doc": "contracts/data/stac_zarr_asset_metadata_profile.md",
+    "fixture_root": "fixtures/contracts/v1/data/stac_zarr_asset_metadata_profile/",
+    "authority": "declared fixture metadata projection only"
+  }
+}

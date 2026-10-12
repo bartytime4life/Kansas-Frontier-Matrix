@@ -1,0 +1,99 @@
+{
+  "receipt_id": "kfm-intake-source-rights-isolation-20261010",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tools/local_data/intake.py",
+    "tests/local_data/test_intake.py",
+    "docs/runbooks/raw-data-intake.md"
+  ],
+  "artifact_hashes": {
+    "tools/local_data/intake.py": "sha256:60f86db6a7d6f62b8b26d0d7f36cf5d6221e0e8de2d1f11dd8dfd4fff1b10eab",
+    "tests/local_data/test_intake.py": "sha256:0c3afeb02a2e79f0d3668ceb68545da633e19908279ed3346f175b016768f3af",
+    "docs/runbooks/raw-data-intake.md": "sha256:eece8837ebbc1b1609c2ed67f88b980882b29cefde0b9501ff93ae57a3ebaba4"
+  },
+  "model_identity": {
+    "provider": "openai",
+    "model": "gpt-6",
+    "version": "runtime-build-not-exposed"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:87baf60fd0188528f5c53239f195d42792fb20bd3b91733a5b22dd76cbfbb8ab",
+      "sha256:425e998e5584a7e400e99c963aba019b33ff685f9fa26b5b474d8758a3160b2a"
+    ],
+    "evidence_refs": [
+      "main@74ee54a4356dc6534a3812db03af005d17b4356f",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4984#discussion_r4233820302"
+    ]
+  },
+  "truth_labels": {
+    "tools/local_data/intake.py": "CONFIRMED",
+    "tests/local_data/test_intake.py": "CONFIRMED",
+    "docs/runbooks/raw-data-intake.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "regression-before-fix",
+      "outcome": "PASS",
+      "reason": "The initial six new regression cases reproduced cross-source binding, cached-hint and stale-index failures before implementation."
+    },
+    {
+      "gate": "local-data-offline-suite",
+      "outcome": "PASS",
+      "reason": "320 passed, 3 optional NWM binary-reader tests skipped, 160 subtests passed. Ran the make local-data-check pytest arguments with the declared rfc3339-validator==0.1.4 supplied from a temporary dependency directory."
+    },
+    {
+      "gate": "git-diff-check",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "doc-review",
+      "outcome": "PASS",
+      "reason": "Reviewed changed table, headings and migration instructions against implementation; no links removed or added."
+    },
+    {
+      "gate": "hosted-ci",
+      "outcome": "SKIPPED",
+      "reason": "Not yet dispatched at receipt creation; inspect the exact PR head checks separately."
+    },
+    {
+      "gate": "real-holdings-and-export-impact",
+      "outcome": "SKIPPED",
+      "reason": "Only synthetic stores exercised. Existing user holdings, exports and running services were not audited or changed."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "source-binding-implementation",
+      "validated": true,
+      "evidence_ref": "tools/local_data/intake.py"
+    },
+    {
+      "id": "source-binding-regressions",
+      "validated": true,
+      "evidence_ref": "tests/local_data/test_intake.py"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-10-10T01:27:04Z",
+  "emitter": "codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Synthetic validation of a source-scoping defect and fail-closed legacy-index refresh. No evidence asserted of impact on user files or outputs. The first full-suite attempt lacked the repository-declared RFC3339 dependency; the corrected temporary test environment passed. Human review remains pending. No source admission, release, deployment, or publication authority is claimed. Generation sampling parameters and exact runtime build are not exposed."
+}

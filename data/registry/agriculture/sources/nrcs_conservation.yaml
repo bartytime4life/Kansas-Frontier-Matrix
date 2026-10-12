@@ -1,0 +1,16 @@
+# source descriptor: nrcs_conservation
+# domain: agriculture
+# status: PROPOSED — greenfield template
+id: nrcs_conservation
+domain: agriculture
+role: TBD            # primary | corroborating | context | restricted
+authority: TBD
+rights:
+  license: TBD
+  attribution_required: true
+  redistribution: TBD
+sensitivity_floor: TBD
+update_cadence: TBD
+access_posture: TBD   # public | api_key | steward_only
+citation_template: "TBD"
+ingest_receipt_template: "data/receipts/ingest/agriculture/nrcs_conservation/<run_id>.json"

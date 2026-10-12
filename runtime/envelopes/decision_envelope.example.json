@@ -1,0 +1,8 @@
+{
+  "decision_id": "runtime:example:evidence-unresolved",
+  "outcome": "ABSTAIN",
+  "policy_family": "capability",
+  "reasons": ["evidence_unresolved"],
+  "obligations": [],
+  "evaluated_at": "2026-05-09T00:00:00Z"
+}

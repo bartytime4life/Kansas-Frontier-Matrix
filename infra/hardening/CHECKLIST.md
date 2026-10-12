@@ -1,0 +1,409 @@
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/infra-hardening-checklist
+title: infra/hardening/CHECKLIST.md — Infrastructure Hardening Evidence Checklist
+type: checklist
+version: v2.1
+status: repository-grounded review template; non-enforcement; non-approval
+owners:
+  - "NEEDS VERIFICATION — CODEOWNERS routes /infra/ to @bartytime4life; operational stewardship and approval authority are not established here"
+created: 2026-07-03
+updated: 2026-08-29
+policy_label: public
+related:
+  - infra/hardening/README.md
+  - infra/README.md
+  - infra/firewall/README.md
+  - infra/reverse_proxy/README.md
+  - infra/vpn/README.md
+  - infra/systemd/README.md
+  - infra/docker/README.md
+  - infra/compose/README.md
+  - infra/kubernetes/README.md
+  - infra/terraform/README.md
+  - docs/security/EXPOSURE_PLAN.md
+  - docs/security/INCIDENT_RESPONSE.md
+  - docs/security/KEY_ROTATION.md
+  - docs/doctrine/directory-rules.md
+  - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+  - .github/CODEOWNERS
+tags:
+  - kfm
+  - infra
+  - hardening
+  - evidence
+  - checklist
+  - exposure
+  - deny-by-default
+notes:
+  - "Complete a copy for a specific change and evidence scope; do not mark this source template as a project-wide pass."
+  - "A completed checklist records bounded review evidence. It does not approve merge, release, deployment, promotion, publication, or source activation."
+[/KFM_META_BLOCK_V2] -->
+
+<a id="top"></a>
+
+# Infrastructure Hardening Evidence Checklist
+
+Use this template to review an infrastructure change that may affect exposure,
+host posture, service isolation, secrets, auditability, recovery, or public
+delivery. Complete it against one identified change and one defined evidence
+scope.
+
+> [!IMPORTANT]
+> The source template's default outcome is **HOLD / NOT ASSESSED**. An unchecked
+> box, placeholder, inaccessible environment, or undocumented observation is not
+> a pass. Completing this checklist does not prove that a control is deployed or
+> effective and does not authorize merge, release, deployment, promotion, or
+> publication.
+
+The companion [hardening evidence boundary](README.md) defines the repository
+facts and limitations inherited by this worksheet.
+
+## 1. Choose the evidence scope
+
+Select exactly one evidence scope. Leave the other two choices unchecked:
+
+- [ ] **Repository-only** — versioned paths, diffs, tests, workflow definitions,
+      and hosted results were inspected.
+- [ ] **Environment observation** — an identified environment was inspected at
+      a recorded time using an authorized, redacted procedure.
+- [ ] **Mixed** — repository evidence and environment observations were both
+      inspected and kept distinguishable below.
+
+A completed worksheet must contain exactly one checked scope. `Mixed` is the
+single choice for a review that used both evidence kinds; do not also check the
+two component choices.
+
+A repository-only review may confirm configuration or static-test facts. It
+cannot confirm deployed routes, effective firewall rules, runtime identities,
+secret custody, monitoring, backup health, or operational rollback.
+
+## 2. Evidence-state vocabulary
+
+Use one state for every applicable item:
+
+| State | Meaning |
+|---|---|
+| `CONFIRMED` | The cited path, result, or redacted observation directly supports the bounded claim. |
+| `N/A` | The item is outside this change; a specific reason is recorded. |
+| `UNKNOWN` | Available evidence cannot determine the state. |
+| `NEEDS VERIFICATION` | A named check against a revision, artifact, or environment remains to be run. |
+| `HOLD` | Do not make the affected enforcement, exposure-safety, deployment-readiness, or rollback-readiness claim. |
+| `NOT_RUN` | A required command or observation was not executed. |
+| `UNAVAILABLE` | A required tool or environment could not be accessed. |
+
+Mark a checkbox only after recording its state and evidence reference. Every
+checkbox in sections 4–10 has a stable assertion ID and exactly one required row
+in the adjacent assertion register. Do not aggregate several assertion IDs into a
+single state. A green workflow supports only the assertions that workflow actually
+checks.
+
+## 3. Review record
+
+| Field | Required value |
+|---|---|
+| PR or change | `<URL or immutable ID>` |
+| Base and head | `<full commit SHAs>` |
+| Reviewer | `<verified identity; do not use an unverified role placeholder>` |
+| Review time | `<ISO 8601 timestamp with offset>` |
+| Evidence scope | `repository-only / environment observation / mixed` |
+| Environment | `<repository-only, or redacted stable environment ID>` |
+| Affected paths | `<exact path list or diff link>` |
+| Affected infrastructure lanes | `<exact lane list>` |
+| Public exposure changed | `yes / no / UNKNOWN` |
+| Model-runtime exposure changed | `yes / no / UNKNOWN` |
+| RAW, WORK, QUARANTINE, or internal access changed | `yes / no / UNKNOWN` |
+| Admin or steward access changed | `yes / no / UNKNOWN` |
+| Release or deployment behavior changed | `yes / no / UNKNOWN` |
+| Correction path | `<link or NEEDS VERIFICATION>` |
+| Operational rollback path | `<link / N/A with reason / HOLD>` |
+
+Do not place credentials, private keys, tokens, internal IPs, private hostnames,
+restricted routes, exploit payloads, sensitive logs, or exact sensitive
+locations in this worksheet. Link only to an approved redacted reference.
+
+## 4. Placement and change boundary
+
+- [ ] **PLACE-01** — Every changed artifact has one responsibility owner and is placed under
+      the correct root.
+- [ ] **PLACE-02** — Infrastructure implementation remains under `infra/`; machine policy,
+      schemas, contracts, release decisions, proofs, receipts, and lifecycle
+      data remain in their owning roots.
+- [ ] **PLACE-03** — A review checklist or README is not presented as deployed configuration,
+      policy enforcement, approval, or operational evidence.
+- [ ] **PLACE-04** — The review names all changed ports, listeners, routes, build contexts,
+      mounts, identities, service definitions, and public assets.
+- [ ] **PLACE-05** — CODEOWNERS is treated only as review routing, not proof of review,
+      operational ownership, or approval authority.
+
+**Assertion state and evidence (required)**
+
+Complete exactly one row for every assertion ID above. A row may use `N/A`
+only with a specific scope reason; blank or aggregate rows cannot support an
+`EVIDENCE_COMPLETE` outcome.
+
+| Assertion ID | Assertion | State | Evidence reference or `N/A` reason |
+|---|---|---|---|
+| `PLACE-01` | Every changed artifact has one responsibility owner and is placed under the correct root. | `<state>` | `<immutable path, test, redacted observation, or N/A reason>` |
+| `PLACE-02` | Infrastructure implementation remains under `infra/`; machine policy, schemas, contracts, release decisions, proofs, receipts, and lifecycle data remain in their owning roots. | `<state>` | `<immutable path, test, redacted observation, or N/A reason>` |
+| `PLACE-03` | A review checklist or README is not presented as deployed configuration, policy enforcement, approval, or operational evidence. | `<state>` | `<immutable path, test, redacted observation, or N/A reason>` |
+| `PLACE-04` | The review names all changed ports, listeners, routes, build contexts, mounts, identities, service definitions, and public assets. | `<state>` | `<immutable path, test, redacted observation, or N/A reason>` |
+| `PLACE-05` | CODEOWNERS is treated only as review routing, not proof of review, operational ownership, or approval authority. | `<state>` | `<immutable path, test, redacted observation, or N/A reason>` |
+
+## 5. Secrets and sensitive material
+
+- [ ] **SECRET-01** — No real secret, credential, private key, production certificate, token,
+      private environment file, or secret-bearing backup was committed.
+- [ ] **SECRET-02** — Examples are unmistakably fake; configuration refers only to environment
+      variables or verified secret-store references.
+- [ ] **SECRET-03** — Logs and traces avoid secrets, raw payloads, restricted geometry,
+      living-person data, private source material, and sensitive prompts.
+- [ ] **SECRET-04** — Any suspected exposure is routed to containment and separately verified
+      rotation; deleting Git history or reverting a commit is not sufficient.
+- [ ] **SECRET-05** — Rights, privacy, sovereignty, consent, provenance, and harmful-precision
+      controls remain fail closed where the change touches governed material.
+
+**Assertion state and evidence (required)**
+
+Complete exactly one row for every assertion ID above. A row may use `N/A`
+only with a specific scope reason; blank or aggregate rows cannot support an
+`EVIDENCE_COMPLETE` outcome.
+
+| Assertion ID | Assertion | State | Evidence reference or `N/A` reason |
+|---|---|---|---|
+| `SECRET-01` | No real secret, credential, private key, production certificate, token, private environment file, or secret-bearing backup was committed. | `<state>` | `<immutable path, test, redacted observation, or N/A reason>` |
+| `SECRET-02` | Examples are unmistakably fake; configuration refers only to environment variables or verified secret-store references. | `<state>` | `<immutable path, test, redacted observation, or N/A reason>` |
+| `SECRET-03` | Logs and traces avoid secrets, raw payloads, restricted geometry, living-person data, private source material, and sensitive prompts. | `<state>` | `<immutable path, test, redacted observation, or N/A reason>` |
+| `SECRET-04` | Any suspected exposure is routed to containment and separately verified rotation; deleting Git history or reverting a commit is not sufficient. | `<state>` | `<immutable path, test, redacted observation, or N/A reason>` |
+| `SECRET-05` | Rights, privacy, sovereignty, consent, provenance, and harmful-precision controls remain fail closed where the change touches governed material. | `<state>` | `<immutable path, test, redacted observation, or N/A reason>` |
+
+## 6. Ingress, egress, and public edge
+
+- [ ] **EDGE-01** — Every new or changed listener, port, hostname, route, proxy rule, VPN
+      route, firewall rule, and container publication is inventoried.
+- [ ] **EDGE-02** — Public routes terminate at a governed interface or released public-safe
+      artifact boundary.
+- [ ] **EDGE-03** — No public route reaches RAW, WORK, QUARANTINE, internal stores, source
+      credentials, direct model runtimes, or steward-only surfaces.
+- [ ] **EDGE-04** — Local-only bindings remain loopback or otherwise explicitly private.
+- [ ] **EDGE-05** — Ingress and egress defaults, exceptions, TLS, headers, and CORS are
+      supported by versioned implementation and observation evidence.
+- [ ] **EDGE-06** — Negative route tests cover every changed trust-boundary path.
+
+**Assertion state and evidence (required)**
+
+Complete exactly one row for every assertion ID above. A row may use `N/A`
+only with a specific scope reason; blank or aggregate rows cannot support an
+`EVIDENCE_COMPLETE` outcome.
+
+| Assertion ID | Assertion | State | Evidence reference or `N/A` reason |
+|---|---|---|---|
+| `EDGE-01` | Every new or changed listener, port, hostname, route, proxy rule, VPN route, firewall rule, and container publication is inventoried. | `<state>` | `<immutable path, test, redacted observation, or N/A reason>` |
+| `EDGE-02` | Public routes terminate at a governed interface or released public-safe artifact boundary. | `<state>` | `<immutable path, test, redacted observation, or N/A reason>` |
+| `EDGE-03` | No public route reaches RAW, WORK, QUARANTINE, internal stores, source credentials, direct model runtimes, or steward-only surfaces. | `<state>` | `<immutable path, test, redacted observation, or N/A reason>` |
+| `EDGE-04` | Local-only bindings remain loopback or otherwise explicitly private. | `<state>` | `<immutable path, test, redacted observation, or N/A reason>` |
+| `EDGE-05` | Ingress and egress defaults, exceptions, TLS, headers, and CORS are supported by versioned implementation and observation evidence. | `<state>` | `<immutable path, test, redacted observation, or N/A reason>` |
+| `EDGE-06` | Negative route tests cover every changed trust-boundary path. | `<state>` | `<immutable path, test, redacted observation, or N/A reason>` |
+
+## 7. Service and workload isolation
+
+- [ ] **ISOLATION-01** — Runtime identities and service accounts use the least privilege supported
+      by the identified environment.
+- [ ] **ISOLATION-02** — Filesystem reads, writes, mounts, volumes, capabilities, and devices are
+      limited to the named workload need.
+- [ ] **ISOLATION-03** — Debug behavior and unnecessary interfaces are disabled for public or
+      semi-public workloads.
+- [ ] **ISOLATION-04** — Startup, dependency, restart, health-check, and failure behavior are
+      documented and observed where operational readiness is claimed.
+- [ ] **ISOLATION-05** — Image or artifact identity, dependency locks, scan evidence, provenance,
+      and registry custody are recorded where containers are in scope.
+- [ ] **ISOLATION-06** — Kubernetes, systemd, Compose, Docker, or Terraform evidence is not
+      generalized beyond the exact implementation lane reviewed.
+
+**Assertion state and evidence (required)**
+
+Complete exactly one row for every assertion ID above. A row may use `N/A`
+only with a specific scope reason; blank or aggregate rows cannot support an
+`EVIDENCE_COMPLETE` outcome.
+
+| Assertion ID | Assertion | State | Evidence reference or `N/A` reason |
+|---|---|---|---|
+| `ISOLATION-01` | Runtime identities and service accounts use the least privilege supported by the identified environment. | `<state>` | `<immutable path, test, redacted observation, or N/A reason>` |
+| `ISOLATION-02` | Filesystem reads, writes, mounts, volumes, capabilities, and devices are limited to the named workload need. | `<state>` | `<immutable path, test, redacted observation, or N/A reason>` |
+| `ISOLATION-03` | Debug behavior and unnecessary interfaces are disabled for public or semi-public workloads. | `<state>` | `<immutable path, test, redacted observation, or N/A reason>` |
+| `ISOLATION-04` | Startup, dependency, restart, health-check, and failure behavior are documented and observed where operational readiness is claimed. | `<state>` | `<immutable path, test, redacted observation, or N/A reason>` |
+| `ISOLATION-05` | Image or artifact identity, dependency locks, scan evidence, provenance, and registry custody are recorded where containers are in scope. | `<state>` | `<immutable path, test, redacted observation, or N/A reason>` |
+| `ISOLATION-06` | Kubernetes, systemd, Compose, Docker, or Terraform evidence is not generalized beyond the exact implementation lane reviewed. | `<state>` | `<immutable path, test, redacted observation, or N/A reason>` |
+
+## 8. Governed data and public artifacts
+
+- [ ] **DATA-01** — Public clients use governed interfaces or released public-safe artifacts,
+      not canonical stores or pre-publication lifecycle paths.
+- [ ] **DATA-02** — Public-serving processes do not directly mount or read RAW, WORK,
+      QUARANTINE, or unpublished candidate material.
+- [ ] **DATA-03** — Tiles, exports, static assets, and downloadable artifacts are bound to a
+      release identity and correction or rollback target where applicable.
+- [ ] **DATA-04** — Range and CORS behavior is verified for public object or tile delivery.
+- [ ] **DATA-05** — Sensitive geometry and rights-uncertain material is denied, withheld,
+      generalized, or redacted before any public release.
+
+**Assertion state and evidence (required)**
+
+Complete exactly one row for every assertion ID above. A row may use `N/A`
+only with a specific scope reason; blank or aggregate rows cannot support an
+`EVIDENCE_COMPLETE` outcome.
+
+| Assertion ID | Assertion | State | Evidence reference or `N/A` reason |
+|---|---|---|---|
+| `DATA-01` | Public clients use governed interfaces or released public-safe artifacts, not canonical stores or pre-publication lifecycle paths. | `<state>` | `<immutable path, test, redacted observation, or N/A reason>` |
+| `DATA-02` | Public-serving processes do not directly mount or read RAW, WORK, QUARANTINE, or unpublished candidate material. | `<state>` | `<immutable path, test, redacted observation, or N/A reason>` |
+| `DATA-03` | Tiles, exports, static assets, and downloadable artifacts are bound to a release identity and correction or rollback target where applicable. | `<state>` | `<immutable path, test, redacted observation, or N/A reason>` |
+| `DATA-04` | Range and CORS behavior is verified for public object or tile delivery. | `<state>` | `<immutable path, test, redacted observation, or N/A reason>` |
+| `DATA-05` | Sensitive geometry and rights-uncertain material is denied, withheld, generalized, or redacted before any public release. | `<state>` | `<immutable path, test, redacted observation, or N/A reason>` |
+
+## 9. Authentication, administration, and audit
+
+- [ ] **AUTH-01** — Admin and review surfaces are outside the normal public path.
+- [ ] **AUTH-02** — Steward-only paths require verified authentication and authorization.
+- [ ] **AUTH-03** — Emergency access is constrained, reviewable, and separately recorded.
+- [ ] **AUTH-04** — Security-relevant events are logged without exposing restricted content.
+- [ ] **AUTH-05** — Log sinks, access controls, retention, redaction, alerts, and response
+      routing are identified and observed where monitoring is claimed.
+- [ ] **AUTH-06** — Audit evidence can reconstruct the reviewed change and material access
+      events without treating a dashboard as sovereign truth.
+
+**Assertion state and evidence (required)**
+
+Complete exactly one row for every assertion ID above. A row may use `N/A`
+only with a specific scope reason; blank or aggregate rows cannot support an
+`EVIDENCE_COMPLETE` outcome.
+
+| Assertion ID | Assertion | State | Evidence reference or `N/A` reason |
+|---|---|---|---|
+| `AUTH-01` | Admin and review surfaces are outside the normal public path. | `<state>` | `<immutable path, test, redacted observation, or N/A reason>` |
+| `AUTH-02` | Steward-only paths require verified authentication and authorization. | `<state>` | `<immutable path, test, redacted observation, or N/A reason>` |
+| `AUTH-03` | Emergency access is constrained, reviewable, and separately recorded. | `<state>` | `<immutable path, test, redacted observation, or N/A reason>` |
+| `AUTH-04` | Security-relevant events are logged without exposing restricted content. | `<state>` | `<immutable path, test, redacted observation, or N/A reason>` |
+| `AUTH-05` | Log sinks, access controls, retention, redaction, alerts, and response routing are identified and observed where monitoring is claimed. | `<state>` | `<immutable path, test, redacted observation, or N/A reason>` |
+| `AUTH-06` | Audit evidence can reconstruct the reviewed change and material access events without treating a dashboard as sovereign truth. | `<state>` | `<immutable path, test, redacted observation, or N/A reason>` |
+
+## 10. Backup, incident response, correction, and rollback
+
+- [ ] **RECOVERY-01** — Protected assets and state are inventoried.
+- [ ] **RECOVERY-02** — Backup location, custody, retention, integrity, and access controls are
+      verified where backup readiness is claimed.
+- [ ] **RECOVERY-03** — Restore has been rehearsed against an identified environment and result.
+- [ ] **RECOVERY-04** — Detection, containment, isolation, escalation, and restoration paths are
+      reachable and do not require publishing sensitive topology.
+- [ ] **RECOVERY-05** — Repository correction, release rollback, and operational rollback are
+      recorded as distinct actions.
+- [ ] **RECOVERY-06** — Any exception has a verified authority, bounded scope, expiration or
+      review trigger, and containment path.
+
+**Assertion state and evidence (required)**
+
+Complete exactly one row for every assertion ID above. A row may use `N/A`
+only with a specific scope reason; blank or aggregate rows cannot support an
+`EVIDENCE_COMPLETE` outcome.
+
+| Assertion ID | Assertion | State | Evidence reference or `N/A` reason |
+|---|---|---|---|
+| `RECOVERY-01` | Protected assets and state are inventoried. | `<state>` | `<immutable path, test, redacted observation, or N/A reason>` |
+| `RECOVERY-02` | Backup location, custody, retention, integrity, and access controls are verified where backup readiness is claimed. | `<state>` | `<immutable path, test, redacted observation, or N/A reason>` |
+| `RECOVERY-03` | Restore has been rehearsed against an identified environment and result. | `<state>` | `<immutable path, test, redacted observation, or N/A reason>` |
+| `RECOVERY-04` | Detection, containment, isolation, escalation, and restoration paths are reachable and do not require publishing sensitive topology. | `<state>` | `<immutable path, test, redacted observation, or N/A reason>` |
+| `RECOVERY-05` | Repository correction, release rollback, and operational rollback are recorded as distinct actions. | `<state>` | `<immutable path, test, redacted observation, or N/A reason>` |
+| `RECOVERY-06` | Any exception has a verified authority, bounded scope, expiration or review trigger, and containment path. | `<state>` | `<immutable path, test, redacted observation, or N/A reason>` |
+
+## 11. Bounded repository checks
+
+Run only checks relevant to the changed paths and record the exact revision and
+result. These commands inspect repository configuration; they do not inspect a
+deployed environment.
+
+```bash
+git ls-tree -r --name-only HEAD -- infra/hardening
+git grep -n -E \
+  'infra-compose-smoke|test_compose_static|test_docker_security_overrides' \
+  HEAD -- .github tests Makefile infra
+python -m unittest discover \
+  --start-directory tests/infra \
+  --pattern 'test_compose_static.py' \
+  --verbose
+python -m unittest discover \
+  --start-directory tests/infra \
+  --pattern 'test_docker_security_overrides.py' \
+  --verbose
+docker compose -f infra/compose/docker-compose.yml config --quiet
+```
+
+| Check | Revision | Result | Bounded interpretation |
+|---|---|---|---|
+| Hardening-lane inventory | `<SHA>` | `<result>` | Confirms tracked paths only. |
+| Compose static tests | `<SHA>` | `<result / NOT_RUN>` | Confirms only enumerated source-level assertions. |
+| Docker overlay tests | `<SHA>` | `<result / NOT_RUN>` | Confirms only declared lock and Dockerfile assertions. |
+| Compose render | `<SHA>` | `<result / NOT_RUN / UNAVAILABLE>` | Confirms the file renders; does not start services. |
+| Hosted image build or scan | `<run URL and SHA>` | `<result / NOT_RUN>` | Point-in-time evidence for the built bytes and configured scanner policy. |
+
+Do not substitute generic firewall, proxy, VPN, `systemctl`, `kubectl`, or
+`terraform` commands. Operational commands require an adopted technology,
+versioned implementation, identified environment, authorization, validation,
+and a tested recovery path.
+
+## 12. Findings and disposition
+
+### Blocking findings
+
+| ID | Finding | State | Evidence | Required resolution |
+|---|---|---|---|---|
+| `<ID>` | `<description>` | `<UNKNOWN / NEEDS VERIFICATION / HOLD>` | `<reference>` | `<action>` |
+
+### Non-blocking follow-up
+
+| ID | Follow-up | Evidence | Tracking reference |
+|---|---|---|---|
+| `<ID>` | `<description>` | `<reference>` | `<issue, backlog, or drift record>` |
+
+### Review outcome
+
+Before recording an outcome, verify that exactly one evidence scope is selected
+and that all 39 assertion IDs in sections 4–10 have a state and an evidence
+reference or specific `N/A` reason. Any missing, ambiguous, or aggregated row
+requires `HOLD`.
+
+| Outcome | Meaning |
+|---|---|
+| `EVIDENCE_COMPLETE` | Exactly one evidence scope is selected; every applicable assertion ID has its own bounded evidence row; and no checklist blocker remains. |
+| `EVIDENCE_COMPLETE_WITH_FOLLOW_UP` | The same per-assertion evidence closure is complete; explicitly non-blocking follow-up remains tracked. |
+| `HOLD` | Required evidence is missing, stale, inaccessible, conflicting, or unsafe to disclose. |
+| `ESCALATE` | A separate security, infrastructure, release, governance, or ADR decision is required. |
+
+**Outcome:** `<HOLD / EVIDENCE_COMPLETE / EVIDENCE_COMPLETE_WITH_FOLLOW_UP / ESCALATE>`
+
+**Outcome scope:** `<repository-only / identified environment / mixed>`
+
+**Outcome rationale and evidence:** `<references>`
+
+**Recorded by:** `<verified identity and timestamp>`
+
+The outcome describes completion of this bounded evidence review only. It is not
+a merge approval, security certification, release decision, deployment record,
+promotion receipt, publication decision, or proof that a control is effective
+outside the observed scope.
+
+## Current repository holds
+
+At the repository checkpoint documented by the companion README:
+
+- operational stewardship and accountable approval authority remain
+  `NEEDS VERIFICATION`;
+- deployed environments and their authoritative inventories are `UNKNOWN`;
+- no aggregate hardening validator exists;
+- firewall, reverse-proxy, VPN, systemd, Kubernetes, and Terraform lanes
+  document holds rather than deployed enforcement; and
+- Docker and Compose evidence is bounded to static checks and review-image
+  build or scan behavior.
+
+Re-check those facts at the review head. Do not copy them forward as permanent
+state.
+
+[Back to top](#top)

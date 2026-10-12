@@ -1,0 +1,4 @@
+record_id,latitude,longitude,fixture_area,label
+fixture-c,39.125,-97.875,SYNTHETIC-003,fixture point c
+fixture-a,38.5000004,-98.5000004,SYNTHETIC-001,fixture point a
+fixture-b,37.75,-99.25,SYNTHETIC-002,fixture point b

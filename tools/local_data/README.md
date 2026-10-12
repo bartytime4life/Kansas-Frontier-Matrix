@@ -1,0 +1,295 @@
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/tools-local-data-readme
+title: Local PC data tools
+type: readme
+version: v1.3
+status: repository-integrated baseline; draft consolidation extension; quarantine-only
+owners: ["@bartytime4life"]
+created: 2026-09-17
+updated: 2026-10-11
+policy_label: public
+owning_root: tools/
+responsibility: Describe bounded workstation inspection and offline quarantine capture tools.
+truth_posture: CONFIRMED b194938f9e8a baseline and targeted local tests; PROPOSED unmerged extensions; host acceptance NEEDS VERIFICATION.
+[/KFM_META_BLOCK_V2] -->
+
+> **Raw-data intake addition — 2026-10-09:** `intake.py` profiles RAW and
+> QUARANTINE files by content (`intake_profile.py`, `intake_crs.py`), routes each
+> to the local store, intake database, WORK review lane, a Git metadata card or a
+> GitHub release candidate (`intake_route.py`), and applies a placement only on
+> request. `intake_service.py` serves the Intake Desk on `127.0.0.1:8771`, and
+> `catalogs/github-storage-budget.json` keeps 20 GB of the owner's 100 GB GitHub-hosted budget for code and
+> interface work. See [the intake runbook](../../docs/runbooks/raw-data-intake.md).
+
+The GitHub-hosted budget includes Site files in repository history, release
+assets, and recorded Actions artifacts/caches. It does not cap local PC storage
+and is not a provider quota. Keep actual GitHub file/push/LFS limits separate.
+For workstation inventory and explicit, verified copy plans, see
+[Projects consolidation](../../docs/runbooks/kfm-projects-consolidation.md).
+
+> **Water pilot addition — 2026-09-30:** `water_pilot.py` captures/replays bounded
+> USGS v1 data into quarantine and WORK; `water_job.py` prepares hourly candidates.
+> Both preserve review/release holds. `doctor.py --water-runtime` inspects dependencies
+> and configuration. See [the runbook](../../docs/runbooks/water-pilot.md).
+
+> **Kansas source candidate addition — 2026-09-30:** `candidate_capture.py`
+> owns private, immutable output for bounded BLM, GNIS, and Crop-CASMA connectors.
+> It accepts temporary candidate directories or the configured external
+> `KFM_DATA_ROOT/data/raw` lane, and rejects published/store-crossing paths,
+> checkout paths, symlink ancestors, duplicate names, traversal, and oversized
+> objects. Captures remain unreleased; this
+> helper does not implement source admission or package activation.
+
+<!-- kfm-showcase:start -->
+<p align="center">
+  <a href="../../README.md#see-it-in-action"><picture><source media="(prefers-color-scheme: dark)" srcset="../../docs/brand/readme/kfm-banner-local-data-tools-dark.svg" /><img src="../../docs/brand/readme/kfm-banner-local-data-tools.svg" alt="Tools banner: capture exact bytes, prove them later." width="100%" /></picture></a>
+</p>
+<!-- kfm-showcase:end -->
+
+# Local PC data tools
+
+<!-- kfm-showcase:start -->
+<p>
+  <a href="#local-pc-data-tools"><img src="https://img.shields.io/badge/tools-local%20data%20tools-4a6fa5?style=flat-square" alt="tools page" /></a>
+  <a href="#local-pc-data-tools"><img src="https://img.shields.io/badge/read-~10%20min-6b6b6b?style=flat-square" alt="About 10 minutes to read" /></a>
+  <a href="../../README.md"><img src="https://img.shields.io/badge/%E2%86%A9-project%20home-0b1f3a?style=flat-square" alt="Back to the project home" /></a>
+  <a href="../../README.md#take-the-tour"><img src="https://img.shields.io/badge/tour-10%20workspaces-2f6f4e?style=flat-square" alt="Take the Explorer tour" /></a>
+</p>
+<!-- kfm-showcase:end -->
+
+`noaa_nwm.py` captures one 18-hour National Water Model streamflow run and
+Kansas-envelope river geometry in private RAW/WORK lanes, with a 512 MiB
+aggregate cap and 100 GiB free-space reserve. The
+[NWM runbook](../../docs/runbooks/noaa-nwm-local-capture.md) describes the
+compressed subset, initialization/valid times, model-versus-geometry version
+review, and optional hash-locked binary reader. No map activation is implied.
+
+`noaa_nexrad.py` captures NOAA NEXRAD Level III storm-tracking (`NST`) and
+rotation (`NMD`) products for Kansas radars and one UTC day, with a 64 MiB
+storage cap checked before any product download. See the
+[NEXRAD runbook](../../docs/runbooks/noaa-nexrad-local-capture.md). These are
+unreviewed algorithm detections, not an activated map layer.
+
+`noaa_ghcnd.py` prepares, captures and verifies compressed Kansas daily station
+histories in the existing external RAW/WORK/receipt lanes, with a 384 MiB source
+storage cap and 100 GiB free-space reserve. See the
+[GHCN Daily runbook](../../docs/runbooks/noaa-ghcnd-local-capture.md). These are
+unreviewed local captures, not an activated map layer.
+
+The offline `manage.py` and filesystem helpers prepare a local checkout and preserve
+explicitly selected, already downloaded files in a private external QUARANTINE
+store. That offline importer does not download, interpret, extract, normalize, activate, promote,
+publish, or serve data. See the [local-PC runbook](../../docs/runbooks/local-pc-data-store.md)
+for the complete setup and update sequence.
+
+The explicit `acquisition.py` operator separately plans and transfers selected
+public HTTPS objects into a **500 GB decimal** private replaceable cache, with
+SHA-256 verification, validated resume, protected-file handling and receipts.
+Selected Kansas data belongs in the local external store. Reuse existing files
+before capturing missing dates or reviewed revisions; remote services provide
+source access, processing or temporary transfer as needed. Generated downloads
+without provider-issued digests remain separate protected candidates: a local
+capture hash is not an upstream checksum verification.
+`discover_3dep.py` and `discover_water.py` capture bounded provider metadata only;
+`candidate_queue.py` renders dated catalog options without contacting providers.
+See [free data acquisition](../../docs/runbooks/free-data-acquisition.md) for
+the provider/destination allowlists, full-history selection, actual-state
+semantics and independent admission/release boundaries. No paid fallback or
+automatic bulk selection is included.
+
+The repository records [owner decision #4613](https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4613)
+for the exact manifest schema and contract used by private, offline quarantine
+capture. Its [successor receipt](../../data/receipts/generated/genrec-local-pc-data-policy-decision-20260917.json)
+leaves independent implementation and native-PC acceptance open. It does not
+admit a source or authorize a public map, release, deployment, or publication.
+
+`tools/` owns the operator interface, checks, and bounded local-byte capture in
+[`file_io.py`](file_io.py). These helpers prepare caller-owned external stores,
+including empty lifecycle directories, so they belong with the operator tool
+rather than the connector output lane. Placement follows accepted
+[ADR-0029](../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) and
+[Directory Rules](../../docs/doctrine/directory-rules.md), especially DIR-EXEC-007,
+DIR-STORAGE-001 and source-first DIR-SOURCE-001. The local-upload connector
+remains unimplemented; its DIR-PLACE-003 output allowlist is unchanged.
+
+<!-- kfm-showcase:start -->
+<p align="center">
+  <picture><source media="(prefers-color-scheme: dark)" srcset="../../docs/brand/readme/kfm-local-store-flow-dark.svg" /><img src="../../docs/brand/readme/kfm-local-store-flow.svg" alt="Local data workflow: doctor, init, describe, plan, sync and verify move downloaded files into a private quarantine store outside the Git checkout." width="100%" /></picture>
+</p>
+
+<sub>Illustration, not a data product — this page's text is authoritative. See <a href="../../docs/brand/readme/README.md">README artwork</a>.</sub>
+<!-- kfm-showcase:end -->
+
+## Commands
+
+Run from the repository root. `--root` may be omitted when `KFM_DATA_ROOT` is set;
+the store must be an absolute path outside and separate from the checkout.
+
+```bash
+python3 tools/local_data/doctor.py
+python3 tools/local_data/manage.py init --root "$HOME/KFM-Data"
+python3 tools/local_data/manage.py plan --root "$HOME/KFM-Data" --manifest configs/local/capture.json --downloads "$HOME/Downloads"
+python3 tools/local_data/manage.py sync --root "$HOME/KFM-Data" --manifest configs/local/capture.json --downloads "$HOME/Downloads"
+python3 tools/local_data/manage.py verify --root "$HOME/KFM-Data" --manifest configs/local/capture.json
+```
+
+`doctor` only inspects the checkout and local tool availability. It does not
+install dependencies, start services, or fetch anything. `plan` also writes
+nothing: it hashes explicit inputs and any existing destination objects, checks
+metadata, and reports required space and proposed actions. `sync` does the same
+preflight under an exclusive store lock before capturing missing objects.
+`verify` checks stored bytes, immutable revision bindings, complete and
+per-source manifest snapshots, and success receipts; it does not need downloads.
+
+To calculate a checksum and size without manually transcribing them, describe
+one explicit file and redirect the resulting manifest to a local config file:
+
+```bash
+python3 tools/local_data/manage.py describe \
+  --downloads "$HOME/Downloads" --file maps/county.zip \
+  --source-id provider --dataset-id county-boundaries --domain settlements-infrastructure \
+  --version 2026-09-17 --source-uri https://example.org/county.zip \
+  --media-type application/zip > configs/local/capture.json
+```
+
+Replace the illustrative source metadata with the actual provider. `describe`
+reads one file without directory discovery. Its stdout is a complete manifest,
+with unknown rights and sensitivity. `captured_at` defaults to the current UTC
+time; `--captured-at` accepts an explicit whole-second UTC timestamp. This is
+local capture time, not provider publication or observation time. The media type
+defaults to `application/octet-stream` and remains a declaration, not validation.
+`describe`, `combine`, and `compare` errors go to stderr with a nonzero exit
+status and no stdout. Other commands return status JSON on stdout. Check the
+exit status before using redirected output; shell redirection can create an
+empty output file even on failure.
+
+## Prepare batches and review updates
+
+Combine two or more explicitly selected manifests without hand-editing JSON:
+
+```bash
+python3 tools/local_data/manage.py combine \
+  --manifest configs/local/maps.json --manifest configs/local/photos.json \
+  > configs/local/batch-new.json
+```
+
+Use a new private output file. Every input path remains relative to the same
+downloads directory; combining does not relocate or discover files. The command
+preserves rights, sensitivity, source references and capture metadata exactly.
+Duplicates, conflicting paths or object sizes, and exceeded limits are rejected;
+there is no silent deduplication or choice of a winning declaration. Input order
+does not affect canonical output. Run `plan` on the result before `sync`.
+
+For a later update or historical backfill, compare two selected snapshots:
+
+```bash
+python3 tools/local_data/manage.py compare \
+  --previous configs/local/batch-old.json --manifest configs/local/batch-new.json
+```
+
+The report matches source ID, dataset ID and exact relative path across versions.
+It lists added, omitted, changed and unchanged declarations, sorted changed field
+names, and whether declared digest or size changed. A version-only change is
+still a changed declaration. Any changed declaration reusing the same version is
+flagged `version_conflict`; `sync` remains responsible for checking actual stored
+bindings. Multiple versions for one logical file in either input are ambiguous
+and rejected: compare one selected snapshot at a time. A renamed path appears
+as an omission and an addition; no rename or latest-version inference occurs.
+
+An omission never deletes retained history. `COMPARED` and exit zero mean only
+that comparison succeeded, even when conflicts are present. Both commands read
+metadata only, require no store, ignore `KFM_DATA_ROOT`, and never inspect payloads
+or make network requests. `compare` reports `byte_verification: false`; use
+`plan` or `verify` for byte-integrity checks. Reports contain source metadata and
+should remain private like manifests.
+
+Both commands enforce the usual item/file/total declaration limits. `combine`
+accepts 2–1,000 explicit inputs with a shared 4 MiB input-byte budget and a 4 MiB
+canonical output limit. `compare` accepts exactly two manifests of at most 4 MiB
+each. No recurring job or remote provider polling is configured.
+
+## Storage and identity
+
+`init` creates private directories for `data/raw`, `work`, `quarantine`,
+`processed`, `catalog`, `triplets`, `receipts`, `proofs`, `registry`, and
+`published`. Only QUARANTINE capture and process receipts are written by `sync`.
+Maps, photographs, PDFs, archives and other files share the same byte-preserving
+mechanism; domain and media type remain metadata.
+
+| Relative path beneath the external root | Meaning |
+|---|---|
+| `data/quarantine/<source>/objects/sha256/<digest>/payload` | Opaque content-addressed bytes, shared by that source's dataset versions |
+| `data/quarantine/<source>/versions/<dataset>/<version>/<path-hash>.json` | Immutable local capture binding for one declared relative input path |
+| `data/quarantine/<source>/runs/<run>/manifest.json` | Canonical source-filtered manifest snapshot |
+| `data/receipts/ingest/local-upload/<run>/manifest.json` | Full replayable canonical manifest |
+| `data/receipts/ingest/local-upload/<source>/<run>/ingest-receipt.json` | Existing IngestReceipt shape, successful local capture only |
+| `data/receipts/ingest/local-upload/<source>/<run>/attempts/<id>.json` | Partial attempt record when at least one verified object was available |
+
+`run` is `local-` plus SHA-256 of canonical full-manifest bytes, including a final
+newline. Items sort by source, dataset, version and relative path; object members
+sort by key. The full snapshot can be passed directly to `verify` after a backup
+restore. The per-source snapshot alone does not identify a multi-source run.
+
+Revision bindings reject a changed declaration at the same source, dataset,
+version and relative path. Use a new version for corrected bytes or metadata.
+These bindings are local capture indexes, not source registry entries or
+scientific facts. A version can contain multiple explicitly named files.
+
+## Limits, safety and recovery
+
+Defaults: 1,000 items, 8 GiB per file, 64 GiB per batch, 4 MiB manifest JSON, and
+256 MiB free-space reserve. Use `--max-items`, `--max-file-bytes`,
+`--max-total-bytes`, or `--min-free-bytes` to reduce the envelope. File and batch
+limits may be explicitly raised to at most 1 TiB and 16 TiB; 1,000 items and
+4 MiB input JSON remain hard caps. Payload streaming uses at most a 1 MiB chunk.
+Disk checks conservatively reserve payload and metadata space; they cannot
+prevent another process filling the disk during a capture.
+
+Static symlinks, special files, traversal, Windows device/stream names,
+duplicate JSON keys, nonfinite/fractional numbers, invalid identifiers and
+undeclared fields fail closed. Input size and digest are checked again during
+capture. New files use private temporary files, `fsync`, and an atomic hard-link
+commit that never replaces an existing object. Filesystems lacking hard-link
+support fail closed. POSIX-created directories use mode `0700` and files use
+`0600`; a nonprivate store root is denied for initialization or synchronization.
+Windows ACL equivalence and crash durability need native-host acceptance.
+
+The operator must control the destination tree. Checks are not a sandbox against
+another process replacing checked ancestors, changing files concurrently, or
+maliciously modifying the store. The lock serializes cooperating `sync` writers;
+it is not a host access-control mechanism. `init` should be run once before
+starting writers. A killed writer can leave `.local-data.lock` and uncommitted
+`.capture-*` temporary files: confirm that no writer remains, preserve any
+material needed for diagnosis, and remove only those stale operational files
+before retrying. The tool never steals a lock or deletes retained payloads.
+
+Rerunning the same manifest rehashes existing objects and completes missing
+snapshots/receipts without recopying valid bytes. Previous partial attempts stay
+available. Existing corrupted payloads, revision bindings, snapshots or success
+receipts are refused; they are never overwritten. A zero-capture failure prints
+error JSON without inventing an IngestReceipt digest. A receipt's SUCCESS means
+local capture processing only. Rights assertions, checksums and successful
+copies do not establish source admission or public permission.
+
+```bash
+make local-data-check
+```
+
+The local tests exercise corruption, safe retry, multi-source backup restore,
+resource limits, explicit-file selection and filesystem boundaries. They do not
+prove a production downloader, governed map integration, or Windows acceptance.
+
+<!-- kfm-showcase:start -->
+<p align="center">
+  <img src="../../docs/brand/readme/kfm-divider.svg" alt="" width="100%" />
+</p>
+
+<p align="center">
+  <a href="../../README.md"><b>↩ Project home</b></a> ·
+  <a href="../../README.md#see-it-in-action">See it in action</a> ·
+  <a href="../../README.md#take-the-tour">Tour</a> ·
+  <a href="../../README.md#things-to-try">Things to try</a> ·
+  <a href="../../README.md#faq">FAQ</a> ·
+  <a href="../../docs/brand/readme/README.md">Artwork</a>
+</p>
+<!-- kfm-showcase:end -->

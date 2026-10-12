@@ -1,0 +1,194 @@
+{
+  "object_type": "DistinctNullDeduplicationAssessmentFixtureManifest",
+  "schema_version": "1.0.0",
+  "profile": "kfm.common.distinct-null-deduplication.fixture.v1",
+  "base_candidate": {
+    "object_type": "DistinctNullDeduplicationAssessmentCandidate",
+    "schema_version": "1.0.0",
+    "profile": "kfm.common.distinct-null-deduplication.fixture.v1",
+    "profile_spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "source_card": "KFM-P18-INV-155",
+    "assessed_at": "2026-08-11T18:30:00Z",
+    "operation_ref": "kfm:query-semantics:synthetic-county-source-pairs:001",
+    "operation_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "use_case": "COUNT_POPULATION",
+    "operation_kind": "SQL_DISTINCT",
+    "dialect_profile_ref": "kfm:sql-dialect-profile:synthetic-postgresql:001",
+    "distinct_fields": ["county_fips", "source_code"],
+    "null_semantics": {
+      "row_posture": "INCLUDE_ROWS",
+      "null_equivalence": "DIALECT_DEFINED",
+      "multi_column_basis": "ORDERED_VALUE_TUPLE"
+    },
+    "fixture_check": {
+      "state": "MATCHED",
+      "fixture_ref": "kfm:fixture:synthetic-distinct-null-pairs:001",
+      "fixture_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+      "coverage": {
+        "null_rows": true,
+        "duplicate_rows": true,
+        "multi_column_tuples": true
+      },
+      "expected_distinct_count": 6,
+      "observed_distinct_count": 6,
+      "receipt_ref": "kfm:query-receipt:synthetic-distinct-null-pairs:001"
+    },
+    "adjacent_contracts": {
+      "count_population_disclosure_ref": "kfm:count-population-disclosure:synthetic-pairs:001",
+      "reconciliation_contract_ref": null
+    },
+    "disclosure": {
+      "intended_use": "INTERNAL_REVIEW",
+      "summary": "Synthetic two-field DISTINCT semantics include reviewed NULL and duplicate tuple cases.",
+      "review_record_refs": []
+    },
+    "limitations": [
+      "DECLARATION_ONLY",
+      "NO_RAW_SQL_OR_SOURCE_ROWS",
+      "NO_QUERY_EXECUTION_OR_ROW_MUTATION",
+      "NO_IDENTITY_RECONCILIATION_AUTHORITY",
+      "NO_EVIDENCE_POLICY_OR_REVIEW_AUTHORITY",
+      "NO_RELEASE_OR_PUBLICATION_AUTHORITY"
+    ],
+    "authority_claims": {
+      "query_execution_authority": false,
+      "row_mutation_authority": false,
+      "identity_reconciliation_authority": false,
+      "evidence_authority": false,
+      "policy_authority": false,
+      "review_authority": false,
+      "promotion_authority": false,
+      "release_authority": false,
+      "publication_authority": false,
+      "public_use_authority": false
+    }
+  },
+  "cases": [
+    {
+      "name": "pass_count_population_distinct_pairs",
+      "patch": {},
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_dataset_explicit_grouping",
+      "patch": {
+        "use_case": "DATASET_ROW_DEDUPLICATION",
+        "operation_kind": "EXPLICIT_GROUP_BY",
+        "null_semantics": {"null_equivalence": "COLLAPSE_EQUAL_NULL_POSITIONS"},
+        "adjacent_contracts": {"count_population_disclosure_ref": null}
+      },
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_entity_match_reconciliation",
+      "patch": {
+        "use_case": "ENTITY_MATCH_CANDIDATE",
+        "operation_kind": "DETERMINISTIC_RECONCILIATION",
+        "dialect_profile_ref": null,
+        "null_semantics": {"null_equivalence": "COLLAPSE_EQUAL_NULL_POSITIONS"},
+        "adjacent_contracts": {
+          "count_population_disclosure_ref": null,
+          "reconciliation_contract_ref": "kfm:contract:reversible-entity-reconciliation:v0.1.0"
+        }
+      },
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_public_candidate_with_review",
+      "patch": {
+        "disclosure": {
+          "intended_use": "PUBLIC_CANDIDATE",
+          "review_record_refs": ["kfm:review-record:synthetic-distinct-null:001"]
+        }
+      },
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "abstain_unresolved_use_case",
+      "patch": {"use_case": "UNRESOLVED"},
+      "expected": {"outcome": "ABSTAIN", "codes": ["USE_CASE_UNRESOLVED"]}
+    },
+    {
+      "name": "abstain_unresolved_null_equivalence",
+      "patch": {"null_semantics": {"null_equivalence": "UNRESOLVED"}},
+      "expected": {"outcome": "ABSTAIN", "codes": ["NULL_EQUIVALENCE_UNRESOLVED"]}
+    },
+    {
+      "name": "abstain_fixture_not_run",
+      "patch": {
+        "fixture_check": {
+          "state": "NOT_RUN",
+          "fixture_ref": null,
+          "fixture_digest": null,
+          "coverage": {"null_rows": false, "duplicate_rows": false, "multi_column_tuples": false},
+          "expected_distinct_count": null,
+          "observed_distinct_count": null,
+          "receipt_ref": null
+        }
+      },
+      "expected": {"outcome": "ABSTAIN", "codes": ["FIXTURE_NOT_RUN"]}
+    },
+    {
+      "name": "deny_count_without_population_disclosure",
+      "patch": {"adjacent_contracts": {"count_population_disclosure_ref": null}},
+      "expected": {"outcome": "DENY", "codes": ["COUNT_POPULATION_DISCLOSURE_REQUIRED"]}
+    },
+    {
+      "name": "deny_entity_match_uses_sql_distinct",
+      "patch": {
+        "use_case": "ENTITY_MATCH_CANDIDATE",
+        "adjacent_contracts": {
+          "count_population_disclosure_ref": null,
+          "reconciliation_contract_ref": "kfm:contract:reversible-entity-reconciliation:v0.1.0"
+        }
+      },
+      "expected": {"outcome": "DENY", "codes": ["ENTITY_MATCH_REQUIRES_RECONCILIATION"]}
+    },
+    {
+      "name": "deny_sql_without_dialect_profile",
+      "patch": {"dialect_profile_ref": null},
+      "expected": {"outcome": "DENY", "codes": ["SQL_DIALECT_PROFILE_REQUIRED"]}
+    },
+    {
+      "name": "deny_field_basis_mismatch",
+      "patch": {"null_semantics": {"multi_column_basis": "SINGLE_FIELD"}},
+      "expected": {"outcome": "DENY", "codes": ["MULTI_COLUMN_BASIS_MISMATCH"]}
+    },
+    {
+      "name": "deny_fixture_missing_multi_column_coverage",
+      "patch": {"fixture_check": {"coverage": {"multi_column_tuples": false}}},
+      "expected": {"outcome": "DENY", "codes": ["FIXTURE_MULTI_COLUMN_COVERAGE_REQUIRED"]}
+    },
+    {
+      "name": "deny_fixture_result_mismatch",
+      "patch": {"fixture_check": {"state": "MISMATCH", "observed_distinct_count": 5}},
+      "expected": {"outcome": "DENY", "codes": ["FIXTURE_RESULT_MISMATCH"]}
+    },
+    {
+      "name": "deny_public_without_review",
+      "patch": {"disclosure": {"intended_use": "PUBLIC_CANDIDATE"}},
+      "expected": {"outcome": "DENY", "codes": ["PUBLIC_DISCLOSURE_REVIEW_REQUIRED"]}
+    },
+    {
+      "name": "deny_profile_hash_tamper",
+      "patch": {},
+      "tamper": "profile_hash",
+      "expected": {"outcome": "DENY", "codes": ["PROFILE_SPEC_HASH_MISMATCH"]}
+    },
+    {
+      "name": "error_recorded_fixture_failure",
+      "patch": {"fixture_check": {"state": "ERROR"}},
+      "expected": {"outcome": "ERROR", "codes": ["FIXTURE_RECORDED_ERROR"]}
+    },
+    {
+      "name": "error_recorded_null_semantics_failure",
+      "patch": {"null_semantics": {"null_equivalence": "ERROR"}},
+      "expected": {"outcome": "ERROR", "codes": ["NULL_SEMANTICS_RECORDED_ERROR"]}
+    },
+    {
+      "name": "error_unknown_field",
+      "patch": {"raw_sql": null},
+      "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}
+    }
+  ]
+}

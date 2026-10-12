@@ -1,0 +1,184 @@
+{
+  "receipt_id": "genrec-tools-watchers-readme-0ca71339",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tools/watchers/README.md"
+  ],
+  "artifact_hashes": {
+    "tools/watchers/README.md": "sha256:0ca713394d0dc2c6c567b179deab21c18218d4dcf7d7e76844f7f65c4462d37f"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-16-session"
+  },
+  "prompt_or_contract": "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "container validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM GitHub Repository Documentation Implementation Agent — Full Operating Prompt v3.1",
+      "Directory Rules.pdf",
+      "Kansas Frontier Matrix — AI Build Operating Contract.md"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/c42adda522241315e03176947c437d14ce15fb46",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/c42adda522241315e03176947c437d14ce15fb46/tools/watchers/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/c42adda522241315e03176947c437d14ce15fb46/tools/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/c42adda522241315e03176947c437d14ce15fb46/tools/watchers/plants_watch/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/c42adda522241315e03176947c437d14ce15fb46/tools/ingest/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/c42adda522241315e03176947c437d14ce15fb46/tools/ingest/hydrology/usgs_streamflow_gate.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/c42adda522241315e03176947c437d14ce15fb46/pipelines/watchers/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/c42adda522241315e03176947c437d14ce15fb46/pipeline_specs/watchers/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/c42adda522241315e03176947c437d14ce15fb46/pipeline_specs/fauna/watchers/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/c42adda522241315e03176947c437d14ce15fb46/pipeline_specs/flora/watchers/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/c42adda522241315e03176947c437d14ce15fb46/docs/adr/ADR-0017-source-descriptor-admission-process.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/c42adda522241315e03176947c437d14ce15fb46/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/c42adda522241315e03176947c437d14ce15fb46/SECURITY.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/c42adda522241315e03176947c437d14ce15fb46/.github/CODEOWNERS",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/c42adda522241315e03176947c437d14ce15fb46/.github/PULL_REQUEST_TEMPLATE.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/c42adda522241315e03176947c437d14ce15fb46/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "attached://Pasted text(32).txt"
+    ]
+  },
+  "truth_labels": {
+    "tools/watchers/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-preflight",
+      "outcome": "PASS",
+      "reason": "Repository identity, permissions, latest base, target blob, direct child inventory, parallel tools/ingest watcher tree, pipeline/spec watcher lanes, source-admission ADR, Directory Rules, SECURITY, CODEOWNERS, PR contract, and receipt schema were inspected."
+    },
+    {
+      "gate": "base-and-target-concurrency",
+      "outcome": "PASS",
+      "reason": "Main advanced during authoring to c42adda522241315e03176947c437d14ce15fb46 through an unrelated Agriculture test README change; the target blob remained 0a3b47a4246a2a1f10cf1cc9ea2a335b4547ae3e before mutation."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "The update remains in the existing tools/ responsibility root, distinguishes reusable helpers from pipelines and pipeline_specs, and introduces no new root, authority home, lifecycle phase, source activation, or public path."
+    },
+    {
+      "gate": "bounded-direct-tree-inventory",
+      "outcome": "PASS",
+      "reason": "Bounded repository search surfaced tools/watchers/README.md and tools/watchers/plants_watch/README.md; the README labels the result bounded rather than exhaustive."
+    },
+    {
+      "gate": "parallel-lane-reconciliation",
+      "outcome": "PASS",
+      "reason": "The README surfaces tools/watchers versus tools/ingest and the pipelines/pipeline_specs ownership split without selecting or duplicating implementation authority."
+    },
+    {
+      "gate": "watcher-non-publisher",
+      "outcome": "PASS",
+      "reason": "Source activation, connector access, lifecycle writers, evidence, policy, release, and public clients remain external; direct processed/catalog/triplet/release/published writes are denied."
+    },
+    {
+      "gate": "sensitive-and-security-no-leak",
+      "outcome": "PASS",
+      "reason": "The README includes only category-level controls and no exact sensitive location, living-person data, DNA material, infrastructure detail, cultural knowledge, credential, private endpoint, geoprivacy parameter, or reconstruction hint."
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "One H1, balanced fenced blocks, all 46 internal links, tables, finite outcomes, child admission, definition of done, verification register, maintenance, correction, migration, rollback, and evidence ledger were checked."
+    },
+    {
+      "gate": "secret-pattern-review",
+      "outcome": "PASS",
+      "reason": "No private-key block or common GitHub, AWS, or OpenAI token pattern was introduced."
+    },
+    {
+      "gate": "remote-readback",
+      "outcome": "PASS",
+      "reason": "GitHub returned README blob 9711995283cbccd80b89189c08002088c28d9b07, matching the locally computed Git blob for the validated content."
+    },
+    {
+      "gate": "workflow-trigger-preflight",
+      "outcome": "PASS",
+      "reason": "Only documentation and its required provenance receipt change. No executable watcher, connector, pipeline, profile, schema, contract, policy, fixture, test, workflow, source record, lifecycle object, release record, runtime, or public artifact is modified."
+    },
+    {
+      "gate": "generated-receipt-structure",
+      "outcome": "PASS",
+      "reason": "Required fields, allowed properties, hash patterns, truth-label and validation enums, human-review state, timestamp, citations, artifact path/hash closure, and notes length were checked against the fetched schema."
+    },
+    {
+      "gate": "runtime-and-executable-tests",
+      "outcome": "SKIPPED",
+      "reason": "Documentation-only change; no watcher, parser, scheduler, network behavior, source activation, pipeline, policy, schema, fixture, test, or runtime behavior changed."
+    },
+    {
+      "gate": "repository-native-ci",
+      "outcome": "SKIPPED",
+      "reason": "Repository checks are observed after draft pull-request creation and are unavailable at receipt emission time."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "KFM-OPERATING-PROMPT-V3.1",
+      "validated": true,
+      "evidence_ref": "attached://Pasted text(32).txt"
+    },
+    {
+      "id": "KFM-DIRECTORY-RULES",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/c42adda522241315e03176947c437d14ce15fb46/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "TOOLS-ROOT-CONTRACT",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/c42adda522241315e03176947c437d14ce15fb46/tools/README.md"
+    },
+    {
+      "id": "PLANTS-WATCH-CHILD-CONTRACT",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/c42adda522241315e03176947c437d14ce15fb46/tools/watchers/plants_watch/README.md"
+    },
+    {
+      "id": "TOOLS-INGEST-PARALLEL-LANE",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/c42adda522241315e03176947c437d14ce15fb46/tools/ingest/README.md"
+    },
+    {
+      "id": "WATCHER-SPEC-CONTRACT",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/c42adda522241315e03176947c437d14ce15fb46/pipeline_specs/watchers/README.md"
+    },
+    {
+      "id": "KFM-SECURITY-POLICY",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/c42adda522241315e03176947c437d14ce15fb46/SECURITY.md"
+    },
+    {
+      "id": "GENERATED-RECEIPT-SCHEMA",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/c42adda522241315e03176947c437d14ce15fb46/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-16T16:46:00Z",
+  "emitter": "ai-builder/openai-gpt-5.6-thinking",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored documentation-only update on a scoped review branch. The watcher parent README is reconciled with the direct README-only tree, the merged plants watcher compatibility boundary, the parallel tools/ingest watcher index, pipeline and pipeline-spec responsibility boundaries, source-admission and security posture, CODEOWNERS limitations, no-network expectations, finite outcomes, child admission, and rollback discipline. No watcher runtime, source activation, connector, pipeline, profile, schema, policy, fixture, test, workflow, lifecycle object, release record, deployment, or public artifact is created or modified. Human review remains pending; this receipt is provenance evidence, not merge authorization."
+}

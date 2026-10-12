@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/domains/flora/promotion_decision.schema.json",
+  "title": "promotion_decision",
+  "type": "object",
+  "description": "KFM v1 contract schema stub for promotion_decision. Greenfield placeholder; fields to be defined per the contract document and ADR.",
+  "x-kfm": {
+    "contract_doc": "contracts/domains/flora/promotion_decision.md",
+    "fixtures_root": "fixtures/domains/flora/promotion_decision/",
+    "validator": "tools/validators/domains/flora/validate_promotion_decision.py",
+    "policy": "policy/domains/flora/",
+    "status": "PROPOSED"
+  },
+  "properties": {
+    "spec_hash": {
+      "type": "string",
+      "description": "Deterministic content hash."
+    },
+    "id": {
+      "type": "string",
+      "description": "Canonical identifier."
+    },
+    "version": {
+      "type": "string",
+      "description": "Contract or object version."
+    }
+  },
+  "required": [
+    "id"
+  ],
+  "additionalProperties": true
+}

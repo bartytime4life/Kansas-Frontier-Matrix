@@ -1,0 +1,124 @@
+{
+  "receipt_id": "genrec-evidence-drawer-schema-family-ratchet-20260826",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/evidence-drawer-schema-convergence.yml",
+    "tests/validators/test_evidence_drawer_schema_convergence.py",
+    "tools/validators/evidence_drawer_schema_family_baseline.json",
+    "tools/validators/validate_evidence_drawer_schema_convergence.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/evidence-drawer-schema-convergence.yml": "sha256:8fa9bcbea2a969a4314c5584364b479f34a414d7cbf5eeb24703f41811bc78ef",
+    "tests/validators/test_evidence_drawer_schema_convergence.py": "sha256:420263f6e4671a80decb200635374337efe9ee17213b433a40bba60c3f8b35c3",
+    "tools/validators/evidence_drawer_schema_family_baseline.json": "sha256:d52a001b01334e5e2871ee52e7899f925a6b461d116f370ab6c497bf6ed22984",
+    "tools/validators/validate_evidence_drawer_schema_convergence.py": "sha256:8a956b2397e7cb6ca9a4d9dc55c1669557a5cb71ac508e67e4adce973d2e4146"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-26"
+  },
+  "prompt_or_contract": "sha256:9f1e5f9af1c731a830b5b7b4352b4ae27285e751dca42331c5d284a4a296dacb",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector (read/write)",
+      "local repository validation",
+      "supplied PDF inspection"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "# Kansas Frontier Matrix Implementation Reference.pdf",
+      "KFM_MapLibre_Operating_Architecture_Governed_UI_AI_Interaction_Manual_REVISED.pdf"
+    ],
+    "evidence_refs": [
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@97e64536aa7096213731397461ccb0f2a152f41c",
+      "repo:docs/adr/ADR-0037-evidence-drawer-payload-ui-authority-and-compatibility.md@97e64536aa7096213731397461ccb0f2a152f41c",
+      "repo:docs/doctrine/directory-rules.md@97e64536aa7096213731397461ccb0f2a152f41c",
+      "repo:schemas/contracts/v1/evidence/evidence_drawer_payload.schema.json@97e64536aa7096213731397461ccb0f2a152f41c",
+      "repo:schemas/contracts/v1/runtime/evidence_drawer_payload.schema.json@97e64536aa7096213731397461ccb0f2a152f41c",
+      "repo:schemas/contracts/v1/ui/evidence_drawer_payload.schema.json@97e64536aa7096213731397461ccb0f2a152f41c"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/evidence-drawer-schema-convergence.yml": "CONFIRMED",
+    "tests/validators/test_evidence_drawer_schema_convergence.py": "CONFIRMED",
+    "tools/validators/evidence_drawer_schema_family_baseline.json": "CONFIRMED",
+    "tools/validators/validate_evidence_drawer_schema_convergence.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "artifact-byte-binding",
+      "outcome": "PASS",
+      "reason": "Every authored artifact except this receipt is bound to its prepared SHA-256 bytes without receipt self-reference."
+    },
+    {
+      "gate": "placement-authority-preservation",
+      "outcome": "PASS",
+      "reason": "The audit keeps placement_state NEEDS_REVIEW, calls the UI path a candidate, and does not accept proposed ADR-0037 or select a canonical schema."
+    },
+    {
+      "gate": "current-family-inventory",
+      "outcome": "PASS",
+      "reason": "The exact-base audit classifies 16 schemas as one closed UI candidate, seven local domain scaffolds, two permissive family scaffolds, and six reference-only profiles."
+    },
+    {
+      "gate": "trusted-base-family-freeze",
+      "outcome": "PASS",
+      "reason": "The baseline matches all 16 trusted-base paths, shape classes, and deterministic full-document fingerprints. Bootstrap reconstructs and compares the schema family at the exact trusted base SHA; after introduction, member additions, removals, rewrites, and protected-metadata changes fail against the trusted base."
+    },
+    {
+      "gate": "synthetic-negative-coverage",
+      "outcome": "PASS",
+      "reason": "Sixteen focused tests pass, including candidate-baseline and trusted-base rejection of added, removed, rewritten, bootstrap-mutated, or authority-mutated family inventories plus prior identity, anchor, draft, and parse failures."
+    },
+    {
+      "gate": "hosted-exact-head-validation",
+      "outcome": "SKIPPED",
+      "reason": "Hosted exact-head execution begins after the draft pull request is opened."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending and is required separately from implementation."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "repository:directory-governance",
+      "validated": true,
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md@97e64536aa7096213731397461ccb0f2a152f41c"
+    },
+    {
+      "id": "repository:evidence-drawer-authority-proposal",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0037-evidence-drawer-payload-ui-authority-and-compatibility.md@97e64536aa7096213731397461ccb0f2a152f41c"
+    },
+    {
+      "id": "repository:evidence-drawer-ui-schema",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/ui/evidence_drawer_payload.schema.json@97e64536aa7096213731397461ccb0f2a152f41c"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-26T22:42:06Z",
+  "emitter": "OpenAI GPT-5 via Codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0037-evidence-drawer-payload-ui-authority-and-compatibility.md",
+    "drift_register_entry": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3368"
+  },
+  "notes": "Read-only EvidenceDrawerPayload schema-family inventory and trusted-base fingerprint freeze. It records the current multiple-writer conflict and rejects unreviewed family drift without selecting authority, accepting ADR-0037, migrating schemas or consumers, or changing review, release, deployment, promotion, or publication state."
+}

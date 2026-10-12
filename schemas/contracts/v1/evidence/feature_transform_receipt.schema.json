@@ -1,0 +1,195 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/evidence/feature_transform_receipt.schema.json",
+  "title": "FeatureTransformReceiptCandidate",
+  "description": "Fixture-only process-memory declaration for an ordered feature-transform chain without transform, evidence, model, review, release, or publication authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "profile_spec_hash",
+    "source_card",
+    "recorded_at",
+    "receipt_ref",
+    "intended_use",
+    "execution_state",
+    "feature_set_manifest",
+    "model_card",
+    "run_receipt",
+    "input_feature_set",
+    "transforms",
+    "output_feature_set",
+    "training_context",
+    "evidence_bundle_refs",
+    "downstream_disposition",
+    "limitations",
+    "authority_claims"
+  ],
+  "properties": {
+    "object_type": {"const": "FeatureTransformReceiptCandidate"},
+    "schema_version": {"const": "1.0.0"},
+    "profile": {"const": "kfm.evidence.feature-transform-receipt.fixture.v1"},
+    "profile_spec_hash": {"$ref": "#/$defs/sha256"},
+    "source_card": {"const": "KFM-P18-INV-408"},
+    "recorded_at": {"type": "string", "format": "date-time"},
+    "receipt_ref": {"$ref": "#/$defs/ref"},
+    "intended_use": {
+      "enum": ["INTERNAL_QA", "MODEL_ASSISTED_ANALYSIS", "PUBLIC_CLAIM_SUPPORT_CANDIDATE"]
+    },
+    "execution_state": {"enum": ["COMPLETE", "INCOMPLETE", "ERROR"]},
+    "feature_set_manifest": {"$ref": "#/$defs/resolved_reference"},
+    "model_card": {"$ref": "#/$defs/resolved_reference"},
+    "run_receipt": {"$ref": "#/$defs/resolved_reference"},
+    "input_feature_set": {"$ref": "#/$defs/feature_set_binding"},
+    "transforms": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 128,
+      "items": {"$ref": "#/$defs/transform_step"}
+    },
+    "output_feature_set": {"$ref": "#/$defs/feature_set_binding"},
+    "training_context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["evaluation_population_present", "split_reference", "leakage_review", "review_record_refs"],
+      "properties": {
+        "evaluation_population_present": {"type": "boolean"},
+        "split_reference": {"$ref": "#/$defs/resolved_reference"},
+        "leakage_review": {"$ref": "#/$defs/resolved_reference"},
+        "review_record_refs": {"$ref": "#/$defs/ref_array"}
+      }
+    },
+    "evidence_bundle_refs": {"$ref": "#/$defs/ref_array"},
+    "downstream_disposition": {"const": "HOLD_FOR_REVIEW"},
+    "limitations": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "DECLARATION_ONLY",
+          "NO_EVIDENCE_RESOLUTION",
+          "NO_MODEL_OR_TRANSFORM_EXECUTION",
+          "NO_PUBLICATION_AUTHORITY"
+        ]
+      }
+    },
+    "authority_claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "feature_registry_authority",
+        "transform_authority",
+        "model_authority",
+        "evidence_authority",
+        "policy_authority",
+        "review_authority",
+        "promotion_authority",
+        "release_authority",
+        "publication_authority",
+        "public_use_authority"
+      ],
+      "properties": {
+        "feature_registry_authority": {"const": false},
+        "transform_authority": {"const": false},
+        "model_authority": {"const": false},
+        "evidence_authority": {"const": false},
+        "policy_authority": {"const": false},
+        "review_authority": {"const": false},
+        "promotion_authority": {"const": false},
+        "release_authority": {"const": false},
+        "publication_authority": {"const": false},
+        "public_use_authority": {"const": false}
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "ref": {"type": "string", "minLength": 3, "maxLength": 512, "pattern": "^\\S+$"},
+    "feature_ref": {"type": "string", "minLength": 8, "maxLength": 256, "pattern": "^kfm:feature:[A-Za-z0-9][A-Za-z0-9._:-]+$"},
+    "nullable_ref": {"oneOf": [{"$ref": "#/$defs/ref"}, {"type": "null"}]},
+    "ref_array": {
+      "type": "array",
+      "maxItems": 128,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/ref"}
+    },
+    "feature_ref_array": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 256,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/feature_ref"}
+    },
+    "resolved_reference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ref", "digest", "resolution"],
+      "properties": {
+        "ref": {"$ref": "#/$defs/ref"},
+        "digest": {"$ref": "#/$defs/sha256"},
+        "resolution": {"enum": ["RESOLVED", "UNRESOLVED"]}
+      }
+    },
+    "feature_set_binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_ref", "artifact_digest", "resolution", "feature_count", "feature_refs"],
+      "properties": {
+        "artifact_ref": {"$ref": "#/$defs/ref"},
+        "artifact_digest": {"$ref": "#/$defs/sha256"},
+        "resolution": {"enum": ["RESOLVED", "UNRESOLVED"]},
+        "feature_count": {"type": "integer", "minimum": 1, "maximum": 256},
+        "feature_refs": {"$ref": "#/$defs/feature_ref_array"}
+      }
+    },
+    "transform_step": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ordinal",
+        "transform_id",
+        "transform_family",
+        "input_state",
+        "output_state",
+        "input_feature_refs",
+        "output_feature_refs",
+        "feature_count_before",
+        "feature_count_after",
+        "method",
+        "parameter_manifest",
+        "fitted_on",
+        "rationale_ref"
+      ],
+      "properties": {
+        "ordinal": {"type": "integer", "minimum": 0, "maximum": 127},
+        "transform_id": {"type": "string", "pattern": "^transform_[0-9]{3}$"},
+        "transform_family": {
+          "enum": ["SCALING", "NORMALIZATION", "ENCODING", "FEATURE_ENGINEERING", "FEATURE_SELECTION", "CUSTOM"]
+        },
+        "input_state": {"enum": ["RAW", "SCALED", "NORMALIZED", "ENCODED", "ENGINEERED", "SELECTED", "CUSTOM"]},
+        "output_state": {"enum": ["SCALED", "NORMALIZED", "ENCODED", "ENGINEERED", "SELECTED", "CUSTOM"]},
+        "input_feature_refs": {"$ref": "#/$defs/feature_ref_array"},
+        "output_feature_refs": {"$ref": "#/$defs/feature_ref_array"},
+        "feature_count_before": {"type": "integer", "minimum": 1, "maximum": 256},
+        "feature_count_after": {"type": "integer", "minimum": 1, "maximum": 256},
+        "method": {"$ref": "#/$defs/resolved_reference"},
+        "parameter_manifest": {"$ref": "#/$defs/resolved_reference"},
+        "fitted_on": {"enum": ["TRAINING_ONLY", "EXTERNAL_REFERENCE", "FULL_DATASET", "NOT_APPLICABLE", "UNRESOLVED"]},
+        "rationale_ref": {"$ref": "#/$defs/nullable_ref"}
+      }
+    }
+  },
+  "x-kfm": {
+    "contract_doc": "contracts/evidence/feature_transform_receipt.md",
+    "fixtures_root": "fixtures/contracts/v1/evidence/feature_transform_receipt/",
+    "validator": "tools/validators/evidence/validate_feature_transform_receipt.py",
+    "status": "PROPOSED_INACTIVE",
+    "network": false,
+    "authority_effects": false,
+    "feature_values_allowed": false
+  }
+}

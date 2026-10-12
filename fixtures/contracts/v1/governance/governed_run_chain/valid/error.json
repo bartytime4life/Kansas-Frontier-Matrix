@@ -1,0 +1,36 @@
+{
+  "chain_id": "chain:sample:error",
+  "evaluated_at": "2026-08-07T19:00:00Z",
+  "outcome": "ERROR",
+  "policy_decision": {
+    "decision_id": "policy:sample:error",
+    "evaluated_at": "2026-08-07T19:00:00Z",
+    "obligations": [],
+    "outcome": "ERROR",
+    "policy_family": "promotion",
+    "reasons": [
+      "fixture outcome"
+    ]
+  },
+  "promotion_decision": null,
+  "quarantine_record": null,
+  "run_receipt": {
+    "code_ref": "repo:c9f9c6674df604c7ce247fdb23212607fe155357",
+    "inputs": [
+      "kfm://raw/sample"
+    ],
+    "outcome": "FAIL",
+    "outputs": [],
+    "run_id": "run:sample:error",
+    "source_descriptor_refs": [
+      "kfm://source/sample"
+    ],
+    "spec_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "stage": "promotion_candidate",
+    "validation_refs": [
+      "kfm://validation/sample"
+    ]
+  },
+  "spec_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+  "subject_ref": "kfm://candidate/sample"
+}

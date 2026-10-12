@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/domains/water_planning/eligibility_decision.schema.json",
+  "title": "eligibility_decision",
+  "type": "object",
+  "description": "A governed eligibility determination for a grant application. An eligibility decision is not a recommendation, award, or project approval.",
+  "x-kfm": {
+    "status": "PROPOSED",
+    "contract_doc": "contracts/domains/water_planning/eligibility_decision.md",
+    "fixtures_root": "fixtures/domains/water_planning/eligibility_decision/",
+    "policy": "policy/domains/water_planning/"
+  },
+  "properties": {
+    "decision_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_:.-]*$"
+    },
+    "application_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "program_version_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "outcome": {
+      "type": "string",
+      "enum": ["eligible", "ineligible", "pending"],
+      "description": "Eligibility determination. Distinct from award outcome."
+    },
+    "basis_ref": {
+      "type": ["string", "null"],
+      "description": "Reference to the policy, statutory, or scoring basis for this decision."
+    },
+    "decided_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "source_ref": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "required": [
+    "decision_id",
+    "application_ref",
+    "program_version_ref",
+    "outcome",
+    "decided_at",
+    "source_ref"
+  ],
+  "additionalProperties": false
+}

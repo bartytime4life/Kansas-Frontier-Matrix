@@ -1,0 +1,208 @@
+{
+  "receipt_id": "genrec-map-context-evidence-drawer-admission-20260807",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/map-context-evidence-drawer-admission.yml",
+    "docs/architecture/ui/map-context-evidence-drawer-admission.md",
+    "fixtures/ui/map_context_evidence_drawer_admission/README.md",
+    "fixtures/ui/map_context_evidence_drawer_admission/cases.json",
+    "fixtures/ui/map_context_evidence_drawer_admission/payloads/abstain-stale-aligned.json",
+    "fixtures/ui/map_context_evidence_drawer_admission/payloads/answer-aligned.json",
+    "fixtures/ui/map_context_evidence_drawer_admission/payloads/answer-wrong-selection.json",
+    "packages/envelopes/src/envelopes/__init__.py",
+    "packages/envelopes/src/envelopes/map_context_evidence_drawer.py",
+    "tests/packages/envelopes/test_map_context_evidence_drawer_admission.py",
+    "tools/validators/ui/validate_map_context_evidence_drawer_admission.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/map-context-evidence-drawer-admission.yml": "sha256:8690f3ff483267e92954c4aeb74276aae49cc2e15e6d5bcefdc76d303e54c5ee",
+    "docs/architecture/ui/map-context-evidence-drawer-admission.md": "sha256:6d7079cfba9d08f6906d652ebd5a07843ca31608d0a49952dc3aab718d42fbc4",
+    "fixtures/ui/map_context_evidence_drawer_admission/README.md": "sha256:4a442e98a9b794817a902d67ba49658d7230fe597f3b91abc835d06d259660fc",
+    "fixtures/ui/map_context_evidence_drawer_admission/cases.json": "sha256:cffefe31c133c308f305e8e9e02a29463511cb2530837c01627e080f2c538a05",
+    "fixtures/ui/map_context_evidence_drawer_admission/payloads/abstain-stale-aligned.json": "sha256:fab6d6176b5a4b2a812fe74963bcc74c5b5c3108c994547b164a3fec51b14ec3",
+    "fixtures/ui/map_context_evidence_drawer_admission/payloads/answer-aligned.json": "sha256:964bf1ecd6a55e837c7d1cdfe732e689c85c730da03b01fbf5f9397f98112f67",
+    "fixtures/ui/map_context_evidence_drawer_admission/payloads/answer-wrong-selection.json": "sha256:bb26a032846045d3c2d2a812848c2e035e054d91edbeb5c25bdd8b4df79a759d",
+    "packages/envelopes/src/envelopes/__init__.py": "sha256:e44630f81422640aca5356d8afaa1250bbc811216dd175ef34ec3edde7770015",
+    "packages/envelopes/src/envelopes/map_context_evidence_drawer.py": "sha256:b059ad82b076490a7ef20ecef8fc2b599bb2fcc75876620ed9656601d8a8dbda",
+    "tests/packages/envelopes/test_map_context_evidence_drawer_admission.py": "sha256:230fae37ec16b60f7b0fa2578bf50be3e565e3f23d6f134fdd21ae2a709be26e",
+    "tools/validators/ui/validate_map_context_evidence_drawer_admission.py": "sha256:632eee5a8a09232973f46e4fd8bbb197797c83c80ac23d47ae7474e57bc5268b"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-07"
+  },
+  "prompt_or_contract": "sha256:bd9db48845ac5f8b60bf7142e45f68b178c00a923bc2d45058f3e464390f5e3c",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector read/write",
+      "uploaded-file search",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:77f56ec1ab632b76c7728cfb250330271b7dc8948db95c8c0594c92ad9ca6b36",
+      "sha256:4406daa99ff0e3d58757d62d40358c9fd745f95137e99f14602659d0c3f54e55",
+      "sha256:2b8db8901f893d9aabb94bb32db5cbc2e0bb0c881bf74068551e9b3b76602893",
+      "sha256:20cdee04ece6b1c84aea2f327675999f60d66cb5415d7f9ec5c99e310ebb0c59",
+      "sha256:7c2d498212b9ad56f3ba37bf91f841e9f328794e8aa4940f8f665a4116c5aaea"
+    ],
+    "attached_docs": [
+      "KFM_MapLibre_Operating_Architecture_Governed_UI_AI_Interaction_Manual_REVISED.pdf",
+      "Domain-Driven Design Reference.pdf",
+      "KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf",
+      "Kansas Frontier Matrix — AI Build Operating Contract.md",
+      "kfm_soil_architecture_extended_pro_pdf_only_report.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_MapLibre_Operating_Architecture_Governed_UI_AI_Interaction_Manual_REVISED.pdf",
+      "attachment:Domain-Driven Design Reference.pdf",
+      "attachment:KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf",
+      "attachment:Kansas Frontier Matrix — AI Build Operating Contract.md",
+      "attachment:kfm_soil_architecture_extended_pro_pdf_only_report.pdf",
+      "github:a6bbaa2a7986858bd72629cf3a77181b9e72a761",
+      "github:schemas/contracts/v1/ui/map_context_envelope.schema.json",
+      "github:schemas/contracts/v1/ui/evidence_drawer_payload.schema.json",
+      "github:schemas/contracts/v1/runtime/decision_envelope.schema.json",
+      "github:packages/envelopes/src/envelopes/runtime_response.py",
+      "github:tools/validators/ui/validate_map_context_envelope.py",
+      "github:tools/validators/ui/validate_evidence_drawer_payload.py",
+      "github:8ee05f3738c29344d055025bf47448150429e05e",
+      "github:424e06b1a054298a5f4ef435765f01e85c721fc9"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/map-context-evidence-drawer-admission.yml": "PROPOSED",
+    "docs/architecture/ui/map-context-evidence-drawer-admission.md": "PROPOSED",
+    "fixtures/ui/map_context_evidence_drawer_admission/README.md": "PROPOSED",
+    "fixtures/ui/map_context_evidence_drawer_admission/cases.json": "PROPOSED",
+    "fixtures/ui/map_context_evidence_drawer_admission/payloads/abstain-stale-aligned.json": "PROPOSED",
+    "fixtures/ui/map_context_evidence_drawer_admission/payloads/answer-aligned.json": "PROPOSED",
+    "fixtures/ui/map_context_evidence_drawer_admission/payloads/answer-wrong-selection.json": "PROPOSED",
+    "packages/envelopes/src/envelopes/__init__.py": "PROPOSED",
+    "packages/envelopes/src/envelopes/map_context_evidence_drawer.py": "PROPOSED",
+    "tests/packages/envelopes/test_map_context_evidence_drawer_admission.py": "PROPOSED",
+    "tools/validators/ui/validate_map_context_evidence_drawer_admission.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-tests",
+      "outcome": "PASS",
+      "reason": "Ten deterministic package tests passed, including finite outcomes, schema conformance, no-leak behavior, input immutability, negative paths, and no-network replay."
+    },
+    {
+      "gate": "exact-case-replay",
+      "outcome": "PASS",
+      "reason": "Eight cross-object cases matched exact outcomes, reason codes, evidence-reference projections, and DecisionEnvelope schema validation."
+    },
+    {
+      "gate": "decision-envelope-schema",
+      "outcome": "PASS",
+      "reason": "Every emitted candidate passed the current closed DecisionEnvelope Draft 2020-12 schema."
+    },
+    {
+      "gate": "workflow-yaml",
+      "outcome": "PASS",
+      "reason": "The path-scoped read-only workflow parsed as YAML."
+    },
+    {
+      "gate": "python-compile",
+      "outcome": "PASS",
+      "reason": "The adapter, case validator, and focused tests compiled under the session Python runtime."
+    },
+    {
+      "gate": "source-profile-validator-replay",
+      "outcome": "SKIPPED",
+      "reason": "The complete repository-owned MapContextEnvelope and EvidenceDrawerPayload validators are invoked by hosted CI against the pushed head."
+    },
+    {
+      "gate": "generated-receipt-integrity",
+      "outcome": "PASS",
+      "reason": "All eleven authored artifacts were checked for exact path, SHA-256 digest, and truth-label key closure without receipt self-reference."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted validation is tracked on draft PR #2105 after the authoring receipt is emitted."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Independent human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:maplibre-operating-boundary",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_MapLibre_Operating_Architecture_Governed_UI_AI_Interaction_Manual_REVISED.pdf"
+    },
+    {
+      "id": "attachment:ddd-anticorruption-layer",
+      "validated": true,
+      "evidence_ref": "attachment:Domain-Driven Design Reference.pdf"
+    },
+    {
+      "id": "attachment:directory-governance",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf"
+    },
+    {
+      "id": "attachment:ai-build-contract",
+      "validated": true,
+      "evidence_ref": "attachment:Kansas Frontier Matrix — AI Build Operating Contract.md"
+    },
+    {
+      "id": "attachment:soil-support-separation",
+      "validated": true,
+      "evidence_ref": "attachment:kfm_soil_architecture_extended_pro_pdf_only_report.pdf"
+    },
+    {
+      "id": "repository:current-main",
+      "validated": true,
+      "evidence_ref": "github:8ee05f3738c29344d055025bf47448150429e05e"
+    },
+    {
+      "id": "repository:map-context-contract",
+      "validated": true,
+      "evidence_ref": "github:schemas/contracts/v1/ui/map_context_envelope.schema.json"
+    },
+    {
+      "id": "repository:evidence-drawer-contract",
+      "validated": true,
+      "evidence_ref": "github:schemas/contracts/v1/ui/evidence_drawer_payload.schema.json"
+    },
+    {
+      "id": "repository:decision-envelope-contract",
+      "validated": true,
+      "evidence_ref": "github:schemas/contracts/v1/runtime/decision_envelope.schema.json"
+    },
+    {
+      "id": "repository:exact-pr-head",
+      "validated": true,
+      "evidence_ref": "github:424e06b1a054298a5f4ef435765f01e85c721fc9"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-07T04:06:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": 2105,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Adds a deterministic candidate-only anticorruption adapter from validated renderer-neutral MapContextEnvelope and public-safe EvidenceDrawerPayload inputs to the existing DecisionEnvelope shape. Initially prepared against main@a6bbaa2a7986858bd72629cf3a77181b9e72a761, then synchronized without force to main@8ee05f3738c29344d055025bf47448150429e05e at draft PR #2105 head 424e06b1a054298a5f4ef435765f01e85c721fc9 after confirming the intervening path set was disjoint. The packet creates no evidence, policy, review, release, publication, or public-use authority."
+}

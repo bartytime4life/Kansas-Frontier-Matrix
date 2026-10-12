@@ -1,0 +1,120 @@
+{
+  "receipt_id": "genrec-dp15-artifacts-placement-successor-20261008",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "artifacts/qa/reports/dp-15-inventory-20261007/README.md",
+    "artifacts/qa/reports/dp-15-inventory-20261007/dp-declarations.json",
+    "artifacts/qa/reports/dp-15-inventory-20261007/summary.json",
+    "tools/qa/dp15_inventory_scan.py",
+    "tools/qa/dp15_inventory_classify.py",
+    "tools/qa/README.md"
+  ],
+  "artifact_hashes": {
+    "artifacts/qa/reports/dp-15-inventory-20261007/README.md": "sha256:94319cbe157008e7fc77d94efce2a1cee121fae5fb118b739dd591d491a2f5c4",
+    "artifacts/qa/reports/dp-15-inventory-20261007/dp-declarations.json": "sha256:a6661e9274c72861d7eeb650014bb7da89082a25f967a339d5005b76f99bac1a",
+    "artifacts/qa/reports/dp-15-inventory-20261007/summary.json": "sha256:b86aa5746ecee5c6c1279504fadf39927b607ce55efbca019152069df2a3b34a",
+    "tools/qa/dp15_inventory_scan.py": "sha256:ae1d006bea819a0b4aa90711d8b328895d0af7ff3f6e37b094579da9d97edc12",
+    "tools/qa/dp15_inventory_classify.py": "sha256:c65c54d9e7ed9cb318a435aaa927c0b0fc3c742cd3b0d7658604e7f9790408e5",
+    "tools/qa/README.md": "sha256:e76c206c177efc4fae0d8263be0877fff3d61abb51fcdaeeb148b950ea47be9c"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code",
+    "version": "exact build not exposed; session 2026-10-08"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local git and Python",
+      "tools/qa/dp15_inventory_scan.py and dp15_inventory_classify.py regeneration at the pinned commit",
+      "repository topology, governance-parity, gap-scan and scaffold validators"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [],
+    "evidence_refs": [
+      "repo:bartytime4life/Kansas-Frontier-Matrix@12c90d93af",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@c90836cdb7a34791669907053522de0458f21ae9",
+      "receipt:data/receipts/generated/genrec-dp15-current-tree-inventory-20261007.json"
+    ],
+    "evidence_hashes": [
+      "sha256:33c3c83eb04014af145db38e3e7d152b53ef06a0ab64c89a7947e88da369a50f",
+      "sha256:e9da8ce40008f399b3927c3c47695e906ebaa62ce0fede6a8ef140650f023f54",
+      "sha256:d0a6267c8416b602b8621a2af370e7624c6f6b5ffbd8fcdc38459340276c3be7",
+      "sha256:6360982c95f5fd4c760cedf45af5a0589040ee17b48b197a96fcdbd79cb4b7a6"
+    ]
+  },
+  "truth_labels": {
+    "artifacts/qa/reports/dp-15-inventory-20261007/README.md": "CONFIRMED",
+    "artifacts/qa/reports/dp-15-inventory-20261007/dp-declarations.json": "CONFIRMED",
+    "artifacts/qa/reports/dp-15-inventory-20261007/summary.json": "CONFIRMED",
+    "tools/qa/dp15_inventory_scan.py": "CONFIRMED",
+    "tools/qa/dp15_inventory_classify.py": "CONFIRMED",
+    "tools/qa/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-topology",
+      "outcome": "PASS",
+      "reason": "KFM-TOPO-017 new drift 5 -> 0; 113 baselined warnings and the baseline file unchanged."
+    },
+    {
+      "gate": "repository-governance-parity",
+      "outcome": "PASS",
+      "reason": "make repository-governance-parity passes."
+    },
+    {
+      "gate": "gap-scan-and-scaffold-inventory",
+      "outcome": "PASS",
+      "reason": "No new broken links, parse errors or placeholders."
+    },
+    {
+      "gate": "deterministic-replay",
+      "outcome": "PASS",
+      "reason": "Fresh scan+classify at c90836cd: hits.csv content and dp-declarations.json identical; inventory.json identical except its recorded tool versions; the README verify snippet passes."
+    },
+    {
+      "gate": "provenance-digest-binding",
+      "outcome": "PASS",
+      "reason": "Stripping the provenance keys from summary.json and dp-declarations.json reproduces the original generator digests 33c3c83e... and e9da8ce4...."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "original-dp15-receipt",
+      "validated": true,
+      "evidence_ref": "data/receipts/generated/genrec-dp15-current-tree-inventory-20261007.json"
+    },
+    {
+      "id": "pinned-inventory-commit",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix@c90836cdb7a34791669907053522de0458f21ae9"
+    },
+    {
+      "id": "directory-rules-artifacts-transition",
+      "validated": true,
+      "evidence_ref": "docs/doctrine/directory-rules.md#152-artifacts-transition"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-10-08T06:00:37Z",
+  "emitter": "Claude Code",
+  "links": {
+    "pr_number": 4931,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Append-only successor binding for the DP-15 report after its artifacts/ placement repair. Scripts moved to tools/qa/ unchanged; dp-declarations.json and summary.json carry provenance keys around byte-identical generator payloads; hits.csv.gz and inventory.json.gz are regenerated on demand rather than tracked. No DP finding, classification or conclusion changed. This receipt does not create authority, waive drift, approve review, change lifecycle state, or authorize release or publication. The original receipt remains historical provenance for the bytes it bound."
+}

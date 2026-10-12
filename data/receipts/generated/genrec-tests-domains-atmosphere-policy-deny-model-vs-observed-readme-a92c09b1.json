@@ -1,0 +1,156 @@
+{
+  "receipt_id": "genrec-tests-domains-atmosphere-policy-deny-model-vs-observed-readme-a92c09b1",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tests/domains/atmosphere/policy-deny/model-vs-observed/README.md"
+  ],
+  "artifact_hashes": {
+    "tests/domains/atmosphere/policy-deny/model-vs-observed/README.md": "sha256:a92c09b14137032494524bc0a821df458f49cfe2e812630fb07ba32a2bc2d976"
+  },
+  "artifact_git_blobs": {
+    "tests/domains/atmosphere/policy-deny/model-vs-observed/README.md": "7475d91c5592da0b2e17cbd1ca8228c7d7cf7229"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-16-session"
+  },
+  "prompt_or_contract": "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "container/Python validation",
+      "public Git object identity comparison"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "Directory Rules.pdf",
+      "Kansas Frontier Matrix — AI Build Operating Contract.md"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/524ec92059a367a1f1107a6d0eb781aeadecf948",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/524ec92059a367a1f1107a6d0eb781aeadecf948/tests/domains/atmosphere/policy-deny/model-vs-observed/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/524ec92059a367a1f1107a6d0eb781aeadecf948/tests/domains/atmosphere/policy-deny/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/524ec92059a367a1f1107a6d0eb781aeadecf948/tests/domains/atmosphere/test_model_as_observed_denied.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/524ec92059a367a1f1107a6d0eb781aeadecf948/policy/domains/atmosphere/model-as-observed-deny.rego",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/524ec92059a367a1f1107a6d0eb781aeadecf948/contracts/domains/atmosphere/ForecastContext.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/524ec92059a367a1f1107a6d0eb781aeadecf948/contracts/domains/atmosphere/WindField.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/524ec92059a367a1f1107a6d0eb781aeadecf948/contracts/domains/atmosphere/SmokeContext.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/524ec92059a367a1f1107a6d0eb781aeadecf948/contracts/domains/atmosphere/WeatherObservation.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/524ec92059a367a1f1107a6d0eb781aeadecf948/contracts/domains/atmosphere/AirObservation.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/524ec92059a367a1f1107a6d0eb781aeadecf948/schemas/contracts/v1/domains/atmosphere/ForecastContext.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/524ec92059a367a1f1107a6d0eb781aeadecf948/docs/domains/atmosphere/MAP_UI_CONTRACTS.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/524ec92059a367a1f1107a6d0eb781aeadecf948/.github/workflows/domain-atmosphere.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/524ec92059a367a1f1107a6d0eb781aeadecf948/Makefile"
+    ]
+  },
+  "truth_labels": {
+    "tests/domains/atmosphere/policy-deny/model-vs-observed/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "The target remains under tests/, the enforceability root. Policy, contracts, schemas, fixtures, source admission, model-run/evidence objects, lifecycle state, release authority, health guidance, and public carrier implementations remain in their owning roots."
+    },
+    {
+      "gate": "target-precondition-and-competing-work",
+      "outcome": "PASS",
+      "reason": "The target prior blob was rechecked on current main and no matching task branch or open pull request surfaced before mutation."
+    },
+    {
+      "gate": "model-observation-authority-split",
+      "outcome": "PASS",
+      "reason": "The README distinguishes model, forecast, analysis, reanalysis, observed, remote-sensing, derived/fusion, station, EvidenceBundle, PolicyDecision, and ReleaseManifest postures."
+    },
+    {
+      "gate": "current-maturity",
+      "outcome": "PASS",
+      "reason": "The child lane is recorded as README-only; the adjacent test is a one-line placeholder; the Rego file is default-deny scaffold text; paired schemas are permissive; fixture payload inventory remains unverified; workflow and root targets are non-substantive."
+    },
+    {
+      "gate": "temporal-and-model-run-discipline",
+      "outcome": "PASS",
+      "reason": "The README preserves source, observation, run/initialization, analysis, valid, lead, retrieval, processing, release, and correction time kinds and requires explicit model-run identity and uncertainty."
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "The committed README has one H1, sixty-eight headings, thirty-two fenced-block delimiter lines, a final newline, and all thirty-five internal fragment links resolve."
+    },
+    {
+      "gate": "remote-byte-integrity",
+      "outcome": "PASS",
+      "reason": "GitHub returned content blob 7475d91c5592da0b2e17cbd1ca8228c7d7cf7229, exactly matching the locally validated Git object. The committed bytes are 50,276 bytes, 976 newline-terminated lines, and SHA-256 a92c09b14137032494524bc0a821df458f49cfe2e812630fb07ba32a2bc2d976."
+    },
+    {
+      "gate": "secret-sensitive-health-and-alert-review",
+      "outcome": "PASS",
+      "reason": "No common credential patterns, real source payloads, private endpoints, station-owner data, protected locations, current official alerts, medical guidance, protective-action instructions, or production trust artifacts were introduced."
+    },
+    {
+      "gate": "executable-model-observation-tests",
+      "outcome": "SKIPPED",
+      "reason": "This change is documentation-only. No substantive direct test, policy adapter, fixture payload, schema closure, model-run runtime, source admission, or validator was established or modified."
+    },
+    {
+      "gate": "ci-status",
+      "outcome": "SKIPPED",
+      "reason": "The receipt was emitted before pull-request CI. Final status must be read from the pull-request head."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "tests/domains/atmosphere/policy-deny/model-vs-observed/README.md@524ec920",
+      "validated": true
+    },
+    {
+      "id": "tests/domains/atmosphere/test_model_as_observed_denied.py@524ec920",
+      "validated": true
+    },
+    {
+      "id": "policy/domains/atmosphere/model-as-observed-deny.rego@524ec920",
+      "validated": true
+    },
+    {
+      "id": "contracts/domains/atmosphere/ForecastContext.md@524ec920",
+      "validated": true
+    },
+    {
+      "id": "contracts/domains/atmosphere/WindField.md@524ec920",
+      "validated": true
+    },
+    {
+      "id": "contracts/domains/atmosphere/SmokeContext.md@524ec920",
+      "validated": true
+    },
+    {
+      "id": "contracts/domains/atmosphere/WeatherObservation.md@524ec920",
+      "validated": true
+    },
+    {
+      "id": "docs/domains/atmosphere/MAP_UI_CONTRACTS.md@524ec920",
+      "validated": true
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-17T02:32:49Z",
+  "emitter": "OpenAI GPT-5.6 Thinking via GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Generated provenance receipt for the repository-grounded v0.2 Atmosphere model-versus-observed README. No executable test, policy bundle, fixture payload, schema, contract, source descriptor, model algorithm, validator, workflow behavior, lifecycle object, evidence object, release object, health guidance, alert, or public output was changed. Human review remains pending."
+}

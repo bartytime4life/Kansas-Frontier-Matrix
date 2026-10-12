@@ -1,0 +1,65 @@
+{
+  "cases": [
+    {
+      "case_id": "valid-binding",
+      "expected_findings": [],
+      "expected_outcome": "PASS",
+      "input": "valid/valid_binding.json",
+      "payload_file": "payload/synthetic_payload.bin"
+    },
+    {
+      "case_id": "missing-payload-digest",
+      "expected_findings": [
+        "SCHEMA_INVALID"
+      ],
+      "expected_outcome": "ERROR",
+      "input": "schema_invalid/missing_payload_digest.json",
+      "payload_file": "payload/synthetic_payload.bin"
+    },
+    {
+      "case_id": "unsafe-location",
+      "expected_findings": [
+        "UNSAFE_LOCATION"
+      ],
+      "expected_outcome": "FAIL",
+      "input": "semantic_invalid/unsafe_location.json",
+      "payload_file": "payload/synthetic_payload.bin"
+    },
+    {
+      "case_id": "noncanonical-locations",
+      "expected_findings": [
+        "LOCATIONS_NOT_CANONICAL"
+      ],
+      "expected_outcome": "FAIL",
+      "input": "semantic_invalid/noncanonical_locations.json",
+      "payload_file": "payload/synthetic_payload.bin"
+    },
+    {
+      "case_id": "spec-hash-mismatch",
+      "expected_findings": [
+        "SPEC_HASH_MISMATCH"
+      ],
+      "expected_outcome": "FAIL",
+      "input": "semantic_invalid/spec_hash_mismatch.json",
+      "payload_file": "payload/synthetic_payload.bin"
+    },
+    {
+      "case_id": "authority-overreach",
+      "expected_findings": [
+        "AUTHORITY_OVERREACH"
+      ],
+      "expected_outcome": "FAIL",
+      "input": "semantic_invalid/authority_overreach.json",
+      "payload_file": "payload/synthetic_payload.bin"
+    },
+    {
+      "case_id": "payload-digest-mismatch",
+      "expected_findings": [
+        "PAYLOAD_DIGEST_MISMATCH"
+      ],
+      "expected_outcome": "FAIL",
+      "input": "semantic_invalid/payload_digest_mismatch.json",
+      "payload_file": "payload/synthetic_payload.bin"
+    }
+  ]
+}

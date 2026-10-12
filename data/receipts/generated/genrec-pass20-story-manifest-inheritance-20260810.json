@@ -1,0 +1,145 @@
+{
+  "artifact_hashes": {
+    ".github/workflows/story-manifest-trust-inheritance.yml": "sha256:597af606063516de67b2792b19e3c5e0d170251735d3e8cebf298c6f5f233f84",
+    "contracts/ui/story_manifest.md": "sha256:b65b028b5cf8bfd892d672d3b9c192f8e54c16b57813c79346d47b9645f63ded",
+    "docs/intake/exploratory/pass-20-story-manifest-inheritance-source-map.md": "sha256:99f55a41809e03b55730c991fa3c5340f596fabc5f40d3e35861f4e54b762c82",
+    "fixtures/ui/story_manifest/cases.json": "sha256:500e7ce03f6e298995e79ca2d6e41fc73459a459a942d7bd33008d7808bc4351",
+    "schemas/contracts/v1/ui/story_manifest.schema.json": "sha256:24b64dbf67a8f802ec83f2080a001f1c055cd421f2fc8e034d41f32a680b26ab",
+    "tests/validators/test_validate_story_manifest.py": "sha256:6008a43fa2157874dfafdfa0ab63d97ea213c004a564afc7695e683f750e4c5e",
+    "tools/validators/ui/validate_story_manifest.py": "sha256:95d2347c2a7ab2a92fae8330d6d16f8335f08a84228470f46f420bbf1695d0ec"
+  },
+  "artifact_paths": [
+    ".github/workflows/story-manifest-trust-inheritance.yml",
+    "contracts/ui/story_manifest.md",
+    "docs/intake/exploratory/pass-20-story-manifest-inheritance-source-map.md",
+    "fixtures/ui/story_manifest/cases.json",
+    "schemas/contracts/v1/ui/story_manifest.schema.json",
+    "tests/validators/test_validate_story_manifest.py",
+    "tools/validators/ui/validate_story_manifest.py"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "attachment:KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md#story-composite-manifest-gap",
+      "id": "attachment:pass20-composite-worst-state-inheritance",
+      "validated": true
+    },
+    {
+      "evidence_ref": "google-drive:Directory Rules@1uTqdIEFZE2cq3gyISetoRYM6LIlnKqTc3FobtEx7Cbs",
+      "id": "google-drive:accepted-directory-placement-rules",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:contracts/ui/story_manifest.md@97b9cb77bf57b1d1cf75c2768f8e550e399a1345",
+      "id": "repository:existing-story-manifest-contract",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:schemas/contracts/v1/ui/story_manifest.schema.json@97b9cb77bf57b1d1cf75c2768f8e550e399a1345",
+      "id": "repository:confirmed-permissive-story-manifest-stub",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:contracts/ui/story_node.md@97b9cb77bf57b1d1cf75c2768f8e550e399a1345",
+      "id": "repository:adjacent-story-node-trust-contract",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-11T04:03:41Z",
+  "emitter": "OpenAI Codex (GPT-5) via ChatGPT Work",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md",
+      "Directory Rules (Google Drive)"
+    ],
+    "evidence_hashes": [
+      "sha256:57e4b74255b52863f2a489595077741d7f45c2968a9740fe4837bac73778f780"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md#story-composite-manifest-gap",
+      "google-drive:Directory Rules@1uTqdIEFZE2cq3gyISetoRYM6LIlnKqTc3FobtEx7Cbs",
+      "repo:contracts/ui/story_manifest.md@97b9cb77bf57b1d1cf75c2768f8e550e399a1345",
+      "repo:schemas/contracts/v1/ui/story_manifest.schema.json@97b9cb77bf57b1d1cf75c2768f8e550e399a1345",
+      "repo:contracts/ui/story_node.md@97b9cb77bf57b1d1cf75c2768f8e550e399a1345"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "Codex (GPT-5)",
+    "provider": "OpenAI",
+    "version": "2026-08-10"
+  },
+  "notes": "Replaces the confirmed permissive StoryManifest schema stub with a closed fixture-only public-safe composite profile. It validates ordered bounded StoryNode snapshots, finite worst-state inheritance, dimensionwise least-permissive trust reduction, visible limiting refs/reasons, correction and supersession linkage, and deterministic identity. It performs no ref resolution and grants no truth, citation, policy, review, release, UI activation, deployment, public-use, or publication authority.",
+  "override_record": null,
+  "parameters": {
+    "max_tokens": null,
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Google Drive connector",
+      "local deterministic validation"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:bf20ea61b1a45035c26875a642ca6d86ff712db38247f373156a1deaa58588d6",
+  "receipt_id": "genrec-pass20-story-manifest-inheritance-20260810",
+  "truth_labels": {
+    ".github/workflows/story-manifest-trust-inheritance.yml": "CONFIRMED",
+    "contracts/ui/story_manifest.md": "PROPOSED",
+    "docs/intake/exploratory/pass-20-story-manifest-inheritance-source-map.md": "CONFIRMED",
+    "fixtures/ui/story_manifest/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/ui/story_manifest.schema.json": "PROPOSED",
+    "tests/validators/test_validate_story_manifest.py": "CONFIRMED",
+    "tools/validators/ui/validate_story_manifest.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "source-to-repo-collision-check",
+      "outcome": "PASS",
+      "reason": "Current main retained the permissive StoryManifest stub and had no branch or pull request matching this composite closure."
+    },
+    {
+      "gate": "json-schema-and-workflow-parse",
+      "outcome": "PASS",
+      "reason": "The closed Draft 2020-12 schema passed meta-validation and the focused workflow parsed as YAML."
+    },
+    {
+      "gate": "focused-unit-tests",
+      "outcome": "PASS",
+      "reason": "Eleven deterministic no-network unit tests passed locally."
+    },
+    {
+      "gate": "exact-fixture-polarity",
+      "outcome": "PASS",
+      "reason": "Six finite-state positive cases and eleven denial cases matched the exact expected finding matrix."
+    },
+    {
+      "gate": "generated-receipt-byte-binding",
+      "outcome": "PASS",
+      "reason": "This receipt binds all seven non-receipt authored artifacts to exact SHA-256 values."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed draft pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ]
+}

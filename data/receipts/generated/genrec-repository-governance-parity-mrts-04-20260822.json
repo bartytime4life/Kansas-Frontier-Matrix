@@ -1,0 +1,193 @@
+{
+  "receipt_id": "genrec-repository-governance-parity-mrts-04-20260822",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/repository-governance-parity.yml",
+    "Makefile",
+    "contracts/governance/repository_governance_parity.md",
+    "control_plane/repository_governance_parity.yaml",
+    "fixtures/contracts/v1/governance/repository_governance_parity/README.md",
+    "fixtures/contracts/v1/governance/repository_governance_parity/expected_findings_manifest.json",
+    "fixtures/contracts/v1/governance/repository_governance_parity/invalid/baseline_growth.yaml",
+    "fixtures/contracts/v1/governance/repository_governance_parity/invalid/check_not_run.yaml",
+    "fixtures/contracts/v1/governance/repository_governance_parity/invalid/failed_lane.yaml",
+    "fixtures/contracts/v1/governance/repository_governance_parity/invalid/hold_as_pass.yaml",
+    "fixtures/contracts/v1/governance/repository_governance_parity/invalid/introduced_drift.yaml",
+    "fixtures/contracts/v1/governance/repository_governance_parity/invalid/missing_coverage.yaml",
+    "fixtures/contracts/v1/governance/repository_governance_parity/valid/inherited_hold.yaml",
+    "schemas/contracts/v1/governance/repository_governance_parity.schema.json",
+    "tests/validators/directory_governance/test_validate_repository_governance_parity.py",
+    "tools/validators/directory_governance/validate_repository_governance_parity.py",
+    "tools/validators/validator_registry.json"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/repository-governance-parity.yml": "sha256:25e6f1ec81169e57887bce5f3a6f3d2eee8bfe9456592a2da134998d37e917df",
+    "Makefile": "sha256:9d7068288912d99d56d36849771bdc2ccb509d007268a81e03230bfe49d63450",
+    "contracts/governance/repository_governance_parity.md": "sha256:cfdea64706433cd547844ca5c5719194610e9d9a66e414031a97cd05b50fb02a",
+    "control_plane/repository_governance_parity.yaml": "sha256:e2aa289f059f9d0bdeac821a45ee27d1aa89c536e40e8fa99098c7530cfcd934",
+    "fixtures/contracts/v1/governance/repository_governance_parity/README.md": "sha256:482b126347639f21a09379d6e68857f63872dc0d86a3d29bf2e7e97954010770",
+    "fixtures/contracts/v1/governance/repository_governance_parity/expected_findings_manifest.json": "sha256:10d9babebb93996139c7f70926571d1dec752774c274afc7493e845d6da77330",
+    "fixtures/contracts/v1/governance/repository_governance_parity/invalid/baseline_growth.yaml": "sha256:db6591703e34472df3c5dc6d53cc63ffe779900fa14424dd5129ffc8799e1a5c",
+    "fixtures/contracts/v1/governance/repository_governance_parity/invalid/check_not_run.yaml": "sha256:5d7f241a79216f02c8c1e1b620c34b5baf224ad25a1a47c948dc6bf0cc73a6b0",
+    "fixtures/contracts/v1/governance/repository_governance_parity/invalid/failed_lane.yaml": "sha256:93c56339dc8b2a8703daa141dab5e7929d6b6682c475c9995956250f5deab5e5",
+    "fixtures/contracts/v1/governance/repository_governance_parity/invalid/hold_as_pass.yaml": "sha256:471c7e9696882e75e06a7d3d6518a78b3ea26a92058d643fd460b41caca714f8",
+    "fixtures/contracts/v1/governance/repository_governance_parity/invalid/introduced_drift.yaml": "sha256:a32087f1ac0968682963123c13aabead3d70f345e5a4e44a00d62fbdcd658992",
+    "fixtures/contracts/v1/governance/repository_governance_parity/invalid/missing_coverage.yaml": "sha256:c8a117b9314748215b1695d1dc23b57ea71220375f5c1f36c19d286aa74d5cf4",
+    "fixtures/contracts/v1/governance/repository_governance_parity/valid/inherited_hold.yaml": "sha256:8aa962826d1eda234f4aaa168ef1ae3e5f965d0b49d84ffa2e9df8dd1c442d8c",
+    "schemas/contracts/v1/governance/repository_governance_parity.schema.json": "sha256:8d04c6ce08417195a216cc67175dc49dd99fd953ab45990d7650ed3447b565cb",
+    "tests/validators/directory_governance/test_validate_repository_governance_parity.py": "sha256:f0cf491f0502bd4b6fa35318b6b60debf3a41730ec29aa0a48f5b89ff0ca696d",
+    "tools/validators/directory_governance/validate_repository_governance_parity.py": "sha256:3a2fb1d5c3ee333402593ea857e3025fa997e3803d0476d7ea93e800602fefbc",
+    "tools/validators/validator_registry.json": "sha256:83219b62a3cad5efe098a211dc504b6dcdc48d113bf7df87710c8300479c5979"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5-session-2026-08-22"
+  },
+  "prompt_or_contract": "sha256:cfdea64706433cd547844ca5c5719194610e9d9a66e414031a97cd05b50fb02a",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector",
+      "GitHub connector",
+      "local Git evidence inspection",
+      "no-network Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:060b20d6e28197faa8a9034ccb5a29b63621f73ebdeea1d2d77d31b23c2149e0",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:17213f5e2fde3993f9c9b7af7f26eeb49a91635904d4a55ba92eddb53a66d60f"
+    ],
+    "attached_docs": [
+      "Kansas Frontier Matrix Repository Structure Guiding Document",
+      "Kansas Frontier Matrix — AI Build Operating Contract"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/milestone/1",
+      "github://bartytime4life/Kansas-Frontier-Matrix/issues/3361",
+      "repo:main@236bdaf81b001d434726bd9ec7b0664c8ec0be83",
+      "repo:docs/doctrine/directory-rules.md@236bdaf81b001d434726bd9ec7b0664c8ec0be83",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@236bdaf81b001d434726bd9ec7b0664c8ec0be83",
+      "repo:control_plane/path_alias_register.yaml@236bdaf81b001d434726bd9ec7b0664c8ec0be83",
+      "repo:control_plane/root_registry.yaml@236bdaf81b001d434726bd9ec7b0664c8ec0be83",
+      "repo:tools/validators/directory_governance/repository_topology_baseline.json@236bdaf81b001d434726bd9ec7b0664c8ec0be83",
+      "https://docs.google.com/document/d/1J0an6dk5VSq_mebS4TYvFUuBQZ_XLVtUlARGOSaMEaY/edit",
+      "https://docs.google.com/document/d/1yy3IaBJm9epC578w7Oak_12gVxT59vnw6IJYn0XIHKs/edit"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/repository-governance-parity.yml": "PROPOSED",
+    "Makefile": "PROPOSED",
+    "contracts/governance/repository_governance_parity.md": "PROPOSED",
+    "control_plane/repository_governance_parity.yaml": "PROPOSED",
+    "fixtures/contracts/v1/governance/repository_governance_parity/README.md": "PROPOSED",
+    "fixtures/contracts/v1/governance/repository_governance_parity/expected_findings_manifest.json": "PROPOSED",
+    "fixtures/contracts/v1/governance/repository_governance_parity/invalid/baseline_growth.yaml": "PROPOSED",
+    "fixtures/contracts/v1/governance/repository_governance_parity/invalid/check_not_run.yaml": "PROPOSED",
+    "fixtures/contracts/v1/governance/repository_governance_parity/invalid/failed_lane.yaml": "PROPOSED",
+    "fixtures/contracts/v1/governance/repository_governance_parity/invalid/hold_as_pass.yaml": "PROPOSED",
+    "fixtures/contracts/v1/governance/repository_governance_parity/invalid/introduced_drift.yaml": "PROPOSED",
+    "fixtures/contracts/v1/governance/repository_governance_parity/invalid/missing_coverage.yaml": "PROPOSED",
+    "fixtures/contracts/v1/governance/repository_governance_parity/valid/inherited_hold.yaml": "PROPOSED",
+    "schemas/contracts/v1/governance/repository_governance_parity.schema.json": "PROPOSED",
+    "tests/validators/directory_governance/test_validate_repository_governance_parity.py": "PROPOSED",
+    "tools/validators/directory_governance/validate_repository_governance_parity.py": "PROPOSED",
+    "tools/validators/validator_registry.json": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "milestone_contract_and_authority_assay",
+      "outcome": "PASS",
+      "reason": "Issue #3361, accepted ADR-0029, adopted Directory Rules, the current registries, validator contracts, and existing topology baseline were inspected; Google Drive planning documents remained advisory."
+    },
+    {
+      "gate": "parity_profile_integrity",
+      "outcome": "PASS",
+      "reason": "All six governed validation lanes ran, their expected outcomes matched, every MRTS-04 acceptance criterion was bound to an implemented lane and rule, and the profile declared all eight required non-effects."
+    },
+    {
+      "gate": "focused_unit_and_fixture_tests",
+      "outcome": "PASS",
+      "reason": "Ten focused no-network tests passed and one valid plus six invalid parity fixtures matched exact reviewed findings, including baseline growth, not-run, failed-lane, inherited-hold-as-pass, introduced-drift, and missing-coverage cases."
+    },
+    {
+      "gate": "governance_dependency_lanes",
+      "outcome": "PASS",
+      "reason": "The control-packet, object-family, path-alias, public-boundary, and root validation lanes passed using bounded constant commands and exact pinned evidence replay."
+    },
+    {
+      "gate": "repository_topology_conformance",
+      "outcome": "FAIL",
+      "reason": "The inherited topology state remains an explicit HOLD_INHERITED with nine unbaselined drift categories, 125 baselined warnings, and thirteen stale fingerprints; no baseline entry was added, expanded, waived, or refreshed."
+    },
+    {
+      "gate": "validator_registry",
+      "outcome": "PASS",
+      "reason": "The strict validator registry accepted twenty-one validators and the full profile includes repository-governance-parity."
+    },
+    {
+      "gate": "workflow_security",
+      "outcome": "PASS",
+      "reason": "Nineteen workflow-security tests passed and the repository scanner reported 476 workflows with zero security findings."
+    },
+    {
+      "gate": "generated_receipt_artifact_hash_replay",
+      "outcome": "PASS",
+      "reason": "The generated-receipt validator replayed every declared artifact SHA-256 against final local bytes."
+    },
+    {
+      "gate": "hosted_exact_head_workflows",
+      "outcome": "SKIPPED",
+      "reason": "Hosted workflows and human review belong to the future pull-request head and were unavailable when this receipt was emitted."
+    }
+  ],
+  "policy_decisions": [
+    "kfm://adr/ADR-0029"
+  ],
+  "citations": [
+    {
+      "id": "KFM-DIRECTORY-RULES-V2",
+      "validated": true,
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md@236bdaf81b001d434726bd9ec7b0664c8ec0be83"
+    },
+    {
+      "id": "KFM-ADR-0029",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@236bdaf81b001d434726bd9ec7b0664c8ec0be83"
+    },
+    {
+      "id": "KFM-GDRIVE-REPOSITORY-STRUCTURE-GUIDANCE",
+      "validated": true,
+      "evidence_ref": "https://docs.google.com/document/d/1J0an6dk5VSq_mebS4TYvFUuBQZ_XLVtUlARGOSaMEaY/edit"
+    },
+    {
+      "id": "KFM-GDRIVE-AI-BUILD-CONTRACT",
+      "validated": true,
+      "evidence_ref": "https://docs.google.com/document/d/1yy3IaBJm9epC578w7Oak_12gVxT59vnw6IJYn0XIHKs/edit"
+    },
+    {
+      "id": "KFM-GITHUB-MILESTONE-1-MRTS-04",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/issues/3361"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-22T20:02:54Z",
+  "emitter": "OpenAI Codex Work Mode",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "MRTS-04 adds a fail-closed governance-parity profile over existing validators without rewriting the topology engine or expanding its baseline. Profile integrity and topology conformance are separate: the former passes, while the latter remains HOLD_INHERITED. Independent review, topology correction, candidate authority decisions, source activation, data admission, policy approval, lifecycle mutation, release, deployment, promotion, publication, milestone closure, and public-runtime behavior remain outside this receipt."
+}

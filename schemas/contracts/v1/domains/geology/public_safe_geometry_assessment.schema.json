@@ -1,0 +1,251 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/domains/geology/public_safe_geometry_assessment.schema.json",
+  "title": "GeologyPublicSafeGeometryAssessment",
+  "description": "Closed, synthetic, metadata-only assessment of a proposed public-safe Geology geometry disposition. It carries no coordinates or geometry bytes, performs no transform, and grants no policy, review, release, or publication authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "kfm_ref": {
+      "type": "string",
+      "pattern": "^kfm:[a-z0-9][a-z0-9._:/-]{5,220}$"
+    },
+    "nullable_kfm_ref": {
+      "oneOf": [
+        {"$ref": "#/$defs/kfm_ref"},
+        {"type": "null"}
+      ]
+    },
+    "date_time": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "Z$"
+    }
+  },
+  "properties": {
+    "object_type": {
+      "const": "GeologyPublicSafeGeometryAssessment"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "profile_id": {
+      "const": "kfm-geology-public-safe-geometry-fixture-v1"
+    },
+    "assessment_id": {
+      "type": "string",
+      "pattern": "^kfm:geology:public-safe-geometry:[0-9a-f]{24}$"
+    },
+    "spec_hash": {
+      "$ref": "#/$defs/sha256"
+    },
+    "evaluated_at": {
+      "$ref": "#/$defs/date_time"
+    },
+    "object_family": {
+      "enum": [
+        "BoreholeReference",
+        "GeochemistrySample",
+        "GeologyBoundaryVersion",
+        "MineralOccurrence",
+        "ResourceDeposit"
+      ]
+    },
+    "requested_surface": {
+      "enum": ["PUBLIC_API", "PUBLIC_EXPORT", "PUBLIC_MAP"]
+    },
+    "source_geometry": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "geometry_ref": {"$ref": "#/$defs/kfm_ref"},
+        "geometry_role": {
+          "enum": ["INTERNAL_EXACT", "GENERALIZED_PUBLIC"]
+        },
+        "storage_class": {
+          "enum": ["RESTRICTED", "PUBLIC"]
+        },
+        "coordinate_material_present": {"type": "boolean"},
+        "crs_ref": {"type": "string", "minLength": 3, "maxLength": 128},
+        "scale_denominator": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000000000
+        },
+        "sensitivity_class": {
+          "enum": [
+            "CANONICAL_BOUNDARY",
+            "EXACT_SUBSURFACE",
+            "RESOURCE_TARGET",
+            "SAMPLE_LOCALITY"
+          ]
+        }
+      },
+      "required": [
+        "geometry_ref",
+        "geometry_role",
+        "storage_class",
+        "coordinate_material_present",
+        "crs_ref",
+        "scale_denominator",
+        "sensitivity_class"
+      ]
+    },
+    "public_derivative": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "disposition": {
+          "enum": ["EXACT_REQUEST", "GENERALIZED", "WITHHELD"]
+        },
+        "geometry_ref": {"$ref": "#/$defs/nullable_kfm_ref"},
+        "geometry_role": {
+          "enum": ["EXACT_PUBLIC_REQUEST", "GENERALIZED_PUBLIC", "WITHHELD"]
+        },
+        "coordinate_material_present": {"type": "boolean"},
+        "generalization_method": {
+          "enum": ["ADMINISTRATIVE_AREA", "NONE", "SOURCE_SCALE", "WITHHELD"]
+        },
+        "crs_ref": {
+          "type": ["string", "null"],
+          "minLength": 3,
+          "maxLength": 128
+        },
+        "scale_denominator": {
+          "type": ["integer", "null"],
+          "minimum": 1,
+          "maximum": 1000000000
+        },
+        "uncertainty_disclosed": {"type": "boolean"}
+      },
+      "required": [
+        "disposition",
+        "geometry_ref",
+        "geometry_role",
+        "coordinate_material_present",
+        "generalization_method",
+        "crs_ref",
+        "scale_denominator",
+        "uncertainty_disclosed"
+      ]
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "source_descriptor_ref": {"$ref": "#/$defs/kfm_ref"},
+        "evidence_refs": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/kfm_ref"}
+        },
+        "transform_receipt_ref": {"$ref": "#/$defs/nullable_kfm_ref"},
+        "policy_decision_ref": {"$ref": "#/$defs/nullable_kfm_ref"},
+        "review_record_ref": {"$ref": "#/$defs/nullable_kfm_ref"},
+        "release_manifest_ref": {"$ref": "#/$defs/nullable_kfm_ref"},
+        "rights_state": {
+          "enum": ["DENIED", "UNKNOWN", "VERIFIED"]
+        },
+        "policy_outcome": {
+          "enum": ["ALLOW_GENERALIZED", "DENY", "UNKNOWN", "WITHHOLD"]
+        },
+        "review_state": {
+          "enum": ["APPROVED", "PENDING", "UNKNOWN"]
+        },
+        "release_state": {
+          "enum": ["NOT_RELEASED", "RELEASED"]
+        },
+        "publication_authorized": {"type": "boolean"}
+      },
+      "required": [
+        "source_descriptor_ref",
+        "evidence_refs",
+        "transform_receipt_ref",
+        "policy_decision_ref",
+        "review_record_ref",
+        "release_manifest_ref",
+        "rights_state",
+        "policy_outcome",
+        "review_state",
+        "release_state",
+        "publication_authorized"
+      ]
+    },
+    "assessment": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "outcome": {"enum": ["DENY", "HOLD"]},
+        "reason_codes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 8,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "EXACT_PUBLIC_GEOMETRY_DENIED",
+              "PUBLIC_GEOMETRY_WITHHELD",
+              "RELEASE_AUTHORITY_UNWIRED"
+            ]
+          }
+        },
+        "required_next_gates": {
+          "type": "array",
+          "maxItems": 8,
+          "uniqueItems": true,
+          "items": {
+            "enum": ["PUBLICATION_REVIEW", "RELEASE_MANIFEST"]
+          }
+        },
+        "authority": {"const": "NONE"}
+      },
+      "required": ["outcome", "reason_codes", "required_next_gates", "authority"]
+    },
+    "limitations": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 6,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "fixture_only",
+          "metadata_only_no_geometry_bytes",
+          "no_live_policy_evaluation",
+          "no_release_or_publication",
+          "no_review_performed",
+          "no_transform_execution"
+        ]
+      }
+    }
+  },
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile_id",
+    "assessment_id",
+    "spec_hash",
+    "evaluated_at",
+    "object_family",
+    "requested_surface",
+    "source_geometry",
+    "public_derivative",
+    "governance",
+    "assessment",
+    "limitations"
+  ],
+  "x-kfm": {
+    "status": "PROPOSED_FIXTURE_PROFILE",
+    "authority": "NONE",
+    "coordinate_material": "DENIED",
+    "transform_execution": "UNWIRED",
+    "policy_evaluation": "UNWIRED",
+    "release_and_publication": "UNWIRED",
+    "contract_doc": "contracts/domains/geology/public_safe_geometry_assessment.md"
+  }
+}

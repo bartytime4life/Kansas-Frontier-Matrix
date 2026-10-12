@@ -1,0 +1,151 @@
+{
+  "receipt_id": "genrec-archaeology-promotion-policy-readme-05f491fd",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "policy/domains/archaeology/promotion/README.md"
+  ],
+  "artifact_hashes": {
+    "policy/domains/archaeology/promotion/README.md": "sha256:05f491fdbf6cf74bd837fba0bc6a06940a57119da0f7f689a75f7a360f872483"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-19"
+  },
+  "prompt_or_contract": "sha256:9c3602e58c615f6fab7f1564dc10d6094dd326b6b05dfba22cf9a8a6c944cc6f",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "repository evidence inspection",
+      "Directory Rules",
+      "KFM AI Build Operating Contract",
+      "local Markdown, JSON, and hash validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "Directory Rules.pdf",
+      "Kansas Frontier Matrix — AI Build Operating Contract.md",
+      "KFM Unified Doctrine Synthesis.md"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f73caa6dece3a4459b1298dc9b105256fb1f67d5/policy/domains/archaeology/promotion/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f73caa6dece3a4459b1298dc9b105256fb1f67d5/policy/domains/archaeology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f73caa6dece3a4459b1298dc9b105256fb1f67d5/docs/runbooks/archaeology/PROMOTION_RUNBOOK.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f73caa6dece3a4459b1298dc9b105256fb1f67d5/docs/domains/archaeology/PUBLICATION_AND_POLICY.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f73caa6dece3a4459b1298dc9b105256fb1f67d5/docs/domains/archaeology/SENSITIVITY.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f73caa6dece3a4459b1298dc9b105256fb1f67d5/contracts/release/promotion_decision.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f73caa6dece3a4459b1298dc9b105256fb1f67d5/schemas/contracts/v1/release/promotion_decision.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f73caa6dece3a4459b1298dc9b105256fb1f67d5/tools/validators/release/validate_promotion_decision.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f73caa6dece3a4459b1298dc9b105256fb1f67d5/tests/release/test_promotion_decision_schema.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f73caa6dece3a4459b1298dc9b105256fb1f67d5/policy/promotion/promotion_prerequisites.rego",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f73caa6dece3a4459b1298dc9b105256fb1f67d5/policy/promotion/rollback_card_required.rego",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f73caa6dece3a4459b1298dc9b105256fb1f67d5/.github/workflows/promotion-gate.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f73caa6dece3a4459b1298dc9b105256fb1f67d5/.github/workflows/domain-archaeology.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f73caa6dece3a4459b1298dc9b105256fb1f67d5/release/candidates/archaeology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f73caa6dece3a4459b1298dc9b105256fb1f67d5/tests/fixtures/domains/archaeology/promotion/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/f73caa6dece3a4459b1298dc9b105256fb1f67d5/tools/validators/archaeology/README.md"
+    ]
+  },
+  "truth_labels": {
+    "policy/domains/archaeology/promotion/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-authority-preflight",
+      "outcome": "PASS",
+      "reason": "Verified repository identity, target path, prior blob, current review branch, and write permission."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "The existing target remains under the canonical policy responsibility root; no parallel policy, contract, schema, receipt, proof, review, or release authority was created."
+    },
+    {
+      "gate": "repository-evidence-grounding",
+      "outcome": "PASS",
+      "reason": "Inspected parent policy and doctrine, promotion runbook, shared PromotionDecision contract/schema/validator/test, promotion policy stubs, shared and domain workflows, fixture boundaries, candidate lane, and validator maturity."
+    },
+    {
+      "gate": "shared-promotion-shape-boundary",
+      "outcome": "PASS",
+      "reason": "The README accurately distinguishes confirmed non-vacuous PromotionDecision shape checks from unestablished Archaeology policy, review, evidence, candidate, release, and publication enforcement."
+    },
+    {
+      "gate": "sensitive-domain-and-non-invention",
+      "outcome": "PASS",
+      "reason": "The README preserves deny-by-default exact-location and protected-cultural-material handling and does not accept new numeric redaction, geometry, privacy, or promotion thresholds."
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "Verified one H1 outside code fences, complete KFM Meta Block markers, required boundary sections, rollback instructions, changelog, and final newline."
+    },
+    {
+      "gate": "remote-readback-and-hash",
+      "outcome": "PASS",
+      "reason": "GitHub returned blob SHA 7268ee0f8531887a4c16c0b443f37108e08364c3, matching the authored Git blob; artifact SHA-256 is 05f491fdbf6cf74bd837fba0bc6a06940a57119da0f7f689a75f7a360f872483."
+    },
+    {
+      "gate": "executable-archaeology-promotion-policy",
+      "outcome": "SKIPPED",
+      "reason": "No accepted Archaeology promotion bundle, evaluator, policy input contract, cultural-review records, domain policy tests, proof producer, reviewed candidate, release dry run, or public obligation integration was established; the README documents this explicit hold."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "prior-target-and-domain-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/f73caa6dece3a4459b1298dc9b105256fb1f67d5/policy/domains/archaeology/promotion/README.md"
+    },
+    {
+      "id": "promotion-runbook-gates",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/f73caa6dece3a4459b1298dc9b105256fb1f67d5/docs/runbooks/archaeology/PROMOTION_RUNBOOK.md"
+    },
+    {
+      "id": "promotion-decision-contract-and-shape",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/f73caa6dece3a4459b1298dc9b105256fb1f67d5/contracts/release/promotion_decision.md"
+    },
+    {
+      "id": "promotion-gate-workflow",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/f73caa6dece3a4459b1298dc9b105256fb1f67d5/.github/workflows/promotion-gate.yml"
+    },
+    {
+      "id": "archaeology-domain-holds",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/f73caa6dece3a4459b1298dc9b105256fb1f67d5/.github/workflows/domain-archaeology.yml"
+    },
+    {
+      "id": "archaeology-release-candidate-maturity",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/f73caa6dece3a4459b1298dc9b105256fb1f67d5/release/candidates/archaeology/README.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-19T17:21:15Z",
+  "emitter": "openai/gpt-5.6-thinking",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored repository-grounded README revision on a scoped review branch. This receipt records provenance, not approval. No policy source, threshold, schema, contract, fixture payload, test, validator, workflow, protected record, evidence object, review record, candidate dossier, receipt/proof instance, release artifact, deployment, public route, map layer, or AI behavior was changed. Human review remains pending."
+}

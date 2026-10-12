@@ -1,0 +1,9 @@
+{
+  "case_id": "tile-manifest-tiling-scheme-unsupported",
+  "expected": {
+    "issue_codes": ["TILE_MANIFEST_TILING_SCHEME_UNSUPPORTED"],
+    "status": "DENY"
+  },
+  "fixture_profile": "kfm.pmtiles.tile-artifact-manifest.compat.v1",
+  "mutation": "manifest_tiling_scheme_unsupported"
+}

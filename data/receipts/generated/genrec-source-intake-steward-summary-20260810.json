@@ -1,0 +1,143 @@
+{
+  "receipt_id": "genrec-source-intake-steward-summary-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/source-intake-steward-summary.yml",
+    "contracts/source/source_intake_steward_summary.md",
+    "docs/intake/exploratory/source-intake-steward-summary-source-map.md",
+    "tests/source/test_render_source_intake_steward_summary.py",
+    "tools/ci/render_source_intake_steward_summary.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/source-intake-steward-summary.yml": "sha256:a08f0663683f039e39314a47bfdb6e5c0e88aba12877ddca33c4b302eb4fdca6",
+    "contracts/source/source_intake_steward_summary.md": "sha256:67b8d532743b7c94c3263224b6d695ca706423e38db610092dc2080372b0698d",
+    "docs/intake/exploratory/source-intake-steward-summary-source-map.md": "sha256:b82059fcec78c519a939dd42b9d39e87ebfdb273f377b67a9ee7015e9d899432",
+    "tests/source/test_render_source_intake_steward_summary.py": "sha256:70cf31f3a7e5767ca3212d4ba5694d5bd4911623d116c906c0bf0482bc0d0133",
+    "tools/ci/render_source_intake_steward_summary.py": "sha256:9acb460ad2e60804536b5a9e20fceb791524af631e3540957a45b7458c9b0f72"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-10"
+  },
+  "prompt_or_contract": "sha256:67b8d532743b7c94c3263224b6d695ca706423e38db610092dc2080372b0698d",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector inspection",
+      "GitHub connector repository inspection",
+      "local deterministic Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:57e4b74255b52863f2a489595077741d7f45c2968a9740fe4837bac73778f780",
+      "sha256:f282fe8538bd94a2101b4955114cae5f87996639b37bc42bf7cfe76d61ba74be",
+      "sha256:eedf1d84bf7f6fba9f40b7e27ea62966ebd4118f5197aa71a9351794f4e4bbd2",
+      "sha256:d20cd9416f5aaee8e73674d40ca2b8f2f9ee3bf84efa76dc2621bc05aca8e1b8",
+      "sha256:d49481873ccf225828c8f49cfe32066064e841422a1b59444bb97e2d74f3a62f"
+    ],
+    "attached_docs": [
+      "KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md#KFM-IDX-UIX-003",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/149af17075f7f12d716aa14de439ea22ee6a343e",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/149af17075f7f12d716aa14de439ea22ee6a343e/docs/domains/flora/SOURCE_REGISTRY.md#L492-L498",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/149af17075f7f12d716aa14de439ea22ee6a343e/contracts/source/source_intake_record.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/149af17075f7f12d716aa14de439ea22ee6a343e/tools/ci/render_stable_diff_summary.py"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/source-intake-steward-summary.yml": "PROPOSED",
+    "contracts/source/source_intake_steward_summary.md": "PROPOSED",
+    "docs/intake/exploratory/source-intake-steward-summary-source-map.md": "PROPOSED",
+    "tests/source/test_render_source_intake_steward_summary.py": "CONFIRMED",
+    "tools/ci/render_source_intake_steward_summary.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "python-syntax-compilation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "existing-source-intake-fixture-polarity-7-cases",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "focused-unittest-suite-10-tests",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "ready-hold-no-action-and-invalid-status-projection",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "sensitive-detail-redaction-and-markdown-escaping",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "rollback-target-hold-and-finite-next-actions",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "no-network-value-free-errors-and-output-symlink-denial",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted validation runs after the draft pull request is opened."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human source, sensitivity, policy, rollback, and review-surface assessment remain pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "structured-steward-summary",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md#KFM-IDX-UIX-003"
+    },
+    {
+      "id": "flora-source-intake-summary",
+      "validated": true,
+      "evidence_ref": "repo:docs/domains/flora/SOURCE_REGISTRY.md@149af17075f7f12d716aa14de439ea22ee6a343e"
+    },
+    {
+      "id": "stable-diff-renderer-reuse",
+      "validated": true,
+      "evidence_ref": "repo:tools/ci/render_stable_diff_summary.py@149af17075f7f12d716aa14de439ea22ee6a343e"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-10T16:00:11Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Adds a deterministic, presentation-only SourceIntakeRecord steward-summary renderer that reuses existing source validation and review-rendering patterns. It redacts sensitive details, exposes missing rollback evidence as a hold, and performs no fetch, lifecycle write, evidence resolution, policy decision, review approval, notification, promotion, release, deployment, publication, or public-use action."
+}

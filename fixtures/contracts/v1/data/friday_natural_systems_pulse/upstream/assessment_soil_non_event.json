@@ -1,0 +1,54 @@
+{
+  "assessment_id": "material-change:natural-systems:soil:2026-03-20:non_event",
+  "baseline_ref": "kfm://dataset-version/natural-systems/soil/2026-03-13",
+  "candidate_ref": "kfm://dataset-version/natural-systems/soil/2026-03-20",
+  "classification": {
+    "change_class": "UNCHANGED",
+    "material": false,
+    "outcome": "NON_EVENT",
+    "reason_codes": [
+      "NO_BYTE_CHANGE"
+    ]
+  },
+  "comparison": {
+    "baseline_digest": "sha256:7177de254fb45f736b3d175c2284cd5eb86f922a2f8679d3d3bbfe2bb56cb78d",
+    "byte_changed": false,
+    "candidate_digest": "sha256:7177de254fb45f736b3d175c2284cd5eb86f922a2f8679d3d3bbfe2bb56cb78d",
+    "semantic_changed": false
+  },
+  "criteria": [],
+  "evidence": {
+    "diff_report_ref": null,
+    "source_refs": [
+      "kfm://source/synthetic/natural-systems/soil"
+    ],
+    "validation_report_refs": []
+  },
+  "governance": {
+    "authority_created": false,
+    "policy_evaluated": false,
+    "promotion_authorized": false,
+    "public_use_allowed": false,
+    "release_ref": null,
+    "spec_hash": "sha256:229661ec35a76ccce6895055698fd173f8f0926301cb80cafc1b289722b84688"
+  },
+  "lineage": {
+    "superseded_by": null,
+    "supersedes": null
+  },
+  "object_type": "MaterialChangeAssessment",
+  "profile": {
+    "canonicalization_profile": "kfm-canonical-json-v1",
+    "digest_algorithm": "sha256",
+    "profile_id": "kfm://materiality-profile/natural-systems/soil/fixture-v1",
+    "profile_version": "1.0.0",
+    "spec_hash": "sha256:410cd6534be291e2544c99a8d944a603ca89e7a61dafc3e06d5fe8bd84f85047"
+  },
+  "schema_version": "1.0.0",
+  "subject_ref": "kfm://dataset/natural-systems/soil",
+  "timing": {
+    "assessed_at": "2026-03-20T23:30:00Z",
+    "baseline_as_of": "2026-03-13T00:00:00Z",
+    "candidate_as_of": "2026-03-20T18:00:00Z"
+  }
+}

@@ -1,0 +1,135 @@
+{
+  "receipt_id": "genrec-connectors-core-source-adapter-20260809",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/connector-gate.yml",
+    "contracts/source/source_adapter.md",
+    "docs/intake/exploratory/briefing-source-adapter-protocol-source-map.md",
+    "packages/connectors-core/src/connectors_core/SOURCE_ADAPTER.md",
+    "packages/connectors-core/src/connectors_core/source_adapter.py",
+    "tests/packages/connectors_core/test_source_adapter.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/connector-gate.yml": "sha256:24fd039e9b4fa400cf271e0b603e0a3751c197fa16582745ce3e3468fa6506fb",
+    "contracts/source/source_adapter.md": "sha256:ab6ea49281d2585e4f5055638a9521bc064d4570194a4e8ae23dd00015117fd6",
+    "docs/intake/exploratory/briefing-source-adapter-protocol-source-map.md": "sha256:b14d606aa9ab4590997286d81b3b76ad8e6a4a40c8f2ded559a051b8d8216d32",
+    "packages/connectors-core/src/connectors_core/SOURCE_ADAPTER.md": "sha256:aa6805cea219ff5de2288b0a5d46058171fab4bb705b5ee7b668566c6f3abd9f",
+    "packages/connectors-core/src/connectors_core/source_adapter.py": "sha256:10e9ddde868543e2e41eddcd84761b3efe9fdfcee221c9c339df0cb71e0b8f6d",
+    "tests/packages/connectors_core/test_source_adapter.py": "sha256:ffee16c326975bbf9d5a68eafedef477ec3cac315572bd864448ef904dc09407"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-09"
+  },
+  "prompt_or_contract": "sha256:73944433dacadd475069e81b9cd1ba20d2f44c61bfd176f0b0e5f30d8a232771",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "uploaded-file search",
+      "GitHub connector repository inspection and mutation",
+      "local deterministic Python validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Briefing_to_System_Integration_Architecture.docx",
+      "KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Briefing_to_System_Integration_Architecture.docx#25.4",
+      "attachment:KFM_Briefing_to_System_Integration_Architecture.docx#26.1",
+      "repo:contracts/source/source_adapter.md@e2cbaf865f8e62dfec080db9d8933ee7590b7dc2",
+      "repo:packages/connectors-core/src/connectors_core/transport.py@e2cbaf865f8e62dfec080db9d8933ee7590b7dc2",
+      "repo:packages/connectors-core/src/connectors_core/artifact_handoff.py@e2cbaf865f8e62dfec080db9d8933ee7590b7dc2",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@e2cbaf865f8e62dfec080db9d8933ee7590b7dc2"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/connector-gate.yml": "PROPOSED",
+    "contracts/source/source_adapter.md": "PROPOSED",
+    "docs/intake/exploratory/briefing-source-adapter-protocol-source-map.md": "PROPOSED",
+    "packages/connectors-core/src/connectors_core/SOURCE_ADAPTER.md": "PROPOSED",
+    "packages/connectors-core/src/connectors_core/source_adapter.py": "PROPOSED",
+    "tests/packages/connectors_core/test_source_adapter.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "isolated-python-syntax-compilation",
+      "outcome": "PASS",
+      "reason": "The new protocol module and focused test module compiled under Python 3.11-compatible syntax."
+    },
+    {
+      "gate": "isolated-focused-pytest",
+      "outcome": "PASS",
+      "reason": "Seven deterministic no-network tests passed for identity, secret safety, immutable parse results, finite outcomes, false-clear prevention, protocol conformance, and import effects."
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS",
+      "reason": "The updated connector-gate workflow parsed as YAML."
+    },
+    {
+      "gate": "markdown-source-check",
+      "outcome": "PASS",
+      "reason": "Authored Markdown has balanced fences and no NUL content."
+    },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS",
+      "reason": "SHA-256 digests were computed over the final authored bytes for every bound artifact."
+    },
+    {
+      "gate": "full-repository-test-suite",
+      "outcome": "SKIPPED",
+      "reason": "No mounted repository checkout is available; hosted exact-head CI remains authoritative for integration."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "briefing-phase-2-source-verification",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Briefing_to_System_Integration_Architecture.docx#25.4"
+    },
+    {
+      "id": "repository-source-adapter-semantic-contract",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/e2cbaf865f8e62dfec080db9d8933ee7590b7dc2/contracts/source/source_adapter.md"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/e2cbaf865f8e62dfec080db9d8933ee7590b7dc2/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-09T01:30:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Pure source-agnostic protocol/value boundary only. No concrete source adapter, live network access, source activation, lifecycle write, evidence closure, policy/review decision, authoritative receipt, release, deployment, publication, or public-use authority is created."
+}

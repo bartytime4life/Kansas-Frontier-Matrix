@@ -1,0 +1,318 @@
+{
+  "profile": "kfm.governance.implementation-decision-record.cases.v1",
+  "cases": [
+    {
+      "name": "ready-local-review",
+      "expected_outcome": "READY",
+      "document": {
+        "schema_version": "1.0.0",
+        "profile": "kfm.governance.implementation-decision-record.v1",
+        "profile_status": "PROPOSED_INACTIVE",
+        "execution_mode": "LOCAL_NO_NETWORK",
+        "authority": "NONE",
+        "record_id": "kfm:implementation-decision:review-context:0001",
+        "change_ref": "git:feature/example@0123456789abcdef",
+        "created_at": "2026-08-06T00:00:00Z",
+        "status": "READY_FOR_REVIEW",
+        "title": "Render implementation rationale from structured records",
+        "scope": {
+          "paths": [
+            "contracts/governance/example.md",
+            "tools/validators/governance/example.py"
+          ],
+          "behavior": "Render a deterministic reviewer appendix without replacing the pull-request template or review authority.",
+          "object_families": [
+            "ImplementationDecisionRecord"
+          ]
+        },
+        "decision": {
+          "chosen_option": "Use a closed JSON record plus deterministic Markdown renderer.",
+          "mechanism": "Validate closed records, sort by stable record ID, and render only declared rationale, alternatives, support references, governance significance, and rollback fields.",
+          "rationale": "A structured record is testable and diffable while the renderer stays mechanical and cannot invent a decision after the fact.",
+          "alternatives": [
+            {
+              "option": "Store free-form session transcripts.",
+              "disposition": "REJECTED",
+              "reason": "Transcripts can expose prompts or private model deliberation and are not deterministic review objects."
+            }
+          ],
+          "reviewer_questions": [
+            "Does the record remain clearly separate from ReviewRecord and ADR authority?"
+          ]
+        },
+        "governance": {
+          "truth_label": "CONFIRMED",
+          "significance": "LOCAL_IMPLEMENTATION",
+          "adr_ref": null,
+          "decision_log_ref": null,
+          "review_record_ref": null,
+          "generated_receipt_ref": "data/receipts/generated/example.json"
+        },
+        "evidence_refs": [
+          "contracts/governance/ReviewRecord.md",
+          "docs/doctrine/directory-rules.md"
+        ],
+        "validation_refs": [
+          "test:implementation-decision-record:focused"
+        ],
+        "rollback": {
+          "strategy": "Revert the feature commit; no data or release migration is required.",
+          "target_ref": "git:main@0123456789abcdef"
+        },
+        "permissions": {
+          "may_approve_review": false,
+          "may_mutate_repository": false,
+          "may_change_policy": false,
+          "may_promote": false,
+          "may_release": false,
+          "may_publish": false
+        },
+        "non_effects": [
+          "no_evidence_creation_or_resolution",
+          "no_policy_or_review_approval",
+          "no_repository_mutation_authority",
+          "no_promotion_release_deployment_or_publication",
+          "no_person_profile_or_hidden_reasoning"
+        ]
+      }
+    },
+    {
+      "name": "hold-draft-without-validation",
+      "expected_outcome": "HOLD",
+      "document": {
+        "schema_version": "1.0.0",
+        "profile": "kfm.governance.implementation-decision-record.v1",
+        "profile_status": "PROPOSED_INACTIVE",
+        "execution_mode": "LOCAL_NO_NETWORK",
+        "authority": "NONE",
+        "record_id": "kfm:implementation-decision:review-context:0002",
+        "change_ref": "pr:example:2",
+        "created_at": "2026-08-06T00:00:00Z",
+        "status": "DRAFT",
+        "title": "Backfill an implementation choice",
+        "scope": {
+          "paths": ["tools/example.py"],
+          "behavior": "Capture a backfilled rationale that remains held until independently supported.",
+          "object_families": []
+        },
+        "decision": {
+          "chosen_option": "Record the reconstructed choice as draft.",
+          "mechanism": "Create the same bounded record shape but with no validation reference.",
+          "rationale": "Backfill is useful lineage but must not masquerade as live, verified rationale.",
+          "alternatives": [
+            {
+              "option": "Mark reconstructed rationale ready immediately.",
+              "disposition": "REJECTED",
+              "reason": "That would convert plausible post-hoc narration into apparent verification."
+            }
+          ],
+          "reviewer_questions": ["What current evidence can verify this reconstructed rationale?"]
+        },
+        "governance": {
+          "truth_label": "NEEDS_VERIFICATION",
+          "significance": "LOCAL_IMPLEMENTATION",
+          "adr_ref": null,
+          "decision_log_ref": null,
+          "review_record_ref": null,
+          "generated_receipt_ref": null
+        },
+        "evidence_refs": ["git:main@example"],
+        "validation_refs": [],
+        "rollback": {
+          "strategy": "Delete the draft record if reconstruction is unsupported.",
+          "target_ref": "git:main@example"
+        },
+        "permissions": {
+          "may_approve_review": false,
+          "may_mutate_repository": false,
+          "may_change_policy": false,
+          "may_promote": false,
+          "may_release": false,
+          "may_publish": false
+        },
+        "non_effects": [
+          "no_evidence_creation_or_resolution",
+          "no_policy_or_review_approval",
+          "no_repository_mutation_authority",
+          "no_promotion_release_deployment_or_publication",
+          "no_person_profile_or_hidden_reasoning"
+        ]
+      }
+    },
+    {
+      "name": "hold-authority-significant-without-adr",
+      "expected_outcome": "HOLD",
+      "document": {
+        "schema_version": "1.0.0",
+        "profile": "kfm.governance.implementation-decision-record.v1",
+        "profile_status": "PROPOSED_INACTIVE",
+        "execution_mode": "LOCAL_NO_NETWORK",
+        "authority": "NONE",
+        "record_id": "kfm:implementation-decision:authority-change:0001",
+        "change_ref": "pr:example:3",
+        "created_at": "2026-08-06T00:00:00Z",
+        "status": "READY_FOR_REVIEW",
+        "title": "Change an authority boundary",
+        "scope": {
+          "paths": ["contracts/example.md", "policy/example.rego"],
+          "behavior": "Describe a change that would alter semantic and policy authority.",
+          "object_families": ["ExampleObject"]
+        },
+        "decision": {
+          "chosen_option": "Change the authority boundary.",
+          "mechanism": "Amend semantic and policy surfaces together.",
+          "rationale": "The example intentionally lacks the required accepted-decision reference.",
+          "alternatives": [
+            {
+              "option": "Keep the existing boundary.",
+              "disposition": "DEFERRED",
+              "reason": "The example is testing escalation rather than selecting an architecture."
+            }
+          ],
+          "reviewer_questions": ["Which accepted ADR authorizes this authority change?"]
+        },
+        "governance": {
+          "truth_label": "PROPOSED",
+          "significance": "AUTHORITY_SIGNIFICANT",
+          "adr_ref": null,
+          "decision_log_ref": null,
+          "review_record_ref": null,
+          "generated_receipt_ref": null
+        },
+        "evidence_refs": ["docs/doctrine/directory-rules.md"],
+        "validation_refs": ["test:example:passed"],
+        "rollback": {
+          "strategy": "Do not implement until an accepted ADR exists.",
+          "target_ref": "git:main@example"
+        },
+        "permissions": {
+          "may_approve_review": false,
+          "may_mutate_repository": false,
+          "may_change_policy": false,
+          "may_promote": false,
+          "may_release": false,
+          "may_publish": false
+        },
+        "non_effects": [
+          "no_evidence_creation_or_resolution",
+          "no_policy_or_review_approval",
+          "no_repository_mutation_authority",
+          "no_promotion_release_deployment_or_publication",
+          "no_person_profile_or_hidden_reasoning"
+        ]
+      }
+    },
+    {
+      "name": "error-permission-overreach",
+      "expected_outcome": "ERROR",
+      "document": {
+        "schema_version": "1.0.0",
+        "profile": "kfm.governance.implementation-decision-record.v1",
+        "profile_status": "PROPOSED_INACTIVE",
+        "execution_mode": "LOCAL_NO_NETWORK",
+        "authority": "NONE",
+        "record_id": "kfm:implementation-decision:invalid-record:0001",
+        "change_ref": "pr:example:4",
+        "created_at": "2026-08-06T00:00:00Z",
+        "status": "READY_FOR_REVIEW",
+        "title": "Invalid authority claim",
+        "scope": {
+          "paths": ["tools/example.py"],
+          "behavior": "Attempt to grant publication authority from a review-support record.",
+          "object_families": []
+        },
+        "decision": {
+          "chosen_option": "Publish from the record.",
+          "mechanism": "Set a permission flag.",
+          "rationale": "This must be rejected by the closed schema.",
+          "alternatives": [
+            {"option": "Keep authority false.", "disposition": "REJECTED", "reason": "Invalid test case."}
+          ],
+          "reviewer_questions": ["Does the schema reject this overreach?"]
+        },
+        "governance": {
+          "truth_label": "PROPOSED",
+          "significance": "LOCAL_IMPLEMENTATION",
+          "adr_ref": null,
+          "decision_log_ref": null,
+          "review_record_ref": null,
+          "generated_receipt_ref": null
+        },
+        "evidence_refs": ["docs/doctrine/directory-rules.md"],
+        "validation_refs": ["test:invalid"],
+        "rollback": {"strategy": "Reject the record.", "target_ref": "git:main@example"},
+        "permissions": {
+          "may_approve_review": false,
+          "may_mutate_repository": false,
+          "may_change_policy": false,
+          "may_promote": false,
+          "may_release": false,
+          "may_publish": true
+        },
+        "non_effects": [
+          "no_evidence_creation_or_resolution",
+          "no_policy_or_review_approval",
+          "no_repository_mutation_authority",
+          "no_promotion_release_deployment_or_publication",
+          "no_person_profile_or_hidden_reasoning"
+        ]
+      }
+    },
+    {
+      "name": "error-unsorted-support",
+      "expected_outcome": "ERROR",
+      "document": {
+        "schema_version": "1.0.0",
+        "profile": "kfm.governance.implementation-decision-record.v1",
+        "profile_status": "PROPOSED_INACTIVE",
+        "execution_mode": "LOCAL_NO_NETWORK",
+        "authority": "NONE",
+        "record_id": "kfm:implementation-decision:invalid-record:0002",
+        "change_ref": "pr:example:5",
+        "created_at": "2026-08-06T00:00:00Z",
+        "status": "READY_FOR_REVIEW",
+        "title": "Invalid unsorted support references",
+        "scope": {
+          "paths": ["tools/example.py"],
+          "behavior": "Supply evidence references in non-canonical order.",
+          "object_families": []
+        },
+        "decision": {
+          "chosen_option": "Keep deterministic ordering.",
+          "mechanism": "Validate sorted support arrays.",
+          "rationale": "Stable ordering prevents review churn and ambiguous rendering.",
+          "alternatives": [
+            {"option": "Preserve input order.", "disposition": "REJECTED", "reason": "Input order is not meaning-bearing for support references."}
+          ],
+          "reviewer_questions": ["Does the validator reject non-canonical ordering?"]
+        },
+        "governance": {
+          "truth_label": "CONFIRMED",
+          "significance": "LOCAL_IMPLEMENTATION",
+          "adr_ref": null,
+          "decision_log_ref": null,
+          "review_record_ref": null,
+          "generated_receipt_ref": null
+        },
+        "evidence_refs": ["z-reference", "a-reference"],
+        "validation_refs": ["test:invalid"],
+        "rollback": {"strategy": "Sort the references.", "target_ref": "git:main@example"},
+        "permissions": {
+          "may_approve_review": false,
+          "may_mutate_repository": false,
+          "may_change_policy": false,
+          "may_promote": false,
+          "may_release": false,
+          "may_publish": false
+        },
+        "non_effects": [
+          "no_evidence_creation_or_resolution",
+          "no_policy_or_review_approval",
+          "no_repository_mutation_authority",
+          "no_promotion_release_deployment_or_publication",
+          "no_person_profile_or_hidden_reasoning"
+        ]
+      }
+    }
+  ]
+}

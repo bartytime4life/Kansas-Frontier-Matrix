@@ -1,0 +1,121 @@
+{
+  "object_type": "SourceDescriptor",
+  "schema_version": "v1",
+  "source_id": "src:usdm-weekly",
+  "descriptor_version": "0.1.0",
+  "title": "U.S. Drought Monitor (USDM) — Weekly Drought Classification",
+  "description": "Weekly drought-classification polygon product jointly produced by NDMC (University of Nebraska-Lincoln), USDA, and NOAA. Released every Thursday morning; data valid through Tuesday 08:00 EDT of the preceding week. Inactive governance candidate only — no connector activation, schedule, release, or publication is authorized by this descriptor.",
+  "domain_scope": ["agriculture", "hydrology", "hazards"],
+  "source_type": "official_government_dataset",
+  "source_role": "authoritative_for_claim",
+  "authority_rank": "primary_authority",
+  "authority_notes": "Jointly authoritative product for broad-scale drought-extent classification. Not a forecast, not a parcel observation, not an emergency declaration.",
+  "publisher": {
+    "name": "National Drought Mitigation Center (NDMC), University of Nebraska-Lincoln",
+    "jurisdiction": "United States",
+    "contact": {
+      "contact_status": "public_contact",
+      "contact_url": "https://droughtmonitor.unl.edu/"
+    }
+  },
+  "owner_or_steward": {
+    "name": "NDMC / USDA / NOAA (joint producers); NDMC hosts canonical distribution",
+    "jurisdiction": "United States",
+    "contact": {
+      "contact_status": "public_contact",
+      "contact_url": "https://droughtmonitor.unl.edu/Data.aspx"
+    }
+  },
+  "rights": {
+    "rights_status": "unknown",
+    "license_or_terms": "NEEDS VERIFICATION — publicly distributed by NDMC with NDMC, USDA, and NOAA attribution required; exact license string, redistribution constraints, and KFM derivative-tile/PMTiles terms unconfirmed.",
+    "attribution_required": true,
+    "attribution_text": "U.S. Drought Monitor, produced by the National Drought Mitigation Center (NDMC) at the University of Nebraska-Lincoln, the U.S. Department of Agriculture (USDA), and the National Oceanic and Atmospheric Administration (NOAA).",
+    "redistribution_allowed": "unknown",
+    "commercial_use_allowed": "unknown",
+    "last_verified_at": "2026-07-28T00:00:00Z",
+    "verified_by": "kfm-source-review"
+  },
+  "sensitivity_default": "public",
+  "cadence": {
+    "update_cadence": "weekly",
+    "freshness_expectation": "New release every Thursday at approximately 08:30 ET; data valid through Tuesday 08:00 EDT of the preceding week.",
+    "staleness_policy": "deny_publication",
+    "known_update_window": "Thursday 08:30 ET weekly",
+    "timezone": "America/New_York"
+  },
+  "access": {
+    "access_method": "https_download",
+    "access_posture": "open",
+    "endpoints": [
+      {
+        "label": "USDM GIS data landing page",
+        "uri": "https://droughtmonitor.unl.edu/DmData/GISData.aspx",
+        "purpose": "documentation"
+      },
+      {
+        "label": "USDM statistics REST service",
+        "uri": "https://droughtmonitor.unl.edu/DmData/DataDownload/WebServiceInfo.aspx",
+        "purpose": "documentation"
+      },
+      {
+        "label": "USDM data download page",
+        "uri": "https://droughtmonitor.unl.edu/Data.aspx",
+        "purpose": "documentation"
+      }
+    ],
+    "rate_limit_notes": "NEEDS VERIFICATION — rate-limit, retry, and timeout behavior not yet tested against live endpoints."
+  },
+  "citation": {
+    "citation_required": true,
+    "citation_template": "U.S. Drought Monitor, {source_id}, accessed {accessed_at}. Produced by the National Drought Mitigation Center (NDMC) at the University of Nebraska-Lincoln, the USDA, and NOAA.",
+    "citation_guidance": "Cite the NDMC canonical URL, the map release date, the data-valid date, and the access date. Canonical citation: Svoboda et al. (2002), Bull. Amer. Meteor. Soc. 83(8):1181-1190.",
+    "preferred_link": "https://droughtmonitor.unl.edu/"
+  },
+  "source_head": {
+    "observed_at": "2026-07-28T00:00:00Z",
+    "method": "manual_review",
+    "content_identity": {
+      "upstream_version": "usdm-profile-candidate-2026-07-28"
+    },
+    "source_head_notes": "Documentation profile review only; no connector activation. Endpoint health, ETag, Last-Modified, and content digest are NEEDS VERIFICATION."
+  },
+  "admissibility_limits": {
+    "allowed_claim_roles": ["operational_context", "citation_support", "historical_context", "candidate_signal"],
+    "prohibited_claim_roles": ["not_for_life_safety", "not_for_title_truth"],
+    "limitations": "USDM is a broad-scale expert-synthesis classification. Do not infer parcel, field, farm, person, facility, water-right, crop-loss, or emergency-status conditions from USDM classifications alone. Native D0-D4 classifications and short-/long-term impact markers must be preserved without silent recoding into KFM domain truth.",
+    "confidence_posture": "corroborate_before_claim",
+    "review_required_before_use": true,
+    "review_required_before_publication": true
+  },
+  "public_release": {
+    "allowed": false,
+    "requires_review": true,
+    "redaction_required": false,
+    "release_conditions": [
+      "Issue #1675 controls verified",
+      "SourceDescriptor activation reviewed and explicitly authorized",
+      "EvidenceBundle + policy decision + review + release + rollback recorded",
+      "Rights and attribution verified for KFM derivative use",
+      "No-network fixtures and boundary tests exist before live-fetch implementation",
+      "Polygon products and aggregate statistics treated as separate source artifacts"
+    ],
+    "deny_reason_if_not_allowed": "Governance candidate only; no connector activation, schedule, release, or publication authority granted by this descriptor."
+  },
+  "connectors": {
+    "activation_state": "disabled",
+    "connector_ref": "connectors/drought-monitor/",
+    "activation_notes": "Connector and schedule remain disabled. Activation requires explicit authorization after Issue #1675 unblock, rights verification, and no-network fixture + boundary test readiness."
+  },
+  "review_state": "needs_review",
+  "release_state": "not_released",
+  "lifecycle": {
+    "registry_state": "proposed",
+    "created_at": "2026-07-28T00:00:00Z",
+    "updated_at": "2026-07-28T00:00:00Z"
+  },
+  "governance_refs": {
+    "source_registry_ref": "kfm://source-registry/hazards-agriculture-hydrology/usdm-weekly",
+    "validation_report_ref": "kfm://validation/usdm-weekly/source-descriptor-candidate"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "kfm://schemas/contracts/v1/domains/roads-rail-trade/route_uncertainty_profile.schema.json",
+  "title": "Route Uncertainty Profile",
+  "description": "PROPOSED scaffold created from the current docs/domains markdown inventory.",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {},
+  "x-kfm": {
+    "status": "PROPOSED",
+    "path": "schemas/contracts/v1/domains/roads-rail-trade/route_uncertainty_profile.schema.json",
+    "source_docs": [
+      "docs/domains/roads-rail-trade/FILE_SYSTEM_PLAN.md",
+      "docs/domains/roads-rail-trade/VERIFICATION_BACKLOG.md"
+    ],
+    "contract_doc": "contracts/domains/roads-rail-trade/route_uncertainty_profile.md"
+  }
+}

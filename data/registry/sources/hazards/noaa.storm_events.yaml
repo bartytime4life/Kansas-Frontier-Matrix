@@ -1,0 +1,111 @@
+{
+  "object_type": "SourceDescriptor",
+  "schema_version": "v1",
+  "source_id": "kfm://source/noaa-storm-events",
+  "descriptor_version": "1.0.0",
+  "title": "NOAA NCEI Storm Events Database: Kansas event-details pilot",
+  "description": "Admitted scope: the Kansas (STATE_FIPS 20) rows of one data year's NCEI Storm Events details file (StormEvents_details-ftp_v1.0_dYYYY_cYYYYMMDD.csv.gz), chosen as the newest creation vintage the NCEI csvfiles/ listing names for that year, read by connectors/noaa/src/noaa/storm_events_capture.py. Pipeline records carry the short source_id noaa-storm-events. The fatalities and locations files are out of scope, and episode and event narratives are never copied into a candidate. Admitted by the repository owner on 2026-10-12. Stored as JSON, which is valid YAML, so the shared SourceDescriptor validator reads it directly.",
+  "domain_scope": [
+    "hazards"
+  ],
+  "source_type": "official_government_dataset",
+  "source_role": "historical_context",
+  "authority_rank": "authoritative_for_role",
+  "authority_notes": "NOAA NCEI publishes the Storm Events Database from reports National Weather Service forecast offices compile under NWS Directive 10-1605. The records are forecaster-compiled historical event reports (the owner set the product role to administrative on 2026-09-28), not instrument measurements, current warnings, disaster declarations or damage surveys. Damage figures are nominal estimates in event-year USD. NCEI reissues a data year's file under a new creation date when reports are corrected; each vintage is a separate source state.",
+  "publisher": {
+    "name": "NOAA National Centers for Environmental Information",
+    "jurisdiction": "United States",
+    "contact": {
+      "contact_status": "public_contact",
+      "contact_url": "https://www.ncei.noaa.gov/"
+    }
+  },
+  "owner_or_steward": {
+    "name": "NOAA National Centers for Environmental Information",
+    "jurisdiction": "United States",
+    "contact": {
+      "contact_status": "public_contact",
+      "contact_url": "https://www.ncdc.noaa.gov/stormevents/"
+    }
+  },
+  "rights": {
+    "rights_status": "verified_open",
+    "license_or_terms": "U.S. Public Domain (NOAA federal records, 17 U.S.C. 105); Storm Events data subject to revision",
+    "attribution_required": true,
+    "attribution_text": "NOAA National Centers for Environmental Information, Storm Events Database. Records are compiled from National Weather Service reports and may be revised.",
+    "redistribution_allowed": "yes",
+    "commercial_use_allowed": "yes",
+    "last_verified_at": "2026-10-12T13:00:00Z",
+    "verified_by": "@bartytime4life"
+  },
+  "sensitivity_default": "public",
+  "sensitivity_notes": "Event rows carry county or forecast-zone names, begin and end coordinates, and casualty counts, all published by NCEI. Episode and event narratives are unreviewed free text that may describe individuals or private property; the pilot keeps only whether a narrative exists. The fatalities file (age, sex, location of each death) is out of scope.",
+  "cadence": {
+    "update_cadence": "monthly",
+    "freshness_expectation": "NCEI reissues details files roughly monthly, typically 75 to 90 days behind the latest events. The pilot marks a capture stale when the captured file's creation date is more than 45 days older than the retrieval date.",
+    "staleness_policy": "mark_stale"
+  },
+  "access": {
+    "access_method": "https_download",
+    "access_posture": "open",
+    "endpoints": [
+      {
+        "label": "Storm Events bulk CSV directory",
+        "uri": "https://www.ncei.noaa.gov/pub/data/swdi/stormevents/csvfiles/",
+        "purpose": "download"
+      },
+      {
+        "label": "Storm Events bulk data format",
+        "uri": "https://www.ncei.noaa.gov/pub/data/swdi/stormevents/csvfiles/Storm-Data-Bulk-csv-Format.pdf",
+        "purpose": "documentation"
+      },
+      {
+        "label": "Storm Events Database",
+        "uri": "https://www.ncdc.noaa.gov/stormevents/",
+        "purpose": "metadata"
+      }
+    ]
+  },
+  "citation": {
+    "citation_required": true,
+    "citation_template": "NOAA National Centers for Environmental Information, Storm Events Database, event {event_id} ({event_type}, {cz_name}), file {source_file}, accessed {accessed_at}.",
+    "citation_guidance": "Cite the event ID, the details file (which names its data year and creation vintage) and the retrieval time, and state that records may be revised."
+  },
+  "source_head": {
+    "observed_at": "2026-10-12T12:00:00Z",
+    "method": "manual_review",
+    "content_identity": {
+      "upstream_version": "StormEvents_details-ftp_v1.0",
+      "source_head_uri": "https://www.ncei.noaa.gov/pub/data/swdi/stormevents/csvfiles/"
+    }
+  },
+  "admissibility_limits": {
+    "allowed_claim_roles": [
+      "historical_context",
+      "map_display",
+      "citation_support"
+    ],
+    "prohibited_claim_roles": [
+      "not_for_life_safety"
+    ],
+    "limitations": "Admission covers the Kansas rows of one data year's details file. A record says a National Weather Service office reported an event of that type in that county or zone over that local-time window; it is not a measurement, footprint, inundation extent, warning or declaration. Begin and end coordinates, where present, are report points, not a path or area. Damage is a nominal, unadjusted estimate; blank damage is unreported, never zero. Rows with unreadable damage or casualty values or an end before the begin are withheld and counted. Selection is by NCEI's STATE_FIPS, not a spatial join. The absence of a record does not mean no hazard occurred.",
+    "confidence_posture": "source_authoritative_within_role"
+  },
+  "public_release": {
+    "allowed": true,
+    "requires_review": true,
+    "redaction_required": false,
+    "release_conditions": [
+      "Each package needs a kfm.storm-events-release-decision/v1 record that passes the serving gate.",
+      "Owner self-release applies only under ADR-0047: public sensitivity and this admitted license.",
+      "Every release keeps the NCEI citation and the revision notice, and no release carries narrative text."
+    ]
+  },
+  "review_state": "approved",
+  "release_state": "candidate",
+  "lifecycle": {
+    "registry_state": "active",
+    "created_at": "2026-10-12T12:00:00Z",
+    "updated_at": "2026-10-12T13:00:00Z"
+  }
+}

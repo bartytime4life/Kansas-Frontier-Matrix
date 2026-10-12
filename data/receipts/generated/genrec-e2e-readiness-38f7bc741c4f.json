@@ -1,0 +1,184 @@
+{
+  "receipt_id": "genrec-e2e-readiness-38f7bc741c4f",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/README.md",
+    ".github/workflows/e2e-smoke.yml",
+    "tests/e2e/README.md",
+    "tests/validators/README.md",
+    "tests/validators/test_e2e_readiness.py",
+    "tools/validators/README.md",
+    "tools/validators/e2e_readiness.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/README.md": "sha256:93f70ea4a658fb77d52c04ef1737969b04e3feaf594931028a9cb7773232fb4e",
+    ".github/workflows/e2e-smoke.yml": "sha256:a12a7485521ee7170ebd7adc8ff29fc9c1e104c9d5b13b316e6f7e628fb2a8e0",
+    "tests/e2e/README.md": "sha256:fb3c955f14e37b8133f3be45cb0db9a5d55980f8dc807d5af367030b4c6b25e8",
+    "tests/validators/README.md": "sha256:e1452a55647f3009954547f4bb2285c0588d9d49e871bfc4a7b792817fe81626",
+    "tests/validators/test_e2e_readiness.py": "sha256:0a3a8e7db5c59d909ea632234319e31599ca87549f82b2007e9661aaa9c5d20b",
+    "tools/validators/README.md": "sha256:22e99d36ca22c2d0f6434202399d2e04d156543fdb56176eb1696233b02699e0",
+    "tools/validators/e2e_readiness.py": "sha256:38f7bc741c4ff6d12a7c6d12920b5c37dc63cb09d5004fba665b1ac8fdeba7c4"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5.6 Work Mode 2026-07-31"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local repository inspection",
+      "Git",
+      "GitHub connector",
+      "deterministic Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:3159ee37d25a897bf2525fd7dafbc6ca28ee74594a3b52a9c0a01fa30aed777b",
+      "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+      "sha256:8246629f2dc84df95964e9085e8cf9e26d997e62b07667aa3451e68ea2be4adf",
+      "sha256:b547db62e516c6171dc34f7f446f4ebfe820073d860799c8e4279debd5109b77",
+      "sha256:cf9a36fcc440b75356f20128b8bf22289d1b0bcf6336f239da872ca708852fe4",
+      "sha256:ddba517cd33aef69affb881256bf4ad94ef4edca3fbadd643c598d6f748fc895"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/f4b6aea4bd7351339a32e2cd5c3b10edbe068968",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1675#issuecomment-5143810920",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/1832",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/30678267144/job/91309852641",
+      "docs/doctrine/directory-rules.md@f4b6aea4bd7351339a32e2cd5c3b10edbe068968",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@f4b6aea4bd7351339a32e2cd5c3b10edbe068968",
+      "apps/explorer-web/package.json@f4b6aea4bd7351339a32e2cd5c3b10edbe068968",
+      ".github/workflows/e2e-smoke.yml@f4b6aea4bd7351339a32e2cd5c3b10edbe068968",
+      ".github/workflows/ui-build.yml@f4b6aea4bd7351339a32e2cd5c3b10edbe068968",
+      "tests/e2e/@f4b6aea4bd7351339a32e2cd5c3b10edbe068968"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/README.md": "CONFIRMED",
+    ".github/workflows/e2e-smoke.yml": "PROPOSED",
+    "tests/e2e/README.md": "CONFIRMED",
+    "tests/validators/README.md": "CONFIRMED",
+    "tests/validators/test_e2e_readiness.py": "PROPOSED",
+    "tools/validators/README.md": "CONFIRMED",
+    "tools/validators/e2e_readiness.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "authority-base-and-overlap",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "directory-placement-and-dependency-closure",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "e2e-readiness-unit-tests-12",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "e2e-readiness-current-tree",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "python-bytecode-compile",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "changed-doc-local-link-and-fragment-check-4-docs-202-targets",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "link-checker-unit-tests-13",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "git-diff-check",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "workflow-yaml-parser",
+      "outcome": "SKIPPED",
+      "reason": "No local YAML parser was available; GitHub-hosted workflow parsing remains to be observed after draft pull-request creation."
+    },
+    {
+      "gate": "generated-receipt-draft-2020-12-schema",
+      "outcome": "SKIPPED",
+      "reason": "The jsonschema Python package was unavailable and the no-network validation posture prohibited dependency installation."
+    },
+    {
+      "gate": "repository-make-validate",
+      "outcome": "FAIL",
+      "reason": "The command exited 2 before validation because the pre-existing jsonschema Python dependency is unavailable; targeted standard-library checks passed without downloading dependencies."
+    },
+    {
+      "gate": "hosted-checks",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks are observable only after the draft pull request is opened."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending and is not implied by this process-memory receipt."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "MAIN-f4b6aea4bd7351339a32e2cd5c3b10edbe068968",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/f4b6aea4bd7351339a32e2cd5c3b10edbe068968"
+    },
+    {
+      "id": "ISSUE-1675-COMMENT-5143810920",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1675#issuecomment-5143810920"
+    },
+    {
+      "id": "PR-1832-EXPLORER-BASELINE",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/1832"
+    },
+    {
+      "id": "RUN-30678267144-E2E-READINESS-DRIFT",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/30678267144/job/91309852641"
+    },
+    {
+      "id": "DIRECTORY-RULES-44f7e94344cb",
+      "validated": true,
+      "evidence_ref": "docs/doctrine/directory-rules.md@f4b6aea4bd7351339a32e2cd5c3b10edbe068968"
+    },
+    {
+      "id": "ADR-0029-3159ee37d25a",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@f4b6aea4bd7351339a32e2cd5c3b10edbe068968"
+    },
+    {
+      "id": "EXPLORER-MANIFEST-8246629f2dc8",
+      "validated": true,
+      "evidence_ref": "apps/explorer-web/package.json@f4b6aea4bd7351339a32e2cd5c3b10edbe068968"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-01T02:13:35Z",
+  "emitter": "openai/codex-gpt-5.6-work-mode",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "One canonical process-memory receipt for a bounded E2E readiness-gate reconciliation. The checker recognizes the implemented Explorer build/unit-test baseline while preserving an explicit composed browser/API E2E hold. It proves neither E2E coverage, review, policy approval, release, deployment, publication, nor repository completeness. Rollback is to close the unmerged draft pull request or revert the bounded commit and its paired receipt through a reviewed branch."
+}

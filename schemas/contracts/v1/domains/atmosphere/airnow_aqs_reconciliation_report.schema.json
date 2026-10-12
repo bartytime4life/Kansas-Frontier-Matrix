@@ -1,0 +1,191 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kansasfrontiermatrix.org/schemas/contracts/v1/domains/atmosphere/airnow_aqs_reconciliation_report.schema.json",
+  "title": "AirnowAqsReconciliationReport",
+  "description": "Fixture-only AirNow-to-AQS authority reconciliation report; never regulatory or publication authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile_id",
+    "reconciliation_id",
+    "evaluation_id",
+    "evaluated_at",
+    "requested_use",
+    "canonical_monitor_key",
+    "source_state",
+    "lineage",
+    "decision",
+    "governance"
+  ],
+  "properties": {
+    "object_type": {
+      "const": "AirnowAqsReconciliationReport"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "profile_id": {
+      "const": "kfm.airnow-aqs-reconciliation.synthetic.v1"
+    },
+    "reconciliation_id": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "evaluation_id": {
+      "type": "string",
+      "pattern": "^fixture://airnow-aqs/[a-z0-9-]+$"
+    },
+    "evaluated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "requested_use": {
+      "enum": [
+        "public_context",
+        "regulatory_replacement"
+      ]
+    },
+    "canonical_monitor_key": {
+      "type": "string",
+      "pattern": "^[0-9]{2}-[0-9]{3}-[0-9]{4}-[0-9]{5}-[0-9]{1,2}$"
+    },
+    "source_state": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "airnow_record_hash",
+        "airnow_measurement_kind",
+        "aqs_record_hash",
+        "aqs_qa_state",
+        "aqs_certification_state"
+      ],
+      "properties": {
+        "airnow_record_hash": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "airnow_measurement_kind": {
+          "enum": [
+            "concentration",
+            "aqi_nowcast"
+          ]
+        },
+        "aqs_record_hash": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "aqs_qa_state": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            null,
+            "validated",
+            "provisional",
+            "invalid"
+          ]
+        },
+        "aqs_certification_state": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            null,
+            "certified",
+            "pending",
+            "not_certified"
+          ]
+        }
+      }
+    },
+    "lineage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "preserve_airnow_record",
+        "superseding_source",
+        "supersedes_record_hash"
+      ],
+      "properties": {
+        "preserve_airnow_record": {
+          "const": true
+        },
+        "superseding_source": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            null,
+            "AQS"
+          ]
+        },
+        "supersedes_record_hash": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        }
+      }
+    },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "outcome",
+        "reason_code"
+      ],
+      "properties": {
+        "outcome": {
+          "enum": [
+            "PROPOSED_WORK_RECORD",
+            "ABSTAIN",
+            "DENY"
+          ]
+        },
+        "reason_code": {
+          "enum": [
+            "AQS_AUTHORITATIVE_REPLACEMENT_AVAILABLE",
+            "AIRNOW_PROVISIONAL_CONTEXT_ONLY",
+            "AIRNOW_NOWCAST_DERIVED_ONLY",
+            "AQS_VALIDATION_PENDING",
+            "AQS_CERTIFICATION_PENDING",
+            "AQS_AUTHORITATIVE_RECORD_MISSING"
+          ]
+        }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "steward_review_required",
+        "promotion_allowed",
+        "release_allowed",
+        "publication"
+      ],
+      "properties": {
+        "steward_review_required": {
+          "type": "boolean"
+        },
+        "promotion_allowed": {
+          "const": false
+        },
+        "release_allowed": {
+          "const": false
+        },
+        "publication": {
+          "const": false
+        }
+      }
+    }
+  }
+}

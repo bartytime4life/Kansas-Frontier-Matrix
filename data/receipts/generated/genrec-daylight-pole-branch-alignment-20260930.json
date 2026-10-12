@@ -1,0 +1,97 @@
+{
+  "receipt_id": "genrec-daylight-pole-branch-alignment-20260930",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/site/source/app/daylight-layer.ts",
+    "apps/site/source/tests/daylight-layer.test.mjs"
+  ],
+  "artifact_hashes": {
+    "apps/site/source/app/daylight-layer.ts": "sha256:85c6ac8d2d80795f83021f0d08ba6394988958c47293b62e657474e5850db9bf",
+    "apps/site/source/tests/daylight-layer.test.mjs": "sha256:662b2eeca6111d7b8e04862c8d2d466a95ea94a30e8e5a88703e83933c73a3be"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6",
+    "version": "Codex session, 2026-09-30"
+  },
+  "prompt_or_contract": "sha256:d5f322c87631c2ed2ee56ea36b0f5f7933a68e89721d14b3b6d4a27788b1e616",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "repo:bartytime4life/Kansas-Frontier-Matrix@bc3e43d86d14b191028d1676e5761c10d23afccf (main after PR #4803 merge)",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@3e1bd8a2b99555ccb38c1c560c04b5918d8c0b42 (reviewed PR #4803 head)",
+      "GitHub Codex review comment 4139015944: P1 on pole-wrapping operand branch mismatch"
+    ],
+    "attached_docs": [
+      "apps/site/source/AGENTS.md",
+      "data/receipts/generated/README.md",
+      "schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    ]
+  },
+  "truth_labels": {
+    "apps/site/source/app/daylight-layer.ts": "CONFIRMED",
+    "apps/site/source/tests/daylight-layer.test.mjs": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Standalone Site production build and full npm test suite",
+      "outcome": "PASS",
+      "reason": "Build passed; 222/222 tests passed, including the new pole-threshold and seam regression."
+    },
+    {
+      "gate": "Polar geometry regression polarity",
+      "outcome": "PASS",
+      "reason": "New overlap test passes with aligned copies and fails when the pre-fix direct difference is restored."
+    },
+    {
+      "gate": "Targeted Site ESLint",
+      "outcome": "PASS",
+      "reason": "Changed TypeScript and test files lint without errors."
+    },
+    {
+      "gate": "Production dependency audit",
+      "outcome": "PASS",
+      "reason": "npm audit --omit=dev --audit-level=high found zero vulnerabilities."
+    },
+    {
+      "gate": "Generated receipt schema and artifact integrity",
+      "outcome": "PASS",
+      "reason": "Bounded local validator passed against both final artifact byte hashes."
+    },
+    {
+      "gate": "Hosted PR checks, dependency scan, and security workflows",
+      "outcome": "SKIPPED",
+      "reason": "These run after the follow-up branch and PR are created; no hosted result is claimed here."
+    },
+    {
+      "gate": "Rendered globe and flat-map visual acceptance",
+      "outcome": "SKIPPED",
+      "reason": "No rendered browser acceptance was performed; geometry tests do not establish visual acceptance."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "PR-4803-Codex-P1-4139015944",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4803"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-09-30T01:00:17Z",
+  "emitter": "Codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Narrow follow-up for the pole-enclosure geometry defect. This receipt records provenance and local validation only. The original daylight receipt remains historical. The PR was already merged before this follow-up began. No rendered visual acceptance, source equivalence, Site deployment, release, or acceptance is claimed; any later merge requires separate authority."
+}

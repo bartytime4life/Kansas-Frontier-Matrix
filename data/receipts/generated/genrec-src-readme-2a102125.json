@@ -1,0 +1,160 @@
+{
+  "receipt_id": "genrec-src-readme-2a102125",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "src/README.md"
+  ],
+  "artifact_hashes": {
+    "src/README.md": "sha256:2a1021255ec2fbf218ef573a38d3b91827ff486e6176a8039a41158ee10ffc66"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-16-session"
+  },
+  "prompt_or_contract": "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "container validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM GitHub Repository Documentation Implementation Agent — Full Operating Prompt v3.1",
+      "Directory Rules.pdf",
+      "Kansas Frontier Matrix — AI Build Operating Contract.md"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/0c9df2b0ed87753ff482bdd2da87f35507517eed",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0c9df2b0ed87753ff482bdd2da87f35507517eed/src/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0c9df2b0ed87753ff482bdd2da87f35507517eed/src/kfm/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0c9df2b0ed87753ff482bdd2da87f35507517eed/src/kfm/__init__.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0c9df2b0ed87753ff482bdd2da87f35507517eed/pyproject.toml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0c9df2b0ed87753ff482bdd2da87f35507517eed/packages/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0c9df2b0ed87753ff482bdd2da87f35507517eed/Makefile",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0c9df2b0ed87753ff482bdd2da87f35507517eed/.github/workflows/schema-validation.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0c9df2b0ed87753ff482bdd2da87f35507517eed/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0c9df2b0ed87753ff482bdd2da87f35507517eed/docs/registers/DRIFT_REGISTER.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0c9df2b0ed87753ff482bdd2da87f35507517eed/.github/PULL_REQUEST_TEMPLATE.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0c9df2b0ed87753ff482bdd2da87f35507517eed/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "attached://Pasted text(32).txt"
+    ]
+  },
+  "truth_labels": {
+    "src/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-preflight",
+      "outcome": "PASS",
+      "reason": "Repository identity, permissions, default branch, pinned base commit, target blob, child namespace README, root packaging, package authority, CI definition, Directory Rules, drift register, PR contract, and receipt schema were inspected."
+    },
+    {
+      "gate": "base-and-target-concurrency",
+      "outcome": "PASS",
+      "reason": "Main advanced during authoring; the change was re-pinned to 0c9df2b0ed87753ff482bdd2da87f35507517eed and the target blob remained c64a49e6b15eb543a78cac29fee5b4fe650010be before mutation."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "The existing src/ drift is documented rather than expanded. No new root, package, authority home, lifecycle phase, migration, or ADR decision is created. The provenance record uses data/receipts/generated/."
+    },
+    {
+      "gate": "parent-child-boundary-reconciliation",
+      "outcome": "PASS",
+      "reason": "The parent README now orients the source-layout directory while src/kfm/README.md remains the detailed namespace/facade contract; competing authority is avoided."
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "One H1, balanced fenced blocks, resolved quick-navigation anchors, tables, definition of done, verification register, maintenance, correction, migration, and rollback guidance were checked."
+    },
+    {
+      "gate": "relative-link-review",
+      "outcome": "PASS",
+      "reason": "Markdown relative links target inspected repository files: src/kfm/README.md, src/kfm/__init__.py, pyproject.toml, packages/README.md, and Makefile."
+    },
+    {
+      "gate": "secret-and-sensitive-content-review",
+      "outcome": "PASS",
+      "reason": "No private-key block or common GitHub, AWS, or OpenAI token pattern, credentials, private endpoint, personal path, sensitive location, or source payload was introduced."
+    },
+    {
+      "gate": "workflow-trigger-preflight",
+      "outcome": "PASS",
+      "reason": "Only documentation and its receipt change. Inspected PR workflows use GitHub-hosted runners; documentation workflows are stubs, and no workflow, executable code, policy, schema, runtime, infrastructure, deployment, or publication file is modified."
+    },
+    {
+      "gate": "generated-receipt-structure",
+      "outcome": "PASS",
+      "reason": "Required fields, allowed properties, hash patterns, truth labels, validation outcomes, human-review state, timestamps, and artifact-path/hash closure were checked against the fetched schema."
+    },
+    {
+      "gate": "remote-readback",
+      "outcome": "SKIPPED",
+      "reason": "Remote readback occurs after the README and receipt are committed to the scoped branch."
+    },
+    {
+      "gate": "repository-native-ci",
+      "outcome": "SKIPPED",
+      "reason": "Repository checks are observed after draft pull-request creation and are unavailable at receipt emission time."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "KFM-OPERATING-PROMPT-V3.1",
+      "validated": true,
+      "evidence_ref": "attached://Pasted text(32).txt"
+    },
+    {
+      "id": "KFM-DIRECTORY-RULES",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/0c9df2b0ed87753ff482bdd2da87f35507517eed/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "SRC-PARENT-README-PRIOR",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/0c9df2b0ed87753ff482bdd2da87f35507517eed/src/README.md"
+    },
+    {
+      "id": "SRC-KFM-NAMESPACE-CONTRACT",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/0c9df2b0ed87753ff482bdd2da87f35507517eed/src/kfm/README.md"
+    },
+    {
+      "id": "ROOT-PACKAGING-CONTRACT",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/0c9df2b0ed87753ff482bdd2da87f35507517eed/pyproject.toml"
+    },
+    {
+      "id": "KFM-PR-CONTRACT",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/0c9df2b0ed87753ff482bdd2da87f35507517eed/.github/PULL_REQUEST_TEMPLATE.md"
+    },
+    {
+      "id": "GENERATED-RECEIPT-SCHEMA",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/0c9df2b0ed87753ff482bdd2da87f35507517eed/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-16T16:05:25Z",
+  "emitter": "ai-builder/openai-gpt-5.6-thinking",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored documentation-only update on a scoped review branch. The parent src/ README is reconciled with root Hatch packaging, the merged src/kfm/ namespace contract, Directory Rules root-src drift, package authority, schema CI, the drift register, and the PR contract. No module, export, entry point, dependency, test, workflow, schema, contract, policy, runtime, lifecycle state, release decision, deployment, source activation, public artifact, ADR, migration, or drift-register entry is modified. Human review remains pending; this receipt is provenance evidence, not merge authorization."
+}

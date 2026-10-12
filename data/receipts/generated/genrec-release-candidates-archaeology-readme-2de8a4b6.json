@@ -1,0 +1,51 @@
+{
+  "receipt_id": "genrec-release-candidates-archaeology-readme-2de8a4b6",
+  "contract_version": "3.0.0",
+  "receipt_type": "GenerationReceipt",
+  "status": "PROPOSED",
+  "generated_at": "2026-07-18T11:17:00-05:00",
+  "repository": "bartytime4life/Kansas-Frontier-Matrix",
+  "base_commit": "ede1d1f2dc4dc7d8409fa5c1da0d98b469d973f9",
+  "branch": "agent/release-candidates-archaeology-readme-20260718",
+  "target_path": "release/candidates/archaeology/README.md",
+  "previous_blob": "2047236f1f8d9a7fb0db8732bd6a492817ce94e5",
+  "new_blob": "bc5edc7a44ea77a6b8ed25b95569646d8df72754",
+  "sha256": "2de8a4b6cfd0fbae37c0cc3d7971462e676ea3a57d17886c2536178bfe8a3cc4",
+  "truth_labels": {
+    "confirmed": [
+      "The Archaeology candidate-lane README existed at the pinned base and was updated in place.",
+      "The bounded repository search surfaced the parent README but no child Archaeology candidate dossier.",
+      "The domain-archaeology workflow checks that this lane contains no non-README candidate record and retains explicit validation, proof, and release-dry-run holds.",
+      "The Archaeology release index describes candidate and release rows as placeholders pending release-plane inspection.",
+      "Archaeology sensitivity, cultural-review, publication, policy, proof, test, published-data, correction, and rollback guidance exists as repository documentation with mixed draft, placeholder, scaffold, or unverified implementation maturity.",
+      "Sampled Archaeology test modules are one-line placeholder docstrings and do not establish executable enforcement.",
+      "The general release-dry-run workflow remains a TODO-only echo scaffold.",
+      "CODEOWNERS routes release and Archaeology documentation review to bartytime4life while explicitly denying that routing is stewardship, review completion, release approval, or publication authority."
+    ],
+    "proposed": [
+      "release/candidates/archaeology/ should operate as the repository-grounded Archaeology candidate index and sensitive-domain pre-publication review contract without becoming candidate, cultural, source, evidence, policy, validation, release, or publication authority."
+    ],
+    "needs_verification": [
+      "Exhaustive child inventory and deterministic public-safe candidate-index generation.",
+      "Candidate naming, identity, artifact-manifest, schema, validator, source-admission, rights, access, and EvidenceBundle contracts.",
+      "Cultural, tribal, sovereignty, rights-holder, consent, revocation, embargo, transform, representation, and review-record implementations.",
+      "Executable policy, public no-leak fixtures and tests, proof producers, candidate validation, and release dry-run commands.",
+      "Canonical manifest, correction, withdrawal, supersession, and rollback topology; correction consumers; cache invalidation; rollback drills; branch protection; required checks; immutable action pinning; and independent reviewer assignments."
+    ]
+  },
+  "changes": [
+    "Replaced generic Archaeology candidate-lane guidance with a repository-grounded sensitive-domain candidate index and pre-publication review contract.",
+    "Recorded that no child candidate dossier or active candidate is established by the bounded inspection.",
+    "Preserved the publication-not_yet compatibility marker required by the current domain-archaeology readiness workflow.",
+    "Separated candidate review from source, evidence, cultural review, consent, contract, schema, policy, validation, manifest, correction, rollback, publication, and public-client authority.",
+    "Added finite candidate states and holds, public-safe admission and identity rules, release gates, a required dossier structure, sensitivity and named-authority controls, source-role and EvidenceBundle rules, validation and automation posture, handoff routing, correction and rollback discipline, review burden, evidence ledger, definition of done, open verification, and documentation rollback."
+  ],
+  "authority_boundary": "This receipt records an AI-authored documentation revision. It is not an Archaeology candidate, site record, SourceDescriptor, EvidenceBundle, cultural or sovereignty decision, consent record, PolicyDecision, ReviewRecord, ValidationReport, PromotionDecision, ReleaseManifest, CorrectionNotice, WithdrawalNotice, RollbackCard, steward approval, release approval, publication authority, or proof of runtime behavior.",
+  "rollback": {
+    "strategy": "Close the draft pull request before merge, or revert the generated-receipt commit and README commit in reverse order after merge.",
+    "restores_blob": "2047236f1f8d9a7fb0db8732bd6a492817ce94e5"
+  },
+  "human_review": {
+    "state": "pending"
+  }
+}

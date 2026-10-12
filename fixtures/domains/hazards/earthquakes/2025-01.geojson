@@ -1,0 +1,101 @@
+{
+ "type": "FeatureCollection",
+ "metadata": {
+  "generated": 1761998400000,
+  "url": "synthetic fixture",
+  "title": "USGS Earthquakes",
+  "status": 200,
+  "api": "1.14.1",
+  "limit": 5000,
+  "offset": 1,
+  "count": 2
+ },
+ "features": [
+  {
+   "type": "Feature",
+   "id": "us7000p001",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -97.5123,
+     37.2741,
+     5
+    ]
+   },
+   "properties": {
+    "mag": 2.6,
+    "place": "synthetic: 8 km NNW of Caldwell, Kansas",
+    "time": 1736843025120,
+    "updated": 1737388931000,
+    "tz": null,
+    "url": "https://earthquake.usgs.gov/earthquakes/eventpage/us7000p001",
+    "felt": null,
+    "cdi": null,
+    "mmi": null,
+    "alert": null,
+    "status": "reviewed",
+    "tsunami": 0,
+    "sig": 50,
+    "net": "us",
+    "code": "7000p001",
+    "ids": ",us7000p001,ok2025a001,",
+    "sources": "us,ok",
+    "types": ",origin,phase-data,",
+    "nst": 12,
+    "dmin": 0.1,
+    "rms": 0.3,
+    "gap": 80,
+    "magType": "ml",
+    "type": "earthquake",
+    "title": "M 2.6 - synthetic: 8 km NNW of Caldwell, Kansas"
+   }
+  },
+  {
+   "type": "Feature",
+   "id": "ok2025b002",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -97.9,
+     37.05,
+     6.2
+    ]
+   },
+   "properties": {
+    "mag": 1.9,
+    "place": "synthetic: 5 km S of Anthony, Kansas",
+    "time": 1738368000000,
+    "updated": 1738576800000,
+    "tz": null,
+    "url": "https://earthquake.usgs.gov/earthquakes/eventpage/ok2025b002",
+    "felt": null,
+    "cdi": null,
+    "mmi": null,
+    "alert": null,
+    "status": "reviewed",
+    "tsunami": 0,
+    "sig": 50,
+    "net": "ok",
+    "code": "2025b002",
+    "ids": ",ok2025b002,",
+    "sources": "ok",
+    "types": ",origin,phase-data,",
+    "nst": 12,
+    "dmin": 0.1,
+    "rms": 0.3,
+    "gap": 80,
+    "magType": "ml",
+    "type": "earthquake",
+    "title": "M 1.9 - synthetic: 5 km S of Anthony, Kansas"
+   }
+  }
+ ],
+ "bbox": [
+  -102.1,
+  36.9,
+  -10,
+  -94.5,
+  40.1,
+  10
+ ]
+}

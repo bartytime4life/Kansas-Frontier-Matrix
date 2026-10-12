@@ -1,0 +1,224 @@
+{
+  "receipt_id": "genrec-focus-mode-county-template-readme-1d9dcaef85ff",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/focus-mode/counties/_template/README.md"
+  ],
+  "artifact_hashes": {
+    "docs/focus-mode/counties/_template/README.md": "sha256:1d9dcaef85ff08debd67a35a6e6b5e25b0a4bc1e4f8e28ac85f99f50212b084c"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-20"
+  },
+  "prompt_or_contract": "sha256:747df45e8977d03d85c23dda7b0d57457a858c05e8003a95fbcaecdfdf54112f",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector (repository evidence, feature-branch writes, draft-PR delivery)",
+      "attached KFM doctrine and implementation prompt",
+      "deterministic local Markdown, metadata, anchor, fence, table, link, hash, and receipt validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0",
+      "KFM Directory Governance Standard v2.0.0-draft.1"
+    ],
+    "evidence_refs": [
+      "repo:commit/1788dad6c30adede09343370e520115da807c885",
+      "repo:branch/docs-modernize-focus-mode-county-template-readme-20260820",
+      "repo:commit/cd962c9380895c5fe29d5a6fcb55ab948da9e10d",
+      "repo:commit/8f37e036864ae8ee6702a3e9321e6bb2fda7d257",
+      "repo:commit/d2c90f5f0f910c1b2655802d6012134da03ddb4a",
+      "repo:docs/focus-mode/counties/_template/README.md@8f37e036864ae8ee6702a3e9321e6bb2fda7d257#blob=8b137891791fe96927ad78e64b0aad7bded08bdc",
+      "repo:docs/focus-mode/counties/_template/README.md@d2c90f5f0f910c1b2655802d6012134da03ddb4a#blob=a4ba82e89e7522eb4080827621d227fd46e4c9f1",
+      "repo:docs/focus-mode/counties/_template/county-build-plan.md@8f37e036864ae8ee6702a3e9321e6bb2fda7d257#blob=520922bf756ff5e75f927c5d0dc9cc81e65ca3e0",
+      "repo:data/receipts/generated/genrec-focus-mode-county-build-plan-template-ab00fbc3417e.json@8f37e036864ae8ee6702a3e9321e6bb2fda7d257#blob=fa51cf6535da7c71cce36cbcf5061c5b25d2a3e3",
+      "repo:docs/focus-mode/counties/COUNTY_INDEX.md@8f37e036864ae8ee6702a3e9321e6bb2fda7d257#blob=c97b7792974b5aafc059a78849e545df1934f984",
+      "repo:docs/focus-mode/counties/_template/README.md@1788dad6c30adede09343370e520115da807c885#blob=8b137891791fe96927ad78e64b0aad7bded08bdc",
+      "repo:docs/focus-mode/counties/README.md@1788dad6c30adede09343370e520115da807c885#blob=48621badd51614db7bff0882c19096fa388234ac",
+      "repo:docs/adr/ADR-0027-county-focus-mode-control-plane.md@1788dad6c30adede09343370e520115da807c885#blob=4dfb29c963cd5662265d3cb97f98be82212d5e08",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@1788dad6c30adede09343370e520115da807c885#blob=a4de0d7a96b78da59cfc499d1025e1508afd8dd9",
+      "repo:docs/doctrine/directory-rules.md@1788dad6c30adede09343370e520115da807c885#blob=fd49a0b83e55cef52c1124281f093e263526898d",
+      "repo:contracts/focus_mode/focus_mode_payload.md@1788dad6c30adede09343370e520115da807c885#blob=7fe687d587cd60dafd6e3fa34306cd58fd125c73",
+      "repo:tools/validators/validate_focus_mode_index.py@1788dad6c30adede09343370e520115da807c885#blob=89391d75680e859dddf3696b9b782369f364c73e",
+      "repo:tools/validate_all.py@1788dad6c30adede09343370e520115da807c885#blob=c308015da780d7b72f56277b521fb0e42317651e",
+      "repo:tools/validators/validate_all.py@1788dad6c30adede09343370e520115da807c885#blob=728cf1404839a5b95e03d70d44567863a6f9b6df",
+      "repo:tools/validators/validator_registry.json@1788dad6c30adede09343370e520115da807c885#blob=86aeadabe7104114c3f1efe60a8708ec11563bb1",
+      "repo:.github/CODEOWNERS@1788dad6c30adede09343370e520115da807c885#blob=dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61",
+      "repo:absence/schemas/contracts/v1/focus_mode/focus_mode_payload.schema.json@1788dad6c30adede09343370e520115da807c885",
+      "repo:absence/tools/validators/validate_focus_mode_payload.py@1788dad6c30adede09343370e520115da807c885",
+      "attachment:KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0",
+      "attachment:KFM Directory Governance Standard v2.0.0-draft.1"
+    ]
+  },
+  "truth_labels": {
+    "docs/focus-mode/counties/_template/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main-target-overlap-and-concurrency-preflight",
+      "outcome": "PASS",
+      "reason": "Pinned the original authoring base at 1788dad6c30adede09343370e520115da807c885, found no overlapping open pull request, then reconciled merged direct-dependency work from PR #3180 and current main@8f37e036864ae8ee6702a3e9321e6bb2fda7d257 without force."
+    },
+    {
+      "gate": "directory-rules-placement-and-authority-boundary",
+      "outcome": "PASS",
+      "reason": "Accepted ADR-0029 and Directory Rules v2 sections 12.4, 16, 17, and 18 support a same-path BOUNDARY_COMPACT docs update while leaving the canonical county-control-plane survivor and any migration on HOLD."
+    },
+    {
+      "gate": "current-template-tree-and-direct-child-map",
+      "outcome": "PASS",
+      "reason": "Verified the current two-entry directory tree after PR #3180 and documented only README.md plus the revised v2.0-draft county-build-plan.md, with no speculative deeper tree or parallel authority home."
+    },
+    {
+      "gate": "focus-mode-convergence-and-validator-reconciliation",
+      "outcome": "PASS",
+      "reason": "Reconciled proposed ADR-0027, the repository-grounded 105-county inventory, the revised v2 compatibility authoring scaffold and its receipt, the semantic contract, index validator, real orchestrator, and registry; retained singular/plural, inventory/lifecycle-table, fenced-block/front-matter, schema, payload-validator, and registry gaps as explicit HOLD or CONFLICTED states."
+    },
+    {
+      "gate": "merged-direct-dependency-reconciliation",
+      "outcome": "PASS",
+      "reason": "Detected that main advanced with PR #3180 touching COUNTY_INDEX.md and county-build-plan.md, re-read both final artifacts and the sibling receipt, updated all affected blob/state/grammar claims, and revalidated the final README rather than leaving the draft pinned to stale dependencies."
+    },
+    {
+      "gate": "sensitivity-evidence-release-and-publication-boundary",
+      "outcome": "PASS",
+      "reason": "The README keeps living-person, DNA, archaeology, burial/sacred, rare-species, private-land, infrastructure, evidence, policy, review, release, correction, and rollback responsibilities outside the template lane and fails closed for unsupported maturity claims."
+    },
+    {
+      "gate": "markdown-metadata-anchor-fence-table-and-link-check",
+      "outcome": "PASS",
+      "reason": "Verified 41,607 UTF-8 bytes, 544 lines, one H1 outside code fences, one KFM Meta Block, one unique explicit top anchor, balanced code fences, consistent Markdown tables, 59 Markdown links across 35 unique targets/fragments, resolving repository-relative targets, no tabs or trailing whitespace, and a final newline."
+    },
+    {
+      "gate": "remote-artifact-hash-binding",
+      "outcome": "PASS",
+      "reason": "Remote branch blob a4ba82e89e7522eb4080827621d227fd46e4c9f1 matches the locally computed Git blob; final README SHA-256 is 1d9dcaef85ff08debd67a35a6e6b5e25b0a4bc1e4f8e28ac85f99f50212b084c."
+    },
+    {
+      "gate": "generated-receipt-shape-and-cross-field-check",
+      "outcome": "PASS",
+      "reason": "Receipt structure was checked against the current GENERATED_RECEIPT schema requirements: exact artifact/hash/truth-label key parity, contract version 3.0.0, nonempty citations, pending human review, no self-reference, and canonical repository-relative artifact path."
+    },
+    {
+      "gate": "repository-native-focus-mode-validator-execution",
+      "outcome": "SKIPPED",
+      "reason": "No mounted repository dependency environment was available, and current evidence predicts grammar/path conflicts between the legacy template/index and proposed index validator. This documentation slice does not claim a passing Focus Mode validator run."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Pull-request checks start after final branch delivery; exact-head hosted results were pending when this receipt was emitted."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending. CODEOWNERS routing creates no specialist stewardship, independent review, architecture acceptance, policy approval, release approval, publication authority, or merge authority."
+    },
+    {
+      "gate": "runtime-release-deployment-and-publication-non-effects",
+      "outcome": "PASS",
+      "reason": "The final slice changes the blank template-directory README and one generated authoring receipt only; it incorporates the already-merged sibling template/index evidence but does not modify those dependencies, any ADR, contract, schema, policy, validator, registry, county lane, application, lifecycle data, release, deployment, publication, or repository settings."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "authoring-main",
+      "validated": true,
+      "evidence_ref": "repo:commit/1788dad6c30adede09343370e520115da807c885"
+    },
+    {
+      "id": "prior-blank-target",
+      "validated": true,
+      "evidence_ref": "repo:docs/focus-mode/counties/_template/README.md@8f37e036864ae8ee6702a3e9321e6bb2fda7d257#blob=8b137891791fe96927ad78e64b0aad7bded08bdc"
+    },
+    {
+      "id": "sibling-county-build-plan",
+      "validated": true,
+      "evidence_ref": "repo:docs/focus-mode/counties/_template/county-build-plan.md@8f37e036864ae8ee6702a3e9321e6bb2fda7d257#blob=520922bf756ff5e75f927c5d0dc9cc81e65ca3e0"
+    },
+    {
+      "id": "sibling-template-authoring-receipt",
+      "validated": true,
+      "evidence_ref": "repo:data/receipts/generated/genrec-focus-mode-county-build-plan-template-ab00fbc3417e.json@8f37e036864ae8ee6702a3e9321e6bb2fda7d257"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@1788dad6c30adede09343370e520115da807c885"
+    },
+    {
+      "id": "adopted-directory-rules",
+      "validated": true,
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md@1788dad6c30adede09343370e520115da807c885"
+    },
+    {
+      "id": "proposed-county-control-plane-adr",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0027-county-focus-mode-control-plane.md@1788dad6c30adede09343370e520115da807c885"
+    },
+    {
+      "id": "county-collision-index",
+      "validated": true,
+      "evidence_ref": "repo:docs/focus-mode/counties/COUNTY_INDEX.md@8f37e036864ae8ee6702a3e9321e6bb2fda7d257#blob=c97b7792974b5aafc059a78849e545df1934f984"
+    },
+    {
+      "id": "focus-mode-semantic-contract",
+      "validated": true,
+      "evidence_ref": "repo:contracts/focus_mode/focus_mode_payload.md@1788dad6c30adede09343370e520115da807c885"
+    },
+    {
+      "id": "focus-mode-index-validator",
+      "validated": true,
+      "evidence_ref": "repo:tools/validators/validate_focus_mode_index.py@1788dad6c30adede09343370e520115da807c885"
+    },
+    {
+      "id": "validator-orchestrator",
+      "validated": true,
+      "evidence_ref": "repo:tools/validators/validate_all.py@1788dad6c30adede09343370e520115da807c885"
+    },
+    {
+      "id": "validator-registry",
+      "validated": true,
+      "evidence_ref": "repo:tools/validators/validator_registry.json@1788dad6c30adede09343370e520115da807c885"
+    },
+    {
+      "id": "codeowners-review-route",
+      "validated": true,
+      "evidence_ref": "repo:.github/CODEOWNERS@1788dad6c30adede09343370e520115da807c885"
+    },
+    {
+      "id": "attached-authoring-contract",
+      "validated": true,
+      "evidence_ref": "attachment:KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0"
+    },
+    {
+      "id": "attached-directory-standard",
+      "validated": true,
+      "evidence_ref": "attachment:KFM Directory Governance Standard v2.0.0-draft.1"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [
+      "@bartytime4life"
+    ],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-20T23:57:18Z",
+  "emitter": "OpenAI GPT-5.6 Pro KFM repository implementation agent",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Documentation-only modernization of the blank county Focus Mode template README, reconciled after merged PR #3180 updated its direct sibling template and county index. The current tracked lane is documented without declaring it canonical; ADR-0027, parser/index convergence, schema/payload-validator closure, migration, runtime use, release, deployment, publication, merge, and repository settings remain outside this change."
+}

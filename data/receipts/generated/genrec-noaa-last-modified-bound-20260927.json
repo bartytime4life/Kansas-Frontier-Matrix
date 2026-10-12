@@ -1,0 +1,75 @@
+{
+  "receipt_id": "genrec-noaa-last-modified-bound-20260927",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "connectors/noaa/src/noaa/admit.py",
+    "connectors/noaa/tests/test_fetch_admit.py"
+  ],
+  "artifact_hashes": {
+    "connectors/noaa/src/noaa/admit.py": "sha256:c6f3b24f3a72ebfd6b9d050f8686f03cd7cc2e7f5a013162146e22d65c79f9e7",
+    "connectors/noaa/tests/test_fetch_admit.py": "sha256:bee7e0e28857bccb40bc1832d134bb7de94db460a2923a77d555cfe8cd2b5a14"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:56d6e03da190f2caca7dc651397a2663397ad6a802ca2079e93863196806612f",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/3d38cf860a3cf503c0e1a2741ca0c5a59c8492da",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4760"
+    ]
+  },
+  "truth_labels": {
+    "connectors/noaa/src/noaa/admit.py": "CONFIRMED",
+    "connectors/noaa/tests/test_fetch_admit.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "NOAA connector suite",
+      "outcome": "PASS",
+      "reason": "44 NOAA tests pass, including a regression refusing five malformed recorded Last-Modified values as EPISODE_LAST_MODIFIED."
+    },
+    {
+      "gate": "Targeted mutation testing",
+      "outcome": "PASS",
+      "reason": "Replacing the bounded conversion with an unbounded one makes the regression fail; file verified restored."
+    },
+    {
+      "gate": "Hosted CI and independent review",
+      "outcome": "SKIPPED",
+      "reason": "Read after PR creation."
+    },
+    {
+      "gate": "Source activation, admission, release",
+      "outcome": "SKIPPED",
+      "reason": "No network library, descriptor or contract change, lifecycle write, admission, or publication; routes stay HOLD."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/3d38cf860a3cf503c0e1a2741ca0c5a59c8492da"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-09-27T14:29:29Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Follow-up to #4760, which merged before this review fix was pushed."
+}

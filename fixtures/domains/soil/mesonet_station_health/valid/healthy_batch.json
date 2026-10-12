@@ -1,0 +1,95 @@
+{
+  "object_type": "SyntheticMesonetStationHealthBatch",
+  "schema_version": "1.0.0",
+  "assessment_id": "mesonet-health-fixture-20260402T120000Z",
+  "evaluated_at": "2026-04-02T12:00:00Z",
+  "source_descriptor_ref": "source:ks-mesonet-fixture",
+  "run_receipt_ref": "receipt:ks-mesonet-health-fixture-20260402",
+  "evidence_refs": [
+    "evidence:ks-mesonet-health-fixture-20260402",
+    "fixture:mesonet-normalized-stations-v1"
+  ],
+  "thresholds": {
+    "expected_interval_minutes": 5,
+    "degraded_after_multiplier": 3,
+    "minimum_coverage_fraction": 0.9,
+    "maximum_degraded_fraction": 0.1,
+    "max_untriaged_anomalies": 0,
+    "z_score_abs_threshold": 4.0,
+    "relative_jump_fraction_threshold": 0.5
+  },
+  "stations": [
+    {
+      "station_id": "KS-FIXTURE-01",
+      "source_timezone": "America/Chicago",
+      "spatial_support": {"kind": "generalized_county", "county_fips": "20001"},
+      "last_reported_at": "2026-04-02T11:55:00Z",
+      "samples": [{"observed_at": "2026-04-02T11:55:00Z", "value": 0.2, "z_score": 0.4, "relative_jump_fraction": 0.02, "triage_state": "CLEAR", "qc_flags": ["PASS"]}]
+    },
+    {
+      "station_id": "KS-FIXTURE-02",
+      "source_timezone": "America/Chicago",
+      "spatial_support": {"kind": "generalized_county", "county_fips": "20002"},
+      "last_reported_at": "2026-04-02T11:55:00Z",
+      "samples": [{"observed_at": "2026-04-02T11:55:00Z", "value": 0.21, "z_score": 0.4, "relative_jump_fraction": 0.02, "triage_state": "CLEAR", "qc_flags": ["PASS"]}]
+    },
+    {
+      "station_id": "KS-FIXTURE-03",
+      "source_timezone": "America/Chicago",
+      "spatial_support": {"kind": "generalized_county", "county_fips": "20003"},
+      "last_reported_at": "2026-04-02T11:55:00Z",
+      "samples": [{"observed_at": "2026-04-02T11:55:00Z", "value": 0.22, "z_score": 0.4, "relative_jump_fraction": 0.02, "triage_state": "CLEAR", "qc_flags": ["PASS"]}]
+    },
+    {
+      "station_id": "KS-FIXTURE-04",
+      "source_timezone": "America/Chicago",
+      "spatial_support": {"kind": "generalized_county", "county_fips": "20004"},
+      "last_reported_at": "2026-04-02T11:55:00Z",
+      "samples": [{"observed_at": "2026-04-02T11:55:00Z", "value": 0.23, "z_score": 0.4, "relative_jump_fraction": 0.02, "triage_state": "CLEAR", "qc_flags": ["PASS"]}]
+    },
+    {
+      "station_id": "KS-FIXTURE-05",
+      "source_timezone": "America/Chicago",
+      "spatial_support": {"kind": "generalized_county", "county_fips": "20005"},
+      "last_reported_at": "2026-04-02T11:55:00Z",
+      "samples": [{"observed_at": "2026-04-02T11:55:00Z", "value": 0.24, "z_score": 0.4, "relative_jump_fraction": 0.02, "triage_state": "CLEAR", "qc_flags": ["PASS"]}]
+    },
+    {
+      "station_id": "KS-FIXTURE-06",
+      "source_timezone": "America/Chicago",
+      "spatial_support": {"kind": "generalized_county", "county_fips": "20006"},
+      "last_reported_at": "2026-04-02T11:55:00Z",
+      "samples": [{"observed_at": "2026-04-02T11:55:00Z", "value": 0.25, "z_score": 0.4, "relative_jump_fraction": 0.02, "triage_state": "CLEAR", "qc_flags": ["PASS"]}]
+    },
+    {
+      "station_id": "KS-FIXTURE-07",
+      "source_timezone": "America/Chicago",
+      "spatial_support": {"kind": "generalized_county", "county_fips": "20007"},
+      "last_reported_at": "2026-04-02T11:55:00Z",
+      "samples": [{"observed_at": "2026-04-02T11:55:00Z", "value": 0.26, "z_score": 0.4, "relative_jump_fraction": 0.02, "triage_state": "CLEAR", "qc_flags": ["PASS"]}]
+    },
+    {
+      "station_id": "KS-FIXTURE-08",
+      "source_timezone": "America/Chicago",
+      "spatial_support": {"kind": "generalized_county", "county_fips": "20008"},
+      "last_reported_at": "2026-04-02T11:55:00Z",
+      "samples": [{"observed_at": "2026-04-02T11:55:00Z", "value": 0.27, "z_score": 0.4, "relative_jump_fraction": 0.02, "triage_state": "CLEAR", "qc_flags": ["PASS"]}]
+    },
+    {
+      "station_id": "KS-FIXTURE-09",
+      "source_timezone": "America/Chicago",
+      "spatial_support": {"kind": "generalized_county", "county_fips": "20009"},
+      "last_reported_at": "2026-04-02T11:55:00Z",
+      "samples": [{"observed_at": "2026-04-02T11:55:00Z", "value": 0.28, "z_score": 0.4, "relative_jump_fraction": 0.02, "triage_state": "CLEAR", "qc_flags": ["PASS"]}]
+    },
+    {
+      "station_id": "KS-FIXTURE-10",
+      "source_timezone": "America/Chicago",
+      "spatial_support": {"kind": "generalized_county", "county_fips": "20010"},
+      "last_reported_at": "2026-04-02T11:55:00Z",
+      "samples": [{"observed_at": "2026-04-02T11:55:00Z", "value": 0.29, "z_score": 0.4, "relative_jump_fraction": 0.02, "triage_state": "CLEAR", "qc_flags": ["PASS"]}]
+    }
+  ],
+  "rights": {"rights_state": "fixture_only", "operator_consent_state": "fixture_only"},
+  "governance": {"promotion_eligible": false, "public_use_allowed": false, "release_state": "not_released", "review_state": "fixture_only"}
+}

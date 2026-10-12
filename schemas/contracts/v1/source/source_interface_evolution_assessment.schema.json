@@ -1,0 +1,354 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/source/source_interface_evolution_assessment.schema.json",
+  "title": "source_interface_evolution_assessment",
+  "description": "Fixture-only observation and compatibility assessment for a declared source interface. Validity records bounded evidence and a proposed migration disposition; it does not change connector, identity, activation, retirement, release, or public-use state.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "assessment_id",
+    "assessed_at",
+    "source_interface",
+    "observations",
+    "consumers",
+    "compatibility",
+    "migration",
+    "summary",
+    "governance",
+    "spec_hash"
+  ],
+  "properties": {
+    "object_type": {"const": "SourceInterfaceEvolutionAssessmentCandidate"},
+    "schema_version": {"const": "1.0.0"},
+    "profile": {"const": "kfm.source-interface-evolution.fixture.v1"},
+    "assessment_id": {
+      "type": "string",
+      "pattern": "^kfm:source-interface-evolution:[a-f0-9]{24}$"
+    },
+    "assessed_at": {"$ref": "#/$defs/aware_datetime"},
+    "source_interface": {"$ref": "#/$defs/source_interface"},
+    "observations": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "items": {"$ref": "#/$defs/observation"}
+    },
+    "consumers": {
+      "type": "array",
+      "maxItems": 128,
+      "items": {"$ref": "#/$defs/consumer"}
+    },
+    "compatibility": {"$ref": "#/$defs/compatibility"},
+    "migration": {"$ref": "#/$defs/migration"},
+    "summary": {"$ref": "#/$defs/summary"},
+    "governance": {"$ref": "#/$defs/governance"},
+    "spec_hash": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "aware_datetime": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "support_ref": {
+      "type": "string",
+      "minLength": 6,
+      "maxLength": 256,
+      "pattern": "^kfm:[a-z0-9][a-z0-9._:/-]{4,250}$"
+    },
+    "nullable_ref": {
+      "oneOf": [
+        {"$ref": "#/$defs/support_ref"},
+        {"type": "null"}
+      ]
+    },
+    "ref_array": {
+      "type": "array",
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/support_ref"}
+    },
+    "capability": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9._-]{2,80}$"
+    },
+    "capability_array": {
+      "type": "array",
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/capability"}
+    },
+    "id_array": {
+      "type": "array",
+      "maxItems": 128,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9._:-]{2,100}$"
+      }
+    },
+    "source_interface": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_id",
+        "source_descriptor_ref",
+        "interface_id",
+        "declared_profile_ref",
+        "declared_version",
+        "canonical_identity_ref",
+        "declared_capabilities"
+      ],
+      "properties": {
+        "source_id": {"$ref": "#/$defs/support_ref"},
+        "source_descriptor_ref": {"$ref": "#/$defs/support_ref"},
+        "interface_id": {"$ref": "#/$defs/support_ref"},
+        "declared_profile_ref": {"$ref": "#/$defs/support_ref"},
+        "declared_version": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+        },
+        "canonical_identity_ref": {"$ref": "#/$defs/support_ref"},
+        "declared_capabilities": {"$ref": "#/$defs/capability_array"}
+      }
+    },
+    "observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "observation_id",
+        "observed_at",
+        "evidence_ref",
+        "scope",
+        "observed_profile_ref",
+        "observed_version",
+        "canonical_identity_ref",
+        "capabilities",
+        "response_shape_hash",
+        "transport_fingerprint",
+        "redirect_target_ref",
+        "asserted_state"
+      ],
+      "properties": {
+        "observation_id": {
+          "type": "string",
+          "pattern": "^obs:[a-z0-9][a-z0-9._:-]{3,100}$"
+        },
+        "observed_at": {"$ref": "#/$defs/aware_datetime"},
+        "evidence_ref": {"$ref": "#/$defs/support_ref"},
+        "scope": {
+          "enum": [
+            "FULL_CONTRACT",
+            "CAPABILITY_SAMPLE",
+            "TRANSPORT_ONLY",
+            "REDIRECT_ONLY"
+          ]
+        },
+        "observed_profile_ref": {"$ref": "#/$defs/support_ref"},
+        "observed_version": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+        },
+        "canonical_identity_ref": {"$ref": "#/$defs/support_ref"},
+        "capabilities": {"$ref": "#/$defs/capability_array"},
+        "response_shape_hash": {"$ref": "#/$defs/sha256"},
+        "transport_fingerprint": {"$ref": "#/$defs/sha256"},
+        "redirect_target_ref": {"$ref": "#/$defs/nullable_ref"},
+        "asserted_state": {
+          "enum": [
+            "ACTIVE",
+            "DEPRECATED",
+            "SUNSET_SIGNALLED",
+            "RETIRED_ASSERTED",
+            "REACTIVATED_ASSERTED"
+          ]
+        }
+      }
+    },
+    "consumer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "consumer_id",
+        "current_profile_ref",
+        "target_profile_ref",
+        "status",
+        "evidence_refs",
+        "debt_refs"
+      ],
+      "properties": {
+        "consumer_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9._:-]{2,100}$"
+        },
+        "current_profile_ref": {"$ref": "#/$defs/support_ref"},
+        "target_profile_ref": {"$ref": "#/$defs/support_ref"},
+        "status": {"enum": ["READY", "DUAL_READ", "BLOCKED", "UNKNOWN"]},
+        "evidence_refs": {"$ref": "#/$defs/ref_array"},
+        "debt_refs": {"$ref": "#/$defs/ref_array"}
+      }
+    },
+    "compatibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "latest_observation_id",
+        "classification",
+        "reason_code",
+        "added_capabilities",
+        "removed_capabilities",
+        "comparison_evidence_refs",
+        "declared_identity_preserved",
+        "observed_identity_authoritative"
+      ],
+      "properties": {
+        "latest_observation_id": {"type": "string", "minLength": 5, "maxLength": 104},
+        "classification": {
+          "enum": [
+            "UNCHANGED",
+            "ADDITIVE",
+            "BREAKING",
+            "REDIRECTED",
+            "UNDOCUMENTED",
+            "PARTIAL_SAMPLE",
+            "INCOMPARABLE"
+          ]
+        },
+        "reason_code": {
+          "enum": [
+            "DECLARED_INTERFACE_MATCH",
+            "CAPABILITY_ADDED",
+            "CAPABILITY_REMOVED",
+            "REDIRECT_OBSERVED",
+            "DECLARATION_DRIFT",
+            "OBSERVATION_SCOPE_INCOMPLETE",
+            "CANONICAL_IDENTITY_MISMATCH"
+          ]
+        },
+        "added_capabilities": {"$ref": "#/$defs/capability_array"},
+        "removed_capabilities": {"$ref": "#/$defs/capability_array"},
+        "comparison_evidence_refs": {"$ref": "#/$defs/ref_array"},
+        "declared_identity_preserved": {"type": "boolean"},
+        "observed_identity_authoritative": {"const": false}
+      }
+    },
+    "dual_read": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "enabled",
+        "old_profile_ref",
+        "new_profile_ref",
+        "evidence_refs",
+        "parity_status"
+      ],
+      "properties": {
+        "enabled": {"type": "boolean"},
+        "old_profile_ref": {"$ref": "#/$defs/nullable_ref"},
+        "new_profile_ref": {"$ref": "#/$defs/nullable_ref"},
+        "evidence_refs": {"$ref": "#/$defs/ref_array"},
+        "parity_status": {"enum": ["NOT_RUN", "MATCH", "MISMATCH", "INCOMPARABLE"]}
+      }
+    },
+    "migration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "disposition",
+        "dual_read",
+        "rollback_ref",
+        "retirement_blockers",
+        "separate_decision_required",
+        "decision_has_effect"
+      ],
+      "properties": {
+        "disposition": {
+          "enum": [
+            "NO_CHANGE",
+            "HOLD",
+            "PROPOSE_DUAL_READ",
+            "PROPOSE_MIGRATION",
+            "PROPOSE_ROLLBACK",
+            "PROPOSE_RETIREMENT_REVIEW"
+          ]
+        },
+        "dual_read": {"$ref": "#/$defs/dual_read"},
+        "rollback_ref": {"$ref": "#/$defs/nullable_ref"},
+        "retirement_blockers": {"$ref": "#/$defs/id_array"},
+        "separate_decision_required": {"const": true},
+        "decision_has_effect": {"const": false}
+      }
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "observation_count",
+        "affected_consumer_ids",
+        "affected_consumer_count",
+        "blocked_or_unknown_consumer_ids",
+        "retirement_readiness",
+        "assessment_state",
+        "trusted_surface_allowed"
+      ],
+      "properties": {
+        "observation_count": {"type": "integer", "minimum": 1, "maximum": 64},
+        "affected_consumer_ids": {"$ref": "#/$defs/id_array"},
+        "affected_consumer_count": {"type": "integer", "minimum": 0, "maximum": 128},
+        "blocked_or_unknown_consumer_ids": {"$ref": "#/$defs/id_array"},
+        "retirement_readiness": {
+          "enum": ["NOT_REQUESTED", "HOLD", "BLOCKED", "READY_FOR_SEPARATE_GATE"]
+        },
+        "assessment_state": {
+          "enum": [
+            "UNCHANGED",
+            "CHANGE_RECORDED",
+            "MIGRATION_HELD",
+            "DUAL_READ_CANDIDATE",
+            "MIGRATION_CANDIDATE",
+            "ROLLBACK_CANDIDATE",
+            "RETIREMENT_REVIEW_CANDIDATE"
+          ]
+        },
+        "trusted_surface_allowed": {"const": false}
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "execution_mode",
+        "network_attempted",
+        "evidence_resolved",
+        "interface_claim_made_authoritative",
+        "connector_changed",
+        "canonical_identity_changed",
+        "interface_activated",
+        "interface_retired",
+        "release_authorized",
+        "publication_authorized",
+        "public_use_allowed"
+      ],
+      "properties": {
+        "execution_mode": {"const": "FIXTURE_ONLY"},
+        "network_attempted": {"const": false},
+        "evidence_resolved": {"const": false},
+        "interface_claim_made_authoritative": {"const": false},
+        "connector_changed": {"const": false},
+        "canonical_identity_changed": {"const": false},
+        "interface_activated": {"const": false},
+        "interface_retired": {"const": false},
+        "release_authorized": {"const": false},
+        "publication_authorized": {"const": false},
+        "public_use_allowed": {"const": false}
+      }
+    }
+  }
+}

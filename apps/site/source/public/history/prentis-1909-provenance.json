@@ -1,0 +1,16 @@
+{
+  "requested_url": "https://archive.org/download/historyofkansas00pren_0/historyofkansas00pren_0_djvu.txt",
+  "resolved_url": "https://dn721107.ca.archive.org/0/items/historyofkansas00pren_0/historyofkansas00pren_0_djvu.txt",
+  "bytes": 757514,
+  "sha1": "607320918c69950364e632012bb67a4ad1dd10d9",
+  "sha256": "68e6c1c76bbd982c395f724318b9beca0894f7c9cd5b543a6c6cd296d0b8ed15",
+  "content_type": "text/plain; charset=utf-8",
+  "verified_against_metadata": true,
+  "title": "A history of Kansas",
+  "author": "Noble L. Prentis",
+  "publicationYear": 1909,
+  "checkedAt": "2026-10-09",
+  "metadataUrl": "https://archive.org/metadata/historyofkansas00pren_0",
+  "rights": "The Library of Congress is unaware of copyright restrictions; 1909 historical publication. OCR reproduced unchanged.",
+  "scope": "Reference text only; OCR errors and period biases retained; not a governed factual dataset."
+}

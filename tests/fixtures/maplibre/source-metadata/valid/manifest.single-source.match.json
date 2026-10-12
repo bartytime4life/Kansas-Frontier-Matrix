@@ -1,0 +1,6 @@
+{
+  "manifest_id": "fixture:maplibre-source-meta:2026q1",
+  "source_digests": {
+    "soil_moisture_q1": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  }
+}

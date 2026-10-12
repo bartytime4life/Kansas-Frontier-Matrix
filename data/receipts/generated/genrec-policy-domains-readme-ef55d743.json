@@ -1,0 +1,241 @@
+{
+  "receipt_id": "genrec-policy-domains-readme-ef55d743",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "policy/domains/README.md"
+  ],
+  "artifact_hashes": {
+    "policy/domains/README.md": "sha256:ef55d7434ca13f551b3ade438e7aa3324e49799031bb8885880da47a77dc40e1"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5 Codex",
+    "version": "2026-08-13"
+  },
+  "prompt_or_contract": "sha256:9259b40fb673370bca14b92b4675552002e62ef0d423fed5eed206aa2f18261e",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local git",
+      "isolated sparse worktree",
+      "repository-native deterministic documentation validation",
+      "Pandoc GitHub-Flavored Markdown parsing",
+      "static domain-policy and topology reconciliation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:47eb7659ba121bd60b69fc8d878ba845185145b62eeaad7d69acdb5ef9bb2328",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:db2b79eed390d1ac2e7cacda30962a65a9b5d8d7c03420b5e8d54b2760794cad",
+      "sha256:b767cdd3321d1f21bf5444938c339c07b30dbf3e2c16c2c745b5c5017a2096e3",
+      "sha256:0b1c9d56110ef933e3d4804e0671b3150f2a49638ee2c93be16be2c0c07beb0f",
+      "sha256:e331263e4c85e8a059793eb67b11a5fabb36d0a88da26ed3e17d2f89d384b6ce",
+      "sha256:9dba2956624827673e3fcb7d903c567cbdc042aaf104d20728dc7b2d762f3641",
+      "sha256:ab509c8d059ac6cd633436df59cb200ddb970a002a2000d70c3e385a1d151178",
+      "sha256:30f4ef15363be30366ba322217545bf1bd986a535204f76902e3a42a34c5657f",
+      "sha256:af7c6fff7deadc37d76b9792ff39b917a4a19aced180152d1c1d999cbdce0dfa",
+      "sha256:809d38438fb12c435b0fdf503c2a26db49d51b937db3b192970eb5254d0a89ce",
+      "sha256:73389b8f84e8220eb61027fa253a63fde44bcdcfd78648a322f44e24fd43b082",
+      "sha256:510ee7f3aea7610c853e429bc02a9dec32b64eee970115be7dd4df1c86cc2dc5"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "repo:commit@2d6a87c307c35c9a10492f43646b817cf7583b2a",
+      "repo:tree@cb550fab5ee6c8e412f246ec1e06bf84cced7530",
+      "repo:policy/domains/README.md@ed9be975c9da2c7d77d94fab621db39f23953813",
+      "repo:policy/domains/**@f7894b200012dc849bc7d95541762ec8ea969f62",
+      "repo:policy/domains/*/README.md@2d6a87c307c35c9a10492f43646b817cf7583b2a",
+      "repo:control_plane/domain_lane_register.yaml@1bfc6f91cfa713a5e3d51ece011b63b46310734f",
+      "repo:docs/registers/DOMAIN_LANE.md@7cd641d99e1e4e3b3823f608d63679a438590c3a",
+      "repo:control_plane/root_registry.yaml@024f668b5f0a9239bafa4f8b09e2afd86300ff8c",
+      "repo:docs/doctrine/directory-rules.md@fd49a0b83e55cef52c1124281f093e263526898d",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@b01322ef64f8c2b1ecb41de7ef4685b97cfa2a62",
+      "repo:policy/domains/soil/watcher_spec.rego@3c7d0f99507c94bf539fb75a0ce26e215f79cbde",
+      "repo:policy/domains/fauna/tile_field_allowlist.yaml@3f743b21f3d13b100a1a5bb7c3a7b2bb6d48df69",
+      "repo:policy/bundles/README.md@0a13a9c9beddfa764d47e5dd6a2ea7ef91bf0d53",
+      "repo:policy/bundles/pass12-release-gate-v1/README.md@0c36c7c68180e74ccd9277f92284530cc2a96db0",
+      "repo:.github/workflows/policy-test.yml@ac8f125e8a4d3634d86f66836d2aa2c0e3925e75",
+      "repo:packages/policy-runtime/src/policy_runtime/core.py@e7e14cf39ae6919fbbc80f1b471de6b907292edb",
+      "repo:tools/validators/directory_governance/validate_repository_topology.py@e2992453d5d78015035ae6e312d839bfc3a2cbda",
+      "repo:tools/validators/directory_governance/repository_topology_baseline.json@717c2480686d254ba6a8b8c19276cfcf0c6bbda2",
+      "repo:.github/CODEOWNERS@dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61"
+    ]
+  },
+  "truth_labels": {
+    "policy/domains/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Pinned live main, its tree, exact target baseline bytes, direct domain tree, branch-name availability, and absence of an open pull request touching the exact target before authoring."
+    },
+    {
+      "gate": "base-drift-review",
+      "outcome": "PASS",
+      "reason": "Main advanced after the evidence snapshot through unrelated empty README additions under policy/role and policy/sources. The exact policy/domains target blob and reviewed domain evidence remained unchanged; publication is based on the newer main commit without rewriting the pinned evidence snapshot."
+    },
+    {
+      "gate": "live-domain-tree-inventory",
+      "outcome": "PASS",
+      "reason": "The untruncated 16,989-entry live tree confirms 185 files under policy/domains: 126 Rego, 9 YAML, 1 JSON, 19 Markdown, and 30 .gitkeep files across 14 direct directories."
+    },
+    {
+      "gate": "canonical-lane-and-physical-path-reconciliation",
+      "outcome": "PASS",
+      "reason": "Confirmed the 13 machine-projected canonical lanes and 13 substantive canonical child READMEs, three absent former direct alias or legacy paths, and one residual marker-only people child without manufacturing a mapping."
+    },
+    {
+      "gate": "policy-source-maturity-reconciliation",
+      "outcome": "PASS",
+      "reason": "Exact source markers classify 125 Rego files as explicit PROPOSED scaffolds and isolate soil/watcher_spec.rego as the one non-default operative body; no domain-local native Rego test or accepted evaluator is claimed."
+    },
+    {
+      "gate": "register-and-topology-authority-reconciliation",
+      "outcome": "PASS",
+      "reason": "Separated canonical lane identity, unresolved machine-register alias vocabulary, current physical paths, stale human-register verification text, and topology-ratchet mechanics without treating any one axis as silent authority for another."
+    },
+    {
+      "gate": "no-loss-document-reconciliation",
+      "outcome": "PASS",
+      "reason": "Preserved the v0.3 purpose, authority, input, output, decision, obligation, review, trust-membrane, activation, rollback, and verification contracts while replacing stale inventory and child-document maturity claims."
+    },
+    {
+      "gate": "local-links-and-fragments",
+      "outcome": "PASS",
+      "reason": "The repository-native no-network checker resolved 91 local targets; nine shield endpoints were classified as external and deliberately not requested."
+    },
+    {
+      "gate": "metadata-document-graph-and-freshness",
+      "outcome": "PASS",
+      "reason": "Required KFM_META_BLOCK_V2, explicit-entrypoint document graph, and bounded-required stale scan passed with zero findings at the deterministic 2026-08-13 as-of date."
+    },
+    {
+      "gate": "documentation-validator-suites",
+      "outcome": "PASS",
+      "reason": "All 18 link-check, 24 metadata-block, 27 document-graph, and 23 stale-scan focused tests passed locally."
+    },
+    {
+      "gate": "markdown-render-and-static-structure",
+      "outcome": "PASS",
+      "reason": "Pandoc parsed GitHub-Flavored Markdown successfully; UTF-8, final newline, tab, fence, metadata-delimiter, trailing-whitespace, and git diff checks passed."
+    },
+    {
+      "gate": "focused-topology-unit-tests",
+      "outcome": "PASS",
+      "reason": "Eight bounded topology tests passed, including invariant-baseline separation, conventional README handling, substantive alias detection, and high-value synthetic path and content rules."
+    },
+    {
+      "gate": "full-local-topology-suite",
+      "outcome": "FAIL",
+      "reason": "The 19-test suite completed 17 assertions but its two live-index checks ended in the validator's 30-second git cat-file object-size timeout. This is recorded as an environment/resource-limited local failure, not a topology semantic finding or a pass."
+    },
+    {
+      "gate": "generated-receipt-manual-integrity",
+      "outcome": "PASS",
+      "reason": "Standards-conforming JSON, required-field presence, artifact/hash/truth-label path parity, policy and citation references, pending-review posture, and the final README SHA-256 are checked locally."
+    },
+    {
+      "gate": "repository-generated-receipt-validator",
+      "outcome": "SKIPPED",
+      "reason": "The local runtime lacks the validator's jsonschema dependency; manual bounded integrity checks are recorded separately without claiming full schema-validator conformance."
+    },
+    {
+      "gate": "sensitive-content-review",
+      "outcome": "PASS",
+      "reason": "The authored artifacts contain no credentials, private prompts, hidden reasoning, personal records, protected payloads, signed URLs, production endpoints, or invented authority claims."
+    },
+    {
+      "gate": "runtime-release-and-public-behavior",
+      "outcome": "SKIPPED",
+      "reason": "Documentation and provenance only; no rule, bundle, evaluator, registry, workflow, runtime, lifecycle, release, deployment, or publication behavior changes."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks require the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "The draft remains pending authorized human review and creates no policy acceptance, merge, release, deployment, or publication authority."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "docs/doctrine/directory-rules.md",
+    "policy/README.md",
+    "policy/domains/README.md"
+  ],
+  "citations": [
+    {
+      "id": "domain-parent-v0.3-baseline",
+      "validated": true,
+      "evidence_ref": "repo:policy/domains/README.md@ed9be975c9da2c7d77d94fab621db39f23953813"
+    },
+    {
+      "id": "live-domain-tree-and-file-inventory",
+      "validated": true,
+      "evidence_ref": "repo:policy/domains/**@f7894b200012dc849bc7d95541762ec8ea969f62"
+    },
+    {
+      "id": "canonical-child-document-maturity",
+      "validated": true,
+      "evidence_ref": "repo:policy/domains/*/README.md@2d6a87c307c35c9a10492f43646b817cf7583b2a"
+    },
+    {
+      "id": "machine-domain-lane-projection",
+      "validated": true,
+      "evidence_ref": "repo:control_plane/domain_lane_register.yaml@1bfc6f91cfa713a5e3d51ece011b63b46310734f"
+    },
+    {
+      "id": "human-domain-register-and-stale-verification-text",
+      "validated": true,
+      "evidence_ref": "repo:docs/registers/DOMAIN_LANE.md@7cd641d99e1e4e3b3823f608d63679a438590c3a"
+    },
+    {
+      "id": "domain-rego-scaffolds-and-soil-exception",
+      "validated": true,
+      "evidence_ref": "repo:policy/domains/**@f7894b200012dc849bc7d95541762ec8ea969f62"
+    },
+    {
+      "id": "topology-readme-and-alias-ratchet",
+      "validated": true,
+      "evidence_ref": "repo:tools/validators/directory_governance/validate_repository_topology.py@e2992453d5d78015035ae6e312d839bfc3a2cbda"
+    },
+    {
+      "id": "accepted-directory-placement",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@b01322ef64f8c2b1ecb41de7ef4685b97cfa2a62"
+    },
+    {
+      "id": "placeholder-general-policy-runtime",
+      "validated": true,
+      "evidence_ref": "repo:packages/policy-runtime/src/policy_runtime/core.py@e7e14cf39ae6919fbbc80f1b471de6b907292edb"
+    },
+    {
+      "id": "verified-github-review-route",
+      "validated": true,
+      "evidence_ref": "repo:.github/CODEOWNERS@dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-13T20:53:59Z",
+  "emitter": "OpenAI Codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Documentation and provenance only. The receipt deliberately separates canonical documentation maturity from policy-source, evaluator, consumer, release, and production maturity; preserves unresolved alias and residual-path drift; and records the local full-topology suite timeout without representing it as a semantic pass. No domain identity, policy activation, release, deployment, publication, or public-use authority is created."
+}

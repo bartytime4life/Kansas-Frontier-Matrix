@@ -1,0 +1,57 @@
+{
+  "receipt_id": "genrec-docs-control-plane-workflow-8510e17e",
+  "contract_version": "3.0.0",
+  "receipt_type": "GenerationReceipt",
+  "status": "PROPOSED",
+  "generated_at": "2026-07-18T00:00:00-05:00",
+  "repository": "bartytime4life/Kansas-Frontier-Matrix",
+  "base_commit": "c2075168292f0a6490e524240c90c9eaf15df9da",
+  "branch": "agent/docs-control-plane-workflow-20260718",
+  "target_path": ".github/workflows/docs-control-plane.yml",
+  "previous_blob": "e50351863cce87a00df03356832b8deada56b325",
+  "new_blob": "0991c0f4b1b580071c9bd25e5353ac2ac746c254",
+  "sha256": "8510e17e05e5da09451e1ed907e7024a73ee0f125ec6eccee168322b3a5850d1",
+  "truth_labels": {
+    "confirmed": [
+      "The prior validate-control-plane-yaml and registers-schema jobs only executed TODO echo commands.",
+      "Baseline workflow run 29649697595 completed successfully without parsing YAML or running register contract tests.",
+      "The control_plane root contains machine-readable YAML registers.",
+      "tests/policy/test_control_plane_register_meta_contract.py is an executable repository-owned register contract.",
+      "Workflow name docs-control-plane and job ids validate-control-plane-yaml and registers-schema are preserved."
+    ],
+    "proposed": [
+      "Parsing all control_plane YAML with a duplicate-key-rejecting safe loader is the current syntax gate.",
+      "The repository-owned meta-contract test is the current executable register structure gate."
+    ],
+    "needs_verification": [
+      "Final-head GitHub Actions conclusions.",
+      "Branch-protection dependencies.",
+      "Independent documentation-governance and policy review.",
+      "Whether a dedicated machine JSON Schema should govern complete register shapes.",
+      "Whether action references should be pinned to immutable commit SHAs.",
+      "Ownership for contradiction, deprecation, and release-state register review."
+    ]
+  },
+  "changes": [
+    "Added workflow_dispatch, contents: read, concurrency cancellation, deterministic environment settings, and timeouts.",
+    "Disabled persisted checkout credentials.",
+    "Pinned PyYAML 6.0.3 and parse all control_plane YAML documents.",
+    "Reject duplicate YAML mapping keys and non-mapping document roots.",
+    "Run the repository-owned control-plane register meta-contract test.",
+    "Added bounded always-run summaries for both jobs."
+  ],
+  "directory_rules_basis": [
+    ".github/workflows remains the existing CI orchestration location.",
+    "control_plane remains the machine-register authority root.",
+    "data/receipts/generated remains the existing generated process-memory lane.",
+    "No new authority root, schema home, policy home, release home, or publication home is created."
+  ],
+  "authority_boundary": "A green result is bounded CI evidence for YAML syntax and the selected register meta-contract only. It does not make register entries authoritative, resolve contradictions, approve policy, change release state, promote lifecycle artifacts, or publish.",
+  "rollback": {
+    "strategy": "Revert the receipt commit and workflow commit in reverse order or close the pull request without merge.",
+    "restores_blob": "e50351863cce87a00df03356832b8deada56b325"
+  },
+  "human_review": {
+    "state": "pending"
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "assessment_id": "material-change:natural-systems:hydrology:2026-03-20:error",
+  "baseline_ref": "kfm://dataset-version/natural-systems/hydrology/2026-03-13",
+  "candidate_ref": "kfm://dataset-version/natural-systems/hydrology/2026-03-20",
+  "classification": {
+    "change_class": "ERROR",
+    "material": null,
+    "outcome": "ERROR",
+    "reason_codes": [
+      "EVALUATION_ERROR"
+    ]
+  },
+  "comparison": {
+    "baseline_digest": "sha256:0f67149aaf7ee59f6a489f7323492f86bcefff225d4c976b5f43244c2d02d4e7",
+    "byte_changed": true,
+    "candidate_digest": "sha256:d5f6e0480e5983955fe28022051e7de14d879d107376d6c28d68bbbaaa7f68e6",
+    "semantic_changed": null
+  },
+  "criteria": [
+    {
+      "criterion_id": "domain-evaluation-status",
+      "evidence_refs": [],
+      "metric": "evaluation_completed",
+      "observed_value": false,
+      "required": true,
+      "result": "ERROR",
+      "threshold": true,
+      "unit": "boolean"
+    }
+  ],
+  "evidence": {
+    "diff_report_ref": "kfm://diff/natural-systems/hydrology/2026-03-20",
+    "source_refs": [
+      "kfm://source/synthetic/natural-systems/hydrology"
+    ],
+    "validation_report_refs": []
+  },
+  "governance": {
+    "authority_created": false,
+    "policy_evaluated": false,
+    "promotion_authorized": false,
+    "public_use_allowed": false,
+    "release_ref": null,
+    "spec_hash": "sha256:c6cc817095f8f5adba880ad11a553ea99de76d89c9af15bc2225a89e965a9484"
+  },
+  "lineage": {
+    "superseded_by": null,
+    "supersedes": null
+  },
+  "object_type": "MaterialChangeAssessment",
+  "profile": {
+    "canonicalization_profile": "kfm-canonical-json-v1",
+    "digest_algorithm": "sha256",
+    "profile_id": "kfm://materiality-profile/natural-systems/hydrology/fixture-v1",
+    "profile_version": "1.0.0",
+    "spec_hash": "sha256:738ce02374a0266f2b549102e2d2c00bc6196e3bf4b6a34e5d60a7e9b263ae87"
+  },
+  "schema_version": "1.0.0",
+  "subject_ref": "kfm://dataset/natural-systems/hydrology",
+  "timing": {
+    "assessed_at": "2026-03-20T23:30:00Z",
+    "baseline_as_of": "2026-03-13T00:00:00Z",
+    "candidate_as_of": "2026-03-20T18:00:00Z"
+  }
+}

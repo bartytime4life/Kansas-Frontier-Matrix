@@ -1,0 +1,27 @@
+{
+  "scenario_id": "synthetic-path-out-of-scope",
+  "evidence_refs": [
+    "fixture://repository-control/path-out-of-scope"
+  ],
+  "repository": "bartytime4life/Kansas-Frontier-Matrix",
+  "default_branch": "main",
+  "base_sha": "9f4a7218e9f29592cce3d15fb6a2b43185ac3d82",
+  "head_sha": "2222222222222222222222222222222222222222",
+  "head_branch": "agent/test-repository-control",
+  "pr_number": 9998,
+  "pr_state": "OPEN",
+  "merge_commit_sha": null,
+  "changed_paths": [
+    "policy/unauthorized.rego"
+  ],
+  "requested_operations": [
+    "update"
+  ],
+  "open_pull_requests": [
+    9998
+  ],
+  "active_review_prs": [
+    9998
+  ],
+  "now": "2026-07-26T12:00:00Z"
+}

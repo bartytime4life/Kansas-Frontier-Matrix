@@ -1,32 +1,19 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "kfm://schemas/contracts/v1/ai/focus_mode_response.schema.json",
+  "title": "Focus Mode Response",
+  "description": "PROPOSED scaffold created from the current docs/domains markdown inventory.",
   "type": "object",
-  "properties": {
-    "id": {
-      "type": "string"
-    },
-    "knowledge_character": {
-      "enum": [
-        "OBSERVED",
-        "DOCUMENTARY",
-        "DERIVED",
-        "MODELED",
-        "GENERALIZED",
-        "SOURCE_DEPENDENT",
-        "SYNTHETIC_TEST"
-      ]
-    },
-    "outcome": {
-      "enum": [
-        "ANSWER",
-        "ABSTAIN",
-        "DENY",
-        "ERROR"
-      ]
-    }
-  },
-  "required": [
-    "id",
-    "outcome"
-  ]
+  "additionalProperties": true,
+  "properties": {},
+  "x-kfm": {
+    "status": "PROPOSED",
+    "path": "schemas/contracts/v1/ai/focus_mode_response.schema.json",
+    "source_docs": [
+      "docs/domains/atmosphere/API_CONTRACTS.md",
+      "docs/domains/roads-rail-trade/API_CONTRACTS.md",
+      "docs/domains/settlements-infrastructure/MAP_UI_CONTRACTS.md"
+    ],
+    "contract_doc": null
+  }
 }

@@ -1,0 +1,337 @@
+{
+  "fixture_profile": "kfm.epa_echo_tri_fixture_suite.v1",
+  "base_document": {
+    "profile": "kfm.epa_echo_tri_facility_evidence_profile.v1",
+    "status": "PROPOSED_INACTIVE",
+    "execution_mode": "FIXTURE_ONLY",
+    "assessment_id": "kfm:epa-facility-assessment:sha256:3946c1e2c2bf537959ff7bad180bb9a9a64a6a5b068dbd29926d2bd3d11dd75c",
+    "bundle": {
+      "bundle_id": "bundle:fixture:epa-echo-tri",
+      "claim_scope": "kfm:epa-facility-assessment:sha256:3946c1e2c2bf537959ff7bad180bb9a9a64a6a5b068dbd29926d2bd3d11dd75c",
+      "evidence_refs": [
+        "evidence:fixture:echo",
+        "evidence:fixture:tri"
+      ],
+      "source_records": [
+        "src:epa_echo_fixture",
+        "src:epa_tri_fixture"
+      ],
+      "citations": [
+        "attachment:pass2#KFM-P2-IDEA-0025"
+      ],
+      "rights": {
+        "license": "fixture-only-no-rights-claim"
+      },
+      "sensitivity": {
+        "level": "generalized",
+        "reason": "synthetic fixture only",
+        "applied_at": "2026-08-08T00:00:00Z"
+      },
+      "transforms": [
+        "synthetic_fixture_only",
+        "public_safe_generalization"
+      ],
+      "checksums": {
+        "epa_echo_tri_facility_evidence_profile": "sha256:3946c1e2c2bf537959ff7bad180bb9a9a64a6a5b068dbd29926d2bd3d11dd75c"
+      },
+      "spec_hash": "sha256:88625bf66a9bba97531a970f5f42acec6d111fad1b6af371992fc8b0bedc0cc8"
+    },
+    "epa_echo_tri_profile": {
+      "source_roles": [
+        {
+          "source_descriptor_ref": "src:epa_echo_fixture",
+          "role": "ECHO_COMPLIANCE",
+          "support_ref_ids": [
+            "evidence:fixture:echo"
+          ],
+          "source_time": "2025-12-31T00:00:00Z",
+          "retrieved_at": "2026-08-08T00:00:00Z",
+          "rights_state": "REVIEWED_PUBLIC_FIXTURE",
+          "sensitivity_state": "GENERALIZED_FIXTURE"
+        },
+        {
+          "source_descriptor_ref": "src:epa_tri_fixture",
+          "role": "TRI_ANNUAL_RELEASE",
+          "support_ref_ids": [
+            "evidence:fixture:tri"
+          ],
+          "source_time": "2025-12-31T00:00:00Z",
+          "retrieved_at": "2026-08-08T00:00:00Z",
+          "rights_state": "REVIEWED_PUBLIC_FIXTURE",
+          "sensitivity_state": "GENERALIZED_FIXTURE"
+        }
+      ],
+      "facility_identity": {
+        "facility_ref": "fixture:facility:alpha",
+        "geography_scope": "COUNTY",
+        "geometry_precision": "GENERALIZED",
+        "exact_geometry_present": false
+      },
+      "records": [
+        {
+          "record_id": "fixture:record:echo",
+          "record_kind": "COMPLIANCE_EVENT",
+          "source_role": "ECHO_COMPLIANCE",
+          "reporting_year": 2025,
+          "quantity_scaled": 0,
+          "support_ref_ids": [
+            "evidence:fixture:echo"
+          ]
+        },
+        {
+          "record_id": "fixture:record:tri",
+          "record_kind": "ANNUAL_CHEMICAL_RELEASE",
+          "source_role": "TRI_ANNUAL_RELEASE",
+          "reporting_year": 2025,
+          "quantity_scaled": 1250,
+          "support_ref_ids": [
+            "evidence:fixture:tri"
+          ]
+        }
+      ],
+      "policy_profile_ref": "policy:fixture:epa-public-safe",
+      "review_refs": {
+        "rights_review_ref": "review:fixture:epa-rights",
+        "sensitivity_review_ref": "review:fixture:epa-sensitivity"
+      },
+      "temporal_lineage": {
+        "period_start": "2025-01-01T00:00:00Z",
+        "period_end": "2025-12-31T23:59:59Z",
+        "computed_at": "2026-08-08T00:00:00Z"
+      },
+      "spec_hash": "sha256:3946c1e2c2bf537959ff7bad180bb9a9a64a6a5b068dbd29926d2bd3d11dd75c"
+    },
+    "claims": {
+      "deterministic_identity": true,
+      "evidence_resolved": false,
+      "policy_evaluated": false,
+      "network_access_performed": false,
+      "source_activated": false,
+      "compliance_authority": false,
+      "current_emissions_authority": false,
+      "facility_score_generated": false,
+      "lifecycle_write_performed": false,
+      "released": false,
+      "published": false
+    }
+  },
+  "cases": [
+    {
+      "case_id": "valid_generalized_echo_tri",
+      "expected_outcome": "PASS",
+      "expected_findings": [],
+      "pre_hash_mutations": [],
+      "post_hash_mutations": [],
+      "recompute_identity": true
+    },
+    {
+      "case_id": "abstain_missing_policy",
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": [
+        {
+          "code": "EPA_POLICY_UNRESOLVED",
+          "path": "/epa_echo_tri_profile/policy_profile_ref"
+        }
+      ],
+      "pre_hash_mutations": [
+        {
+          "op": "replace",
+          "path": "/epa_echo_tri_profile/policy_profile_ref",
+          "value": ""
+        }
+      ],
+      "post_hash_mutations": [],
+      "recompute_identity": true
+    },
+    {
+      "case_id": "abstain_missing_review",
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": [
+        {
+          "code": "EPA_REVIEW_UNRESOLVED",
+          "path": "/epa_echo_tri_profile/review_refs/rights_review_ref"
+        }
+      ],
+      "pre_hash_mutations": [
+        {
+          "op": "replace",
+          "path": "/epa_echo_tri_profile/review_refs/rights_review_ref",
+          "value": ""
+        }
+      ],
+      "post_hash_mutations": [],
+      "recompute_identity": true
+    },
+    {
+      "case_id": "abstain_support_unresolved",
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": [
+        {
+          "code": "EPA_SUPPORT_UNRESOLVED",
+          "path": "/epa_echo_tri_profile/source_roles/1/support_ref_ids/0"
+        }
+      ],
+      "pre_hash_mutations": [
+        {
+          "op": "replace",
+          "path": "/epa_echo_tri_profile/source_roles/1/support_ref_ids/0",
+          "value": "evidence:missing"
+        }
+      ],
+      "post_hash_mutations": [],
+      "recompute_identity": true
+    },
+    {
+      "case_id": "deny_role_collapse",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "EPA_SOURCE_ROLE_COLLAPSED",
+          "path": "/epa_echo_tri_profile/source_roles"
+        }
+      ],
+      "pre_hash_mutations": [
+        {
+          "op": "replace",
+          "path": "/epa_echo_tri_profile/source_roles/1/source_descriptor_ref",
+          "value": "src:epa_echo_fixture"
+        }
+      ],
+      "post_hash_mutations": [],
+      "recompute_identity": true
+    },
+    {
+      "case_id": "deny_exact_geometry",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "EPA_SCHEMA_INVALID",
+          "path": "/epa_echo_tri_profile/facility_identity/exact_geometry_present"
+        }
+      ],
+      "pre_hash_mutations": [
+        {
+          "op": "replace",
+          "path": "/epa_echo_tri_profile/facility_identity/exact_geometry_present",
+          "value": true
+        }
+      ],
+      "post_hash_mutations": [],
+      "recompute_identity": true
+    },
+    {
+      "case_id": "deny_authority_claim",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "EPA_SCHEMA_INVALID",
+          "path": "/claims/compliance_authority"
+        }
+      ],
+      "pre_hash_mutations": [
+        {
+          "op": "replace",
+          "path": "/claims/compliance_authority",
+          "value": true
+        }
+      ],
+      "post_hash_mutations": [],
+      "recompute_identity": true
+    },
+    {
+      "case_id": "error_hash_mismatch",
+      "expected_outcome": "ERROR",
+      "expected_findings": [
+        {
+          "code": "EPA_PROFILE_HASH_MISMATCH",
+          "path": "/epa_echo_tri_profile/spec_hash"
+        }
+      ],
+      "pre_hash_mutations": [],
+      "post_hash_mutations": [
+        {
+          "op": "replace",
+          "path": "/epa_echo_tri_profile/spec_hash",
+          "value": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+        }
+      ],
+      "recompute_identity": true
+    },
+    {
+      "case_id": "error_time_order",
+      "expected_outcome": "ERROR",
+      "expected_findings": [
+        {
+          "code": "EPA_TIME_INVALID",
+          "path": "/epa_echo_tri_profile/temporal_lineage"
+        }
+      ],
+      "pre_hash_mutations": [
+        {
+          "op": "replace",
+          "path": "/epa_echo_tri_profile/temporal_lineage/computed_at",
+          "value": "2025-01-01T00:00:00Z"
+        }
+      ],
+      "post_hash_mutations": [],
+      "recompute_identity": true
+    },
+    {
+      "case_id": "error_duplicate_record",
+      "expected_outcome": "ERROR",
+      "expected_findings": [
+        {
+          "code": "EPA_DUPLICATE_RECORD_ID",
+          "path": "/epa_echo_tri_profile/records/1/record_id"
+        }
+      ],
+      "pre_hash_mutations": [
+        {
+          "op": "replace",
+          "path": "/epa_echo_tri_profile/records/1/record_id",
+          "value": "fixture:record:echo"
+        }
+      ],
+      "post_hash_mutations": [],
+      "recompute_identity": true
+    },
+    {
+      "case_id": "error_echo_quantity",
+      "expected_outcome": "ERROR",
+      "expected_findings": [
+        {
+          "code": "EPA_ROLE_ARITHMETIC_CONTRADICTION",
+          "path": "/epa_echo_tri_profile/records/0/quantity_scaled"
+        }
+      ],
+      "pre_hash_mutations": [
+        {
+          "op": "replace",
+          "path": "/epa_echo_tri_profile/records/0/quantity_scaled",
+          "value": 5
+        }
+      ],
+      "post_hash_mutations": [],
+      "recompute_identity": true
+    },
+    {
+      "case_id": "deny_role_kind_mismatch",
+      "expected_outcome": "DENY",
+      "expected_findings": [
+        {
+          "code": "EPA_ROLE_KIND_MISMATCH",
+          "path": "/epa_echo_tri_profile/records/1/record_kind"
+        }
+      ],
+      "pre_hash_mutations": [
+        {
+          "op": "replace",
+          "path": "/epa_echo_tri_profile/records/1/record_kind",
+          "value": "COMPLIANCE_EVENT"
+        }
+      ],
+      "post_hash_mutations": [],
+      "recompute_identity": true
+    }
+  ]
+}

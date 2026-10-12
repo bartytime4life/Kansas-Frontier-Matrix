@@ -1,0 +1,127 @@
+{
+  "artifact_hashes": {
+    ".github/workflows/source-descriptor-validate.yml": "sha256:38b38085569911ef31a8dbb1d090b5359abf85d2c89e3be9122a89cbed0f3f6e",
+    "schemas/contracts/v1/sources/source_descriptor.schema.json": "sha256:01e2c03e770d7c84d0d329e482703688281792fcf0b2f7c9e431a65b10c13c5c",
+    "tests/validators/test_validate_source_descriptor_entrypoints.py": "sha256:ab04c1b86e202020e8bf0ede60be38eb1abc4101fc8164bb2a81a352e4f1ceea",
+    "tools/validators/sources/validate_source_descriptor.py": "sha256:f1f97b07c4afc6653e12c868b814d12c5b24d3de66684e64d3ba1f8a57885c2c"
+  },
+  "artifact_paths": [
+    ".github/workflows/source-descriptor-validate.yml",
+    "schemas/contracts/v1/sources/source_descriptor.schema.json",
+    "tests/validators/test_validate_source_descriptor_entrypoints.py",
+    "tools/validators/sources/validate_source_descriptor.py"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "attachment:KFM_Pass_1_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P1-IDEA-0006",
+      "id": "attachment:pass1-source-descriptor-before-activation",
+      "validated": true
+    },
+    {
+      "evidence_ref": "attachment:KFM_Pass_1_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P1-PROG-0007",
+      "id": "attachment:pass1-registry-adapter-pipeline-flow",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/adr/ADR-0017-source-descriptor-admission-process.md@d4586ec659d86e4bf07e59bccd65c6c3412755e7",
+      "id": "repository:source-descriptor-admission-hold",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:.github/workflows/source-descriptor-validate.yml@d4586ec659d86e4bf07e59bccd65c6c3412755e7",
+      "id": "repository:source-descriptor-validation-holds",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-08T17:30:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Pass_1_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf"
+    ],
+    "evidence_hashes": [],
+    "evidence_refs": [
+      "attachment:KFM_Pass_1_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P1-IDEA-0006",
+      "attachment:KFM_Pass_1_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P1-PROG-0007",
+      "repo:docs/intake/exploratory/pass-1-idea-index-coverage-source-map.md@d4586ec659d86e4bf07e59bccd65c6c3412755e7",
+      "repo:docs/adr/ADR-0017-source-descriptor-admission-process.md@d4586ec659d86e4bf07e59bccd65c6c3412755e7",
+      "repo:schemas/contracts/v1/source/source_descriptor.schema.json@d4586ec659d86e4bf07e59bccd65c6c3412755e7",
+      "repo:schemas/contracts/v1/sources/source_descriptor.schema.json@d4586ec659d86e4bf07e59bccd65c6c3412755e7",
+      "repo:tools/validators/validate_source_descriptor.py@d4586ec659d86e4bf07e59bccd65c6c3412755e7",
+      "repo:.github/workflows/source-descriptor-validate.yml@d4586ec659d86e4bf07e59bccd65c6c3412755e7"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0017-source-descriptor-admission-process.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "GPT-5.6 Pro",
+    "provider": "OpenAI",
+    "version": "2026-08-08"
+  },
+  "notes": "Implements the bounded Pass 1 P1-IMPORT-02 SourceDescriptor validation convergence slice. The permissive plural schema becomes a non-authoritative alias of the rich singular implementation schema, the schema-declared validator path becomes executable, direct tests prove both entrypoints and schema paths have identical fixture polarity, and the workflow preserves source-admission, rights, policy, activation, release, and publication holds.",
+  "override_record": null,
+  "parameters": {
+    "max_tokens": null,
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local deterministic syntax and hash validation"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0017-source-descriptor-admission-process.md",
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:f39198a4f927c2d166d50abff4205dde21e88170e63b6a694946b7be6e97cce5",
+  "receipt_id": "genrec-source-descriptor-convergence-20260808",
+  "truth_labels": {
+    ".github/workflows/source-descriptor-validate.yml": "CONFIRMED",
+    "schemas/contracts/v1/sources/source_descriptor.schema.json": "PROPOSED",
+    "tests/validators/test_validate_source_descriptor_entrypoints.py": "CONFIRMED",
+    "tools/validators/sources/validate_source_descriptor.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "json-and-yaml-parse",
+      "outcome": "PASS",
+      "reason": "The schema and receipt parsed as JSON and the workflow parsed as YAML."
+    },
+    {
+      "gate": "python-syntax",
+      "outcome": "PASS",
+      "reason": "The compatibility validator and direct test module compiled as Python syntax."
+    },
+    {
+      "gate": "artifact-digest-replay",
+      "outcome": "PASS",
+      "reason": "Four authored non-receipt artifacts were bound to exact SHA-256 digests."
+    },
+    {
+      "gate": "repository-dependent-tests",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed repository head and installed repository dependencies."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ]
+}

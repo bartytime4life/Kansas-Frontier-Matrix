@@ -1,0 +1,198 @@
+{
+  "receipt_id": "genrec-evidence-ref-validator-52dbbdc8",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/evidence-resolver.yml",
+    ".github/workflows/schema-validation.yml",
+    "contracts/evidence/evidence_ref.md",
+    "fixtures/contracts/v1/evidence/README.md",
+    "fixtures/contracts/v1/evidence/evidence_ref/README.md",
+    "fixtures/contracts/v1/evidence/evidence_ref/invalid/README.md",
+    "fixtures/contracts/v1/evidence/evidence_ref/valid/README.md",
+    "tests/schemas/test_evidence_ref_validator.py",
+    "tools/validators/_common/run_all.py",
+    "tools/validators/validate_evidence_ref.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/evidence-resolver.yml": "sha256:17432272e8ef3861009d91f3f18ae98ef2e225d8af17fa5c9d58355db2594bb5",
+    ".github/workflows/schema-validation.yml": "sha256:7861305e7fe95a3afa45c5b445391cee857ddfde84148cb90ec80c49d0e956c8",
+    "contracts/evidence/evidence_ref.md": "sha256:5131d5cfb889567dd3f4f4485348925d42fb11c0b6f4b093e78142fba8ad193a",
+    "fixtures/contracts/v1/evidence/README.md": "sha256:021088468367433b26be1875354a5907aff4098769b83bde75c4499cb837f844",
+    "fixtures/contracts/v1/evidence/evidence_ref/README.md": "sha256:45850320bfef7e9638b33bbffdab28785f2dfa52a21fa035d309124efd36e35e",
+    "fixtures/contracts/v1/evidence/evidence_ref/invalid/README.md": "sha256:39f453abf0790a9a9568851e2efe96c1c184d008d89bd67f3c299c273044ff55",
+    "fixtures/contracts/v1/evidence/evidence_ref/valid/README.md": "sha256:0f449daebc5d0e58318f75dcb81a1b0b4014a3adf89d0bc0d2dc59cd2521cfc0",
+    "tests/schemas/test_evidence_ref_validator.py": "sha256:c2bb00f5b3518b3c20b2cf7b4e21606bb3ed0a248dccfcd593e45e53d769239d",
+    "tools/validators/_common/run_all.py": "sha256:ef2b160e48dbeb6943ab6b7496ee4385419c1983355eadb2f407f0bd91e724cc",
+    "tools/validators/validate_evidence_ref.py": "sha256:eab94ca89b8ebe58da865f10a4c36f31647e71f653e59daae3d31b74368dce3a"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "2026-07-19-session"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "git",
+      "Python 3.12",
+      "jsonschema",
+      "pytest"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:a89f0527052062ce0ae659a3e9b5f863b050bc6731a7a569c4c4403d3ff2f46c",
+      "sha256:17f0ff99847a849567cb97140c20f4119269972bc741575a15b186d2daccf5ae",
+      "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7"
+    ],
+    "attached_docs": [
+      "Codex Repository Completion Agent — README-Driven Missing Files and Directories Build Prompt",
+      "Directory Rules.pdf",
+      "Kansas Frontier Matrix — AI Build Operating Contract.md"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/7bf8b8d6e797bb9930ae73830029dccfbbda3846",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7bf8b8d6e797bb9930ae73830029dccfbbda3846/docs/architecture/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7bf8b8d6e797bb9930ae73830029dccfbbda3846/CONTRIBUTING.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7bf8b8d6e797bb9930ae73830029dccfbbda3846/schemas/contracts/v1/evidence/evidence_ref.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7bf8b8d6e797bb9930ae73830029dccfbbda3846/contracts/evidence/evidence_ref.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7bf8b8d6e797bb9930ae73830029dccfbbda3846/fixtures/contracts/v1/evidence/evidence_ref/",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7bf8b8d6e797bb9930ae73830029dccfbbda3846/tools/validators/validate_evidence_bundle.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7bf8b8d6e797bb9930ae73830029dccfbbda3846/tools/validators/_common/run_all.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7bf8b8d6e797bb9930ae73830029dccfbbda3846/.github/workflows/schema-validation.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7bf8b8d6e797bb9930ae73830029dccfbbda3846/.github/workflows/evidence-resolver.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/7bf8b8d6e797bb9930ae73830029dccfbbda3846/.github/PULL_REQUEST_TEMPLATE.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/evidence-resolver.yml": "CONFIRMED",
+    ".github/workflows/schema-validation.yml": "CONFIRMED",
+    "contracts/evidence/evidence_ref.md": "CONFIRMED",
+    "fixtures/contracts/v1/evidence/README.md": "CONFIRMED",
+    "fixtures/contracts/v1/evidence/evidence_ref/README.md": "CONFIRMED",
+    "fixtures/contracts/v1/evidence/evidence_ref/invalid/README.md": "CONFIRMED",
+    "fixtures/contracts/v1/evidence/evidence_ref/valid/README.md": "CONFIRMED",
+    "tests/schemas/test_evidence_ref_validator.py": "CONFIRMED",
+    "tools/validators/_common/run_all.py": "CONFIRMED",
+    "tools/validators/validate_evidence_ref.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-governance-preflight",
+      "outcome": "PASS",
+      "reason": "Repository identity, default branch, immutable base SHA, duplicate remote work, current Directory Rules, contribution rules, ADR status, drift register, CODEOWNERS, and generated-receipt requirements were inspected."
+    },
+    {
+      "gate": "readme-and-reference-inventory",
+      "outcome": "PASS",
+      "reason": "All 2,248 tracked README paths were read and high-signal unresolved references were classified before implementation."
+    },
+    {
+      "gate": "directory-rules-and-authority-boundary",
+      "outcome": "PASS",
+      "reason": "Implementation stays in existing .github, contracts, fixtures, tests, tools, and generated-receipt responsibility lanes; no new root or parallel contract, schema, policy, proof, registry, release, or public authority was created."
+    },
+    {
+      "gate": "default-runtime-dependency-preflight",
+      "outcome": "FAIL",
+      "reason": "The default Codex Python environment lacked declared jsonschema and pytest packages. The same checks were rerun successfully in an untracked temporary environment containing the declared dependency versions."
+    },
+    {
+      "gate": "editable-install-preflight",
+      "outcome": "FAIL",
+      "reason": "A fresh editable-install attempt could not resolve the hatchling build dependency through the restricted package proxy; this was an environment/network limitation, not a passing repository check."
+    },
+    {
+      "gate": "evidence-ref-cli-polarity",
+      "outcome": "PASS",
+      "reason": "The dedicated CLI accepted valid_1 with exit 0, rejected missing-ref invalid_1 with exit 1, and --fixtures enforced all two valid and three invalid fixture polarities."
+    },
+    {
+      "gate": "aggregate-schema-fixtures",
+      "outcome": "PASS",
+      "reason": "make schemas completed successfully with six aggregate validators, including EvidenceRef. Expected-invalid fixtures print FAIL lines by the shared runner's established display convention while the aggregate process exits 0 only when their polarity is correct."
+    },
+    {
+      "gate": "schema-contract-tests",
+      "outcome": "PASS",
+      "reason": "make test completed with 18 passing schema and contract tests; the focused and generic EvidenceRef selection completed with 16 passing cases."
+    },
+    {
+      "gate": "full-pytest-suite",
+      "outcome": "PASS",
+      "reason": "python -m pytest -q completed with 105 passing tests in the temporary declared-dependency environment."
+    },
+    {
+      "gate": "workflow-static-and-held-boundaries",
+      "outcome": "PASS",
+      "reason": "All 41 workflow YAML files parsed; the schema inventory step and both evidence-resolver readiness scripts completed with the resolver and denied-resolution outcomes still explicitly WORKFLOW_HOLD."
+    },
+    {
+      "gate": "changed-markdown-links",
+      "outcome": "PASS",
+      "reason": "All 50 repository-relative Markdown links in changed documents and inline metadata-related paths resolved locally."
+    },
+    {
+      "gate": "diff-integrity-and-safety",
+      "outcome": "PASS",
+      "reason": "Python AST parsing, git diff --check, new-file non-emptiness and modes, responsibility-root checks, and a bounded added-line secret scan passed; no file-mode change surfaced."
+    },
+    {
+      "gate": "repository-native-markdown-lint",
+      "outcome": "SKIPPED",
+      "reason": "No accepted executable repository-native Markdown lint command was established; changed-link resolution and diff hygiene were run instead."
+    },
+    {
+      "gate": "remote-ci",
+      "outcome": "SKIPPED",
+      "reason": "The receipt was emitted before opening the draft pull request; remote workflow conclusions require the published head and remain separate from local validation."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "directory-rules",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/7bf8b8d6e797bb9930ae73830029dccfbbda3846/docs/architecture/directory-rules.md"
+    },
+    {
+      "id": "evidence-ref-schema",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/7bf8b8d6e797bb9930ae73830029dccfbbda3846/schemas/contracts/v1/evidence/evidence_ref.schema.json"
+    },
+    {
+      "id": "evidence-ref-contract",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/7bf8b8d6e797bb9930ae73830029dccfbbda3846/contracts/evidence/evidence_ref.md"
+    },
+    {
+      "id": "validator-pattern",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/7bf8b8d6e797bb9930ae73830029dccfbbda3846/tools/validators/validate_evidence_bundle.py"
+    },
+    {
+      "id": "resolver-hold-workflow",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/7bf8b8d6e797bb9930ae73830029dccfbbda3846/.github/workflows/evidence-resolver.yml"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-19T19:07:59Z",
+  "emitter": "openai:codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Bounded EvidenceRef JSON Schema validator completion only. The change does not resolve references, establish EvidenceBundle closure, make policy or rights decisions, promote lifecycle data, release or publish artifacts, activate sources, or expose public/internal data paths. Human review remains pending. MapLibre 3D documentation, stale-link repairs, historical package README snapshots, and Focus Mode path drift are deferred to separately scoped review work."
+}

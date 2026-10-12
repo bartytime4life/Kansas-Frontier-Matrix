@@ -1,0 +1,190 @@
+{
+  "receipt_id": "genrec:pass18-gcp-evidence:20260811",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/map-georeference-control-point-evidence.yml",
+    "contracts/map/georeference_control_point_evidence_assessment.md",
+    "docs/intake/exploratory/pass-18-georeference-control-point-evidence-source-map.md",
+    "fixtures/contracts/v1/map/georeference_control_point_evidence_assessment/cases.json",
+    "schemas/contracts/v1/map/georeference_control_point_evidence_assessment.schema.json",
+    "tests/map/test_georeference_control_point_evidence_assessment.py",
+    "tools/validators/map/validate_georeference_control_point_evidence_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/map-georeference-control-point-evidence.yml": "sha256:945e87524f98fd5c7aeea994dc1489be57af77e9695bf5713e2d0ddcf7e7002d",
+    "contracts/map/georeference_control_point_evidence_assessment.md": "sha256:755378127046f65fd4a1912a6c3d787dd6047e57f1f704bbb2bc10d0a07e9340",
+    "docs/intake/exploratory/pass-18-georeference-control-point-evidence-source-map.md": "sha256:39e12198521ec672d4260625509cb5425c1edae0b3aa7afa5c44c6591b9d94c6",
+    "fixtures/contracts/v1/map/georeference_control_point_evidence_assessment/cases.json": "sha256:d4549482e6ea3eb019e37f7ca8b60acd372f9e8260f9c245eca35ae1ee878ce4",
+    "schemas/contracts/v1/map/georeference_control_point_evidence_assessment.schema.json": "sha256:174ac30bd1cffcd50bc7733e810291dc2ff190dc7cb6cb6e1f799abed08dd54e",
+    "tests/map/test_georeference_control_point_evidence_assessment.py": "sha256:22de44cfd57c5809d8f9500c83b0ca352b226e1d703a0d7cace4b6f02279e2dc",
+    "tools/validators/map/validate_georeference_control_point_evidence_assessment.py": "sha256:e7a629509f07a5e0fc30337d5f3fea87f2d3ef13c0d0fc7839fe4f9a765646b5"
+  },
+  "model_identity": {
+    "provider": "openai",
+    "model": "gpt-5.6-sol",
+    "version": "2026-08-11"
+  },
+  "prompt_or_contract": "sha256:cf82a5b9dbd735d27f4ceee41db26e0aeb4fb86dcb05377a53ac2d88d3087de8",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "tools_enabled": [
+      "container",
+      "google_drive",
+      "github"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:efc0d159761581b5ae043c607dfa28bbc58b3ca5423c9d18a659e650271d73b9"
+    ],
+    "attached_docs": [
+      "KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf"
+    ],
+    "evidence_refs": [
+      "git:authoring-base@276b6817766b299bf6b318167c7559aae9fd44b3",
+      "git:publication-base@074a39c4acb8e4e72cafe4bdea4c9e237dbf2496",
+      "drive:file:11GH5lYaa-lqXDKhG20GmiSetFgh5VWx3#pages=85-86",
+      "KFM-P18-INV-317",
+      "docs/atlases/pass-10/changed-cards-pass-10.jsonl",
+      "contracts/map/georeference_control_point_set.md",
+      "contracts/map/georeference_spatial_distribution.md",
+      "contracts/map/georeference_transform_quality.md",
+      "docs/doctrine/directory-rules.md",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/map-georeference-control-point-evidence.yml": "PROPOSED",
+    "contracts/map/georeference_control_point_evidence_assessment.md": "PROPOSED",
+    "docs/intake/exploratory/pass-18-georeference-control-point-evidence-source-map.md": "PROPOSED",
+    "fixtures/contracts/v1/map/georeference_control_point_evidence_assessment/cases.json": "PROPOSED",
+    "schemas/contracts/v1/map/georeference_control_point_evidence_assessment.schema.json": "PROPOSED",
+    "tests/map/test_georeference_control_point_evidence_assessment.py": "PROPOSED",
+    "tools/validators/map/validate_georeference_control_point_evidence_assessment.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "drive-source-pages-85-86",
+      "outcome": "PASS",
+      "reason": "Connected Drive text verified large, clear, high-contrast GCP targets, high-accuracy RTK/GNSS coordinate collection, and coordinate-to-drone-photo matching in the cited source pages."
+    },
+    {
+      "gate": "pass18-card-visual-review",
+      "outcome": "PASS",
+      "reason": "Rendered physical PDF pages 329-330 were visually inspected; the card states implementation maturity UNKNOWN and preserves public-use and adequacy-threshold questions."
+    },
+    {
+      "gate": "fixture-exact-four-way-polarity-34",
+      "outcome": "PASS",
+      "reason": "Thirty-four fixture cases reproduced exact PASS, ABSTAIN, DENY, and ERROR outcomes and findings."
+    },
+    {
+      "gate": "focused-pytest-14",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "adjacent-georeference-regression-pytest-46",
+      "outcome": "PASS",
+      "reason": "The new profile plus existing control-point-set, distribution, and transform-quality tests passed together."
+    },
+    {
+      "gate": "docs-validator-unit-tests-51",
+      "outcome": "PASS",
+      "reason": "Twenty-four metadata and twenty-seven document-graph unit tests passed."
+    },
+    {
+      "gate": "docs-meta-block-ratchet",
+      "outcome": "PASS",
+      "reason": "The new metadata block is valid with zero current failures; its missing registry entry remains a review-only add-candidate warning."
+    },
+    {
+      "gate": "docs-document-graph-ratchet",
+      "outcome": "PASS",
+      "reason": "The changed-file ratchet reported zero current failures; orphan and reachability remain non-blocking warnings for the exploratory source map."
+    },
+    {
+      "gate": "draft-2020-12-meta",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "python-compile",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-local-parity",
+      "outcome": "PASS",
+      "reason": "Artifact paths, SHA-256 hashes, and truth-label keys match all seven non-self artifacts."
+    },
+    {
+      "gate": "hosted-current-head",
+      "outcome": "SKIPPED",
+      "reason": "Pending exact-head GitHub Actions after draft PR publication."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "PASS18_IDEA_CARD_KFM-P18-INV-317",
+      "validated": true,
+      "evidence_ref": "KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#physical-pages=329-330"
+    },
+    {
+      "id": "SRC-P18-010",
+      "validated": true,
+      "evidence_ref": "https://drive.google.com/file/d/11GH5lYaa-lqXDKhG20GmiSetFgh5VWx3/view#pages=85-86"
+    },
+    {
+      "id": "GEOREFERENCE_CONTROL_POINT_SET",
+      "validated": true,
+      "evidence_ref": "contracts/map/georeference_control_point_set.md"
+    },
+    {
+      "id": "GEOREFERENCE_SPATIAL_DISTRIBUTION",
+      "validated": true,
+      "evidence_ref": "contracts/map/georeference_spatial_distribution.md"
+    },
+    {
+      "id": "GEOREFERENCE_TRANSFORM_QUALITY",
+      "validated": true,
+      "evidence_ref": "contracts/map/georeference_transform_quality.md"
+    },
+    {
+      "id": "DIRECTORY_RULES",
+      "validated": true,
+      "evidence_ref": "docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "DIRECTORY_RULES_ADOPTION_ADR",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "GENERATED_RECEIPT_SCHEMA_V1",
+      "validated": true,
+      "evidence_ref": "schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-12T00:57:54Z",
+  "emitter": "openai/gpt-5.6-sol",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only implementation of KFM-P18-INV-317's missing evidence-assessment seam. PASS means internally coherent and ready for human review only; it does not establish real GCP evidence, positional accuracy, policy, review, release, publication, or public-use authority."
+}

@@ -1,0 +1,3 @@
+DEPTH_INTERVAL_NON_NUMERIC	$.depth_interval_cm
+GOVERNANCE_STATE_INVALID	$.governance.promotion_eligible
+MEASUREMENT_VALUE_OUT_OF_RANGE	$.measurement.value

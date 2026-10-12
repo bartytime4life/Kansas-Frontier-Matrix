@@ -1,0 +1,166 @@
+{
+  "receipt_id": "genrec-policy-data-readme-v0-3-9cd85ee5",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "policy/data/README.md"
+  ],
+  "artifact_hashes": {
+    "policy/data/README.md": "sha256:9cd85ee555d514ff9c083796b4e8b1143e8defb17caa9fe500851af52f4a9eb9"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-5)",
+    "version": "2026-07-22"
+  },
+  "prompt_or_contract": "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "container",
+      "Poppler PDF inspection"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+      "sha256:759de4fcb51cf0f55896089e397d9c47481d60d9fb80ac9a44d47b2f60a0a335"
+    ],
+    "attached_docs": [
+      "Pasted text(72).txt — KFM GitHub Repository Documentation Implementation Agent v3.1",
+      "Directory Rules.pdf"
+    ],
+    "evidence_refs": [
+      "repo:bartytime4life/Kansas-Frontier-Matrix:policy/data/README.md@d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:policy/README.md@d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:data/README.md@d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:release/README.md@d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:docs/doctrine/directory-rules.md@d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:docs/architecture/DIRECTORY_RULES.md@d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:docs/architecture/directory-rules.md@d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:docs/doctrine/lifecycle-law.md@d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:.github/workflows/policy-test.yml@d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:.github/workflows/policy-boundary-guards.yml@d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:tests/policy/test_pipeline_connector_non_publisher.py@d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:pipelines/domains/hydrology/promote.py@d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:release/promotion_decisions/hydrology/run-local-smoke.json@d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:.github/workflows/promotion-gate.yml@d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:apps/governed-api/src/governed_api/stub.py@d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:control_plane/policy_gate_register.yaml@d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:control_plane/release_state_register.yaml@d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:schemas/contracts/v1/receipts/generated_receipt.schema.json@d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:data/receipts/generated/genrec-policy-data-readme-ca6cbd60.json@d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0"
+    ]
+  },
+  "truth_labels": {
+    "policy/data/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "target-and-meta-block-structure",
+      "outcome": "PASS",
+      "reason": "One H1, closed KFM Meta Block v2, balanced fences, unique heading slugs, resolved internal anchors, final newline, and no trailing whitespace."
+    },
+    {
+      "gate": "authority-and-placement-preflight",
+      "outcome": "PASS",
+      "reason": "Existing policy/data path retained under the singular policy root; the three-copy Directory Rules conflict is disclosed and no new authority path is created."
+    },
+    {
+      "gate": "repository-evidence-grounding",
+      "outcome": "PASS",
+      "reason": "Current-state claims are bounded to direct file reads and searches at main@d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0."
+    },
+    {
+      "gate": "promotion-gap-evidence",
+      "outcome": "PASS",
+      "reason": "Hydrology helper, tracked smoke decision, literal guard, and holding workflow were read directly; the document does not elevate the smoke artifact to authority."
+    },
+    {
+      "gate": "repository-relative-paths",
+      "outcome": "PASS",
+      "reason": "All 34 related paths resolve at the pinned base."
+    },
+    {
+      "gate": "workflow-trigger-threat-preflight",
+      "outcome": "PASS",
+      "reason": "Inspected all-PR policy and promotion workflows use hosted runners and read-only contents permission; this documentation diff changes no executable code or workflow."
+    },
+    {
+      "gate": "sensitive-content-review",
+      "outcome": "PASS",
+      "reason": "Documentation contains no credentials, private payloads, exact protected locations, living-person records, or genomic data."
+    },
+    {
+      "gate": "repository-native-test-run",
+      "outcome": "SKIPPED",
+      "reason": "API-only documentation workflow has no mounted checkout; no repository script or runtime result is claimed."
+    },
+    {
+      "gate": "generated-receipt-shape",
+      "outcome": "PASS",
+      "reason": "Receipt contains the required v3.0 fields, valid truth labels and gate outcomes, SHA-256 hashes, and pending human review."
+    },
+    {
+      "gate": "remote-read-back",
+      "outcome": "SKIPPED",
+      "reason": "Performed after receipt emission and recorded in the pull-request handoff."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "repo:policy/data/README.md",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:policy/data/README.md@d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0"
+    },
+    {
+      "id": "attached:Directory Rules.pdf",
+      "validated": true,
+      "evidence_ref": "sha256:759de4fcb51cf0f55896089e397d9c47481d60d9fb80ac9a44d47b2f60a0a335"
+    },
+    {
+      "id": "repo:tests/policy/test_pipeline_connector_non_publisher.py",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:tests/policy/test_pipeline_connector_non_publisher.py@d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0"
+    },
+    {
+      "id": "repo:pipelines/domains/hydrology/promote.py",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:pipelines/domains/hydrology/promote.py@d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0"
+    },
+    {
+      "id": "repo:.github/workflows/promotion-gate.yml",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:.github/workflows/promotion-gate.yml@d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0"
+    },
+    {
+      "id": "repo:apps/governed-api/src/governed_api/stub.py",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:apps/governed-api/src/governed_api/stub.py@d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-22T21:47:37Z",
+  "emitter": "OpenAI Codex via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Documentation-only v0.3 update. This receipt records AI-authored provenance and bounded preflight outcomes; it is not policy approval, evidence, proof, review, lifecycle authorization, release approval, publication authority, or proof that remote CI passed."
+}
+

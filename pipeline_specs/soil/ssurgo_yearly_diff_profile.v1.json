@@ -1,0 +1,67 @@
+{
+  "canonicalization_profile": "RFC8785-JCS",
+  "current_snapshot": {
+    "artifact_ref": "artifact:soil/ssurgo/2026/snapshot",
+    "artifact_sha256": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "dataset_year": 2026,
+    "prov_entity_ref": "kfm://prov/entity/soil-ssurgo-2026",
+    "snapshot_receipt_ref": "kfm://receipt/source-snapshot/soil-ssurgo-2026",
+    "stac_item_ref": "stac://kfm/soil/ssurgo/2026",
+    "validation_receipt_ref": "kfm://receipt/validation/soil-ssurgo-2026"
+  },
+  "diff": {
+    "added_records": 0,
+    "changed_property_names": [],
+    "computation_profile": "SSURGO_KEYED_RECORD_DIFF_V1",
+    "diff_artifact_ref": "artifact:soil/ssurgo/2025-2026/diff",
+    "diff_artifact_sha256": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    "modified_records": 0,
+    "observed_property_relabelled": false,
+    "removed_records": 0
+  },
+  "execution_mode": "FIXTURE_ONLY",
+  "governance": {
+    "network_authorized": false,
+    "promotion_authorized": false,
+    "publication_authorized": false,
+    "raw_admission_authorized": false,
+    "release_authorized": false,
+    "source_activation_authorized": false
+  },
+  "network_mode": "DENY",
+  "normalization": {
+    "attributes_changed": false,
+    "geometry_changed": false,
+    "transform_receipt_refs": []
+  },
+  "object_type": "SoilYearlyDiffProfile",
+  "output": {
+    "promotion_required": true,
+    "prov_chain_complete": true,
+    "stac_pair_complete": true,
+    "target_zone": "WORK"
+  },
+  "previous_snapshot": {
+    "artifact_ref": "artifact:soil/ssurgo/2025/snapshot",
+    "artifact_sha256": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "dataset_year": 2025,
+    "prov_entity_ref": "kfm://prov/entity/soil-ssurgo-2025",
+    "snapshot_receipt_ref": "kfm://receipt/source-snapshot/soil-ssurgo-2025",
+    "stac_item_ref": "stac://kfm/soil/ssurgo/2025",
+    "validation_receipt_ref": "kfm://receipt/validation/soil-ssurgo-2025"
+  },
+  "profile_id": "kfm.soil.ssurgo-gnatsgo-yearly-diff.fixture.v1",
+  "provenance": {
+    "diff_activity_ref": "kfm://prov/activity/diff/soil-ssurgo-2025-2026",
+    "fetch_activity_ref": "kfm://prov/activity/fetch/soil-ssurgo-2026",
+    "publication_activity_ref": null,
+    "validation_activity_ref": "kfm://prov/activity/validation/soil-ssurgo-2026"
+  },
+  "schema_version": "1.0.0",
+  "source_descriptor_ref": "data/registry/sources/soil/nrcs-ssurgo.yaml",
+  "source_family": "SSURGO",
+  "spec_hash": "sha256:b830b7c68b08aba7bc8e45f0acda9701603025dd34e1e55303951fd1b6f49110",
+  "status": "PROPOSED_INACTIVE",
+  "support_type": "AUTHORITATIVE_STATIC_SOIL_SURVEY",
+  "version": "0.1.0"
+}

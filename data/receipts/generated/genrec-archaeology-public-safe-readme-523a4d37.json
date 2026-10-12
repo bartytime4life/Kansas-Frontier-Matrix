@@ -1,0 +1,120 @@
+{
+  "receipt_id": "genrec-archaeology-public-safe-readme-523a4d37",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "fixtures/archaeology-public-safe/README.md"
+  ],
+  "artifact_hashes": {
+    "fixtures/archaeology-public-safe/README.md": "sha256:523a4d37be0701218abd58a8431ec1b431624dd81ce010d7f052028b0ed2ae7c"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-19"
+  },
+  "prompt_or_contract": "sha256:e80d5f963df6b68c049fca2c0e3cb923c1623d2a287a43d58d5a020a4d8e20ee",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "file_search",
+      "container"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:e80d5f963df6b68c049fca2c0e3cb923c1623d2a287a43d58d5a020a4d8e20ee"
+    ],
+    "attached_docs": [
+      "Pasted text.txt — KFM GitHub Repository Documentation Implementation Agent v3.1.0 (File Library)"
+    ],
+    "evidence_refs": [
+      "github:bartytime4life/Kansas-Frontier-Matrix@f73caa6dece3a4459b1298dc9b105256fb1f67d5:fixtures/archaeology-public-safe/README.md",
+      "github:bartytime4life/Kansas-Frontier-Matrix@f73caa6dece3a4459b1298dc9b105256fb1f67d5:fixtures/README.md",
+      "github:bartytime4life/Kansas-Frontier-Matrix@f73caa6dece3a4459b1298dc9b105256fb1f67d5:fixtures/domains/archaeology/README.md",
+      "github:bartytime4life/Kansas-Frontier-Matrix@f73caa6dece3a4459b1298dc9b105256fb1f67d5:fixtures/domains/archaeology-public-safe/README.md",
+      "github:bartytime4life/Kansas-Frontier-Matrix@f73caa6dece3a4459b1298dc9b105256fb1f67d5:docs/doctrine/directory-rules.md",
+      "github:bartytime4life/Kansas-Frontier-Matrix@f73caa6dece3a4459b1298dc9b105256fb1f67d5:docs/domains/archaeology/CANONICAL_PATHS.md",
+      "github:bartytime4life/Kansas-Frontier-Matrix@f73caa6dece3a4459b1298dc9b105256fb1f67d5:docs/registers/DRIFT_REGISTER.md",
+      "github:bartytime4life/Kansas-Frontier-Matrix@f73caa6dece3a4459b1298dc9b105256fb1f67d5:tests/domains/archaeology/README.md",
+      "github:bartytime4life/Kansas-Frontier-Matrix@f73caa6dece3a4459b1298dc9b105256fb1f67d5:tools/validators/archaeology/README.md",
+      "github:bartytime4life/Kansas-Frontier-Matrix@f73caa6dece3a4459b1298dc9b105256fb1f67d5:.github/workflows/domain-archaeology.yml",
+      "file-library:Pasted text.txt"
+    ]
+  },
+  "truth_labels": {
+    "fixtures/archaeology-public-safe/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "directory-rules-placement-preflight",
+      "outcome": "PASS",
+      "reason": "Existing top-level path retained as a compatibility lane; new domain-owned payloads are routed to fixtures/domains/archaeology/ without moving or creating payloads."
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "One H1, consecutive heading hierarchy, balanced fences, unique GitHub-style anchors, no broken internal anchors, final newline, no tabs or trailing whitespace."
+    },
+    {
+      "gate": "repository-relative-links",
+      "outcome": "PASS",
+      "reason": "Every relative link in the prepared README resolves to a file verified at the pinned base commit."
+    },
+    {
+      "gate": "sensitive-content-and-secret-scan",
+      "outcome": "PASS",
+      "reason": "No coordinate-like exact locations, credentials, tokens, private keys, personal data, or restricted payloads were introduced."
+    },
+    {
+      "gate": "repository-tests-and-validators",
+      "outcome": "SKIPPED",
+      "reason": "Documentation-only change; archaeology executable enforcement is not established and no repository code was executed locally."
+    },
+    {
+      "gate": "remote-ci",
+      "outcome": "SKIPPED",
+      "reason": "To be observed after draft pull request creation."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "directory-rules",
+      "validated": true,
+      "evidence_ref": "github:bartytime4life/Kansas-Frontier-Matrix@f73caa6dece3a4459b1298dc9b105256fb1f67d5:docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "archaeology-canonical-paths",
+      "validated": true,
+      "evidence_ref": "github:bartytime4life/Kansas-Frontier-Matrix@f73caa6dece3a4459b1298dc9b105256fb1f67d5:docs/domains/archaeology/CANONICAL_PATHS.md"
+    },
+    {
+      "id": "fixtures-root-readme",
+      "validated": true,
+      "evidence_ref": "github:bartytime4life/Kansas-Frontier-Matrix@f73caa6dece3a4459b1298dc9b105256fb1f67d5:fixtures/README.md"
+    },
+    {
+      "id": "archaeology-domain-workflow",
+      "validated": true,
+      "evidence_ref": "github:bartytime4life/Kansas-Frontier-Matrix@f73caa6dece3a4459b1298dc9b105256fb1f67d5:.github/workflows/domain-archaeology.yml"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-19T17:08:01Z",
+  "emitter": "ChatGPT GitHub documentation agent",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Task kfm-fixtures-archaeology-public-safe-readme-20260719. The prompt_or_contract hash is computed from a compact task-contract string recorded in the implementation journal, not from private reasoning. The README documents the existing top-level path as a frozen compatibility lane because current parent guidance, Archaeology canonical-path doctrine, tests, validators, and the domain workflow converge on fixtures/domains/archaeology/ for domain-owned fixtures. No payload was moved, created, validated, released, or published. Human review remains pending."
+}

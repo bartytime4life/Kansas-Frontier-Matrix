@@ -1,0 +1,54 @@
+{
+  "assessment_id": "material-change:natural-systems:hydrology:2026-03-20:non_event",
+  "baseline_ref": "kfm://dataset-version/natural-systems/hydrology/2026-03-13",
+  "candidate_ref": "kfm://dataset-version/natural-systems/hydrology/2026-03-20",
+  "classification": {
+    "change_class": "UNCHANGED",
+    "material": false,
+    "outcome": "NON_EVENT",
+    "reason_codes": [
+      "NO_BYTE_CHANGE"
+    ]
+  },
+  "comparison": {
+    "baseline_digest": "sha256:0f67149aaf7ee59f6a489f7323492f86bcefff225d4c976b5f43244c2d02d4e7",
+    "byte_changed": false,
+    "candidate_digest": "sha256:0f67149aaf7ee59f6a489f7323492f86bcefff225d4c976b5f43244c2d02d4e7",
+    "semantic_changed": false
+  },
+  "criteria": [],
+  "evidence": {
+    "diff_report_ref": null,
+    "source_refs": [
+      "kfm://source/synthetic/natural-systems/hydrology"
+    ],
+    "validation_report_refs": []
+  },
+  "governance": {
+    "authority_created": false,
+    "policy_evaluated": false,
+    "promotion_authorized": false,
+    "public_use_allowed": false,
+    "release_ref": null,
+    "spec_hash": "sha256:e2554b4ceda5e6809e23dce7edb6da1452f86f1cb63ac963423a221455b108b2"
+  },
+  "lineage": {
+    "superseded_by": null,
+    "supersedes": null
+  },
+  "object_type": "MaterialChangeAssessment",
+  "profile": {
+    "canonicalization_profile": "kfm-canonical-json-v1",
+    "digest_algorithm": "sha256",
+    "profile_id": "kfm://materiality-profile/natural-systems/hydrology/fixture-v1",
+    "profile_version": "1.0.0",
+    "spec_hash": "sha256:738ce02374a0266f2b549102e2d2c00bc6196e3bf4b6a34e5d60a7e9b263ae87"
+  },
+  "schema_version": "1.0.0",
+  "subject_ref": "kfm://dataset/natural-systems/hydrology",
+  "timing": {
+    "assessed_at": "2026-03-20T23:30:00Z",
+    "baseline_as_of": "2026-03-13T00:00:00Z",
+    "candidate_as_of": "2026-03-20T18:00:00Z"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "object_type": "PolicyEvaluationBinding",
+  "profile_version": "v1",
+  "binding_id": "policy-eval-binding:public-render-001",
+  "input": {
+    "path": "fixtures/contracts/v1/policy/policy_input_bundle_profile_v1/valid/valid_1.json",
+    "sha256": "3d7494232c8ce232109ef40634a66c59ce7b3fe0d2eecebc9c9140f599bfb50c"
+  },
+  "decision": {
+    "path": "fixtures/contracts/v1/policy/policy_decision_semantics_v1/valid_answer.json",
+    "sha256": "1da2f1aa7e58b4c1380486514b8869185d4beaa062bb872eee71db34911b9b84"
+  },
+  "evaluator": {
+    "bundle_ref": "policy:decision-vocabulary:v1",
+    "bundle_version": "v1",
+    "execution_mode": "DECLARED_ONLY"
+  },
+  "governance": {
+    "policy_evaluated": false,
+    "decision_authenticated": false,
+    "promotion_authorized": false,
+    "release_authorized": false,
+    "publication_authorized": false
+  }
+}

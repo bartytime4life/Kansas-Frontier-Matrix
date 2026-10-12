@@ -1,0 +1,298 @@
+{
+  "artifact_hashes": {
+    "docs/wiki/Project-Status.md": "sha256:868d6f47bd514e4e655bfa8aefdc91b5148128786966fc419089933340fe20e6"
+  },
+  "artifact_paths": [
+    "docs/wiki/Project-Status.md"
+  ],
+  "citations": [
+    {
+      "id": "KFM-wiki-project-status-base",
+      "validated": true,
+      "evidence_ref": "repo:docs/wiki/Project-Status.md@09a04dffa385a29f8b1b32562a89c025b1eed37a"
+    },
+    {
+      "id": "KFM-wiki-source-set-contract",
+      "validated": true,
+      "evidence_ref": "repo:docs/wiki/README.md@09a04dffa385a29f8b1b32562a89c025b1eed37a"
+    },
+    {
+      "id": "KFM-wiki-maintenance",
+      "validated": true,
+      "evidence_ref": "repo:docs/wiki/Wiki-Maintenance.md@09a04dffa385a29f8b1b32562a89c025b1eed37a"
+    },
+    {
+      "id": "KFM-wiki-sidebar",
+      "validated": true,
+      "evidence_ref": "repo:docs/wiki/_Sidebar.md@09a04dffa385a29f8b1b32562a89c025b1eed37a"
+    },
+    {
+      "id": "KFM-root-readme",
+      "validated": true,
+      "evidence_ref": "repo:README.md@09a04dffa385a29f8b1b32562a89c025b1eed37a"
+    },
+    {
+      "id": "KFM-directory-rules-v2",
+      "validated": true,
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md@09a04dffa385a29f8b1b32562a89c025b1eed37a"
+    },
+    {
+      "id": "ADR-0029",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@09a04dffa385a29f8b1b32562a89c025b1eed37a"
+    },
+    {
+      "id": "KFM-domain-index",
+      "validated": true,
+      "evidence_ref": "repo:docs/domains/README.md@09a04dffa385a29f8b1b32562a89c025b1eed37a"
+    },
+    {
+      "id": "KFM-explorer-web-readme",
+      "validated": true,
+      "evidence_ref": "repo:apps/explorer-web/README.md@09a04dffa385a29f8b1b32562a89c025b1eed37a"
+    },
+    {
+      "id": "KFM-explorer-web-entry",
+      "validated": true,
+      "evidence_ref": "repo:apps/explorer-web/src/main.ts@09a04dffa385a29f8b1b32562a89c025b1eed37a"
+    },
+    {
+      "id": "KFM-evidence-drawer",
+      "validated": true,
+      "evidence_ref": "repo:apps/explorer-web/src/features/evidence_drawer/index.tsx@09a04dffa385a29f8b1b32562a89c025b1eed37a"
+    },
+    {
+      "id": "KFM-governed-api-readme",
+      "validated": true,
+      "evidence_ref": "repo:apps/governed-api/README.md@09a04dffa385a29f8b1b32562a89c025b1eed37a"
+    },
+    {
+      "id": "KFM-governed-api-main",
+      "validated": true,
+      "evidence_ref": "repo:apps/governed-api/src/governed_api/main.py@09a04dffa385a29f8b1b32562a89c025b1eed37a"
+    },
+    {
+      "id": "KFM-governed-api-routes",
+      "validated": true,
+      "evidence_ref": "repo:apps/governed-api/src/governed_api/routes/registry.py@09a04dffa385a29f8b1b32562a89c025b1eed37a"
+    },
+    {
+      "id": "KFM-governed-api-bootstrap",
+      "validated": true,
+      "evidence_ref": "repo:apps/governed-api/src/governed_api/routes/bootstrap.py@09a04dffa385a29f8b1b32562a89c025b1eed37a"
+    },
+    {
+      "id": "KFM-governed-api-layers",
+      "validated": true,
+      "evidence_ref": "repo:apps/governed-api/src/governed_api/routes/layers.py@09a04dffa385a29f8b1b32562a89c025b1eed37a"
+    },
+    {
+      "id": "KFM-governed-api-evidence",
+      "validated": true,
+      "evidence_ref": "repo:apps/governed-api/src/governed_api/routes/evidence.py@09a04dffa385a29f8b1b32562a89c025b1eed37a"
+    },
+    {
+      "id": "KFM-schema-root",
+      "validated": true,
+      "evidence_ref": "repo:schemas/README.md@09a04dffa385a29f8b1b32562a89c025b1eed37a"
+    },
+    {
+      "id": "KFM-release-root",
+      "validated": true,
+      "evidence_ref": "repo:release/README.md@09a04dffa385a29f8b1b32562a89c025b1eed37a"
+    },
+    {
+      "id": "KFM-published-lane",
+      "validated": true,
+      "evidence_ref": "repo:data/published/README.md@09a04dffa385a29f8b1b32562a89c025b1eed37a"
+    },
+    {
+      "id": "KFM-generated-receipt-schema",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@09a04dffa385a29f8b1b32562a89c025b1eed37a"
+    },
+    {
+      "id": "KFM-main-checkpoint",
+      "validated": true,
+      "evidence_ref": "github:branch/main@09a04dffa385a29f8b1b32562a89c025b1eed37a"
+    },
+    {
+      "id": "KFM-main-refresh-compare",
+      "validated": true,
+      "evidence_ref": "github:compare:c969b8fcd657b14676320d808d234cadab0fcd4f...09a04dffa385a29f8b1b32562a89c025b1eed37a:17-commits"
+    },
+    {
+      "id": "KFM-exact-head-actions",
+      "validated": true,
+      "evidence_ref": "github:actions:head_sha=09a04dffa385a29f8b1b32562a89c025b1eed37a:44-runs:41-success:2-failure:1-skipped:0-queued:0-in-progress"
+    },
+    {
+      "id": "KFM-domain-hydrology-success-run",
+      "validated": true,
+      "evidence_ref": "github:workflow-run/31901395008"
+    },
+    {
+      "id": "KFM-schema-validation-run",
+      "validated": true,
+      "evidence_ref": "github:workflow-run/31901395007"
+    },
+    {
+      "id": "KFM-validator-suite-run",
+      "validated": true,
+      "evidence_ref": "github:workflow-run/31901395035"
+    },
+    {
+      "id": "KFM-project-status-draft-pr",
+      "validated": true,
+      "evidence_ref": "github:pull/2910"
+    },
+    {
+      "id": "KFM-github-releases",
+      "validated": true,
+      "evidence_ref": "github:releases@2026-08-15:empty"
+    },
+    {
+      "id": "KFM-stage-deployment",
+      "validated": true,
+      "evidence_ref": "github:deployment/3516566837/status/failure"
+    },
+    {
+      "id": "KFM-native-wiki-probe",
+      "validated": true,
+      "evidence_ref": "github:native-wiki/Home@2026-08-15:connector-404"
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-15T18:52:30Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [],
+    "evidence_hashes": [
+      "sha256:30fa7938ec2869e28640ec1fdea9c3284be862c4829ef6c168959be0218151d1"
+    ],
+    "evidence_refs": [
+      "repo:docs/wiki/Project-Status.md@09a04dffa385a29f8b1b32562a89c025b1eed37a",
+      "repo:docs/wiki/README.md@09a04dffa385a29f8b1b32562a89c025b1eed37a",
+      "repo:docs/wiki/Wiki-Maintenance.md@09a04dffa385a29f8b1b32562a89c025b1eed37a",
+      "repo:docs/wiki/_Sidebar.md@09a04dffa385a29f8b1b32562a89c025b1eed37a",
+      "repo:README.md@09a04dffa385a29f8b1b32562a89c025b1eed37a",
+      "repo:docs/doctrine/directory-rules.md@09a04dffa385a29f8b1b32562a89c025b1eed37a",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@09a04dffa385a29f8b1b32562a89c025b1eed37a",
+      "repo:docs/domains/README.md@09a04dffa385a29f8b1b32562a89c025b1eed37a",
+      "repo:apps/explorer-web/README.md@09a04dffa385a29f8b1b32562a89c025b1eed37a",
+      "repo:apps/explorer-web/src/main.ts@09a04dffa385a29f8b1b32562a89c025b1eed37a",
+      "repo:apps/explorer-web/src/features/evidence_drawer/index.tsx@09a04dffa385a29f8b1b32562a89c025b1eed37a",
+      "repo:apps/governed-api/README.md@09a04dffa385a29f8b1b32562a89c025b1eed37a",
+      "repo:apps/governed-api/src/governed_api/main.py@09a04dffa385a29f8b1b32562a89c025b1eed37a",
+      "repo:apps/governed-api/src/governed_api/routes/registry.py@09a04dffa385a29f8b1b32562a89c025b1eed37a",
+      "repo:apps/governed-api/src/governed_api/routes/bootstrap.py@09a04dffa385a29f8b1b32562a89c025b1eed37a",
+      "repo:apps/governed-api/src/governed_api/routes/layers.py@09a04dffa385a29f8b1b32562a89c025b1eed37a",
+      "repo:apps/governed-api/src/governed_api/routes/evidence.py@09a04dffa385a29f8b1b32562a89c025b1eed37a",
+      "repo:schemas/README.md@09a04dffa385a29f8b1b32562a89c025b1eed37a",
+      "repo:release/README.md@09a04dffa385a29f8b1b32562a89c025b1eed37a",
+      "repo:data/published/README.md@09a04dffa385a29f8b1b32562a89c025b1eed37a",
+      "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@09a04dffa385a29f8b1b32562a89c025b1eed37a",
+      "github:branch/main@09a04dffa385a29f8b1b32562a89c025b1eed37a",
+      "github:compare:c969b8fcd657b14676320d808d234cadab0fcd4f...09a04dffa385a29f8b1b32562a89c025b1eed37a:17-commits",
+      "github:actions:head_sha=09a04dffa385a29f8b1b32562a89c025b1eed37a:44-runs:41-success:2-failure:1-skipped:0-queued:0-in-progress",
+      "github:workflow-run/31901395008",
+      "github:workflow-run/31901395007",
+      "github:workflow-run/31901395035",
+      "github:pull/2910",
+      "github:releases@2026-08-15:empty",
+      "github:deployment/3516566837/status/failure",
+      "github:native-wiki/Home@2026-08-15:connector-404",
+      "user-request:sha256:30fa7938ec2869e28640ec1fdea9c3284be862c4829ef6c168959be0218151d1"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": 2910
+  },
+  "model_identity": {
+    "model": "GPT-5.6 Pro",
+    "provider": "OpenAI",
+    "version": "2026-08-15"
+  },
+  "notes": "Authoring provenance for the same-path modernization of docs/wiki/Project-Status.md. The authoring checkpoint was refreshed twice while main advanced, ending at main@09a04dffa385a29f8b1b32562a89c025b1eed37a after PR #2909 preserved the strict Hydrology domain inventory for the western-Kansas observation-assessment profile. The page separates repository presence, bounded executable proof, integration, release, deployment, publication, and native-wiki synchronization; records 44 exact-head runs as 41 success, 2 failure, and 1 skipped with no queued or in-progress runs; identifies aggregate fixture-family and repository topology-ratchet failures; records the passing focused DatasetVersion/aggregate-selection regression, passing Hydrology workflow, and invalid-EvidenceBundle fail-closed canary; and preserves UNKNOWN or HOLD status for current deployment, operational release, broad published-carrier closure, and native-wiki parity. No source activation, schema, contract, policy, runtime, lifecycle, release, deployment, publication, native-wiki synchronization, repository setting, or governance transition occurred. Prior target blob was 4b7ac87e42902bb28e0531ba5491ac7477fb26bb; rollback is a focused revert or restoration of that blob.",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local deterministic Markdown validation"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:30fa7938ec2869e28640ec1fdea9c3284be862c4829ef6c168959be0218151d1",
+  "receipt_id": "genrec-wiki-project-status-868d6f47bd51",
+  "truth_labels": {
+    "docs/wiki/Project-Status.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "target-authority-history-and-overlap-inspection",
+      "outcome": "PASS",
+      "reason": "The complete target, history, refreshed main SHA, source-packet contract, maintenance guide, sidebar, accepted ADR-0029, adopted Directory Rules, relevant root READMEs, application files, exact-head workflows, releases, deployments, and open target overlap were inspected."
+    },
+    {
+      "gate": "concurrent-main-refresh",
+      "outcome": "PASS",
+      "reason": "Main advanced from c969b8fcd657b14676320d808d234cadab0fcd4f to 09a04dffa385a29f8b1b32562a89c025b1eed37a during authoring. Seventeen graph commits were compared, the unchanged target was reread, exact-head workflow evidence was refreshed twice, and PR #2909's Hydrology placement correction was incorporated before finalizing the draft PR."
+    },
+    {
+      "gate": "same-path-page-identity",
+      "outcome": "PASS",
+      "reason": "The docs/wiki/Project-Status.md path, Project-Status page ID, title, orientation-only role, and native-wiki non-effect boundary were preserved; no sibling status page or authority root was created."
+    },
+    {
+      "gate": "current-state-truth-separation",
+      "outcome": "PASS",
+      "reason": "Repository presence, bounded executable proof, integration, release readiness, release, deployment, KFM publication, and native-wiki synchronization are presented as distinct evidence classes."
+    },
+    {
+      "gate": "exact-head-workflow-reconciliation",
+      "outcome": "PASS",
+      "reason": "The page records 44 exact-head runs as 41 success, 2 failure, and 1 skipped with no queued or in-progress runs; identifies aggregate fixture-family and topology-ratchet failures; and records the passing Hydrology workflow, focused DatasetVersion/aggregate-selection regression, and invalid-EvidenceBundle canary without overclaiming."
+    },
+    {
+      "gate": "wiki-link-closure",
+      "outcome": "PASS",
+      "reason": "Every relative wiki link targets an existing source page, and repository links target inspected stable entry points."
+    },
+    {
+      "gate": "markdown-source-structure",
+      "outcome": "PASS",
+      "reason": "The page has one H1, orderly headings, balanced fenced blocks and HTML, no tabs or trailing whitespace, a final newline, and resolving local navigation anchors under GitHub Flavored Markdown conventions."
+    },
+    {
+      "gate": "sensitive-content-review",
+      "outcome": "PASS",
+      "reason": "The public status page contains no credentials, private payloads, restricted evidence, living-person or genomic records, protected precise locations, or internal security detail that would create harmful exposure."
+    },
+    {
+      "gate": "generated-receipt-local-shape-and-hash",
+      "outcome": "PASS",
+      "reason": "Required receipt fields, enums, canonical artifact path, artifact-path/hash parity, JSON serialization, and the SHA-256 binding for docs/wiki/Project-Status.md were checked locally."
+    },
+    {
+      "gate": "hosted-feature-branch-ci",
+      "outcome": "SKIPPED",
+      "reason": "Draft PR #2910 exists, but hosted checks must be evaluated against the final refreshed branch head after this receipt and page update."
+    },
+    {
+      "gate": "native-wiki-readback",
+      "outcome": "SKIPPED",
+      "reason": "Native-wiki synchronization is a separate reviewed public documentation mutation outside this source-only change."
+    }
+  ]
+}

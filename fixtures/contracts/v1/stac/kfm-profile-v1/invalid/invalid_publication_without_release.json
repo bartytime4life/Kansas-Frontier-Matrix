@@ -1,0 +1,53 @@
+{
+  "assets": {},
+  "bbox": [
+    -98,
+    38,
+    -98,
+    38
+  ],
+  "geometry": {
+    "coordinates": [
+      -98,
+      38
+    ],
+    "type": "Point"
+  },
+  "id": "invalid-publication-without-release",
+  "links": [
+    {
+      "href": "kfm://catalog/stac/item/invalid-publication-without-release",
+      "rel": "self",
+      "type": "application/geo+json"
+    }
+  ],
+  "properties": {
+    "datetime": "2026-08-08T00:00:00Z",
+    "kfm:authority": {
+      "evidence_authority": false,
+      "policy_authority": false,
+      "publication_authority": false,
+      "release_authority": false,
+      "review_authority": false,
+      "source_authority": false
+    },
+    "kfm:catalog_state": "CATALOGED",
+    "kfm:profile_version": "1.0.0-draft.1",
+    "kfm:proof_ref": null,
+    "kfm:publication_state": "PUBLICATION_LINKED",
+    "kfm:reason_codes": [
+      "FIXTURE_SYNTHETIC"
+    ],
+    "kfm:release_ref": null,
+    "kfm:release_state": "NOT_RELEASED",
+    "kfm:run_receipt_ref": null,
+    "kfm:source_role": "synthetic",
+    "kfm:spec_hash": "sha256:da8c7b10e2b336bfc4495eab80abfdb5f1be2071412c3886e556595f4b62e31c",
+    "kfm:trust_class": "CATALOG_ONLY"
+  },
+  "stac_extensions": [
+    "kfm://profile/stac/kfm-profile-v1"
+  ],
+  "stac_version": "1.0.0",
+  "type": "Feature"
+}

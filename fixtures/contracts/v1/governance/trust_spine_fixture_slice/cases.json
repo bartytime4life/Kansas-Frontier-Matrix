@@ -1,0 +1,96 @@
+{
+  "schema_version": "kfm.trust-spine-fixture-slice-cases.v1",
+  "cases": [
+    {
+      "case_id": "direct_public_path_attempt",
+      "expected_outcome": "DENY",
+      "expected_codes": [
+        "DIRECT_PUBLIC_PATH_ATTEMPT"
+      ]
+    },
+    {
+      "case_id": "duplicate_id",
+      "expected_outcome": "FAIL",
+      "expected_codes": [
+        "DUPLICATE_OBJECT_ID"
+      ]
+    },
+    {
+      "case_id": "incomplete_promotion_gates",
+      "expected_outcome": "FAIL",
+      "expected_codes": [
+        "PROMOTION_GATES_INCOMPLETE"
+      ]
+    },
+    {
+      "case_id": "invalid_lifecycle_placement",
+      "expected_outcome": "FAIL",
+      "expected_codes": [
+        "LIFECYCLE_PLACEMENT_INVALID"
+      ]
+    },
+    {
+      "case_id": "missing_receipt",
+      "expected_outcome": "FAIL",
+      "expected_codes": [
+        "MISSING_RECEIPT"
+      ]
+    },
+    {
+      "case_id": "missing_release_manifest",
+      "expected_outcome": "FAIL",
+      "expected_codes": [
+        "MISSING_RELEASE_MANIFEST"
+      ]
+    },
+    {
+      "case_id": "missing_rollback_target",
+      "expected_outcome": "FAIL",
+      "expected_codes": [
+        "ROLLBACK_TARGET_MISSING"
+      ]
+    },
+    {
+      "case_id": "missing_source_identity",
+      "expected_outcome": "FAIL",
+      "expected_codes": [
+        "SOURCE_IDENTITY_MISSING"
+      ]
+    },
+    {
+      "case_id": "policy_deny",
+      "expected_outcome": "DENY",
+      "expected_codes": [
+        "POLICY_DENIED"
+      ]
+    },
+    {
+      "case_id": "schema_mismatch",
+      "expected_outcome": "FAIL",
+      "expected_codes": [
+        "SCHEMA_MISMATCH"
+      ]
+    },
+    {
+      "case_id": "unauthorized_parallel_writer",
+      "expected_outcome": "DENY",
+      "expected_codes": [
+        "UNAUTHORIZED_PARALLEL_WRITER"
+      ]
+    },
+    {
+      "case_id": "unknown_rights_or_sensitivity",
+      "expected_outcome": "DENY",
+      "expected_codes": [
+        "RIGHTS_OR_SENSITIVITY_UNKNOWN"
+      ]
+    },
+    {
+      "case_id": "unresolved_evidence_ref",
+      "expected_outcome": "FAIL",
+      "expected_codes": [
+        "EVIDENCE_REF_UNRESOLVED"
+      ]
+    }
+  ]
+}

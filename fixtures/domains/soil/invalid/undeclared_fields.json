@@ -1,0 +1,34 @@
+{
+  "record_id": "soil-fixture-undeclared-fields",
+  "support_type": "station_observation",
+  "source_descriptor_ref": "source:synthetic-soil-station",
+  "evidence_refs": [
+    "evidence:synthetic-soil-reading"
+  ],
+  "spatial_support": {
+    "kind": "generalized_county",
+    "county_fips": "99999",
+    "soil_series": "synthetic-series"
+  },
+  "depth_interval_cm": {
+    "top": 10,
+    "bottom": 20,
+    "datum": "synthetic-surface"
+  },
+  "measurement": {
+    "property": "volumetric_water_content",
+    "value": 0.24,
+    "unit": "m3/m3",
+    "method": "synthetic-method"
+  },
+  "governance": {
+    "rights_state": "fixture_only",
+    "sensitivity_state": "public_safe_fixture",
+    "review_state": "fixture_only",
+    "release_state": "not_released",
+    "promotion_eligible": false,
+    "rollback_state": "fixture_only",
+    "approval_state": "none"
+  },
+  "generated_claim": "synthetic-claim"
+}

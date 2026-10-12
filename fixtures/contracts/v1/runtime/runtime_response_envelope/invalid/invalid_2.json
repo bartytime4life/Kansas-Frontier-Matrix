@@ -1,0 +1,13 @@
+{
+  "id": "resp1",
+  "spec_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "version": "v1",
+  "issued_at": "2026-05-09T00:00:00Z",
+  "outcome": "ABSTAIN",
+  "reason_code": "NOT_IMPLEMENTED",
+  "evidence_refs": [],
+  "policy_state": "baseline",
+  "freshness": "current",
+  "correction_state": "none",
+  "extra_field": 1
+}

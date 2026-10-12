@@ -1,0 +1,122 @@
+{
+  "receipt_id": "genrec-source-rights-currentness-assessment-20260809",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/source-rights-currentness-assessment.yml",
+    "contracts/source/source_rights_currentness_assessment.md",
+    "docs/intake/exploratory/source-rights-currentness-assessment-source-map.md",
+    "fixtures/contracts/v1/source/source_rights_currentness_assessment/cases.json",
+    "schemas/contracts/v1/source/source_rights_currentness_assessment.schema.json",
+    "tests/validators/test_validate_source_rights_currentness_assessment.py",
+    "tools/validators/source/validate_source_rights_currentness_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/source-rights-currentness-assessment.yml": "sha256:1b846b7847464d3752291e462fc5a534e9edd5bb7e0ae262b0fcc5680d6cd3a3",
+    "contracts/source/source_rights_currentness_assessment.md": "sha256:1907fdf395e626000a79827fde7049ddd41b10d7c2cdfe91af3a41a1d3265db1",
+    "docs/intake/exploratory/source-rights-currentness-assessment-source-map.md": "sha256:55bcd12b029327297a1992d7ad434e0e4d7505cbbfb691a0cd2004850aea7112",
+    "fixtures/contracts/v1/source/source_rights_currentness_assessment/cases.json": "sha256:99e272f706ba7f6476c3d391e1e792fe9152eaab1beb8a31e704b24809151c72",
+    "schemas/contracts/v1/source/source_rights_currentness_assessment.schema.json": "sha256:fa58ff82e7fcc9dc6e9d5a8730298b709a5e7a1ff4d721df00df8eec928d92e7",
+    "tests/validators/test_validate_source_rights_currentness_assessment.py": "sha256:0d9e0bf345eef5e98a6b5a20c66299dbce08fe3c35a8f244b475c1be008fc3bf",
+    "tools/validators/source/validate_source_rights_currentness_assessment.py": "sha256:b63b2f9de533331b9c1978ba3afde4043a93f0209a6d6c080d02da703d48f9d0"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-09"
+  },
+  "prompt_or_contract": "sha256:aeacb40b26a8518e04a60c03e23cd69292bdaed7996e3a4f9a68fe9e7319f92e",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "uploaded-file search",
+      "GitHub connector repository inspection and mutation",
+      "local deterministic Python validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Comprehensive_Research_and_Verification_Agenda.docx",
+      "KFM_Briefing_to_System_Integration_Architecture.docx"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Comprehensive_Research_and_Verification_Agenda.docx#W05"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/source-rights-currentness-assessment.yml": "CONFIRMED",
+    "contracts/source/source_rights_currentness_assessment.md": "PROPOSED",
+    "docs/intake/exploratory/source-rights-currentness-assessment-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/source/source_rights_currentness_assessment/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/source/source_rights_currentness_assessment.schema.json": "PROPOSED",
+    "tests/validators/test_validate_source_rights_currentness_assessment.py": "CONFIRMED",
+    "tools/validators/source/validate_source_rights_currentness_assessment.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "python-syntax-compilation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "draft-2020-12-schema-meta-validation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "focused-unittest-suite",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "exact-fixture-replay",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "no-network-boundary",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending on draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "source-basis",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Comprehensive_Research_and_Verification_Agenda.docx#W05"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/7a06715731ec15c17955d422c7383adad0eee6c8/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-09T02:00:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only dated source-rights/currentness assessment. No network access, source activation, fetch, RAW write, promotion, release, publication, or public-use authority is created."
+}

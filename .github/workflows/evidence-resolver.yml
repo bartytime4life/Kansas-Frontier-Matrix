@@ -1,0 +1,123 @@
+# KFM bounded evidence-resolver candidate checks.
+#
+# Responsibility: execute the internal v1alpha1 candidate profile over
+# synthetic fixtures. A green job proves only those local checks. It does not
+# resolve a live registry record, establish evidence truth or claim scope,
+# evaluate policy, approve review/release, emit a public ANSWER, or publish.
+#
+# Security: pull-request code runs with contents:read, no secrets, no write
+# permission, and no network-dependent test command. Repository-declared
+# schema/test dependencies are installed because the result-contract conformance
+# test uses the pinned jsonschema dependency from pyproject.toml.
+# Compatibility: workflow name, triggers, and job IDs are preserved from the
+# prior readiness audit. Revert this file and the bounded implementation slice
+# to restore the prior hold.
+name: evidence-resolver
+
+"on":
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: evidence-resolver-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PYTHONHASHSEED: "0"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+
+jobs:
+  resolve-bundles:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Check out bounded candidate inputs
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared schema and test dependencies
+        shell: bash
+        run: python tools/ci/install_python_ci.py project-test
+
+      - name: Run bounded candidate profile
+        run: make evidence-resolver
+
+      - name: Exercise fixture-to-runtime projection boundary
+        run: python -m unittest tests.packages.evidence_resolver.test_runtime_projection_fixtures --verbose
+
+      - name: Record bounded authority
+        if: always()
+        shell: bash
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'EOF_SUMMARY'
+          ## Evidence resolver candidate profile
+
+          This job executes the internal
+          `kfm/evidence-ref-bundle-candidate/v1alpha1` profile over synthetic
+          fixtures. `RESOLVED` is a non-authoritative candidate result only.
+
+          The fixture-to-runtime projection check additionally requires every
+          checked-in resolver outcome to remain non-renderable and prevents
+          `RESOLVED` from being interpreted as a public `ANSWER`; resolved
+          candidates must still carry the complete remaining governed-check set.
+
+          No registry was queried, no evidence or policy was created, no claim
+          scope was inferred, and no review, release, public response, or
+          publication action occurred.
+          EOF_SUMMARY
+
+  denied-bundles-fail-closed:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Check out bounded negative inputs
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared schema and test dependencies
+        shell: bash
+        run: python tools/ci/install_python_ci.py project-test
+
+      - name: Run fail-closed negative profile
+        run: make evidence-resolver-deny
+
+      - name: Record negative-boundary result
+        if: always()
+        shell: bash
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'EOF_SUMMARY'
+          ## Evidence resolver negative boundary
+
+          This job requires every synthetic negative fixture to remain
+          non-`RESOLVED` with its exact expected status and issue codes. A green
+          result is bounded rejection evidence, not evidence closure or release
+          authority.
+          EOF_SUMMARY

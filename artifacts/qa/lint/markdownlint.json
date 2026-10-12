@@ -1,0 +1,9 @@
+{
+  "status": "PROPOSED",
+  "tool": "markdownlint",
+  "path": "artifacts/qa/lint/markdownlint.json",
+  "results": [],
+  "notes": [
+    "Illustrative placeholder for markdown lint output. Replace with generated output when available."
+  ]
+}

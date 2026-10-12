@@ -1,0 +1,14 @@
+{
+  "profile": "kfm.explorer.consent-card.public-safe.v1",
+  "id": "kfm:consent-card:INTERNAL_ERROR_CANARY_2f61",
+  "outcome": "ERROR",
+  "reason_code": "UPSTREAM_ERROR",
+  "layer_ref": null,
+  "layer_label": null,
+  "basis": null,
+  "scope": [],
+  "expires_at": null,
+  "subject_consent_state": "UNRESOLVED",
+  "obligation_set_ref": null,
+  "policy_decision_ref": null
+}

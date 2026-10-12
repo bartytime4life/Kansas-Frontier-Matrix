@@ -1,9 +1,0 @@
-{
-  "id": "HSP-HYD-001",
-  "knowledge_character": "SYNTHETIC_TEST",
-  "source_id": "SRC-HYD-WBD-CANDIDATE",
-  "source_role": "BOUNDARY_CONTEXT",
-  "claims": [
-    "boundary_context_only"
-  ]
-}

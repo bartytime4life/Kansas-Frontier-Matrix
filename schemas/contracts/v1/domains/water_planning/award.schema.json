@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/domains/water_planning/award.schema.json",
+  "title": "award",
+  "type": "object",
+  "description": "A grant award event. An award is not a payment, a completed project, or an operational benefit. The awarded_amount is distinct from the requested_amount, the recommended_amount, and the paid_amount.",
+  "x-kfm": {
+    "status": "PROPOSED",
+    "contract_doc": "contracts/domains/water_planning/award.md",
+    "fixtures_root": "fixtures/domains/water_planning/award/",
+    "policy": "policy/domains/water_planning/"
+  },
+  "properties": {
+    "award_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_:.-]*$"
+    },
+    "application_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "recommendation_ref": {
+      "type": ["string", "null"]
+    },
+    "fiscal_year": {
+      "type": "string",
+      "pattern": "^FY[0-9]{4}$"
+    },
+    "funding_source": {
+      "type": ["string", "null"],
+      "description": "Funding source identity, e.g. State Water Infrastructure Grant Program."
+    },
+    "awarded_amount": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "description": "Amount awarded as stated by the source. Null if not publicly disclosed. Distinct from requested, recommended, and paid amounts."
+    },
+    "awarded_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "source_publication_time": {
+      "type": ["string", "null"],
+      "format": "date-time"
+    },
+    "source_ref": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "required": [
+    "award_id",
+    "application_ref",
+    "fiscal_year",
+    "awarded_at",
+    "source_ref"
+  ],
+  "additionalProperties": false
+}

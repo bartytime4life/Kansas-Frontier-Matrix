@@ -1,0 +1,171 @@
+{
+  "receipt_id": "genrec-pass20-plants-taxa-drift-assessment-20260811",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/plants-taxa-drift-assessment.yml",
+    "contracts/source/plants_taxa_drift_assessment.md",
+    "docs/intake/exploratory/pass-20-plants-taxa-drift-assessment-source-map.md",
+    "fixtures/contracts/v1/source/plants_taxa_drift_assessment/cases.json",
+    "schemas/contracts/v1/source/plants_taxa_drift_assessment.schema.json",
+    "tests/validators/test_validate_plants_taxa_drift_assessment.py",
+    "tools/validators/source/validate_plants_taxa_drift_assessment.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/plants-taxa-drift-assessment.yml": "sha256:312e0af198d30c7e1b18ca9abf423719bf1140367d04946824117e913743781f",
+    "contracts/source/plants_taxa_drift_assessment.md": "sha256:5679c942a2bd9ee1d8c1c0cb7619173814058fa71dec8c6725d2a303bff37320",
+    "docs/intake/exploratory/pass-20-plants-taxa-drift-assessment-source-map.md": "sha256:3a7e64c7208e5a13a8e2c386946d0c4f4c0aedf525e5c038cb2c554b355cc539",
+    "fixtures/contracts/v1/source/plants_taxa_drift_assessment/cases.json": "sha256:c6d8aef84ae6dd66c8f59b419162e2d9295728aad07a5043fc983975c5f6f112",
+    "schemas/contracts/v1/source/plants_taxa_drift_assessment.schema.json": "sha256:22852e8e5a721226a0f805e2d733b6cb268138a4c884644f5b3ec9da353c1a26",
+    "tests/validators/test_validate_plants_taxa_drift_assessment.py": "sha256:1a3a448e0cabd63e35637805cc1df3303da422428d14e14b8ca82f9de270eb86",
+    "tools/validators/source/validate_plants_taxa_drift_assessment.py": "sha256:ee95842d57c9d7c52ae13aaa25108bf142159e4645bc094e7088fc85628dfe4a"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-11"
+  },
+  "prompt_or_contract": "sha256:5679c942a2bd9ee1d8c1c0cb7619173814058fa71dec8c6725d2a303bff37320",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive private-corpus discovery",
+      "GitHub repository inspection and draft PR publication",
+      "local source inspection and deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:57e4b74255b52863f2a489595077741d7f45c2968a9740fe4837bac73778f780",
+      "sha256:f282fe8538bd94a2101b4955114cae5f87996639b37bc42bf7cfe76d61ba74be",
+      "sha256:ac9145a23458428cb12864cf9588e4c3c6c2e5abff65531c6722f7661e5fd932",
+      "sha256:6ddb44511a16f872644f6d334cc330d24424c582dae14b636bc7d1a5044a78aa",
+      "sha256:825f63bcd9a144ce75e4b2abaacb69914c3b6798e0d9aaeecc022d792d0311d0",
+      "sha256:eedf1d84bf7f6fba9f40b7e27ea62966ebd4118f5197aa71a9351794f4e4bbd2",
+      "sha256:190a542215bdf06b3a07c6912aeeaea6504407097c1729471929725e4d7643e9"
+    ],
+    "attached_docs": [
+      "Supplied Pass 20 Part 2 Markdown; KFM-IDX-ANA-004, KFM-IDX-SRC-006, and EXP-001 were inspected",
+      "Connected Drive New Ideas 5-19-26; private corpus used only as thematic corroboration",
+      "Repository Flora registry, PLANTS watcher boundaries, taxonomic lineage, SourceIntakeRecord, watcher registry, and Directory Rules"
+    ],
+    "evidence_refs": [
+      "attachment://KFM-Pass-20-Part-2#ideas=KFM-IDX-ANA-004,KFM-IDX-SRC-006,EXP-001",
+      "gdrive://1Gx4pU71Pqk1cG1oKb8l69B8K4yOJK7zy5KNH-Xvl4HQ",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/bd59127604f3ab7578fe43f30caaeef089c0fffc/docs/domains/flora/SOURCE_REGISTRY.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/bd59127604f3ab7578fe43f30caaeef089c0fffc/tools/ingest/plants_watch/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/bd59127604f3ab7578fe43f30caaeef089c0fffc/tools/watchers/plants_watch/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/bd59127604f3ab7578fe43f30caaeef089c0fffc/contracts/crosswalks/taxonomy/taxonomic_concept_lineage.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/bd59127604f3ab7578fe43f30caaeef089c0fffc/contracts/source/source_intake_record.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/bd59127604f3ab7578fe43f30caaeef089c0fffc/contracts/source/watcher_registry.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/bd59127604f3ab7578fe43f30caaeef089c0fffc/docs/doctrine/directory-rules.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/plants-taxa-drift-assessment.yml": "CONFIRMED",
+    "contracts/source/plants_taxa_drift_assessment.md": "PROPOSED",
+    "docs/intake/exploratory/pass-20-plants-taxa-drift-assessment-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/source/plants_taxa_drift_assessment/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/source/plants_taxa_drift_assessment.schema.json": "PROPOSED",
+    "tests/validators/test_validate_plants_taxa_drift_assessment.py": "CONFIRMED",
+    "tools/validators/source/validate_plants_taxa_drift_assessment.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "source-corpus-review",
+      "outcome": "PASS",
+      "reason": "Pass 20 KFM-IDX-ANA-004, KFM-IDX-SRC-006, and EXP-001 plus connected Drive and bounded repository evidence were inspected."
+    },
+    {"gate": "python-syntax-compilation", "outcome": "PASS"},
+    {"gate": "draft-2020-12-schema-meta-validation", "outcome": "PASS"},
+    {"gate": "workflow-yaml-parse", "outcome": "PASS"},
+    {
+      "gate": "focused-unittest-suite",
+      "outcome": "PASS",
+      "reason": "Fourteen deterministic PLANTS taxa-drift assessment tests passed."
+    },
+    {
+      "gate": "exact-fixture-replay",
+      "outcome": "PASS",
+      "reason": "Thirty-four exact PASS, ABSTAIN, DENY, and ERROR cases matched reviewed outcomes and codes."
+    },
+    {
+      "gate": "adjacent-taxonomy-and-cdl-regression",
+      "outcome": "PASS",
+      "reason": "Twenty-four existing taxonomic-lineage and fixture-first CDL watcher tests passed."
+    },
+    {
+      "gate": "repository-schema-and-contract-suite",
+      "outcome": "PASS",
+      "reason": "Four hundred forty-six tests and twenty-nine subtests passed."
+    },
+    {
+      "gate": "documentation-and-ci-readiness-suite",
+      "outcome": "PASS",
+      "reason": "One hundred eleven metadata, link, document-graph, changed-receipt selection, and CI-readiness tests passed."
+    },
+    {"gate": "no-network-boundary", "outcome": "PASS"},
+    {"gate": "git-diff-check", "outcome": "PASS"},
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pass20-plants-taxa-drift",
+      "validated": true,
+      "evidence_ref": "attachment://KFM-Pass-20-Part-2#ideas=KFM-IDX-ANA-004,KFM-IDX-SRC-006,EXP-001"
+    },
+    {
+      "id": "drive-new-ideas-5-19-26",
+      "validated": true,
+      "evidence_ref": "gdrive://1Gx4pU71Pqk1cG1oKb8l69B8K4yOJK7zy5KNH-Xvl4HQ"
+    },
+    {
+      "id": "flora-source-registry",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/bd59127604f3ab7578fe43f30caaeef089c0fffc/docs/domains/flora/SOURCE_REGISTRY.md"
+    },
+    {
+      "id": "plants-watcher-placement-conflict",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/bd59127604f3ab7578fe43f30caaeef089c0fffc/tools/watchers/plants_watch/README.md"
+    },
+    {
+      "id": "taxonomic-concept-lineage",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/bd59127604f3ab7578fe43f30caaeef089c0fffc/contracts/crosswalks/taxonomy/taxonomic_concept_lineage.md"
+    },
+    {
+      "id": "accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/bd59127604f3ab7578fe43f30caaeef089c0fffc/docs/doctrine/directory-rules.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-11T21:44:22Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT GitHub and Google Drive connectors",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Additive, inactive, fixture-only PLANTS taxa-drift assessment. It selects no disputed watcher or specification home, contacts no live source, contains only invented identities, performs no occurrence or location join, exposes no exact location, decides no taxonomy or conservation status, emits no real SourceIntakeRecord, mutates no lifecycle state, and grants no policy, review, promotion, release, publication, or public-use authority."
+}

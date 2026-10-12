@@ -1,0 +1,201 @@
+{
+  "object_type": "ConnectorLoadBudgetAssessmentFixtureManifest",
+  "schema_version": "1.0.0",
+  "profile": "kfm.source.connector-load-budget-assessment.fixture.v1",
+  "base_candidate": {
+    "object_type": "ConnectorLoadBudgetAssessmentCandidate",
+    "schema_version": "1.0.0",
+    "profile": "kfm.source.connector-load-budget-assessment.fixture.v1",
+    "profile_spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "source_cards": ["KFM-P18-INV-217", "KFM-P18-INV-372", "KFM-P18-INV-422", "KFM-P18-INV-447"],
+    "observed_at": "2026-08-11T18:00:00Z",
+    "source_descriptor_ref": "kfm:source-descriptor:synthetic-budget:001",
+    "source_descriptor_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "conduct_assessment": {
+      "ref": "kfm:web-acquisition-conduct:synthetic-budget:001",
+      "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+      "outcome": "PASS"
+    },
+    "execution": {
+      "mode": "THREADED",
+      "worker_count": 4,
+      "requested_concurrency": 4
+    },
+    "budget": {
+      "state": "DECLARED",
+      "policy_ref": "kfm:source-rate-policy:synthetic-budget:001",
+      "scope": "PER_SOURCE",
+      "max_concurrency": 4,
+      "minimum_delay_ms": 1000,
+      "window_seconds": 60,
+      "max_requests_per_window": 30,
+      "distributed_share_key": null,
+      "retry": {
+        "strategy": "EXPONENTIAL",
+        "max_attempts": 3,
+        "base_delay_ms": 1000,
+        "cap_delay_ms": 60000,
+        "honor_retry_after": true
+      },
+      "stop_conditions": ["BUDGET_EXHAUSTED", "MANUAL_CANCEL", "SOURCE_THROTTLE", "TERMS_CHANGE"]
+    },
+    "review": {
+      "state": "COMPLETE",
+      "review_record_refs": ["kfm:review-record:synthetic-budget:001"]
+    },
+    "authority_claims": {
+      "source_authority": false,
+      "connector_activation_authority": false,
+      "scheduling_authority": false,
+      "network_authority": false,
+      "lifecycle_write_authority": false,
+      "evidence_authority": false,
+      "policy_authority": false,
+      "review_authority": false,
+      "promotion_authority": false,
+      "release_authority": false,
+      "publication_authority": false,
+      "public_use_authority": false
+    }
+  },
+  "cases": [
+    {"name": "pass_threaded_per_source", "patch": {}, "expected": {"outcome": "PASS", "codes": []}},
+    {
+      "name": "pass_single_worker",
+      "patch": {"execution": {"mode": "SINGLE_WORKER", "worker_count": 1, "requested_concurrency": 1}},
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_distributed_shared_budget",
+      "patch": {
+        "execution": {"mode": "DISTRIBUTED", "worker_count": 8, "requested_concurrency": 4},
+        "budget": {"distributed_share_key": "kfm:source-budget-share:synthetic-budget:global"}
+      },
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "abstain_budget_unresolved",
+      "patch": {
+        "budget": {
+          "state": "UNRESOLVED",
+          "policy_ref": null,
+          "scope": "UNRESOLVED",
+          "max_concurrency": null,
+          "minimum_delay_ms": null,
+          "window_seconds": null,
+          "max_requests_per_window": null,
+          "retry": null,
+          "stop_conditions": []
+        }
+      },
+      "expected": {"outcome": "ABSTAIN", "codes": ["LOAD_BUDGET_UNRESOLVED"]}
+    },
+    {
+      "name": "abstain_source_policy_requires_resolution",
+      "patch": {
+        "budget": {
+          "state": "SOURCE_POLICY",
+          "scope": "UNRESOLVED",
+          "max_concurrency": null,
+          "minimum_delay_ms": null,
+          "window_seconds": null,
+          "max_requests_per_window": null,
+          "retry": null,
+          "stop_conditions": []
+        }
+      },
+      "expected": {"outcome": "ABSTAIN", "codes": ["SOURCE_POLICY_RESOLUTION_REQUIRED"]}
+    },
+    {
+      "name": "abstain_conduct_unresolved",
+      "patch": {"conduct_assessment": {"outcome": "UNRESOLVED"}},
+      "expected": {"outcome": "ABSTAIN", "codes": ["CONDUCT_ASSESSMENT_UNRESOLVED"]}
+    },
+    {
+      "name": "abstain_review_pending",
+      "patch": {"review": {"state": "PENDING", "review_record_refs": []}},
+      "expected": {"outcome": "ABSTAIN", "codes": ["REVIEW_PENDING"]}
+    },
+    {
+      "name": "deny_conduct_denied",
+      "patch": {"conduct_assessment": {"outcome": "DENY"}},
+      "expected": {"outcome": "DENY", "codes": ["CONDUCT_ASSESSMENT_DENIED"]}
+    },
+    {
+      "name": "deny_per_worker_scope",
+      "patch": {"budget": {"scope": "PER_WORKER"}},
+      "expected": {"outcome": "DENY", "codes": ["PER_SOURCE_SCOPE_REQUIRED"]}
+    },
+    {
+      "name": "deny_requested_concurrency_exceeds_budget",
+      "patch": {"execution": {"requested_concurrency": 5}},
+      "expected": {"outcome": "DENY", "codes": ["REQUESTED_CONCURRENCY_EXCEEDS_BUDGET", "REQUESTED_CONCURRENCY_EXCEEDS_WORKERS"]}
+    },
+    {
+      "name": "deny_distributed_share_key_missing",
+      "patch": {"execution": {"mode": "DISTRIBUTED", "worker_count": 8}},
+      "expected": {"outcome": "DENY", "codes": ["DISTRIBUTED_SHARE_KEY_REQUIRED"]}
+    },
+    {
+      "name": "deny_non_distributed_share_key_present",
+      "patch": {"budget": {"distributed_share_key": "kfm:source-budget-share:unexpected"}},
+      "expected": {"outcome": "DENY", "codes": ["DISTRIBUTED_SHARE_KEY_UNEXPECTED"]}
+    },
+    {
+      "name": "deny_single_worker_incoherent",
+      "patch": {"execution": {"mode": "SINGLE_WORKER"}},
+      "expected": {"outcome": "DENY", "codes": ["EXECUTION_MODE_INCOHERENT"]}
+    },
+    {
+      "name": "deny_retry_after_not_honored",
+      "patch": {"budget": {"retry": {"honor_retry_after": false}}},
+      "expected": {"outcome": "DENY", "codes": ["RETRY_AFTER_MUST_BE_HONORED"]}
+    },
+    {
+      "name": "deny_retry_cap_below_base",
+      "patch": {"budget": {"retry": {"cap_delay_ms": 500}}},
+      "expected": {"outcome": "DENY", "codes": ["RETRY_BACKOFF_INCOHERENT"]}
+    },
+    {
+      "name": "deny_retry_none_incoherent",
+      "patch": {"budget": {"retry": {"strategy": "NONE"}}},
+      "expected": {"outcome": "DENY", "codes": ["RETRY_DECLARATION_INCOHERENT"]}
+    },
+    {
+      "name": "deny_stop_condition_missing",
+      "patch": {"budget": {"stop_conditions": ["BUDGET_EXHAUSTED", "MANUAL_CANCEL", "TERMS_CHANGE"]}},
+      "expected": {"outcome": "DENY", "codes": ["REQUIRED_STOP_CONDITION_MISSING"]}
+    },
+    {
+      "name": "deny_stop_conditions_not_canonical",
+      "patch": {"budget": {"stop_conditions": ["TERMS_CHANGE", "SOURCE_THROTTLE", "MANUAL_CANCEL", "BUDGET_EXHAUSTED"]}},
+      "expected": {"outcome": "DENY", "codes": ["ARRAY_NOT_CANONICAL"]}
+    },
+    {
+      "name": "deny_complete_review_without_reference",
+      "patch": {"review": {"review_record_refs": []}},
+      "expected": {"outcome": "DENY", "codes": ["COMPLETE_REVIEW_REFERENCE_REQUIRED"]}
+    },
+    {
+      "name": "deny_declared_budget_without_policy_reference",
+      "patch": {"budget": {"policy_ref": null}},
+      "expected": {"outcome": "DENY", "codes": ["DECLARED_BUDGET_INCOHERENT"]}
+    },
+    {
+      "name": "deny_profile_hash_tamper",
+      "patch": {},
+      "tamper": "profile_hash",
+      "expected": {"outcome": "DENY", "codes": ["PROFILE_SPEC_HASH_MISMATCH"]}
+    },
+    {
+      "name": "error_unknown_field",
+      "patch": {"network_enabled": true},
+      "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}
+    },
+    {
+      "name": "error_unknown_execution_mode",
+      "patch": {"execution": {"mode": "AUTO_SCALE"}},
+      "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}
+    }
+  ]
+}

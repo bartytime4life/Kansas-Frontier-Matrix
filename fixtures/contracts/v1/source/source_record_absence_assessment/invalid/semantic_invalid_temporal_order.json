@@ -1,0 +1,56 @@
+{
+  "object_type": "SourceRecordAbsenceAssessment",
+  "schema_version": "1.0.0",
+  "assessment_id": "urn:kfm:source-record-absence:sha256:ea6e5740018b43f2a24c71598eb974ee59d16a9fecad480549b839d2e360d6d5",
+  "hash_profile": "kfm-source-record-absence-v1",
+  "spec_hash": "sha256:6d9f7f09dda5e9d594f3f89a20d23283b4e6112ca7c600cfb071c38fde0e612c",
+  "source": {
+    "source_descriptor_ref": "kfm:source:synthetic:status-surface",
+    "source_contract_ref": "kfm:source-contract:synthetic:status-surface-v1",
+    "mode": "COMPLETE_AUTHORITATIVE_SNAPSHOT",
+    "health": "HEALTHY",
+    "completeness_verified": true,
+    "parse_status": "COMPLETE",
+    "parse_confidence": 1.0
+  },
+  "record": {
+    "record_key_hash": "sha256:3d0c52d40d053eacfac2c96b5654343c53d9b2a0971b7bee102e5302f1b8d39d",
+    "last_known_state_ref": "urn:kfm:state:synthetic-record:20260801",
+    "prior_snapshot_ref": "urn:kfm:source-artifact:synthetic-status:20260801",
+    "current_snapshot_ref": "urn:kfm:source-artifact:synthetic-status:20260802",
+    "prior_present": true,
+    "current_present": false
+  },
+  "timing": {
+    "prior_captured_at": "2026-08-01T12:00:00Z",
+    "current_captured_at": "2026-07-31T12:00:00Z",
+    "assessed_at": "2026-08-02T12:05:00Z"
+  },
+  "decision": {
+    "outcome": "REMOVAL_CANDIDATE",
+    "reason_codes": [
+      "ABSENT_FROM_VERIFIED_COMPLETE_SNAPSHOT"
+    ],
+    "transition_candidate_ref": "urn:kfm:transition-candidate:synthetic-record:20260802",
+    "retain_prior_state": false,
+    "history_deletion_allowed": false
+  },
+  "provenance": {
+    "validator_profile": "source-record-absence-assessment-v1",
+    "input_refs": [
+      "urn:kfm:source-artifact:synthetic-status:20260801",
+      "urn:kfm:source-artifact:synthetic-status:20260802"
+    ],
+    "evidence_refs": [
+      "urn:kfm:evidence:synthetic-source-mode-contract"
+    ]
+  },
+  "governance": {
+    "source_state_mutated": false,
+    "clearance_authorized": false,
+    "promotion_authorized": false,
+    "release_authorized": false,
+    "publication_authorized": false,
+    "public_use_allowed": false
+  }
+}

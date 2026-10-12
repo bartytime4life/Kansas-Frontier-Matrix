@@ -1,0 +1,147 @@
+{
+  "profile": "kfm.source-role-use-request.v1",
+  "descriptor": {
+    "object_type": "SourceDescriptor",
+    "schema_version": "v1",
+    "source_id": "src:usgs-wbd-huc12",
+    "descriptor_version": "1.0.0",
+    "title": "USGS Watershed Boundary Dataset (HUC12)",
+    "description": "Twelve-digit hydrologic unit boundaries from the USGS Watershed Boundary Dataset.",
+    "domain_scope": [
+      "hydrology"
+    ],
+    "source_type": "official_government_dataset",
+    "source_role": "authoritative_for_claim",
+    "authority_rank": "primary_authority",
+    "authority_notes": "Maintained by the USGS National Geospatial Program.",
+    "publisher": {
+      "name": "U.S. Geological Survey National Geospatial Program",
+      "jurisdiction": "United States",
+      "contact": {
+        "contact_status": "public_contact",
+        "contact_url": "https://www.usgs.gov/national-hydrography/watershed-boundary-dataset"
+      }
+    },
+    "owner_or_steward": {
+      "name": "USGS National Geospatial Technical Operations Center",
+      "jurisdiction": "United States",
+      "contact": {
+        "contact_status": "public_contact",
+        "contact_url": "https://www.usgs.gov/national-hydrography"
+      }
+    },
+    "rights": {
+      "rights_status": "verified_open",
+      "license_or_terms": "Public Domain (17 USC 105)",
+      "attribution_required": false,
+      "redistribution_allowed": "yes",
+      "commercial_use_allowed": "yes",
+      "last_verified_at": "2026-01-05T00:00:00Z",
+      "verified_by": "kfm-source-review"
+    },
+    "sensitivity_default": "public",
+    "cadence": {
+      "update_cadence": "irregular",
+      "freshness_expectation": "Updated as watershed boundaries are revised and stewarded.",
+      "staleness_policy": "review_required"
+    },
+    "access": {
+      "access_method": "https_download",
+      "access_posture": "open",
+      "endpoints": [
+        {
+          "label": "WBD national download",
+          "uri": "https://prd-tnm.s3.amazonaws.com/StagedProducts/Hydrography/WBD/",
+          "purpose": "download"
+        }
+      ]
+    },
+    "citation": {
+      "citation_required": true,
+      "citation_template": "USGS Watershed Boundary Dataset (WBD) HUC12, source_id={source_id}, accessed_at={accessed_at}, url=https://www.usgs.gov/national-hydrography/watershed-boundary-dataset",
+      "citation_guidance": "Cite the USGS Watershed Boundary Dataset with the HUC12 identifier and access date."
+    },
+    "source_head": {
+      "observed_at": "2026-01-05T00:00:00Z",
+      "method": "registry_snapshot",
+      "content_identity": {
+        "revision_id": "wbd-2026-q1"
+      }
+    },
+    "admissibility_limits": {
+      "allowed_claim_roles": [
+        "map_display",
+        "range_context"
+      ],
+      "prohibited_claim_roles": [
+        "not_for_title_truth"
+      ],
+      "limitations": "Watershed boundaries are cartographic delineations, not legal property lines.",
+      "confidence_posture": "source_authoritative_within_role"
+    },
+    "public_release": {
+      "allowed": true,
+      "requires_review": false,
+      "redaction_required": false,
+      "release_conditions": []
+    },
+    "review_state": "approved",
+    "release_state": "released",
+    "lifecycle": {
+      "registry_state": "active",
+      "created_at": "2025-10-01T00:00:00Z",
+      "updated_at": "2026-01-05T00:00:00Z"
+    }
+  },
+  "use": {
+    "request_id": "kfm:source-role-use:e4317311df91b8a19905fe77ea76b5367f83207e79378e640d2b728133c17482",
+    "source_id": "src:usgs-wbd-huc12",
+    "descriptor_version": "1.0.0",
+    "role_origin": "SOURCE_DESCRIPTOR",
+    "propagated_source_role": "authoritative_for_claim",
+    "propagated_authority_rank": "primary_authority",
+    "requested_claim_roles": [
+      "map_display"
+    ],
+    "consumer_surface": "INTERNAL_PIPELINE",
+    "exposure": "INTERNAL",
+    "support_refs": {
+      "evidence_refs": [],
+      "policy_decision_refs": [],
+      "review_refs": [],
+      "release_manifest_refs": [],
+      "correction_refs": [],
+      "rollback_refs": []
+    },
+    "role_change": {
+      "kind": "NONE",
+      "lineage_refs": []
+    },
+    "authority_claims": {
+      "claim_truth": false,
+      "evidence_closure": false,
+      "policy_approval": false,
+      "release_approval": false,
+      "public_permission": false
+    }
+  },
+  "permissions": {
+    "mutate_descriptor": false,
+    "activate_source": false,
+    "create_evidence": false,
+    "decide_policy": false,
+    "approve_review": false,
+    "promote": false,
+    "release": false,
+    "publish": false
+  },
+  "non_effects": {
+    "descriptor_mutated": false,
+    "source_activated": false,
+    "evidence_created": false,
+    "policy_decided": false,
+    "review_approved": false,
+    "release_created": false,
+    "publication_created": false
+  }
+}

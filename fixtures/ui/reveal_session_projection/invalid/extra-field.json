@@ -1,0 +1,14 @@
+{
+  "profile": "kfm.explorer.reveal-session.public-safe.v1",
+  "session_id": "kfm:reveal-session:synthetic:invalid-extra-001",
+  "outcome": "DENY",
+  "reason_code": "POLICY_DENIED",
+  "layer_ref": null,
+  "scope_codes": [],
+  "started_at": null,
+  "expires_at": null,
+  "key_handle_ref": null,
+  "audit_ref": null,
+  "policy_decision_ref": null,
+  "internal_detail": "SENSITIVE_REVEAL_CANARY_82f7"
+}

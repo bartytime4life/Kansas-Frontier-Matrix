@@ -1,0 +1,20 @@
+# Package metadata for the USGS connector source tree under src/usgs.
+# Runtime needs only the standard library and the in-repository connectors-core
+# package (packages/connectors-core); no distribution or release is implied.
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "kfm-connector-usgs"
+version = "0.0.0"
+description = "USGS earthquake request planning, injected-transport retrieval episodes, and candidate routing"
+requires-python = ">=3.11"
+dependencies = ["kfm-connectors-core"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["usgs"]
+
+[tool.setuptools.package-data]
+usgs = ["descriptor.yaml"]

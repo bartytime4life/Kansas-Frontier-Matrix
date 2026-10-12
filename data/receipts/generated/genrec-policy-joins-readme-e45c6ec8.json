@@ -1,0 +1,207 @@
+{
+  "receipt_id": "genrec-policy-joins-readme-e45c6ec8",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "policy/joins/README.md"
+  ],
+  "artifact_hashes": {
+    "policy/joins/README.md": "sha256:e45c6ec8151864a9378e65c89248eccea356633f8bfc24996038ba97594625ca"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5 Codex",
+    "version": "2026-08-13"
+  },
+  "prompt_or_contract": "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local git",
+      "repository-native deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:b767cdd3321d1f21bf5444938c339c07b30dbf3e2c16c2c745b5c5017a2096e3",
+      "sha256:4bfafc0ff613eea985493c2759205b12f7853fd03a5abd525513b5402cc0bf8a",
+      "sha256:b975d562eb61aed6eb39bdbb245d76668e58ceb3f6a44a1848bbe4838aba5178",
+      "sha256:3c7dd2eb89dd99e8c50982b9928b557d11d886dd26595cf2d8d9b972f427369b",
+      "sha256:1c1240fdd0b887208a0f34122d79ac46d403fcc03a71a83fdea69cb64ed11d9c",
+      "sha256:b15c026c383dbee06b33ade4fe8b5215192ae574f50b8552eebcbc875c054744",
+      "sha256:5f81824320c3599fce6c011ae37ea7b9ffcc1223520d19c1b0d5d16e8ff13562",
+      "sha256:6a074a59348b6f1c3bd9dad8a1624ff84d88e190a8d740a1bdfc1dc673a4beda",
+      "sha256:e1c8906de125f0c43a396075fadf2a8176de65ad7aa16b74cded4120e7af6a7a",
+      "sha256:b89c6ff213b787eb816c32c997312d1e06837f1185d0bedd1ce43b3ebe4c9cf7",
+      "sha256:3ddba25f500ebcf0ddc69f7f40fe9ed9975f85255d17179c0d91852a85f4f800",
+      "sha256:c012b851ebf2a10bc44d2dd62ba42d4ea006ad78b1b293440094a2c7232ce0c6",
+      "sha256:1b1936bf354503b3704c81c620cad6de5feb17d46bb204b4863e84240a6c7cda",
+      "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb"
+    ],
+    "attached_docs": [
+      "Pasted text(20260813-130707).txt"
+    ],
+    "evidence_refs": [
+      "repo:commit@ad31275429d715ad92002f8f2e160299193c9f50",
+      "repo:policy/joins/README.md@ad31275429d715ad92002f8f2e160299193c9f50",
+      "repo:policy/joins/habitat-fauna/README.md@ad31275429d715ad92002f8f2e160299193c9f50",
+      "repo:policy/joins/habitat-hydrology/README.md@ad31275429d715ad92002f8f2e160299193c9f50",
+      "repo:policy/joins/habitat-hydrology/riparian/README.md@ad31275429d715ad92002f8f2e160299193c9f50",
+      "repo:policy/README.md@ad31275429d715ad92002f8f2e160299193c9f50",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@ad31275429d715ad92002f8f2e160299193c9f50",
+      "repo:docs/doctrine/directory-rules.md@ad31275429d715ad92002f8f2e160299193c9f50",
+      "repo:docs/architecture/cross-lane-join-policy.md@ad31275429d715ad92002f8f2e160299193c9f50",
+      "repo:docs/architecture/cross-domain/cross-lane-relations.md@ad31275429d715ad92002f8f2e160299193c9f50",
+      "repo:docs/architecture/cross-domain/source-role-anti-collapse.md@ad31275429d715ad92002f8f2e160299193c9f50",
+      "repo:contracts/joins/README.md@ad31275429d715ad92002f8f2e160299193c9f50",
+      "repo:contracts/joins/cross_lane_join_assessment.md@ad31275429d715ad92002f8f2e160299193c9f50",
+      "repo:contracts/joins/historical_network_proximity_assessment.md@ad31275429d715ad92002f8f2e160299193c9f50",
+      "repo:schemas/contracts/v1/joins/README.md@ad31275429d715ad92002f8f2e160299193c9f50",
+      "repo:schemas/contracts/v1/relations/README.md@ad31275429d715ad92002f8f2e160299193c9f50",
+      "repo:contracts/policy/policy_decision.md@ad31275429d715ad92002f8f2e160299193c9f50",
+      "repo:schemas/contracts/v1/policy/policy_decision.schema.json@ad31275429d715ad92002f8f2e160299193c9f50",
+      "repo:tools/joins/README.md@ad31275429d715ad92002f8f2e160299193c9f50",
+      "repo:tools/joins/join_candidates.py@ad31275429d715ad92002f8f2e160299193c9f50",
+      "repo:tools/joins/historical_network_proximity.py@ad31275429d715ad92002f8f2e160299193c9f50",
+      "repo:fixtures/contracts/v1/joins/cross_lane_join_assessment/cases.json@ad31275429d715ad92002f8f2e160299193c9f50",
+      "repo:fixtures/contracts/v1/joins/historical_network_proximity_assessment/cases.json@ad31275429d715ad92002f8f2e160299193c9f50",
+      "repo:tests/joins/test_join_candidates.py@ad31275429d715ad92002f8f2e160299193c9f50",
+      "repo:tests/joins/test_historical_network_proximity.py@ad31275429d715ad92002f8f2e160299193c9f50",
+      "repo:.github/workflows/cross-lane-join-assessment.yml@ad31275429d715ad92002f8f2e160299193c9f50",
+      "repo:.github/workflows/historical-network-proximity-assessment.yml@ad31275429d715ad92002f8f2e160299193c9f50",
+      "repo:tools/validators/joins/README.md@ad31275429d715ad92002f8f2e160299193c9f50",
+      "repo:tools/validators/cross-domain-joins/README.md@ad31275429d715ad92002f8f2e160299193c9f50",
+      "repo:tools/validators/joins/agriculture-soil/README.md@ad31275429d715ad92002f8f2e160299193c9f50",
+      "repo:tools/validators/joins/person-parcel/README.md@ad31275429d715ad92002f8f2e160299193c9f50",
+      "repo:control_plane/root_registry.yaml@ad31275429d715ad92002f8f2e160299193c9f50",
+      "repo:control_plane/policy_gate_register.yaml@ad31275429d715ad92002f8f2e160299193c9f50",
+      "repo:.github/CODEOWNERS@ad31275429d715ad92002f8f2e160299193c9f50",
+      "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@ad31275429d715ad92002f8f2e160299193c9f50",
+      "repo:tools/validators/validate_generated_receipt.py@ad31275429d715ad92002f8f2e160299193c9f50"
+    ]
+  },
+  "truth_labels": {
+    "policy/joins/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-authority-preflight",
+      "outcome": "PASS",
+      "reason": "Current main, target bytes and history, complete direct-child tree, exact-target open-pull-request overlap, planned branch name, accepted Directory Rules and ADR-0029, parent policy authority, machine root projection, empty proposed policy-gate register, and directly related join contracts, schemas, candidate tools, fixtures, tests, workflows, validator indexes, child lanes, and PolicyDecision evidence were inspected before authoring."
+    },
+    {
+      "gate": "markdown-structure-and-metadata",
+      "outcome": "PASS",
+      "reason": "The final README has one H1, logical heading progression, three balanced language-tagged fence pairs, no diff whitespace errors, UTF-8-compatible text, a final newline, and one valid KFM_META_BLOCK_V2 envelope under the required repository profile."
+    },
+    {
+      "gate": "local-links-and-fragments",
+      "outcome": "PASS",
+      "reason": "The repository-native no-network link checker resolved all 61 local README targets and fragments; no external URL was added or checked."
+    },
+    {
+      "gate": "cross-lane-candidate-assessment-evidence",
+      "outcome": "PASS",
+      "reason": "All 19 synthetic fixture cases passed their exact expected polarity and all 10 focused join-candidate tests passed under the credential-scrubbed no-network profile."
+    },
+    {
+      "gate": "historical-proximity-assessment-evidence",
+      "outcome": "PASS",
+      "reason": "All 20 synthetic historical-proximity cases matched their finite expected outcomes and all 10 focused tests passed; the README preserves the profile's non-authoritative, no-real-geometry, and non-publisher limits."
+    },
+    {
+      "gate": "documentation-validator-suites",
+      "outcome": "PASS",
+      "reason": "All 18 bounded local-link validator tests and all 24 metadata-block validator tests passed with no network access."
+    },
+    {
+      "gate": "generated-receipt-schema-and-hash",
+      "outcome": "PASS",
+      "reason": "The receipt parses without duplicate keys, conforms to GENERATED_RECEIPT contract version 3.0.0 and cross-field rules, and binds the final README SHA-256 digest."
+    },
+    {
+      "gate": "sensitive-content-review",
+      "outcome": "PASS",
+      "reason": "The authored artifacts contain no credentials, signed URLs, private endpoints, personal data, real protected relationships, exact sensitive coordinates, restricted payloads, hidden thresholds, or actor-authority claims."
+    },
+    {
+      "gate": "runtime-and-public-behavior",
+      "outcome": "SKIPPED",
+      "reason": "Documentation and provenance only; no policy source, contract, schema, registry, fixture, helper, validator, test, workflow, bundle, evaluator, consumer, decision, release, deployment, rollback execution, publication, or public behavior changes."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks require the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "The draft remains pending authorized human review; no lane acceptance, policy activation, independent approval, release, deployment, publication, or public-use authority is created."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "policy/README.md"
+  ],
+  "citations": [
+    {
+      "id": "join-policy-lane-baseline-and-direct-child-tree",
+      "validated": true,
+      "evidence_ref": "repo:policy/joins/README.md@ad31275429d715ad92002f8f2e160299193c9f50"
+    },
+    {
+      "id": "accepted-policy-root-placement-and-readme-contract",
+      "validated": true,
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md@ad31275429d715ad92002f8f2e160299193c9f50"
+    },
+    {
+      "id": "open-five-check-three-posture-architecture",
+      "validated": true,
+      "evidence_ref": "repo:docs/architecture/cross-lane-join-policy.md@ad31275429d715ad92002f8f2e160299193c9f50"
+    },
+    {
+      "id": "cross-lane-candidate-assessment-implementation",
+      "validated": true,
+      "evidence_ref": "repo:tools/joins/join_candidates.py@ad31275429d715ad92002f8f2e160299193c9f50"
+    },
+    {
+      "id": "historical-proximity-non-authority-profile",
+      "validated": true,
+      "evidence_ref": "repo:tools/joins/historical_network_proximity.py@ad31275429d715ad92002f8f2e160299193c9f50"
+    },
+    {
+      "id": "closed-policy-decision-family-enum",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/policy/policy_decision.schema.json@ad31275429d715ad92002f8f2e160299193c9f50"
+    },
+    {
+      "id": "empty-proposed-policy-gate-register",
+      "validated": true,
+      "evidence_ref": "repo:control_plane/policy_gate_register.yaml@ad31275429d715ad92002f8f2e160299193c9f50"
+    },
+    {
+      "id": "generated-receipt-machine-shape",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@ad31275429d715ad92002f8f2e160299193c9f50"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-13T14:50:18Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Documentation-only modernization of the substantive policy/joins boundary. The update replaces stale empty-target and README-only ecosystem claims with current direct-child, contract, schema, candidate-tool, fixture, test, workflow, validator-routing, PolicyDecision, and policy-gate evidence; preserves the five checks, three proposed postures, authority separation, sensitivity composition, child routing, public-surface, review, correction, rollback, and open-decision doctrine; and adds a material no-loss ledger. It changes no policy source, relationship semantics, schema, runtime behavior, decision, release, deployment, rollback execution, publication, or public behavior. This receipt is provenance and process memory, not policy acceptance, relationship truth, evidence closure, independent review, release authority, or publication authority; authorized human review remains pending."
+}

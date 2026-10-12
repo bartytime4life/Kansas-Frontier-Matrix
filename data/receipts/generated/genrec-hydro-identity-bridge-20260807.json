@@ -1,0 +1,173 @@
+{
+  "receipt_id": "genrec-hydro-identity-bridge-20260807",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "contracts/domains/hydrology/hydro_identity_bridge.md",
+    "fixtures/contracts/v1/domains/hydrology/hydro_identity_bridge/invalid/answer_with_split.json",
+    "fixtures/contracts/v1/domains/hydrology/hydro_identity_bridge/invalid/answer_without_join_receipt.json",
+    "fixtures/contracts/v1/domains/hydrology/hydro_identity_bridge/invalid/crosswalk_release_mismatch.json",
+    "fixtures/contracts/v1/domains/hydrology/hydro_identity_bridge/invalid/noncanonical_evidence_refs.json",
+    "fixtures/contracts/v1/domains/hydrology/hydro_identity_bridge/invalid/relabel_not_denied.json",
+    "fixtures/contracts/v1/domains/hydrology/hydro_identity_bridge/invalid/request_not_bound.json",
+    "fixtures/contracts/v1/domains/hydrology/hydro_identity_bridge/invalid/spec_hash_mismatch.json",
+    "fixtures/contracts/v1/domains/hydrology/hydro_identity_bridge/valid/exact_answer.json",
+    "fixtures/contracts/v1/domains/hydrology/hydro_identity_bridge/valid/legacy_relabel_denied.json",
+    "fixtures/contracts/v1/domains/hydrology/hydro_identity_bridge/valid/merge_abstain.json",
+    "fixtures/contracts/v1/domains/hydrology/hydro_identity_bridge/valid/operational_error.json",
+    "fixtures/contracts/v1/domains/hydrology/hydro_identity_bridge/valid/split_abstain.json",
+    "fixtures/contracts/v1/domains/hydrology/hydro_identity_bridge/valid/unresolved_abstain.json",
+    "schemas/contracts/v1/domains/hydrology/hydro_identity_bridge.schema.json",
+    "tests/domains/hydrology/test_hydro_identity_bridge.py",
+    "tools/validators/domains/hydrology/validate_hydro_identity_bridge.py"
+  ],
+  "artifact_hashes": {
+    "contracts/domains/hydrology/hydro_identity_bridge.md": "sha256:3a901ffd88651bfcfa42591c4a3bad480a8d02322c26c0b07d3e1124b97f0b48",
+    "fixtures/contracts/v1/domains/hydrology/hydro_identity_bridge/invalid/answer_with_split.json": "sha256:b272f7c054ad139f48fd8d60ad8daffdd3931d65f5328550b573694c5632ad39",
+    "fixtures/contracts/v1/domains/hydrology/hydro_identity_bridge/invalid/answer_without_join_receipt.json": "sha256:bc9fffa57f06410afe1f70e2a880499d93bcf94b033f33b61fa7c4267c3d1a5b",
+    "fixtures/contracts/v1/domains/hydrology/hydro_identity_bridge/invalid/crosswalk_release_mismatch.json": "sha256:005b70ac3fbc6df896b0ff34fac22629d9b5335fdf1edb6936e08b47baecce08",
+    "fixtures/contracts/v1/domains/hydrology/hydro_identity_bridge/invalid/noncanonical_evidence_refs.json": "sha256:80647de5c1e30e3dfafdc197c145fc51de35cd241c1380f67f4fda60a4250dd2",
+    "fixtures/contracts/v1/domains/hydrology/hydro_identity_bridge/invalid/relabel_not_denied.json": "sha256:24815677e7e83c2d063b78d22a80ef79b406d2da679a9c1946bc3d898aca313d",
+    "fixtures/contracts/v1/domains/hydrology/hydro_identity_bridge/invalid/request_not_bound.json": "sha256:088701c78cefe3fbcca40a72ee0d44aaa6bca5bf77a09ae6a02f0540a8d0f8f6",
+    "fixtures/contracts/v1/domains/hydrology/hydro_identity_bridge/invalid/spec_hash_mismatch.json": "sha256:08bad759cbe495fbf96187cd10bb9d6fa9c845db0a26e2725632ca2b02de95e0",
+    "fixtures/contracts/v1/domains/hydrology/hydro_identity_bridge/valid/exact_answer.json": "sha256:b08ed4ca55b64296351f2a60417f257f7bd6400cb12ed90cfce4a7306afcdc88",
+    "fixtures/contracts/v1/domains/hydrology/hydro_identity_bridge/valid/legacy_relabel_denied.json": "sha256:515b2de76e106e5f62bba6a0b63f290c86a4066a67aed9943a6cd5ea3cc58c8b",
+    "fixtures/contracts/v1/domains/hydrology/hydro_identity_bridge/valid/merge_abstain.json": "sha256:42da965a20ca8ecc49fd8ef4081adfa39d67b878a9f90947f27723cb6e789d93",
+    "fixtures/contracts/v1/domains/hydrology/hydro_identity_bridge/valid/operational_error.json": "sha256:3abb481e80bce0e0706ef5108720592be711357dc56baf17891d2d4106e9094d",
+    "fixtures/contracts/v1/domains/hydrology/hydro_identity_bridge/valid/split_abstain.json": "sha256:2407855e7ab85ce3a0483a4a5ab828e32fb18ded40f28407e16bdff842882c25",
+    "fixtures/contracts/v1/domains/hydrology/hydro_identity_bridge/valid/unresolved_abstain.json": "sha256:872f6b435dd3d59effac202672d7ddb1241222203856d6fa5357d6c8fc662654",
+    "schemas/contracts/v1/domains/hydrology/hydro_identity_bridge.schema.json": "sha256:b0ea9b16f77dc7ebba402db9fbed0b0da6d61c7ee9aa78d94795aff8e28ed62b",
+    "tests/domains/hydrology/test_hydro_identity_bridge.py": "sha256:306880745926b7050cb17f07b184dc3ef61697c85e44e4fa3dba8480b06e9a3f",
+    "tools/validators/domains/hydrology/validate_hydro_identity_bridge.py": "sha256:50b821d1628a222df41c919b53eae84cf2aabd819977082b010f9a90c3f8457e"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-07"
+  },
+  "prompt_or_contract": "sha256:98a1d8c1aeff540d425a2b66dabda29e0ac64f294b11292f22e40cb6992308d4",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "New Ideas 4-14-26.pdf",
+      "New Ideas 4-17-26.pdf",
+      "KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:New Ideas 4-14-26.pdf#hydro-identity-bridge",
+      "attachment:New Ideas 4-17-26.pdf#nhdplus-current-vs-legacy-comid",
+      "repo:contracts/domains/hydrology/nhdplus_waterbody_crosswalk.md@29bf0c8c6b112df0a77c141d54a3a39fc5e9dfaf",
+      "repo:schemas/contracts/v1/domains/hydrology/nhdplus_waterbody_crosswalk.schema.json@29bf0c8c6b112df0a77c141d54a3a39fc5e9dfaf",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@29bf0c8c6b112df0a77c141d54a3a39fc5e9dfaf"
+    ]
+  },
+  "truth_labels": {
+    "contracts/domains/hydrology/hydro_identity_bridge.md": "PROPOSED",
+    "fixtures/contracts/v1/domains/hydrology/hydro_identity_bridge/invalid/answer_with_split.json": "PROPOSED",
+    "fixtures/contracts/v1/domains/hydrology/hydro_identity_bridge/invalid/answer_without_join_receipt.json": "PROPOSED",
+    "fixtures/contracts/v1/domains/hydrology/hydro_identity_bridge/invalid/crosswalk_release_mismatch.json": "PROPOSED",
+    "fixtures/contracts/v1/domains/hydrology/hydro_identity_bridge/invalid/noncanonical_evidence_refs.json": "PROPOSED",
+    "fixtures/contracts/v1/domains/hydrology/hydro_identity_bridge/invalid/relabel_not_denied.json": "PROPOSED",
+    "fixtures/contracts/v1/domains/hydrology/hydro_identity_bridge/invalid/request_not_bound.json": "PROPOSED",
+    "fixtures/contracts/v1/domains/hydrology/hydro_identity_bridge/invalid/spec_hash_mismatch.json": "PROPOSED",
+    "fixtures/contracts/v1/domains/hydrology/hydro_identity_bridge/valid/exact_answer.json": "PROPOSED",
+    "fixtures/contracts/v1/domains/hydrology/hydro_identity_bridge/valid/legacy_relabel_denied.json": "PROPOSED",
+    "fixtures/contracts/v1/domains/hydrology/hydro_identity_bridge/valid/merge_abstain.json": "PROPOSED",
+    "fixtures/contracts/v1/domains/hydrology/hydro_identity_bridge/valid/operational_error.json": "PROPOSED",
+    "fixtures/contracts/v1/domains/hydrology/hydro_identity_bridge/valid/split_abstain.json": "PROPOSED",
+    "fixtures/contracts/v1/domains/hydro_identity_bridge/valid/unresolved_abstain.json": "PROPOSED",
+    "schemas/contracts/v1/domains/hydrology/hydro_identity_bridge.schema.json": "PROPOSED",
+    "tests/domains/hydrology/test_hydro_identity_bridge.py": "PROPOSED",
+    "tools/validators/domains/hydrology/validate_hydro_identity_bridge.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-pytest",
+      "outcome": "PASS",
+      "reason": "Twenty-two deterministic HydroIdentityBridge tests passed locally."
+    },
+    {
+      "gate": "python-bytecode-compile",
+      "outcome": "PASS",
+      "reason": "The validator and focused test module compile without syntax errors."
+    },
+    {
+      "gate": "json-schema-self-check",
+      "outcome": "PASS",
+      "reason": "The Draft 2020-12 schema passes Draft202012Validator.check_schema."
+    },
+    {
+      "gate": "finite-outcome-replay",
+      "outcome": "PASS",
+      "reason": "ANSWER, ABSTAIN, DENY, and ERROR fixtures validate; contradictory packets fail closed."
+    },
+    {
+      "gate": "no-network-boundary",
+      "outcome": "PASS",
+      "reason": "The validator imports no network client and exposes no source activation or lifecycle-write authority."
+    },
+    {
+      "gate": "receipt-byte-binding",
+      "outcome": "PASS",
+      "reason": "SHA-256 values bind all authored non-receipt artifacts with exact path closure."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted validation occurs after the draft pull request is opened."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:hydro-identity-modernization",
+      "validated": true,
+      "evidence_ref": "attachment:New Ideas 4-14-26.pdf#hydro-identity-bridge"
+    },
+    {
+      "id": "attachment:current-vs-legacy-id-separation",
+      "validated": true,
+      "evidence_ref": "attachment:New Ideas 4-17-26.pdf#nh]plus-current-vs-legacy-comid"
+    },
+    {
+      "id": "repository:existing-crosswalk-contract",
+      "validated": true,
+      "evidence_ref": "repo:contracts/domains/hydrology/nhdplus_waterbody_crosswalk.md@29bf0c8c6b112df0a77c141d54a3a39fc5e9dfaf"
+    },
+    {
+      "id": "repository:directory-governance-adr",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@29bf0c8c6b112df0a77c141d54a3a39fc5e9dfaf"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-07T20:09:57Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Adds a fixture-first, no-networl HydroIdentityBridge contract and validator that preserves current NHDPlus HR identifiers and legacy COMIDs as distinct source-native families. It binds source releases, temporal basis, finite outcomes, and a JoinReceipt reference without activating sources, mutating lifecycle state, promoting, releasing, or publishing."
+}

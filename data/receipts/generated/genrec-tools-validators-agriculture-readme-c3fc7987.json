@@ -1,0 +1,173 @@
+{
+  "receipt_id": "genrec-tools-validators-agriculture-readme-c3fc7987",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tools/validators/agriculture/README.md"
+  ],
+  "artifact_hashes": {
+    "tools/validators/agriculture/README.md": "sha256:c3fc79878f64ca0ffcf201b8702031dc7dc615eb6b99b99964bcae97a606dd47"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-16-session"
+  },
+  "prompt_or_contract": "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "container validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM GitHub Repository Documentation Implementation Agent — Full Operating Prompt v3.1",
+      "Directory Rules.pdf",
+      "Kansas Frontier Matrix — AI Build Operating Contract.md"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/b902a5c34165ac55d2bb46b470f21e4002cf505f",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b902a5c34165ac55d2bb46b470f21e4002cf505f/tools/validators/agriculture/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b902a5c34165ac55d2bb46b470f21e4002cf505f/tools/validators/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b902a5c34165ac55d2bb46b470f21e4002cf505f/tools/validators/_common/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b902a5c34165ac55d2bb46b470f21e4002cf505f/tools/validators/domains/agriculture/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b902a5c34165ac55d2bb46b470f21e4002cf505f/tools/validators/domains/agriculture/soil-join/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b902a5c34165ac55d2bb46b470f21e4002cf505f/tools/validators/joins/agriculture-soil/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b902a5c34165ac55d2bb46b470f21e4002cf505f/tools/validators/soil-suitability/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b902a5c34165ac55d2bb46b470f21e4002cf505f/docs/domains/agriculture/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b902a5c34165ac55d2bb46b470f21e4002cf505f/tests/domains/agriculture/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b902a5c34165ac55d2bb46b470f21e4002cf505f/tests/domains/agriculture/schema/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b902a5c34165ac55d2bb46b470f21e4002cf505f/tests/domains/agriculture/policy_deny/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b902a5c34165ac55d2bb46b470f21e4002cf505f/schemas/contracts/v1/domains/agriculture/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b902a5c34165ac55d2bb46b470f21e4002cf505f/schemas/contracts/v1/domains/agriculture/crop_observation.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b902a5c34165ac55d2bb46b470f21e4002cf505f/policy/domains/agriculture/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b902a5c34165ac55d2bb46b470f21e4002cf505f/policy/domains/agriculture/deny_unpublished.rego",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b902a5c34165ac55d2bb46b470f21e4002cf505f/.github/workflows/domain-agriculture.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b902a5c34165ac55d2bb46b470f21e4002cf505f/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b902a5c34165ac55d2bb46b470f21e4002cf505f/.github/PULL_REQUEST_TEMPLATE.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b902a5c34165ac55d2bb46b470f21e4002cf505f/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "attached://Pasted text(32).txt"
+    ]
+  },
+  "truth_labels": {
+    "tools/validators/agriculture/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-preflight",
+      "outcome": "PASS",
+      "reason": "Repository identity, target blob, parent/common validator boundaries, parallel Agriculture validator lanes, Agriculture doctrine, test lanes, schema index/scaffold, policy lane/stub, workflow, Directory Rules, PR contract, and receipt schema were inspected."
+    },
+    {
+      "gate": "base-and-target-concurrency",
+      "outcome": "PASS",
+      "reason": "Latest verified main was b902a5c34165ac55d2bb46b470f21e4002cf505f and target blob remained ba9009bdecb6e007423122c32c53fffc3559976d before mutation."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "The README remains under the existing tools/validator responsibility root and introduces no new schema, contract, policy, data, release, or public authority home."
+    },
+    {
+      "gate": "bounded-direct-lane-inventory",
+      "outcome": "PASS",
+      "reason": "Bounded search surfaced tools/validators/agriculture/README.md only under the direct lane; no validate_agriculture executable or AG_VALIDATION implementation surfaced."
+    },
+    {
+      "gate": "parallel-lane-reconciliation",
+      "outcome": "PASS",
+      "reason": "The README surfaces broad, edge, join, and suitability validator lanes without selecting or duplicating implementation authority."
+    },
+    {
+      "gate": "schema-policy-maturity-boundary",
+      "outcome": "PASS",
+      "reason": "Representative permissive schema and proposed policy stub are classified as scaffolds, not enforcement or conformance proof."
+    },
+    {
+      "gate": "sensitive-agriculture-posture",
+      "outcome": "PASS",
+      "reason": "Field/operator/private joins, source rights, aggregation, redaction, evidence, policy, release, and public-surface controls fail closed; no sensitive payload or hidden parameter was introduced."
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "One H1, balanced fenced blocks, all 46 internal links, tables, outcome vocabulary, verification register, migration, correction, rollback, and evidence ledger were checked."
+    },
+    {
+      "gate": "secret-pattern-review",
+      "outcome": "PASS",
+      "reason": "No private-key block or common GitHub, AWS, or OpenAI token pattern was introduced."
+    },
+    {
+      "gate": "remote-readback",
+      "outcome": "PASS",
+      "reason": "GitHub returned README blob 40d268b425d9939ab6a8cda7bd197ba758572d3f, matching the locally computed Git blob."
+    },
+    {
+      "gate": "workflow-trigger-preflight",
+      "outcome": "PASS",
+      "reason": "Documentation and generated provenance only; no validator, schema, policy, fixture, test, workflow, source record, lifecycle object, release record, or public behavior changed."
+    },
+    {
+      "gate": "runtime-and-executable-tests",
+      "outcome": "SKIPPED",
+      "reason": "Documentation-only change; no executable Agriculture validator or enforcement artifact changed."
+    },
+    {
+      "gate": "repository-native-ci",
+      "outcome": "SKIPPED",
+      "reason": "Repository checks are observed after draft pull-request creation and are unavailable at receipt emission time."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "KFM-OPERATING-PROMPT-V3.1",
+      "validated": true,
+      "evidence_ref": "attached://Pasted text(32).txt"
+    },
+    {
+      "id": "KFM-DIRECTORY-RULES",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/b902a5c34165ac55d2bb46b470f21e4002cf505f/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "AGRICULTURE-DOMAIN-README",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/b902a5c34165ac55d2bb46b470f21e4002cf505f/docs/domains/agriculture/README.md"
+    },
+    {
+      "id": "AGRICULTURE-SCHEMA-TEST-BOUNDARY",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/b902a5c34165ac55d2bb46b470f21e4002cf505f/tests/domains/agriculture/schema/README.md"
+    },
+    {
+      "id": "AGRICULTURE-POLICY-DENY-BOUNDARY",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/b902a5c34165ac55d2bb46b470f21e4002cf505f/tests/domains/agriculture/policy_deny/README.md"
+    },
+    {
+      "id": "GENERATED-RECEIPT-SCHEMA",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/b902a5c34165ac55d2bb46b470f21e4002cf505f/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-16T17:32:53Z",
+  "emitter": "ai-builder/openai-gpt-5.6-thinking",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored documentation-only update on a scoped branch. The Agriculture validator README is reconciled with current README-only implementation maturity, parallel broad/edge/join/suitability lanes, permissive schema scaffolds, proposed policy stubs, README-backed tests, TODO-only workflow, sensitive field/operator posture, evidence/lifecycle/release boundaries, structured result guidance, migration, correction, and rollback. Human review remains pending; this receipt is provenance evidence, not merge authorization."
+}

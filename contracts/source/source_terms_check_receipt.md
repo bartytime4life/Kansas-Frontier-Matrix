@@ -1,1 +1,0 @@
-# source_terms_check_receipt

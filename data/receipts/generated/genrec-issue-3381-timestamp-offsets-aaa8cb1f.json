@@ -1,0 +1,118 @@
+{
+  "receipt_id": "kfm:genrec:issue-3381-resolver-timestamp-offsets:20260905",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "packages/evidence-resolver/src/evidence_resolver/core.py",
+    "tests/packages/evidence_resolver/README.md",
+    "tests/packages/evidence_resolver/test_timestamp_boundary.py"
+  ],
+  "artifact_hashes": {
+    "packages/evidence-resolver/src/evidence_resolver/core.py": "sha256:bbfe7be58abbb85a68f23497d6ddf2538ab76af0c752c32ae59b83ce8e42e0f6",
+    "tests/packages/evidence_resolver/README.md": "sha256:24afefb1438b4d9f1c8874cc76a249387515cc9de3c01d24f0a97b1f5d943110",
+    "tests/packages/evidence_resolver/test_timestamp_boundary.py": "sha256:9989c607846831f548388c4653b271702c5ad3f529b1991865f5b3d18a9ef153"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Pro",
+    "version": "runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:ae87b3dba570cd654a21c7706a366cd8b9193657cca912655d9edfa785cec0f7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "tools_enabled": [
+      "GitHub",
+      "Notion",
+      "Google_Drive",
+      "container",
+      "web"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3381",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/2975",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/94e976ff281ff5033c1c91ada417ab1d0c445f7b",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/aaa8cb1feaf3cc12634898213e9480b0eb623a72",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/94e976ff281ff5033c1c91ada417ab1d0c445f7b/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/94e976ff281ff5033c1c91ada417ab1d0c445f7b/schemas/contracts/v1/policy/sensitivity_label.schema.json",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/34000422727",
+      "https://www.rfc-editor.org/rfc/rfc3339.html#section-5.6"
+    ]
+  },
+  "truth_labels": {
+    "packages/evidence-resolver/src/evidence_resolver/core.py": "PROPOSED",
+    "tests/packages/evidence_resolver/README.md": "PROPOSED",
+    "tests/packages/evidence_resolver/test_timestamp_boundary.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "exact-main hosted resolver baseline",
+      "outcome": "PASS",
+      "reason": "Run 34000422727 checks out literal main 94e976ff281ff5033c1c91ada417ab1d0c445f7b. make evidence-resolver, make evidence-resolver-deny, and runtime projection pass; package suite has 46 tests. Overall diagnostic run is failure because topology fails separately."
+    },
+    {
+      "gate": "same-source negative control",
+      "outcome": "PASS",
+      "reason": "New five-test timestamp module on unmodified core rejects the old behavior with exactly 22 failing subcases: 16 overflow offsets, 4 policy postures, 2 digest-matched adapter cases. This is expected regression-detection evidence, not a passing old implementation."
+    },
+    {
+      "gate": "local patched resolver package suite",
+      "outcome": "PASS",
+      "reason": "Python 3.13.5: unittest discovery runs 51 tests successfully, including all five timestamp tests. Full source tree and authored tree hashes were compared with GitHub. This is local evidence, not the hosted Python 3.11 lane."
+    },
+    {
+      "gate": "local paired make wrapper",
+      "outcome": "FAIL",
+      "reason": "Both command logs reached 51-test OK results, but the paired invocation exceeded the local tool timeout and make evidence-resolver-deny was terminated. No successful paired-command exit is claimed; exact-head hosted rerun is required."
+    },
+    {
+      "gate": "current-main repository topology",
+      "outcome": "FAIL",
+      "reason": "Run 34000422727: 127 findings, 122 baselined warnings, 5 fail_new_drift; report outcome FAIL_INVARIANT. Frozen catalog/baseline/authority surfaces remain untouched. Candidate parity is not yet claimed."
+    },
+    {
+      "gate": "git diff --check and source-byte parity",
+      "outcome": "PASS",
+      "reason": "Three authored paths; local authored tree 0abd2d394e2a02df3117529f71638a037bde5f16 exactly equals GitHub source commit tree."
+    },
+    {
+      "gate": "final-head hosted checks and independent human review",
+      "outcome": "SKIPPED",
+      "reason": "Not completed at receipt authorship. Later exact-head workflow and issue evidence supplement this immutable record. Human review remains pending; no PR-state transition is authorized."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "issue-scope",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3381"
+    },
+    {
+      "id": "baseline-run",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/34000422727"
+    },
+    {
+      "id": "timestamp-shape",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/94e976ff281ff5033c1c91ada417ab1d0c445f7b/schemas/contracts/v1/policy/sensitivity_label.schema.json"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "created_at": "2026-09-06T00:17:44Z",
+  "emitter": "chatgpt:issue-3381-resolver-timestamp-offsets",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Bounded malformed-input repair for #3381, not full M19 or public-consumer closure. Numeric offset hours must be 00-23 and minutes 00-59 before datetime normalization. Existing profile, schema, policy precedence, safe error vocabulary, valid timestamp forms, digest profile, fixture manifest/payload bytes, no-network checks, and non-authoritative/non-renderable runtime posture are preserved. New adapter cases mutate temporary synthetic copies only. Source commit aaa8cb1feaf3cc12634898213e9480b0eb623a72 is based directly on 94e976ff281ff5033c1c91ada417ab1d0c445f7b. Product branch agent/issue-3381-resolver-timestamp-offsets-20260905 contains no workflow edits. Separate validation branch is diagnostic only and must never be merged. Receipt excludes itself to avoid circular hashing. Revert source and this provenance addition together if rollback is necessary. No Directory Rules amendment, catalog correction binding, source admission, review approval, PR creation, ready/merge, deployment, publication, or policy decision is performed. Incident-quarantined delivery stops at validated branch only; a separately proven creator and independent review remain required."
+}

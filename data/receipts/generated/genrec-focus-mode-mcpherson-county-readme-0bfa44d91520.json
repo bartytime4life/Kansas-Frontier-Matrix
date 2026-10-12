@@ -1,0 +1,97 @@
+{
+  "receipt_id": "genrec-focus-mode-mcpherson-county-readme-0bfa44d91520",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/focus-mode/counties/mcpherson_county/README.md"
+  ],
+  "artifact_hashes": {
+    "docs/focus-mode/counties/mcpherson_county/README.md": "sha256:NEEDS_VERIFICATION"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Sol",
+    "version": "exact serving revision not exposed"
+  },
+  "prompt_or_contract": "sha256:NEEDS_VERIFICATION",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "bounded current-repository inspection"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [],
+    "attached_docs": [],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/d5b2d6e74f939d38a426207f2afb7653f005ea3b",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d5b2d6e74f939d38a426207f2afb7653f005ea3b/docs/focus-mode/counties/mcpherson_county/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d5b2d6e74f939d38a426207f2afb7653f005ea3b/docs/focus-mode/counties/mcpherson_county/mcpherson_county_focus_mode_build_plan.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d5b2d6e74f939d38a426207f2afb7653f005ea3b/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d5b2d6e74f939d38a426207f2afb7653f005ea3b/data/receipts/generated/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d5b2d6e74f939d38a426207f2afb7653f005ea3b/.github/PULL_REQUEST_TEMPLATE.md"
+    ]
+  },
+  "truth_labels": {
+    "docs/focus-mode/counties/mcpherson_county/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main-target-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Current main was pinned at d5b2d6e74f939d38a426207f2afb7653f005ea3b. The McPherson README and linked build plan were inspected. No open McPherson README pull request or matching task branch existed before branch creation."
+    },
+    {
+      "gate": "same-path-placement",
+      "outcome": "PASS",
+      "reason": "The existing tracked README remains at docs/focus-mode/counties/mcpherson_county/README.md under docs/. No move, rename, new root, or parallel authority is introduced."
+    },
+    {
+      "gate": "linked-build-plan-reconciliation",
+      "outcome": "PASS",
+      "reason": "The linked McPherson build plan was inspected and remains byte-unchanged. Its external-source observations and runtime design are treated as dated planning lineage, not current implementation proof."
+    },
+    {
+      "gate": "sensitive-ecology-and-operational-boundary",
+      "outcome": "PASS",
+      "reason": "The README explicitly refuses sensitive species-location intelligence, private-land inference, current water/hunting/access/road/safety claims, and stale operational reuse."
+    },
+    {
+      "gate": "artifact-byte-and-hash-closure",
+      "outcome": "SKIPPED",
+      "reason": "A SHA-256 digest could not be computed from the GitHub connector output in this run. The exact Git blob SHA is available separately and remote byte readback is verified after mutation."
+    },
+    {
+      "gate": "generated-receipt-full-schema-validation",
+      "outcome": "SKIPPED",
+      "reason": "Repository code was not executed in this connector-only run. Receipt payload is a bounded provenance record with human review pending."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "pinned-current-main",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/d5b2d6e74f939d38a426207f2afb7653f005ea3b"
+    },
+    {
+      "id": "prior-mcpherson-readme",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/d5b2d6e74f939d38a426207f2afb7653f005ea3b/docs/focus-mode/counties/mcpherson_county/README.md"
+    },
+    {
+      "id": "mcpherson-build-plan",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/d5b2d6e74f939d38a426207f2afb7653f005ea3b/docs/focus-mode/counties/mcpherson_county/mcpherson_county_focus_mode_build_plan.md"
+    }
+  ],
+  "human_review": {
+    "state": "pending"
+  },
+  "created_at": "2026-08-22T02:19:00Z",
+  "emitter": "ChatGPT GitHub connector",
+  "notes": "Provenance only. No source admission, policy approval, release, deployment, promotion, publication, or repository-settings authority. SHA-256 fields remain NEEDS_VERIFICATION because this connector-only run did not expose a byte-digest primitive."
+}

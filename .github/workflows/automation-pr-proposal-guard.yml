@@ -1,0 +1,68 @@
+name: automation-pr-proposal-guard
+
+on:
+  pull_request:
+    paths:
+      - 'contracts/governance/automation_pr_proposal.md'
+      - 'schemas/contracts/v1/governance/automation_pr_proposal.schema.json'
+      - 'fixtures/contracts/v1/governance/automation_pr_proposal/**'
+      - 'tools/validators/governance/validate_automation_pr_proposal.py'
+      - 'tests/validators/test_validate_automation_pr_proposal.py'
+      - '.github/workflows/automation-pr-proposal-guard.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out pull-request merge result without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Verify checkout provenance
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          EXPECTED_SHA: ${{ github.sha }}
+          EXPECTED_PR_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          checked_out_sha="$(git rev-parse HEAD)"
+          test "${checked_out_sha}" = "${EXPECTED_SHA}"
+
+          if [[ "${EVENT_NAME}" = "pull_request" ]]; then
+            mapfile -t parents < <(git cat-file commit HEAD | sed -n 's/^parent //p')
+            test "${#parents[@]}" -eq 2
+            test "${parents[1]}" = "${EXPECTED_PR_HEAD_SHA}"
+          fi
+
+      - name: Parse schema and fixtures
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          files = [Path('schemas/contracts/v1/governance/automation_pr_proposal.schema.json')]
+          files += sorted(Path('fixtures/contracts/v1/governance/automation_pr_proposal').rglob('*.json'))
+          for path in files:
+              json.loads(path.read_text(encoding='utf-8'))
+          print(f'parsed {len(files)} JSON files')
+          PY
+
+      - name: Compile validator and run focused tests
+        run: |
+          set -euo pipefail
+          python3 -m py_compile tools/validators/governance/validate_automation_pr_proposal.py tests/validators/test_validate_automation_pr_proposal.py
+          python3 -m unittest -q tests.validators.test_validate_automation_pr_proposal
+
+      - name: Verify CLI fixture polarity
+        run: |
+          set -euo pipefail
+          python3 tools/validators/governance/validate_automation_pr_proposal.py fixtures/contracts/v1/governance/automation_pr_proposal/valid/valid_pass.json | grep -F '"write_eligible": true'
+          python3 tools/validators/governance/validate_automation_pr_proposal.py fixtures/contracts/v1/governance/automation_pr_proposal/valid/valid_hold.json | grep -F '"outcome": "HOLD"'
+          if python3 tools/validators/governance/validate_automation_pr_proposal.py fixtures/contracts/v1/governance/automation_pr_proposal/invalid/invalid_publish_allowed.json; then exit 1; fi
+          if python3 tools/validators/governance/validate_automation_pr_proposal.py fixtures/contracts/v1/governance/automation_pr_proposal/invalid/invalid_path_escape.json; then exit 1; fi

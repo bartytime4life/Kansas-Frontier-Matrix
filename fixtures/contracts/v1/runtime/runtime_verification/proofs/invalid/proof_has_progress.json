@@ -1,0 +1,27 @@
+{
+  "object_type": "RuntimeVerificationProof",
+  "schema_version": "1.0.0",
+  "proof_id": "kfm://proof/runtime-verification/p-verified-001",
+  "job_id": "job-runtime-010",
+  "artifact_ref": "pmtiles://kansas/hydrology/v1",
+  "manifest_ref": "kfm://release/manifest/hydrology-v1",
+  "outcome": "VERIFIED",
+  "expected_digest": {
+    "algorithm": "sha256",
+    "encoding": "hex",
+    "value": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+  },
+  "observed_digest": {
+    "algorithm": "sha256",
+    "encoding": "hex",
+    "value": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+  },
+  "reason": null,
+  "verified_at": "2026-04-12T18:05:00Z",
+  "verifier": {
+    "surface": "runtime-worker",
+    "version": "0.1.0"
+  },
+  "receipt_ref": "kfm://receipt/runtime-verification/r-checkpoint-001",
+  "bytes_processed": 123
+}

@@ -1,0 +1,98 @@
+{
+  "receipt_id": "genrec-pass18-missing-value-filter-receipt-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/missing-value-filter-receipt.yml",
+    "contracts/common/missing_value_filter_receipt.md",
+    "docs/intake/exploratory/pass-18-missing-value-filter-receipt-source-map.md",
+    "fixtures/contracts/v1/common/missing_value_filter_receipt/cases.json",
+    "schemas/contracts/v1/common/missing_value_filter_receipt.schema.json",
+    "tests/validators/test_validate_missing_value_filter_receipt.py",
+    "tools/validators/validate_missing_value_filter_receipt.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/missing-value-filter-receipt.yml": "sha256:48316162441bbeb1d4904252f6defe052f801cb1f777516d56978f5e83ee0bcb",
+    "contracts/common/missing_value_filter_receipt.md": "sha256:38257623f376a0708aedd0fa9e7803169bb2d07d57487012c25e4523a139bdd7",
+    "docs/intake/exploratory/pass-18-missing-value-filter-receipt-source-map.md": "sha256:64507f1db6732cf38aed357c4ea375b731c1c9c2ffaf4257b2a45d40059b9785",
+    "fixtures/contracts/v1/common/missing_value_filter_receipt/cases.json": "sha256:f6133fd34bcb6068d3ca1a6d1c3090212cdc272d64cada35b88ccfefd512a6e9",
+    "schemas/contracts/v1/common/missing_value_filter_receipt.schema.json": "sha256:d5a807803a753c0d460d6f0b317e475a0bf67c106c279f5d365c80db48b671e5",
+    "tests/validators/test_validate_missing_value_filter_receipt.py": "sha256:78ea6facdf8cd97fc8213253fd649013d79d4c278aeda99d26efe879882135cc",
+    "tools/validators/validate_missing_value_filter_receipt.py": "sha256:507e2d9994ee06da6e9cd9053af18b4820278dc2472c75f0fecd6e12af816f9b"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-10"
+  },
+  "prompt_or_contract": "sha256:38257623f376a0708aedd0fa9e7803169bb2d07d57487012c25e4523a139bdd7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector corpus discovery",
+      "GitHub connector repository inspection and mutation",
+      "local PDF rendering and deterministic Markdown, JSON, YAML, and Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:efc0d159761581b5ae043c607dfa28bbc58b3ca5423c9d18a659e650271d73b9"
+    ],
+    "attached_docs": [
+      "KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf"
+    ],
+    "evidence_refs": [
+      "attachment://KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#physical-pages=188-189&printed-pages=185-186&card=KFM-P18-INV-443",
+      "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho#discovery=receipt-validation-pressure",
+      "gdrive://1Gx4pU71Pqk1cG1oKb8l69B8K4yOJK7zy5KNH-Xvl4HQ#discovery=repository-gap-triage",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ef1ba46a19e4de7c176e9d093c1285e73a0af75a/docs/doctrine/directory-rules.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/missing-value-filter-receipt.yml": "CONFIRMED",
+    "contracts/common/missing_value_filter_receipt.md": "PROPOSED",
+    "docs/intake/exploratory/pass-18-missing-value-filter-receipt-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/common/missing_value_filter_receipt/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/common/missing_value_filter_receipt.schema.json": "PROPOSED",
+    "tests/validators/test_validate_missing_value_filter_receipt.py": "CONFIRMED",
+    "tools/validators/validate_missing_value_filter_receipt.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {"gate": "python-syntax-compilation", "outcome": "PASS"},
+    {"gate": "draft-2020-12-schema-meta-validation", "outcome": "PASS"},
+    {"gate": "workflow-yaml-parse", "outcome": "PASS"},
+    {"gate": "focused-unittest-suite", "outcome": "PASS", "reason": "Nine deterministic missing-value filter receipt tests passed in an isolated declared-dependency environment."},
+    {"gate": "exact-fixture-replay", "outcome": "PASS", "reason": "Seventeen exact PASS, ABSTAIN, DENY, and ERROR cases matched reviewed outcomes and codes."},
+    {"gate": "documentation-meta-block-profile", "outcome": "PASS", "reason": "Both new Markdown artifacts passed the repository required metadata profile."},
+    {"gate": "repository-make-validate", "outcome": "PASS", "reason": "Eight aggregate validators passed; 402 schema/contract tests and 29 subtests passed."},
+    {"gate": "no-network-boundary", "outcome": "PASS"},
+    {"gate": "generated-receipt-artifact-hash-replay", "outcome": "PASS"},
+    {"gate": "hosted-exact-head-ci", "outcome": "SKIPPED", "reason": "Requires the pushed pull-request head."},
+    {"gate": "human-review", "outcome": "SKIPPED", "reason": "Pending on the draft pull request."}
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {"id": "pass18-missing-value-filter-card", "validated": true, "evidence_ref": "attachment://KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#physical-pages=188-189&printed-pages=185-186&card=KFM-P18-INV-443"},
+    {"id": "drive-receipt-discovery", "validated": true, "evidence_ref": "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho#discovery=receipt-validation-pressure"},
+    {"id": "drive-gap-triage", "validated": true, "evidence_ref": "gdrive://1Gx4pU71Pqk1cG1oKb8l69B8K4yOJK7zy5KNH-Xvl4HQ#discovery=repository-gap-triage"},
+    {"id": "accepted-directory-rules", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ef1ba46a19e4de7c176e9d093c1285e73a0af75a/docs/doctrine/directory-rules.md"}
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-10T18:43:28Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT GitHub and Google Drive connectors",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Additive, inactive, fixture-only MissingValueFilterReceiptCandidate packet derived from supplied Pass 18 card KFM-P18-INV-443 after connected-Drive discovery and current-repository gap triage. It validates deterministic identity, explicit input/support bindings, non-empty missingness rules, filter-chain counts, paired before/after count summaries, population-change posture, a fixed review hold, and canonical evidence references without opening datasets, executing filters, computing statistics, resolving evidence, deciding policy or review, promoting, releasing, deploying, publishing, or authorizing public use."
+}

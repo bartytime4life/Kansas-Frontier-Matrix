@@ -1,0 +1,212 @@
+{
+  "receipt_id": "genrec-promotion-gate-proof-20260802",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/README.md",
+    ".github/workflows/promotion-gate.yml",
+    ".github/workflows/release-dry-run.yml",
+    "Makefile",
+    "docs/intake/NEW_IDEAS_INDEX.md",
+    "docs/intake/exploratory/README.md",
+    "docs/intake/exploratory/new-ideas-4-13-source-map.md",
+    "docs/intake/new-ideas-register.md",
+    "fixtures/release/README.md",
+    "fixtures/release/promotion_gate/README.md",
+    "fixtures/release/promotion_gate/invalid/abstain__missing_evidence_ref.json",
+    "fixtures/release/promotion_gate/invalid/deny__artifact_set_mismatch.json",
+    "fixtures/release/promotion_gate/invalid/deny__invalid_geometry.json",
+    "fixtures/release/promotion_gate/invalid/deny__missing_candidate_id.json",
+    "fixtures/release/promotion_gate/invalid/deny__review_missing.json",
+    "fixtures/release/promotion_gate/invalid/deny__unknown_policy_label.json",
+    "fixtures/release/promotion_gate/invalid/error__malformed_json.json",
+    "fixtures/release/promotion_gate/invalid/error__policy_evaluation.json",
+    "fixtures/release/promotion_gate/valid/pass__complete_candidate.json",
+    "tests/release/README.md",
+    "tests/release/test_promotion_gate.py",
+    "tools/validators/README.md",
+    "tools/validators/promotion_gate/README.md",
+    "tools/validators/promotion_gate/__init__.py",
+    "tools/validators/promotion_gate/validate_promotion_gate.py",
+    "tools/validators/release/README.md",
+    "tools/validators/validate_promotion_gate.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/README.md": "sha256:0fa8848189c277222fe7a2112e8c71082d20e378aed49717e7034d3c292cf3a8",
+    ".github/workflows/promotion-gate.yml": "sha256:45896f2ad9d2e4d2aab5d862f1f5055041da54132c8b0318b9041aca1d069721",
+    ".github/workflows/release-dry-run.yml": "sha256:c37500b59669650e1be168da9f371daa60d6b6054af5df4f86689248428ca4eb",
+    "Makefile": "sha256:d0bd887a3435b62c30074c9011a7413a45336cce1d2cc1ed19b1d50093193c9f",
+    "docs/intake/NEW_IDEAS_INDEX.md": "sha256:45a5c0161cc2a5d93f3a8b2020d049079525b92646434eb5a350fed89393aee6",
+    "docs/intake/exploratory/README.md": "sha256:da9f30db8adea3035b74f847e357862836571ba61225b5a9693a01074cbfb26e",
+    "docs/intake/exploratory/new-ideas-4-13-source-map.md": "sha256:3ec2e2d5a599f5371beadc340691252ba5eba8b6859f5279be0d14688ea2344c",
+    "docs/intake/new-ideas-register.md": "sha256:5a86aed818dd42314b680d1ca78628a73ef1e2056d91dcbcbb1a1bd0c24ea400",
+    "fixtures/release/README.md": "sha256:221659bf8279fe0f0870e94ba36cef64c131f3e78f0bff850a70639218da7771",
+    "fixtures/release/promotion_gate/README.md": "sha256:b6798ed339c41301236ff5c0489c5605b912314392e712a6b9a1c8c5f27f7b8c",
+    "fixtures/release/promotion_gate/invalid/abstain__missing_evidence_ref.json": "sha256:2c1a123b89051e6537f6bd300e5bb83f22b6608a807a2d779d92c3f1e8f0080a",
+    "fixtures/release/promotion_gate/invalid/deny__artifact_set_mismatch.json": "sha256:e17417d9a8328eedf298755bef6af303f37b1d173e2e862ca4afa49c50df4ddc",
+    "fixtures/release/promotion_gate/invalid/deny__invalid_geometry.json": "sha256:6e1b2c46d4422505a1983c1234301b268ea1fa7afc136c6148aa6331e22a5351",
+    "fixtures/release/promotion_gate/invalid/deny__missing_candidate_id.json": "sha256:65bfa0c691d71d40392b27cefa110e9699a550294db7956cb7e41640028bbfd1",
+    "fixtures/release/promotion_gate/invalid/deny__review_missing.json": "sha256:a7b9816367211f0a644f6d1253217e495f3b1878d3e02c1a8b1d456ba8c8d831",
+    "fixtures/release/promotion_gate/invalid/deny__unknown_policy_label.json": "sha256:56ec91270b0d17c2af91ee417b8a79020f7f5b5fc4f7767da02c9330764c3e4c",
+    "fixtures/release/promotion_gate/invalid/error__malformed_json.json": "sha256:225a1ca397f0e9454fd107dbda17d8460aa09ec418c9c8541a845579ed1179b5",
+    "fixtures/release/promotion_gate/invalid/error__policy_evaluation.json": "sha256:c68a4b0b86a3208c25f92202f902f003a4146069afb7d90148145753b630ff15",
+    "fixtures/release/promotion_gate/valid/pass__complete_candidate.json": "sha256:7d55b73b59ccb3290d36e7cfd9516fca6682c32615b79cea4f0a45d4aae1f196",
+    "tests/release/README.md": "sha256:972c32bbb35a547ef22a536e8bf75d8c00440365c5b452022fd9970ffc9f57bf",
+    "tests/release/test_promotion_gate.py": "sha256:37e1cd60db548842d5bb42177c5e7298451d87f9dd99418ae9a26b63e6c7e939",
+    "tools/validators/README.md": "sha256:cfedbab2e3eee0b6a1097d108649e9e02db1f443c30eede19d912c5e306e427f",
+    "tools/validators/promotion_gate/README.md": "sha256:4b1e914460f8d8aa7f323ed1d6a693ef86ea9998c392b3844b2cd71640b94666",
+    "tools/validators/promotion_gate/__init__.py": "sha256:5ba911d85f43007ffefdd4311f6d2583683984e32f26e7e185ce75e8ee973ad4",
+    "tools/validators/promotion_gate/validate_promotion_gate.py": "sha256:f06b30e2a6095d1f125351b3da95def8e82eb853eeeea99713207ce47ecd184d",
+    "tools/validators/release/README.md": "sha256:1fe5986e8ac10d1b999b30c5168a5a203cc1ed51f6aa19502d491dcfa86d496f",
+    "tools/validators/validate_promotion_gate.py": "sha256:b2d06dbca73a0948a37310019bdcacb3360ca13536eda2fe4109c148538cfa77"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5 Work Mode 2026-08-02"
+  },
+  "prompt_or_contract": "sha256:e5c45ac8df1195b407441e07006f1e98d74b854bdaa07ca03a71018e1a64a4ec",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local attachment and repository inspection",
+      "PDF text extraction and rendered-page inspection",
+      "Git",
+      "GitHub connector",
+      "isolated repository-declared Python test environment",
+      "deterministic no-network validators"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:7289fad4b6fded40cb58c8ffa7d8c051f6004f6c2720d9eb2c52c20f232f78f2"
+    ],
+    "attached_docs": [
+      "New Ideas 4-13-26.pdf"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/83cca9c66a1eb218f010a75b862d417d429c3c85",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/83cca9c66a1eb218f010a75b862d417d429c3c85/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/83cca9c66a1eb218f010a75b862d417d429c3c85/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/83cca9c66a1eb218f010a75b862d417d429c3c85/tools/validators/validate_promotion_gate.py",
+      "attachment://New Ideas 4-13-26.pdf#pages=12-16,80-104"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/README.md": "PROPOSED",
+    ".github/workflows/promotion-gate.yml": "CONFIRMED",
+    ".github/workflows/release-dry-run.yml": "CONFIRMED",
+    "Makefile": "CONFIRMED",
+    "docs/intake/NEW_IDEAS_INDEX.md": "PROPOSED",
+    "docs/intake/exploratory/README.md": "PROPOSED",
+    "docs/intake/exploratory/new-ideas-4-13-source-map.md": "PROPOSED",
+    "docs/intake/new-ideas-register.md": "PROPOSED",
+    "fixtures/release/README.md": "PROPOSED",
+    "fixtures/release/promotion_gate/README.md": "PROPOSED",
+    "fixtures/release/promotion_gate/invalid/abstain__missing_evidence_ref.json": "CONFIRMED",
+    "fixtures/release/promotion_gate/invalid/deny__artifact_set_mismatch.json": "CONFIRMED",
+    "fixtures/release/promotion_gate/invalid/deny__invalid_geometry.json": "CONFIRMED",
+    "fixtures/release/promotion_gate/invalid/deny__missing_candidate_id.json": "CONFIRMED",
+    "fixtures/release/promotion_gate/invalid/deny__review_missing.json": "CONFIRMED",
+    "fixtures/release/promotion_gate/invalid/deny__unknown_policy_label.json": "CONFIRMED",
+    "fixtures/release/promotion_gate/invalid/error__malformed_json.json": "CONFIRMED",
+    "fixtures/release/promotion_gate/invalid/error__policy_evaluation.json": "CONFIRMED",
+    "fixtures/release/promotion_gate/valid/pass__complete_candidate.json": "CONFIRMED",
+    "tests/release/README.md": "PROPOSED",
+    "tests/release/test_promotion_gate.py": "CONFIRMED",
+    "tools/validators/README.md": "PROPOSED",
+    "tools/validators/promotion_gate/README.md": "PROPOSED",
+    "tools/validators/promotion_gate/__init__.py": "CONFIRMED",
+    "tools/validators/promotion_gate/validate_promotion_gate.py": "CONFIRMED",
+    "tools/validators/release/README.md": "PROPOSED",
+    "tools/validators/validate_promotion_gate.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-authority-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Repository identity, current main@83cca9c66a1eb218f010a75b862d417d429c3c85, zero open pull requests, accepted Directory Rules v2, current release/promotion homes, and the placeholder promotion-gate surface were inspected before mutation."
+    },
+    {
+      "gate": "source-curation-and-scope-correction",
+      "outcome": "PASS",
+      "reason": "New Ideas 4-13-26.pdf pages 12-16 and 80-104 proposed a promotion proof and A-G grammar. The batch retains deterministic fail-closed readiness while rejecting direct PROMOTE authority, packet paths, network installs, write-capable CI, signing-service claims, and publication automation."
+    },
+    {
+      "gate": "directory-and-authority-placement",
+      "outcome": "PASS",
+      "reason": "The existing specialized validator, release fixture/test, Make, workflow, intake, and generated-receipt homes were extended. No parallel contract, schema, policy, evidence, proof, receipt, review, release, runtime, data, or publication authority root was created."
+    },
+    {
+      "gate": "focused-promotion-gate-validation",
+      "outcome": "PASS",
+      "reason": "KFM_NO_NETWORK=1 make publish-check passed the nine-fixture finite-outcome matrix and 11 standard-library tests. The declared test environment also passed 12 pytest cases and 12 subtests across the promotion-gate and PromotionDecision shape suites."
+    },
+    {
+      "gate": "repository-make-validate",
+      "outcome": "PASS",
+      "reason": "KFM_NO_NETWORK=1 make validate passed in the isolated repository-declared environment. All seven aggregate validators preserved expected polarity and the schema/contract lane passed 148 tests plus 15 subtests."
+    },
+    {
+      "gate": "workflow-document-and-syntax-integrity",
+      "outcome": "PASS",
+      "reason": "Both changed workflow files parsed as YAML; the promotion workflow inventory replay passed; 18 documentation-link tests and 348 local targets across 11 changed documents passed; Python compilation and git diff --check passed."
+    },
+    {
+      "gate": "generated-receipt-integrity",
+      "outcome": "PASS",
+      "reason": "The repository GENERATED_RECEIPT validator checked the final 27-artifact path/hash/label binding with human review explicitly pending."
+    },
+    {
+      "gate": "hosted-exact-head-checks",
+      "outcome": "SKIPPED",
+      "reason": "Exact-head hosted conclusions are unavailable until branch and draft pull-request delivery. Hosted success will not be treated as evidence truth, policy approval, review, promotion, release, deployment, publication, or source activation."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending and is not authored, authenticated, or inferred by the agent."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/83cca9c66a1eb218f010a75b862d417d429c3c85/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "directory-governance-adoption",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/83cca9c66a1eb218f010a75b862d417d429c3c85/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "promotion-gate-placeholder-at-base",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/83cca9c66a1eb218f010a75b862d417d429c3c85/tools/validators/validate_promotion_gate.py"
+    },
+    {
+      "id": "new-ideas-4-13-promotion-proof-lineage",
+      "validated": true,
+      "evidence_ref": "attachment://New Ideas 4-13-26.pdf#pages=12-16,80-104"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-02T18:57:48Z",
+  "emitter": "openai/codex-gpt-5",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "This batch replaces the promotion-gate placeholder with a strict, bounded, no-network A-G readiness validator, a synthetic finite-outcome fixture matrix, focused tests, stable Make and workflow wiring, and an identity-pinned source map for New Ideas 4-13-26.pdf. PASS means APPROVE_READY only. The validator does not dereference support records, authenticate actors, evaluate production policy, verify signatures, write a PromotionDecision, assemble a release candidate, execute rollback, change lifecycle state, activate a source, deploy, release, or publish. The removed .gitkeep carried no content. Rollback is a clean revert of the feature commit; no stored data or public state requires migration."
+}

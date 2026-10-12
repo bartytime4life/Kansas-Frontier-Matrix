@@ -1,0 +1,214 @@
+{
+  "receipt_id": "genrec-ci-conformance-report-mrts-06-20260822",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/ci-conformance-report.yml",
+    ".github/workflows/release-dry-run.yml",
+    ".github/workflows/release-manifest.yml",
+    "Makefile",
+    "artifacts/qa/validation/milestone-1/README.md",
+    "artifacts/qa/validation/milestone-1/ci_conformance_report.json",
+    "contracts/governance/ci_conformance_report.md",
+    "docs/runbooks/mrts-06-ci-conformance-handoff.md",
+    "fixtures/contracts/v1/governance/ci_conformance_report/README.md",
+    "fixtures/contracts/v1/governance/ci_conformance_report/cases.json",
+    "schemas/contracts/v1/governance/ci_conformance_report.schema.json",
+    "tests/validators/governance/test_validate_ci_conformance_report.py",
+    "tests/validators/test_validate_generated_receipt.py",
+    "tools/validators/governance/validate_ci_conformance_report.py",
+    "tools/validators/validate_generated_receipt.py",
+    "tools/validators/validator_registry.json"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/ci-conformance-report.yml": "sha256:6f40e935dfcdf0851e663d9df90084394de5e6ee23ec7bb9b06e5bdb891ceced",
+    ".github/workflows/release-dry-run.yml": "sha256:efce9c2249d1055c53c53a7c185062cc925a9e32595cf7ddd18df2b6f6ac2d64",
+    ".github/workflows/release-manifest.yml": "sha256:917b41a54e04a5b47ee1775b55d2d76b8cf6dc1d0f169bb3cc36eaedeb271567",
+    "Makefile": "sha256:2eab237e6f616f8032e266613581d1e36ad6d1b38fe671f6974fafffaa18c2c8",
+    "artifacts/qa/validation/milestone-1/README.md": "sha256:dc6a1c8786c0a3240ebfd50e9cb8ad255625622c07625ecb604995c41a10e099",
+    "artifacts/qa/validation/milestone-1/ci_conformance_report.json": "sha256:b051acc2bddfc73c003accc102b020b53404618ed116ab5b822da9a42e7f5fdb",
+    "contracts/governance/ci_conformance_report.md": "sha256:1b71b45a086ac2174cb711363b27b99146030a11de9d364115091d345642cabc",
+    "docs/runbooks/mrts-06-ci-conformance-handoff.md": "sha256:a24416c7072adb2211ddce26a85b946b1d87305a14183c84ad00775dc42f5589",
+    "fixtures/contracts/v1/governance/ci_conformance_report/README.md": "sha256:d9d9d33cf3c768a1cbe5156545442c37bb974600f83acec5d975d0e54325cd53",
+    "fixtures/contracts/v1/governance/ci_conformance_report/cases.json": "sha256:860d9e607ade3164ea33c004d16b8902c9160e3c14032af2647c95e900eb74bc",
+    "schemas/contracts/v1/governance/ci_conformance_report.schema.json": "sha256:955f4bb2b5f8cfff92478d20528b656747c90c4a4380fa69b2f6902a3c43e698",
+    "tests/validators/governance/test_validate_ci_conformance_report.py": "sha256:bbaf17e3e5801fe200d7f2b1f8d36e1299befcc64e3d6f7856fb1cc100eda802",
+    "tests/validators/test_validate_generated_receipt.py": "sha256:6c25026bb1fae49139f11b66226967df4ec7862b7b974cf94f0e1faa45e9031c",
+    "tools/validators/governance/validate_ci_conformance_report.py": "sha256:a6650e8c1737954bd302e6c4e9cbe452b0d853c2771ad8c554ddf45cba11c94d",
+    "tools/validators/validate_generated_receipt.py": "sha256:463239e1cf64f5a813253adeae0c99086fdf2e0f28f2e49740c22dfb681c9599",
+    "tools/validators/validator_registry.json": "sha256:f0514bd63c71cbea5873bcca6335be8a1ca11c5313e61b61319f68568c065791"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5-session-2026-08-22"
+  },
+  "prompt_or_contract": "sha256:1b71b45a086ac2174cb711363b27b99146030a11de9d364115091d345642cabc",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector",
+      "GitHub connector",
+      "local Git evidence inspection",
+      "no-network Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:060b20d6e28197faa8a9034ccb5a29b63621f73ebdeea1d2d77d31b23c2149e0",
+      "sha256:9e6381b682313a77619faaac5306a7361d005976f724f39688ee2a97bcae4eae",
+      "sha256:c37d0afaea0b08419c443108ef08935907e6054f4659ed20b6a829f2239453d2",
+      "sha256:b051acc2bddfc73c003accc102b020b53404618ed116ab5b822da9a42e7f5fdb"
+    ],
+    "attached_docs": [
+      "Kansas Frontier Matrix Repository Structure Guiding Document",
+      "Kansas Frontier Matrix — AI Build Operating Contract"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/milestone/1",
+      "github://bartytime4life/Kansas-Frontier-Matrix/issues/3364",
+      "github://bartytime4life/Kansas-Frontier-Matrix/pull/3411",
+      "github://bartytime4life/Kansas-Frontier-Matrix/pull/3414",
+      "github://bartytime4life/Kansas-Frontier-Matrix/pull/3415",
+      "github://bartytime4life/Kansas-Frontier-Matrix/pull/3416",
+      "repo:main@c653d573c1641503215844c5c4fc85bc15060ced",
+      "repo:agent/mrts-06-post-merge-reconciliation-20260822",
+      "repo:docs/doctrine/directory-rules.md@c653d573c1641503215844c5c4fc85bc15060ced",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@c653d573c1641503215844c5c4fc85bc15060ced",
+      "https://docs.google.com/document/d/1J0an6dk5VSq_mebS4TYvFUuBQZ_XLVtUlARGOSaMEaY/edit",
+      "https://docs.google.com/document/d/1yy3IaBJm9epC578w7Oak_12gVxT59vnw6IJYn0XIHKs/edit"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/ci-conformance-report.yml": "PROPOSED",
+    ".github/workflows/release-dry-run.yml": "PROPOSED",
+    ".github/workflows/release-manifest.yml": "PROPOSED",
+    "Makefile": "PROPOSED",
+    "artifacts/qa/validation/milestone-1/README.md": "PROPOSED",
+    "artifacts/qa/validation/milestone-1/ci_conformance_report.json": "PROPOSED",
+    "contracts/governance/ci_conformance_report.md": "PROPOSED",
+    "docs/runbooks/mrts-06-ci-conformance-handoff.md": "PROPOSED",
+    "fixtures/contracts/v1/governance/ci_conformance_report/README.md": "PROPOSED",
+    "fixtures/contracts/v1/governance/ci_conformance_report/cases.json": "PROPOSED",
+    "schemas/contracts/v1/governance/ci_conformance_report.schema.json": "PROPOSED",
+    "tests/validators/governance/test_validate_ci_conformance_report.py": "PROPOSED",
+    "tests/validators/test_validate_generated_receipt.py": "PROPOSED",
+    "tools/validators/governance/validate_ci_conformance_report.py": "PROPOSED",
+    "tools/validators/validate_generated_receipt.py": "PROPOSED",
+    "tools/validators/validator_registry.json": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "milestone_contract_and_authority_assay",
+      "outcome": "PASS",
+      "reason": "Issue #3364, merged milestone evidence through MRTS-06 including PR #3414, MRTS-02 review fixes through PR #3415, and main@c653d573c1641503215844c5c4fc85bc15060ced were inspected with adopted Directory Rules, accepted ADR-0029, current registries, policy surfaces, and advisory Drive documents without turning guidance or CI evidence into authority."
+    },
+    {
+      "gate": "ci_conformance_schema_and_semantics",
+      "outcome": "PASS",
+      "reason": "The proposed Draft 2020-12 schema and semantic validator enforce finite report, execution, outcome, failure, unresolved, and closure states."
+    },
+    {
+      "gate": "source_and_generated_artifact_digest_replay",
+      "outcome": "PASS",
+      "reason": "Every report reference replayed from exact merged BASE_TREE main@c653d573c1641503215844c5c4fc85bc15060ced; the refreshed report, receipt, fixture polarity, tests, and handoff documentation remain bounded current candidate bytes."
+    },
+    {
+      "gate": "historical_authoring_receipt_replay",
+      "outcome": "PASS",
+      "reason": "Twenty-eight generated-receipt tests passed, and seven retained authoring receipts across MRTS-01, MRTS-02, MRTS-04, MRTS-05, the release dry-run, and ReleaseManifest replayed from exact ancestor commits without rewriting their stored hashes."
+    },
+    {
+      "gate": "deterministic_serialization_and_report_digest",
+      "outcome": "PASS",
+      "reason": "Sorted finite JSON serialization was byte-identical across repeated renders and the self-excluding SHA-256 report digest recomputed exactly."
+    },
+    {
+      "gate": "negative_case_polarity",
+      "outcome": "PASS",
+      "reason": "Nine deterministic mutations produced exact reviewed codes for check-not-run/skipped overclaim, closure overclaim, authority overclaim, digest mismatch, duplicate refs, introduced-failure hiding, and unresolved-count drift."
+    },
+    {
+      "gate": "focused_unit_tests",
+      "outcome": "PASS",
+      "reason": "Fifteen no-network focused tests passed, including canonical validation, digest and render determinism, exact closure boundaries, reference replay, parser fail-closed behavior, CLI output, and non-authority controls."
+    },
+    {
+      "gate": "validator_registry",
+      "outcome": "PASS",
+      "reason": "The strict validator registry accepted twenty-three validators and includes CIConformanceReport in full and release-dry-run inspection profiles."
+    },
+    {
+      "gate": "workflow_security",
+      "outcome": "PASS",
+      "reason": "Nineteen workflow-security tests passed and the repository scanner reported 478 workflows with zero findings."
+    },
+    {
+      "gate": "documentation_metadata_and_local_links",
+      "outcome": "PASS",
+      "reason": "Both new governed documents passed required metadata validation and all four new Markdown surfaces passed local-link validation."
+    },
+    {
+      "gate": "repository_governance_parity",
+      "outcome": "FAIL",
+      "reason": "Profile integrity passed with zero introduced findings, but conformance remains HOLD_INHERITED: 9 new-drift categories, 125 baselined warnings, and 13 stale fingerprints. No baseline entry was added or changed."
+    },
+    {
+      "gate": "hosted_exact_head_workflows",
+      "outcome": "SKIPPED",
+      "reason": "The exact final milestone head does not exist; hosted results and human review cannot be recorded as pass."
+    },
+    {
+      "gate": "generated_receipt_artifact_hash_replay",
+      "outcome": "PASS",
+      "reason": "The generated-receipt validator replayed all sixteen declared authored artifact SHA-256 values against final local bytes."
+    }
+  ],
+  "policy_decisions": [
+    "kfm://adr/ADR-0029"
+  ],
+  "citations": [
+    {
+      "id": "KFM-DIRECTORY-RULES-V2",
+      "validated": true,
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md@f2d5ec5f34c97beaedca96f1ea7cce84b3643b67"
+    },
+    {
+      "id": "KFM-ADR-0029",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@f2d5ec5f34c97beaedca96f1ea7cce84b3643b67"
+    },
+    {
+      "id": "KFM-GDRIVE-REPOSITORY-STRUCTURE-GUIDANCE",
+      "validated": true,
+      "evidence_ref": "https://docs.google.com/document/d/1J0an6dk5VSq_mebS4TYvFUuBQZ_XLVtUlARGOSaMEaY/edit"
+    },
+    {
+      "id": "KFM-GDRIVE-AI-BUILD-CONTRACT",
+      "validated": true,
+      "evidence_ref": "https://docs.google.com/document/d/1yy3IaBJm9epC578w7Oak_12gVxT59vnw6IJYn0XIHKs/edit"
+    },
+    {
+      "id": "KFM-GITHUB-MILESTONE-1-MRTS-06",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/issues/3364"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-22T22:03:43Z",
+  "emitter": "OpenAI Codex Work Mode",
+  "links": {
+    "pr_number": 3416,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "MRTS-06 emits a deterministic blocked inspection report and process receipt only. It preserves CHECK_NOT_RUN, SKIPPED, HOLD_INHERITED, and PASS as distinct states. The exact merged implementation checkpoint is recorded; hosted exact-head success, human review, issue closure, and milestone closure remain absent. Neither this receipt nor any validator result approves review, merge, baseline expansion, release, deployment, promotion, publication, public routing, or lifecycle mutation."
+}

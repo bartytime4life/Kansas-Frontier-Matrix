@@ -1,0 +1,8 @@
+{
+  "status": "PROPOSED",
+  "source_doc": "docs/domains/hydrology/FILE_SYSTEM_PLAN.md",
+  "path": "fixtures/domains/hydrology/valid/usgs_gauge_sample.json",
+  "notes": [
+    "Placeholder created from docs/domains markdown inventory."
+  ]
+}

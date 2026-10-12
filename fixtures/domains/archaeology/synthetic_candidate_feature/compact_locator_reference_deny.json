@@ -1,0 +1,15 @@
+{
+  "candidate_feature_id": "arc-candidate-synthetic-compact-locator",
+  "object_type": "CandidateFeature",
+  "truth_state": "CANDIDATE",
+  "candidate_type": "ANOMALY",
+  "origin_method": "REMOTE_SENSING",
+  "source_refs": [
+    "kfm://source/synthetic/compact-locator"
+  ],
+  "candidate_geometry_ref": "kfm://geometry/synthetic/lat39",
+  "review_state": "NEEDS_REVIEW",
+  "sensitivity_class": "WITHHELD",
+  "spatial_precision_class": "WITHHELD",
+  "lifecycle_state": "WORK"
+}

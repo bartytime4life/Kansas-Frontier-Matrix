@@ -1,0 +1,31 @@
+{
+  "invalid_spec_hash_mismatch.json": [
+    "SPEC_HASH_MISMATCH"
+  ],
+  "invalid_operators_not_canonical.json": [
+    "OPERATORS_NOT_CANONICAL"
+  ],
+  "invalid_survivor_inventory.json": [
+    "SURVIVOR_INVENTORY_MISMATCH"
+  ],
+  "invalid_kill_rate_denominator.json": [
+    "KILL_RATE_DENOMINATOR_MISMATCH"
+  ],
+  "invalid_high_risk_count.json": [
+    "HIGH_RISK_COUNT_MISMATCH"
+  ],
+  "invalid_pass_with_high_risk.json": [
+    "PASS_OUTCOME_INCONSISTENT"
+  ],
+  "invalid_hold_without_review.json": [
+    "HOLD_OUTCOME_INCONSISTENT"
+  ],
+  "invalid_universal_threshold.json": [
+    "SCHEMA_INVALID",
+    "UNIVERSAL_THRESHOLD_FORBIDDEN"
+  ],
+  "invalid_governance_overclaim.json": [
+    "GOVERNANCE_BOUNDARY_VIOLATION",
+    "SCHEMA_INVALID"
+  ]
+}

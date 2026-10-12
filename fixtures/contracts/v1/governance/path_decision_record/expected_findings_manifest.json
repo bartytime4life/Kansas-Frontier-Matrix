@@ -1,0 +1,24 @@
+{
+  "execution_role_mismatch.yaml": [
+    "ARTIFACT_KIND_NOT_ALLOWED",
+    "EXECUTION_ROLE_ROOT_MISMATCH"
+  ],
+  "mirror_without_consumer.yaml": [
+    "SCHEMA_INVALID"
+  ],
+  "place_in_artifacts_trust.yaml": [
+    "ARTIFACTS_TRUST_AUTHORITY_DENIED",
+    "ARTIFACT_KIND_NOT_ALLOWED",
+    "ARTIFACT_KIND_PROHIBITED",
+    "TARGET_ROOT_NOT_WRITABLE_CANONICAL"
+  ],
+  "place_public_raw.yaml": [
+    "PUBLIC_INTERNAL_LIFECYCLE_DENIED"
+  ],
+  "registry_digest_mismatch.yaml": [
+    "REGISTRY_DIGEST_MISMATCH"
+  ],
+  "split_without_targets.yaml": [
+    "SCHEMA_INVALID"
+  ]
+}

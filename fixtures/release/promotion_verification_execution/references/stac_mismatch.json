@@ -1,0 +1,7 @@
+{
+  "object_type": "ResolvedPromotionReference",
+  "kind": "STAC",
+  "ref_id": "catalog:synthetic:promotion-proof:stac:v1",
+  "subject_spec_hash": "sha256:f51b3ac7cdb4c7fa7ca479391845090528db8a53884f4afe2d61b95591e72411",
+  "artifact_digest": "sha256:9999999999999999999999999999999999999999999999999999999999999999"
+}

@@ -1,0 +1,130 @@
+{
+  "receipt_id": "genrec-m04-verification-query-20260905",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "packages/evidence-resolver/src/evidence_resolver/verification_history.py",
+    "tests/packages/evidence_resolver/test_verification_query_timestamps.py",
+    "tests/packages/evidence_resolver/README.md"
+  ],
+  "artifact_hashes": {
+    "packages/evidence-resolver/src/evidence_resolver/verification_history.py": "sha256:45d0f70a1d7bd0574bf0b91fe66de4ad3315c89cf046c74760fc3368c8f61d7d",
+    "tests/packages/evidence_resolver/test_verification_query_timestamps.py": "sha256:30afde576c88f886fdf39b06b4a4af275e59cbb41420f3777c01146a62489c9a",
+    "tests/packages/evidence_resolver/README.md": "sha256:84d9b148ecb3e00cb257570e6867ae2ddc13b973f9f44725ddeee094b23124c4"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Pro",
+    "version": "Exact runtime build identifier is not exposed"
+  },
+  "prompt_or_contract": "sha256:f1d72df7ed5254197e1a51da0e980a9aaf0fdf0a57cdb0c91cd871f961b442e3",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub",
+      "Notion",
+      "Google Drive",
+      "container"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:ae7f4b7e031c9c417dbaf96eea660605ab298037d70ab03d32fdc88357d68f90",
+      "sha256:8a9e492a952c53a6c5ec006489167ad375038667b1b47f57ca6e1981dfc03b0c",
+      "sha256:2850bed11eced580d2e77f214ec055c6cfe8adeea8e03a71de8733234f2b6c1e",
+      "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "sha256:aff760244be727c174e89c4ab9207feaf7bf590f556f324b430571d21fd8b442",
+      "sha256:3a10cdf6b8d9760c8c2f164e650e2da484695df216039d9b543c06f3f0a5eaee",
+      "sha256:425e998e5584a7e400e99c963aba019b33ff685f9fa26b5b474d8758a3160b2a"
+    ],
+    "evidence_refs": [
+      "repo:main@94e976ff281ff5033c1c91ada417ab1d0c445f7b",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3367",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/94e976ff281ff5033c1c91ada417ab1d0c445f7b/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "https://app.notion.com/p/3c9a92021bf68195b8b1f3a8d694b447",
+      "https://docs.google.com/document/d/1yy3IaBJm9epC578w7Oak_12gVxT59vnw6IJYn0XIHKs/edit"
+    ]
+  },
+  "truth_labels": {
+    "packages/evidence-resolver/src/evidence_resolver/verification_history.py": "PROPOSED",
+    "tests/packages/evidence_resolver/test_verification_query_timestamps.py": "PROPOSED",
+    "tests/packages/evidence_resolver/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "local-source-integrity",
+      "outcome": "PASS",
+      "reason": "All reconstructed baseline dependencies, fixture, README and receipt schema match the immutable GitHub Git blob hashes in the accompanying source manifest. This is a bounded source reconstruction, not a full clone."
+    },
+    {
+      "gate": "regressions-on-unchanged-main-source",
+      "outcome": "FAIL",
+      "reason": "Expected negative control: the new 14-test suite produced 39 assertion failures on unmodified base source. This is not an execution of existing main CI or the full repository suite."
+    },
+    {
+      "gate": "candidate-focused-regressions",
+      "outcome": "PASS",
+      "reason": "All 14 test methods pass on Python 3.13.5 with PYTHONHASHSEED=0 and again with 8675309. Includes 14 malformed-query/axis cases through replay, candidate and runtime projection, valid calendar and correction cutoffs, policy precedence, safe diagnostics and guarded I/O."
+    },
+    {
+      "gate": "python-syntax",
+      "outcome": "PASS",
+      "reason": "All reconstructed production Python modules and the new regression file parse successfully."
+    },
+    {
+      "gate": "post-emission-receipt-check",
+      "outcome": "SKIPPED",
+      "reason": "Schema, format and actual artifact-hash parity are checked after this receipt is emitted and recorded separately in validation-summary.json. No repository-native receipt validator result is claimed here."
+    },
+    {
+      "gate": "full-repository-and-hosted-validation",
+      "outcome": "SKIPPED",
+      "reason": "No complete checkout or GitHub write/dispatch path was available. make evidence-resolver, make evidence-resolver-deny, repository topology, native GeneratedReceipt validation and hosted CI were not run. No inherited full-suite failure is waived or inferred."
+    },
+    {
+      "gate": "remote-repository-delivery",
+      "outcome": "SKIPPED",
+      "reason": "LOCAL_VALIDATED_PATCH_ONLY. No remote branch, commit, push, PR, issue edit, Notion edit or Drive edit was made. The GitHub connector exposes reads; gh is absent and git clone failed DNS resolution."
+    },
+    {
+      "gate": "independent-human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending; the user execution request is not approval of these newly authored bytes."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "issue-3367-first-bounded-action",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3367"
+    },
+    {
+      "id": "existing-timestamp-profile",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/94e976ff281ff5033c1c91ada417ab1d0c445f7b/schemas/contracts/v1/evidence/verification_state_history.schema.json"
+    },
+    {
+      "id": "existing-test-boundary",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/94e976ff281ff5033c1c91ada417ab1d0c445f7b/tests/packages/evidence_resolver/README.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-06T00:16:03.227024+00:00",
+  "emitter": "ChatGPT GPT-6 Pro; local exact-source candidate authoring, not GitHub branch authoring",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Four-file candidate: shared parser guard, new regression file, test README, and this add-only receipt. Artifact hashes bind local candidate bytes, not a remote commit. Original core.py, runtime_projection.py, positive fixture, schemas, contracts, policies, workflows, Directory Rules, correction registers, existing receipts and parallel branches are unchanged. Existing UTC-second grammar is enforced before strptime; no new contract or public ANSWER is introduced. Status is LOCAL_VALIDATED_PATCH_ONLY, not VALIDATED_BRANCH_ONLY, merged, deployed or issue closed. Whole M04/public consumer closure is not established. Do not use issue #4024 closure or this receipt to infer a safe PR-state mutation path. Roll back the four-file candidate together on a task branch; never force-push or rewrite historical evidence."
+}

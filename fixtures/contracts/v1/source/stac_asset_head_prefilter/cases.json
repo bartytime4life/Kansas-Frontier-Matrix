@@ -1,0 +1,264 @@
+{
+  "profile": "kfm.stac_asset_head_prefilter.fixture_cases.v1",
+  "source": "KFM-P32-PROG-0004",
+  "execution_mode": "FIXTURE_ONLY",
+  "base_document": {
+    "claims": {
+      "authority_created": false,
+      "cloudevents_conformance_claimed": false,
+      "cloudevents_core_attributes_present": true,
+      "deterministic_identity": true,
+      "idempotent_replay": true,
+      "lifecycle_write_performed": false,
+      "network_access_performed": false,
+      "published": false,
+      "released": false,
+      "source_activated": false
+    },
+    "event_id": "kfm:source-event:sha256:3fb69ff2eaca6616d1e2c5a3ad4c8fc675d0b5f3523d4c7394a0eba24c364079",
+    "event_type": "SCHEDULED_POLL",
+    "execution_mode": "FIXTURE_ONLY",
+    "governance": {
+      "evidence_refs": [
+        "evidence:synthetic:stac-head-metadata"
+      ],
+      "policy_refs": [
+        "policy:synthetic:stac-prefilter"
+      ],
+      "rights_state": "KNOWN",
+      "sensitivity_state": "KNOWN"
+    },
+    "occurred_at": "2026-08-08T02:00:00Z",
+    "payload": {
+      "attributes": {
+        "stac.asset_href": "https://stac.example.invalid/collections/ndvi/items/ks-2026-08-01/assets/ndvi",
+        "stac.asset_key": "ndvi",
+        "stac.checked_at": "2026-08-08T02:00:00Z",
+        "stac.decision": "UNCHANGED",
+        "stac.download_allowed": false,
+        "stac.http_method": "HEAD",
+        "stac.http_status": 304,
+        "stac.item_id": "ks-2026-08-01",
+        "stac.media_type": "image/tiff",
+        "stac.observed_content_length": null,
+        "stac.observed_etag": null,
+        "stac.observed_last_modified": null,
+        "stac.prior_content_length": 4096,
+        "stac.prior_etag": "\"asset-v1\"",
+        "stac.prior_last_modified": "2026-08-01T12:00:00Z",
+        "stac.profile": "kfm.stac_asset_head_prefilter.v1",
+        "stac.reason_code": "HTTP_NOT_MODIFIED"
+      },
+      "payload_spec_hash": "sha256:abd0a72743affc418b4788727458952a31213e8b5260a0518c53f78df877363c"
+    },
+    "producer": {
+      "kind": "MANUAL_FIXTURE",
+      "producer_id": "kfm-fixture-stac-prefilter",
+      "version": "1.0.0"
+    },
+    "profile": "kfm.source_event_envelope_candidate.v1",
+    "received_at": "2026-08-08T02:00:05Z",
+    "routing": {
+      "disposition": "NO_ACTION",
+      "publication_allowed": false,
+      "raw_write_allowed": false,
+      "reason_codes": [
+        "HTTP_NOT_MODIFIED",
+        "NO_MATERIAL_CHANGE"
+      ],
+      "review_required": false,
+      "source_activation_allowed": false
+    },
+    "schema_version": "1.0.0",
+    "source_descriptor_ref": "src:synthetic:stac-environmental-archive",
+    "source_role_ref": "src:synthetic:stac-environmental-archive#/source_role",
+    "specversion": "1.0",
+    "subject": {
+      "byte_count": 4096,
+      "content_digest": "sha256:abababababababababababababababababababababababababababababababab",
+      "etag": "\"asset-v1\"",
+      "last_modified": "2026-08-01T12:00:00Z",
+      "media_type": "image/tiff",
+      "native_id": "ks-2026-08-01#ndvi",
+      "subject_ref": "https://stac.example.invalid/collections/ndvi/items/ks-2026-08-01/assets/ndvi"
+    }
+  },
+  "cases": [
+    {
+      "case_id": "valid_http_304_unchanged",
+      "overrides": {},
+      "expected_findings": [],
+      "expected_outcome": "PASS"
+    },
+    {
+      "case_id": "valid_http_200_validator_match",
+      "overrides": {
+        "/payload/attributes/stac.http_status": 200,
+        "/payload/attributes/stac.observed_content_length": 4096,
+        "/payload/attributes/stac.observed_etag": "\"asset-v1\"",
+        "/payload/attributes/stac.observed_last_modified": "2026-08-01T12:00:00Z",
+        "/payload/attributes/stac.reason_code": "VALIDATOR_MATCH",
+        "/routing/reason_codes": [
+          "NO_MATERIAL_CHANGE",
+          "VALIDATOR_MATCH"
+        ]
+      },
+      "expected_findings": [],
+      "expected_outcome": "PASS"
+    },
+    {
+      "case_id": "valid_http_200_validator_changed",
+      "overrides": {
+        "/payload/attributes/stac.decision": "CHANGED",
+        "/payload/attributes/stac.http_status": 200,
+        "/payload/attributes/stac.observed_content_length": 8192,
+        "/payload/attributes/stac.observed_etag": "\"asset-v2\"",
+        "/payload/attributes/stac.observed_last_modified": "2026-08-08T01:30:00Z",
+        "/payload/attributes/stac.reason_code": "VALIDATOR_CHANGED",
+        "/routing/disposition": "PROPOSE_QUARANTINE",
+        "/routing/reason_codes": [
+          "STAC_ASSET_CHANGED",
+          "VALIDATOR_CHANGED"
+        ],
+        "/routing/review_required": true
+      },
+      "expected_findings": [],
+      "expected_outcome": "PASS"
+    },
+    {
+      "case_id": "valid_http_404_unavailable",
+      "overrides": {
+        "/payload/attributes/stac.decision": "UNAVAILABLE",
+        "/payload/attributes/stac.http_status": 404,
+        "/payload/attributes/stac.reason_code": "ASSET_NOT_FOUND",
+        "/routing/disposition": "PROPOSE_QUARANTINE",
+        "/routing/reason_codes": [
+          "ASSET_NOT_FOUND",
+          "STAC_ASSET_UNAVAILABLE"
+        ],
+        "/routing/review_required": true
+      },
+      "expected_findings": [],
+      "expected_outcome": "PASS"
+    },
+    {
+      "case_id": "valid_http_403_denied",
+      "overrides": {
+        "/payload/attributes/stac.decision": "DENY",
+        "/payload/attributes/stac.http_status": 403,
+        "/payload/attributes/stac.reason_code": "ACCESS_DENIED",
+        "/routing/disposition": "PROPOSE_QUARANTINE",
+        "/routing/reason_codes": [
+          "ACCESS_DENIED",
+          "STAC_ACCESS_DENIED"
+        ],
+        "/routing/review_required": true
+      },
+      "expected_findings": [],
+      "expected_outcome": "PASS"
+    },
+    {
+      "case_id": "valid_http_503_error",
+      "overrides": {
+        "/payload/attributes/stac.decision": "ERROR",
+        "/payload/attributes/stac.http_status": 503,
+        "/payload/attributes/stac.reason_code": "UPSTREAM_ERROR",
+        "/routing/disposition": "PROPOSE_QUARANTINE",
+        "/routing/reason_codes": [
+          "STAC_PREFILTER_ERROR",
+          "UPSTREAM_ERROR"
+        ],
+        "/routing/review_required": true
+      },
+      "expected_findings": [],
+      "expected_outcome": "PASS"
+    },
+    {
+      "case_id": "invalid_conflicting_validators",
+      "overrides": {
+        "/payload/attributes/stac.decision": "ERROR",
+        "/payload/attributes/stac.http_status": 200,
+        "/payload/attributes/stac.observed_content_length": 8192,
+        "/payload/attributes/stac.observed_etag": "\"asset-v1\"",
+        "/payload/attributes/stac.observed_last_modified": "2026-08-08T01:30:00Z",
+        "/payload/attributes/stac.reason_code": "VALIDATOR_CONFLICT",
+        "/routing/disposition": "PROPOSE_QUARANTINE",
+        "/routing/reason_codes": [
+          "STAC_PREFILTER_ERROR",
+          "VALIDATOR_CONFLICT"
+        ],
+        "/routing/review_required": true
+      },
+      "expected_findings": [
+        {
+          "code": "STAC_VALIDATOR_CONFLICT",
+          "path": "/payload/attributes"
+        }
+      ],
+      "expected_outcome": "DENY"
+    },
+    {
+      "case_id": "invalid_missing_observed_validators",
+      "overrides": {
+        "/payload/attributes/stac.decision": "ERROR",
+        "/payload/attributes/stac.http_status": 200,
+        "/payload/attributes/stac.reason_code": "VALIDATOR_MISSING",
+        "/routing/disposition": "PROPOSE_QUARANTINE",
+        "/routing/reason_codes": [
+          "STAC_PREFILTER_ERROR",
+          "VALIDATOR_MISSING"
+        ],
+        "/routing/review_required": true
+      },
+      "expected_findings": [
+        {
+          "code": "STAC_VALIDATOR_MISSING",
+          "path": "/payload/attributes"
+        }
+      ],
+      "expected_outcome": "DENY"
+    },
+    {
+      "case_id": "invalid_download_allowed",
+      "overrides": {
+        "/payload/attributes/stac.download_allowed": true
+      },
+      "expected_findings": [
+        {
+          "code": "STAC_PROFILE_SCHEMA_INVALID",
+          "path": "/payload/attributes/stac.download_allowed"
+        }
+      ],
+      "expected_outcome": "DENY"
+    },
+    {
+      "case_id": "invalid_decision_mismatch",
+      "overrides": {
+        "/payload/attributes/stac.http_status": 200,
+        "/payload/attributes/stac.observed_content_length": 8192,
+        "/payload/attributes/stac.observed_etag": "\"asset-v2\"",
+        "/payload/attributes/stac.observed_last_modified": "2026-08-08T01:30:00Z",
+        "/payload/attributes/stac.reason_code": "VALIDATOR_MATCH",
+        "/routing/reason_codes": [
+          "NO_MATERIAL_CHANGE",
+          "VALIDATOR_MATCH"
+        ]
+      },
+      "expected_findings": [
+        {
+          "code": "STAC_DECISION_MISMATCH",
+          "path": "/payload/attributes/stac.decision"
+        },
+        {
+          "code": "STAC_REASON_CODE_MISMATCH",
+          "path": "/payload/attributes/stac.reason_code"
+        },
+        {
+          "code": "STAC_ROUTING_MISMATCH",
+          "path": "/routing"
+        }
+      ],
+      "expected_outcome": "DENY"
+    }
+  ]
+}

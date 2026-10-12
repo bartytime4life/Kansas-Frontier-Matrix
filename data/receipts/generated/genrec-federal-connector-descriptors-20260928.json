@@ -1,0 +1,173 @@
+{
+  "receipt_id": "genrec-federal-connector-descriptors-20260928",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/blm-connector-offline.yml",
+    ".github/workflows/census-offline.yml",
+    ".github/workflows/epa-connector-offline.yml",
+    ".github/workflows/fema-openfema-declarations-offline.yml",
+    ".github/workflows/noaa-connector-offline.yml",
+    ".github/workflows/nrcs-connector-offline.yml",
+    ".github/workflows/usgs-earthquake-offline.yml",
+    "connectors/blm/README.md",
+    "connectors/blm/src/blm/descriptor.yaml",
+    "connectors/blm/tests/test_fetch_admit.py",
+    "connectors/census/README.md",
+    "connectors/census/src/census/admit.py",
+    "connectors/census/src/census/descriptor.yaml",
+    "connectors/census/tests/test_fetch_admit.py",
+    "connectors/epa/README.md",
+    "connectors/epa/src/epa/descriptor.yaml",
+    "connectors/epa/tests/test_fetch_admit.py",
+    "connectors/fema/README.md",
+    "connectors/fema/src/fema/descriptor.yaml",
+    "connectors/fema/tests/test_fetch_admit.py",
+    "connectors/noaa/README.md",
+    "connectors/noaa/src/noaa/admit.py",
+    "connectors/noaa/src/noaa/descriptor.yaml",
+    "connectors/noaa/tests/test_fetch_admit.py",
+    "connectors/nrcs/README.md",
+    "connectors/nrcs/src/nrcs/descriptor.yaml",
+    "connectors/nrcs/tests/test_fetch_admit.py",
+    "connectors/usgs/README.md",
+    "connectors/usgs/src/usgs/descriptor.yaml",
+    "connectors/usgs/tests/test_fetch_admit.py",
+    "packages/connectors-core/src/connectors_core/descriptor-gate.md",
+    "tests/packages/connectors_core/test_descriptor_gate.py",
+    "tools/qa/scaffold_baseline.json"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/blm-connector-offline.yml": "sha256:173b5b20789d44999235354c84c3320587e7d4a97a65c9ba069139f6a45fcfe5",
+    ".github/workflows/census-offline.yml": "sha256:a37d4af475a02f90d4da9ace422b989c054b384252cdf42ccfcefafa22b55d1d",
+    ".github/workflows/epa-connector-offline.yml": "sha256:3d48f8c230f96df9a57b11a4f53c2baf9cdfbb005a80407a8f31e75ec95387cc",
+    ".github/workflows/fema-openfema-declarations-offline.yml": "sha256:a2306cb06554df351ddfd0f494c9ad8b6b9e8ee0daf285c91bb233c355835d47",
+    ".github/workflows/noaa-connector-offline.yml": "sha256:97398fc042d7fc0938411664f9b973dc9548dab26e23a0b50b69272a211e4e26",
+    ".github/workflows/nrcs-connector-offline.yml": "sha256:d7d8907d547009f76879dc0c95ead92144a976ac92507aa25d394e27d0f51b47",
+    ".github/workflows/usgs-earthquake-offline.yml": "sha256:bf7ebc89e5eaebb20bc8f3faa7d7e5b5bd87d43fb8e7d9746c5ef437e39e1665",
+    "connectors/blm/README.md": "sha256:68cb13fde04ae5b371c29862966cf62e4a2bdbd571ffd2bd26876adaa496cf30",
+    "connectors/blm/src/blm/descriptor.yaml": "sha256:3cc0ed64b45c6801d2aa9c5398aa9025cc5805c08961445b0a651dd24f618631",
+    "connectors/blm/tests/test_fetch_admit.py": "sha256:bff162995e8ca5e7a09c08f582a5076920418f3a50340fa7cba3adecab8e9559",
+    "connectors/census/README.md": "sha256:12a6192bb64335d4f18ac7700e7bfc9090cd0e5be6f2c77a23b1d718603f4cfe",
+    "connectors/census/src/census/admit.py": "sha256:54bec6b1b5327ee8a5432f631f8af4401f4008504f8c1c790d3abb5ad28e8c39",
+    "connectors/census/src/census/descriptor.yaml": "sha256:7f68f553b9d3b649f2303ffd8141d56ec691b046db221e9bf20bee9d8342d402",
+    "connectors/census/tests/test_fetch_admit.py": "sha256:28674bf0caa9a68b6f8b2dd721fa22d387d4c10072d3087a410c95759619e8e0",
+    "connectors/epa/README.md": "sha256:4c3beae0faf73262abb2cac63abf0269f5328870bd8b2aff49a6b1823f2f8890",
+    "connectors/epa/src/epa/descriptor.yaml": "sha256:94c7c318909124334a9c41cfb847a8327a9719adfa0295722c025f4804ee0cf4",
+    "connectors/epa/tests/test_fetch_admit.py": "sha256:b2a9053d3b7bc785b8625c32e843770f1cc79c1b9314db6b3a8a4585a5e7e5b2",
+    "connectors/fema/README.md": "sha256:9c66d7e72f4747b574e583576ba796f4cbc4adf16f1bf2a41b2d5fe48b57f36f",
+    "connectors/fema/src/fema/descriptor.yaml": "sha256:a9bccadc3676d4bdec6901ca08c982217c7087a5c491235159b1f6f499ba330b",
+    "connectors/fema/tests/test_fetch_admit.py": "sha256:cd3a7619d1fc55cce9b567931521ad3836d768f0f1d217100bc32f5c5b810320",
+    "connectors/noaa/README.md": "sha256:10797452390d71585cfadce9e79fc576d3e01936a55e31af7a93777fd8c2bc8b",
+    "connectors/noaa/src/noaa/admit.py": "sha256:a64881d9fcb5ac38a6c3d31f790dbae94218f56a3443d97b3001e2165a42d4a7",
+    "connectors/noaa/src/noaa/descriptor.yaml": "sha256:5482cb4466ce9b590e2aa86ffaf3623e7c2da8e948172d5ac1b13cc68de7682a",
+    "connectors/noaa/tests/test_fetch_admit.py": "sha256:eb998d824dd5ed8d0cf66ad0421f2fa4c945d44f47d232a84d634de1fc6495bf",
+    "connectors/nrcs/README.md": "sha256:6d4726698ae2aab376c2d6a317529761296324884b9fd6f4f889f133d13a7385",
+    "connectors/nrcs/src/nrcs/descriptor.yaml": "sha256:c2378799a1ec0a896601556714da6c1b07c6547ed2d748c83fdf7adffce1aac8",
+    "connectors/nrcs/tests/test_fetch_admit.py": "sha256:1d42f6f24b3ffde93f493ec16e1c5c888c1fe6a3a0c6d5544c4df827874bc8a2",
+    "connectors/usgs/README.md": "sha256:9fed7a8d61b2a9c646c47e671c1c1ccc3fc4485c793cc866ad3fed9e3de35f14",
+    "connectors/usgs/src/usgs/descriptor.yaml": "sha256:0d6de0561e3f48d41e98abba4e223819c2ca2acdce4b00b71acab45451fadfa4",
+    "connectors/usgs/tests/test_fetch_admit.py": "sha256:358a4072e2b320d71c4ddb11bf9ddd0dff23dbceb349381519330a49e081dcec",
+    "packages/connectors-core/src/connectors_core/descriptor-gate.md": "sha256:17da18e1b32a1255f8501e94a70fbd11cd1cac6f48d5e6f6542a55cca15e4053",
+    "tests/packages/connectors_core/test_descriptor_gate.py": "sha256:0bff3d3184647be52ba2d787c1ab02d5fabba1cfc2d61907842bad0ae8ef2ad1",
+    "tools/qa/scaffold_baseline.json": "sha256:b3b691c9dcbe728c8af2ab96da4406ed4efa859cf21f14a7026e6542e9f19bbd"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:cc638e034d30d52484c0da5d41e5e1d0e39a65f4c7bb5bf8c760d3e294988f04",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/29d020cb259669eabcc3e8a5c25033086b645fca",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4779#discussion_r4118871684"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/blm-connector-offline.yml": "CONFIRMED",
+    ".github/workflows/census-offline.yml": "CONFIRMED",
+    ".github/workflows/epa-connector-offline.yml": "CONFIRMED",
+    ".github/workflows/fema-openfema-declarations-offline.yml": "CONFIRMED",
+    ".github/workflows/noaa-connector-offline.yml": "CONFIRMED",
+    ".github/workflows/nrcs-connector-offline.yml": "CONFIRMED",
+    ".github/workflows/usgs-earthquake-offline.yml": "CONFIRMED",
+    "connectors/blm/README.md": "CONFIRMED",
+    "connectors/blm/src/blm/descriptor.yaml": "CONFIRMED",
+    "connectors/blm/tests/test_fetch_admit.py": "CONFIRMED",
+    "connectors/census/README.md": "CONFIRMED",
+    "connectors/census/src/census/admit.py": "CONFIRMED",
+    "connectors/census/src/census/descriptor.yaml": "CONFIRMED",
+    "connectors/census/tests/test_fetch_admit.py": "CONFIRMED",
+    "connectors/epa/README.md": "CONFIRMED",
+    "connectors/epa/src/epa/descriptor.yaml": "CONFIRMED",
+    "connectors/epa/tests/test_fetch_admit.py": "CONFIRMED",
+    "connectors/fema/README.md": "CONFIRMED",
+    "connectors/fema/src/fema/descriptor.yaml": "CONFIRMED",
+    "connectors/fema/tests/test_fetch_admit.py": "CONFIRMED",
+    "connectors/noaa/README.md": "CONFIRMED",
+    "connectors/noaa/src/noaa/admit.py": "CONFIRMED",
+    "connectors/noaa/src/noaa/descriptor.yaml": "CONFIRMED",
+    "connectors/noaa/tests/test_fetch_admit.py": "CONFIRMED",
+    "connectors/nrcs/README.md": "CONFIRMED",
+    "connectors/nrcs/src/nrcs/descriptor.yaml": "CONFIRMED",
+    "connectors/nrcs/tests/test_fetch_admit.py": "CONFIRMED",
+    "connectors/usgs/README.md": "CONFIRMED",
+    "connectors/usgs/src/usgs/descriptor.yaml": "CONFIRMED",
+    "connectors/usgs/tests/test_fetch_admit.py": "CONFIRMED",
+    "packages/connectors-core/src/connectors_core/descriptor-gate.md": "CONFIRMED",
+    "tests/packages/connectors_core/test_descriptor_gate.py": "CONFIRMED",
+    "tools/qa/scaffold_baseline.json": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Connector suites",
+      "outcome": "PASS",
+      "reason": "USGS, NOAA, NRCS, BLM, Census, FEMA, EPA, GBIF and iNaturalist suites pass on Python 3.11 and 3.12 (USGS conformance on 3.12 needs rfc8785, installed only for 3.11 locally; unchanged). Each checked-in descriptor now releases the provisional route; an unresolved descriptor still holds."
+    },
+    {
+      "gate": "Shared suites",
+      "outcome": "PASS",
+      "reason": "tests/packages/connectors_core, tests/qa/test_scaffold_inventory.py and the connector non-publisher policy test: 154 passed. The descriptor guard now pins exactly the seven opened connectors."
+    },
+    {
+      "gate": "Workflow security and scaffold ratchet",
+      "outcome": "PASS",
+      "reason": "make workflow-security PASS (489, 0 new drift); scaffold baseline removes exactly the 14 findings of the seven descriptors (1261 -> 1247)."
+    },
+    {
+      "gate": "Hosted CI and independent review",
+      "outcome": "SKIPPED",
+      "reason": "Read after PR creation."
+    },
+    {
+      "gate": "Source activation, admission, release",
+      "outcome": "SKIPPED",
+      "reason": "Descriptors release candidate routing only; no write, admission, SourceDescriptor, sensitivity review, activation, or publication."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/29d020cb259669eabcc3e8a5c25033086b645fca"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-09-28T05:25:08Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Records the repository owner's 2026-09-28 choice (in-session) to resolve role and rights for the seven U.S. federal connectors: rights public-domain-us-government-work (17 U.S.C. 105); roles USGS/NOAA/NRCS observed, BLM/FEMA administrative, Census/EPA aggregate. GBIF and iNaturalist remain unresolved. Per the #4779 Codex P2, source role is applied per product: NOAA's role covers USCRN only and Census's covers ACS only; Storm Events, NWS alerts and TIGER/Line hold with PRODUCT_ROLE_UNRESOLVED."
+}

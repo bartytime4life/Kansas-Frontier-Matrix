@@ -1,0 +1,181 @@
+{
+  "receipt_id": "genrec-responsibility-layers-99b99d5f37be",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/architecture/cross-domain/responsibility-layers.md"
+  ],
+  "artifact_hashes": {
+    "docs/architecture/cross-domain/responsibility-layers.md": "sha256:99b99d5f37bebe5b85fa8c4bc99003701ca3cf0f4935d0e2ed74387ec2bdab5c"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-20"
+  },
+  "prompt_or_contract": "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file evidence",
+      "repository evidence inspection",
+      "local deterministic documentation validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb",
+      "sha256:4406daa99ff0e3d58757d62d40358c9fd745f95137e99f14602659d0c3f54e55"
+    ],
+    "attached_docs": [
+      "KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0",
+      "Domain-Driven Design Reference"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/9cebd52e986d343ccb0e1ae4423bd689124d0801",
+      "repo:docs/architecture/cross-domain/responsibility-layers.md@9cebd52e986d343ccb0e1ae4423bd689124d0801#blob=bbb5605a84c0b9a639df7c20a2b5ab28850663e3",
+      "repo:docs/architecture/cross-domain/README.md@9cebd52e986d343ccb0e1ae4423bd689124d0801#blob=3353a0a0ab5fe3f8f5fdea937b8eecfa34b81032",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@9cebd52e986d343ccb0e1ae4423bd689124d0801#blob=a4de0d7a96b78da59cfc499d1025e1508afd8dd9",
+      "repo:docs/doctrine/directory-rules.md@9cebd52e986d343ccb0e1ae4423bd689124d0801#blob=fd49a0b83e55cef52c1124281f093e263526898d",
+      "repo:control_plane/root_registry.yaml@9cebd52e986d343ccb0e1ae4423bd689124d0801#blob=024f668b5f0a9239bafa4f8b09e2afd86300ff8c",
+      "repo:control_plane/domain_lane_register.yaml@9cebd52e986d343ccb0e1ae4423bd689124d0801#blob=1bfc6f91cfa713a5e3d51ece011b63b46310734f",
+      "repo:contracts/governance/responsibility_layer_impact_assessment.md@9cebd52e986d343ccb0e1ae4423bd689124d0801#blob=5e2000c77a845493ef3272b0d75fbe3495cb73a4",
+      "repo:schemas/contracts/v1/governance/responsibility_layer_impact_assessment.schema.json@9cebd52e986d343ccb0e1ae4423bd689124d0801#blob=c2a3e9a9570174ead9451d25c43c9196da4243a2",
+      "repo:fixtures/contracts/v1/governance/responsibility_layer_impact_assessment/cases.json@9cebd52e986d343ccb0e1ae4423bd689124d0801#blob=af00be1cdc5eb4651138c4398818488ec4022a94",
+      "repo:tools/validators/governance/validate_responsibility_layer_impact_assessment.py@9cebd52e986d343ccb0e1ae4423bd689124d0801#blob=83ad18e16655f123b8b6678032075594c79e6488",
+      "repo:tests/validators/governance/test_validate_responsibility_layer_impact_assessment.py@9cebd52e986d343ccb0e1ae4423bd689124d0801#blob=9295abcf5122232ad0982f51fbc81f7e4704b1af",
+      "repo:.github/workflows/responsibility-layer-impact-assessment.yml@9cebd52e986d343ccb0e1ae4423bd689124d0801#blob=fb0c07542f2d07d89536ac410be48ab38bee75b9",
+      "repo:docs/intake/exploratory/pass-18-responsibility-layer-impact-assessment-source-map.md@9cebd52e986d343ccb0e1ae4423bd689124d0801#blob=43faa1bd6078ef454942c81706d48362fed5a1d7",
+      "github-actions:responsibility-layer-impact-assessment:31538415902@233e4d3806a81625cc5502fc2147668b6ba42099",
+      "attachment:KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0",
+      "attachment:Domain-Driven Design Reference.pdf"
+    ]
+  },
+  "truth_labels": {
+    "docs/architecture/cross-domain/responsibility-layers.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Target and governing evidence were pinned at main@9cebd52e986d343ccb0e1ae4423bd689124d0801; the target retained blob bbb5605a84c0b9a639df7c20a2b5ab28850663e3 and no open pull request claimed responsibility-layers.md."
+    },
+    {
+      "gate": "directory-rules-and-authority-separation",
+      "outcome": "PASS",
+      "reason": "Kept the existing docs/architecture/cross-domain path under accepted ADR-0029 and left doctrine, contracts, schemas, policy, machine projections, implementation, data, release, and publication authority in their owning roots."
+    },
+    {
+      "gate": "responsibility-layer-repository-reconciliation",
+      "outcome": "PASS",
+      "reason": "Reconciled the page to the proposed 13-lane Domain Lane Register, current Root Registry, inactive impact-assessment contract/schema/fixtures/validator/tests/workflow, prior focused workflow evidence, and explicit non-effects."
+    },
+    {
+      "gate": "conceptual-source-boundary",
+      "outcome": "PASS",
+      "reason": "Used the DDD Responsibility Layers pattern as conceptual reference language while keeping the exact KFM eight-layer vocabulary and adoption state explicitly PROPOSED."
+    },
+    {
+      "gate": "markdown-structure-and-identity",
+      "outcome": "PASS",
+      "reason": "Verified one H1, stable doc_id, same path, created date, top anchor, all fifteen legacy numbered section headings, balanced fences, valid metadata YAML, UTF-8/LF, no tabs or trailing whitespace, and a final newline."
+    },
+    {
+      "gate": "links-and-fragments",
+      "outcome": "PASS",
+      "reason": "All internal references were checked against explicit or GitHub-style heading anchors, and all 19 unique repository-relative targets were verified from current repository reads and directory inventories."
+    },
+    {
+      "gate": "stale-claim-and-safety-review",
+      "outcome": "PASS",
+      "reason": "Removed stale OPEN-DR-10 and assumed ops-root claims, replaced maturity checkmarks with review expectations, preserved object-family separation, and introduced no secret, private payload, source data, protected location, or sensitive record."
+    },
+    {
+      "gate": "artifact-sha256-binding",
+      "outcome": "PASS",
+      "reason": "The receipt binds the final Markdown bytes to sha256:99b99d5f37bebe5b85fa8c4bc99003701ca3cf0f4935d0e2ed74387ec2bdab5c."
+    },
+    {
+      "gate": "repository-native-documentation-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted exact-head documentation and repository checks begin after the draft pull request opens."
+    },
+    {
+      "gate": "focused-impact-assessment-workflow",
+      "outcome": "SKIPPED",
+      "reason": "The focused workflow's current path filters do not include this architecture page; its prior success is cited only as historical exact-head packet evidence."
+    },
+    {
+      "gate": "human-review-and-model-adoption",
+      "outcome": "SKIPPED",
+      "reason": "Human review, eight-layer model adoption, accountable stewardship, schema/root-enum convergence, and operational assessment use remain separate decisions."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:repository-build-agent-v6",
+      "validated": true,
+      "evidence_ref": "attachment:KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0"
+    },
+    {
+      "id": "attachment:ddd-responsibility-layers",
+      "validated": true,
+      "evidence_ref": "attachment:Domain-Driven Design Reference.pdf"
+    },
+    {
+      "id": "repository:accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@9cebd52e986d343ccb0e1ae4423bd689124d0801"
+    },
+    {
+      "id": "repository:root-registry",
+      "validated": true,
+      "evidence_ref": "repo:control_plane/root_registry.yaml@9cebd52e986d343ccb0e1ae4423bd689124d0801"
+    },
+    {
+      "id": "repository:domain-lane-register",
+      "validated": true,
+      "evidence_ref": "repo:control_plane/domain_lane_register.yaml@9cebd52e986d343ccb0e1ae4423bd689124d0801"
+    },
+    {
+      "id": "repository:impact-assessment-contract",
+      "validated": true,
+      "evidence_ref": "repo:contracts/governance/responsibility_layer_impact_assessment.md@9cebd52e986d343ccb0e1ae4423bd689124d0801"
+    },
+    {
+      "id": "repository:impact-assessment-schema",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/governance/responsibility_layer_impact_assessment.schema.json@9cebd52e986d343ccb0e1ae4423bd689124d0801"
+    },
+    {
+      "id": "repository:impact-assessment-validator-and-tests",
+      "validated": true,
+      "evidence_ref": "repo:tools/validators/governance/validate_responsibility_layer_impact_assessment.py@9cebd52e986d343ccb0e1ae4423bd689124d0801"
+    },
+    {
+      "id": "repository:prior-focused-workflow",
+      "validated": true,
+      "evidence_ref": "github-actions:responsibility-layer-impact-assessment:31538415902@233e4d3806a81625cc5502fc2147668b6ba42099"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-20T18:38:41Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Same-path repository-grounded modernization of responsibility-layers.md. It keeps the eight-layer vocabulary proposed, distinguishes layers from roots/domains/lifecycle/composition, records the current inactive impact-assessment packet and its proof limits, surfaces ops-root enum drift and workflow path-filter limits, preserves stable navigation, and changes no doctrine, contract, schema, policy, implementation, source, lifecycle, release, deployment, publication, or repository settings. Human review remains pending."
+}

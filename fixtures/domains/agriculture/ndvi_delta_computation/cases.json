@@ -1,0 +1,101 @@
+{
+  "object_type": "NdviDeltaComputationFixtureManifest",
+  "schema_version": "1.0.0",
+  "cases": [
+    {
+      "case_id": "gain-threshold-equality",
+      "request": {
+        "profile": "kfm.ndvi-delta.synthetic.v1",
+        "cell_id": "ks:county:20045:cell:gain",
+        "thresholds": {"max_scene_cloud_fraction_bps": 2000, "min_baseline_clear_observations": 2, "min_recent_clear_observations": 2, "vegetation_floor_millionths": 150000, "delta_threshold_millionths": 120000},
+        "baseline": [
+          {"observation_id": "baseline-01", "nir_scaled_int": 6000, "red_scaled_int": 4000, "scene_cloud_fraction_bps": 1000, "pixel_cloud_masked": false},
+          {"observation_id": "baseline-02", "nir_scaled_int": 6000, "red_scaled_int": 4000, "scene_cloud_fraction_bps": 1500, "pixel_cloud_masked": false}
+        ],
+        "recent": [
+          {"observation_id": "recent-01", "nir_scaled_int": 6600, "red_scaled_int": 3400, "scene_cloud_fraction_bps": 1000, "pixel_cloud_masked": false},
+          {"observation_id": "recent-02", "nir_scaled_int": 6600, "red_scaled_int": 3400, "scene_cloud_fraction_bps": 1200, "pixel_cloud_masked": false}
+        ]
+      },
+      "expected_classification": "GAIN_CANDIDATE",
+      "expected_delta_ndvi_millionths": 120000,
+      "expected_reasons": []
+    },
+    {
+      "case_id": "loss",
+      "request": {
+        "profile": "kfm.ndvi-delta.synthetic.v1",
+        "cell_id": "ks:county:20045:cell:loss",
+        "thresholds": {"max_scene_cloud_fraction_bps": 2000, "min_baseline_clear_observations": 2, "min_recent_clear_observations": 2, "vegetation_floor_millionths": 150000, "delta_threshold_millionths": 120000},
+        "baseline": [
+          {"observation_id": "baseline-11", "nir_scaled_int": 7000, "red_scaled_int": 3000, "scene_cloud_fraction_bps": 500, "pixel_cloud_masked": false},
+          {"observation_id": "baseline-12", "nir_scaled_int": 7000, "red_scaled_int": 3000, "scene_cloud_fraction_bps": 600, "pixel_cloud_masked": false}
+        ],
+        "recent": [
+          {"observation_id": "recent-11", "nir_scaled_int": 6000, "red_scaled_int": 4000, "scene_cloud_fraction_bps": 500, "pixel_cloud_masked": false},
+          {"observation_id": "recent-12", "nir_scaled_int": 6000, "red_scaled_int": 4000, "scene_cloud_fraction_bps": 600, "pixel_cloud_masked": false}
+        ]
+      },
+      "expected_classification": "LOSS_CANDIDATE",
+      "expected_delta_ndvi_millionths": -200000,
+      "expected_reasons": []
+    },
+    {
+      "case_id": "stable",
+      "request": {
+        "profile": "kfm.ndvi-delta.synthetic.v1",
+        "cell_id": "ks:county:20045:cell:stable",
+        "thresholds": {"max_scene_cloud_fraction_bps": 2000, "min_baseline_clear_observations": 2, "min_recent_clear_observations": 2, "vegetation_floor_millionths": 150000, "delta_threshold_millionths": 120000},
+        "baseline": [
+          {"observation_id": "baseline-21", "nir_scaled_int": 6000, "red_scaled_int": 4000, "scene_cloud_fraction_bps": 1000, "pixel_cloud_masked": false},
+          {"observation_id": "baseline-22", "nir_scaled_int": 6000, "red_scaled_int": 4000, "scene_cloud_fraction_bps": 1000, "pixel_cloud_masked": false}
+        ],
+        "recent": [
+          {"observation_id": "recent-21", "nir_scaled_int": 6400, "red_scaled_int": 3600, "scene_cloud_fraction_bps": 1000, "pixel_cloud_masked": false},
+          {"observation_id": "recent-22", "nir_scaled_int": 6400, "red_scaled_int": 3600, "scene_cloud_fraction_bps": 1000, "pixel_cloud_masked": false}
+        ]
+      },
+      "expected_classification": "STABLE",
+      "expected_delta_ndvi_millionths": 80000,
+      "expected_reasons": []
+    },
+    {
+      "case_id": "non-vegetated-suppression",
+      "request": {
+        "profile": "kfm.ndvi-delta.synthetic.v1",
+        "cell_id": "ks:county:20045:cell:suppress",
+        "thresholds": {"max_scene_cloud_fraction_bps": 2000, "min_baseline_clear_observations": 2, "min_recent_clear_observations": 2, "vegetation_floor_millionths": 150000, "delta_threshold_millionths": 120000},
+        "baseline": [
+          {"observation_id": "baseline-31", "nir_scaled_int": 5500, "red_scaled_int": 4500, "scene_cloud_fraction_bps": 1000, "pixel_cloud_masked": false},
+          {"observation_id": "baseline-32", "nir_scaled_int": 5500, "red_scaled_int": 4500, "scene_cloud_fraction_bps": 1000, "pixel_cloud_masked": false}
+        ],
+        "recent": [
+          {"observation_id": "recent-31", "nir_scaled_int": 7000, "red_scaled_int": 3000, "scene_cloud_fraction_bps": 1000, "pixel_cloud_masked": false},
+          {"observation_id": "recent-32", "nir_scaled_int": 7000, "red_scaled_int": 3000, "scene_cloud_fraction_bps": 1000, "pixel_cloud_masked": false}
+        ]
+      },
+      "expected_classification": "SUPPRESSED_NON_VEGETATED",
+      "expected_delta_ndvi_millionths": 300000,
+      "expected_reasons": ["BASELINE_BELOW_VEGETATION_FLOOR"]
+    },
+    {
+      "case_id": "cloud-filter-insufficient",
+      "request": {
+        "profile": "kfm.ndvi-delta.synthetic.v1",
+        "cell_id": "ks:county:20045:cell:cloud",
+        "thresholds": {"max_scene_cloud_fraction_bps": 2000, "min_baseline_clear_observations": 2, "min_recent_clear_observations": 2, "vegetation_floor_millionths": 150000, "delta_threshold_millionths": 120000},
+        "baseline": [
+          {"observation_id": "baseline-41", "nir_scaled_int": 6000, "red_scaled_int": 4000, "scene_cloud_fraction_bps": 1999, "pixel_cloud_masked": false},
+          {"observation_id": "baseline-42", "nir_scaled_int": 6000, "red_scaled_int": 4000, "scene_cloud_fraction_bps": 2000, "pixel_cloud_masked": false}
+        ],
+        "recent": [
+          {"observation_id": "recent-41", "nir_scaled_int": 7000, "red_scaled_int": 3000, "scene_cloud_fraction_bps": 1000, "pixel_cloud_masked": true},
+          {"observation_id": "recent-42", "nir_scaled_int": 7000, "red_scaled_int": 3000, "scene_cloud_fraction_bps": 1000, "pixel_cloud_masked": false}
+        ]
+      },
+      "expected_classification": "INSUFFICIENT_CLEAR_OBSERVATIONS",
+      "expected_delta_ndvi_millionths": null,
+      "expected_reasons": ["BASELINE_CLEAR_OBSERVATIONS_INSUFFICIENT", "RECENT_CLEAR_OBSERVATIONS_INSUFFICIENT"]
+    }
+  ]
+}

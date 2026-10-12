@@ -1,0 +1,630 @@
+{
+  "added": [
+    "KFM-P10-PROG-0009",
+    "KFM-P10-PROG-0016",
+    "KFM-P10-PROG-0017",
+    "KFM-P10-PROG-0018",
+    "KFM-P10-FEAT-0003",
+    "KFM-P10-IDEA-0002",
+    "KFM-P10-PROG-0021",
+    "KFM-P10-PROG-0022",
+    "KFM-P10-PROG-0003",
+    "KFM-P10-PROG-0024",
+    "KFM-P10-FEAT-0001",
+    "KFM-P10-PROG-0002",
+    "KFM-P10-PROG-0007",
+    "KFM-P10-PROG-0020",
+    "KFM-P10-PROG-0013",
+    "KFM-P10-PROG-0001",
+    "KFM-P10-PROG-0004",
+    "KFM-P10-PROG-0008",
+    "KFM-P10-PROG-0010",
+    "KFM-P10-PROG-0011",
+    "KFM-P10-PROG-0012",
+    "KFM-P10-PROG-0015",
+    "KFM-P10-PROG-0019",
+    "KFM-P10-PROG-0023",
+    "KFM-P10-IDEA-0001",
+    "KFM-P10-PROG-0014",
+    "KFM-P10-PROG-0005",
+    "KFM-P10-PROG-0006",
+    "KFM-P10-FEAT-0002"
+  ],
+  "counts": {
+    "added": 29,
+    "expanded": 30,
+    "quarantined": 0,
+    "superseded": 0,
+    "unchanged": 339,
+    "withdrawn_on_evidence": 0
+  },
+  "expanded": [
+    {
+      "expanded_fields": [
+        "pass_10_addenda",
+        "source_attribution",
+        "spec_hash"
+      ],
+      "stable_id": "KFM-P1-IDEA-0061"
+    },
+    {
+      "expanded_fields": [
+        "pass_10_addenda",
+        "source_attribution",
+        "spec_hash"
+      ],
+      "stable_id": "KFM-P1-PROG-0062"
+    },
+    {
+      "expanded_fields": [
+        "pass_10_addenda",
+        "source_attribution",
+        "spec_hash"
+      ],
+      "stable_id": "KFM-P8-PROG-0022"
+    },
+    {
+      "expanded_fields": [
+        "pass_10_addenda",
+        "source_attribution",
+        "spec_hash"
+      ],
+      "stable_id": "KFM-P6-PROG-0014"
+    },
+    {
+      "expanded_fields": [
+        "pass_10_addenda",
+        "source_attribution",
+        "spec_hash"
+      ],
+      "stable_id": "KFM-P8-PROG-0019"
+    },
+    {
+      "expanded_fields": [
+        "pass_10_addenda",
+        "source_attribution",
+        "spec_hash"
+      ],
+      "stable_id": "KFM-P1-FEAT-0038"
+    },
+    {
+      "expanded_fields": [
+        "pass_10_addenda",
+        "source_attribution",
+        "spec_hash"
+      ],
+      "stable_id": "KFM-P1-IDEA-0040"
+    },
+    {
+      "expanded_fields": [
+        "pass_10_addenda",
+        "source_attribution",
+        "spec_hash"
+      ],
+      "stable_id": "KFM-P1-PROG-0041"
+    },
+    {
+      "expanded_fields": [
+        "pass_10_addenda",
+        "source_attribution",
+        "spec_hash"
+      ],
+      "stable_id": "KFM-P4-PROG-0002"
+    },
+    {
+      "expanded_fields": [
+        "pass_10_addenda",
+        "source_attribution",
+        "spec_hash"
+      ],
+      "stable_id": "KFM-P1-PROG-0021"
+    },
+    {
+      "expanded_fields": [
+        "pass_10_addenda",
+        "source_attribution",
+        "spec_hash"
+      ],
+      "stable_id": "KFM-P3-IDEA-0004"
+    },
+    {
+      "expanded_fields": [
+        "pass_10_addenda",
+        "source_attribution",
+        "spec_hash"
+      ],
+      "stable_id": "KFM-P1-PROG-0026"
+    },
+    {
+      "expanded_fields": [
+        "pass_10_addenda",
+        "source_attribution",
+        "spec_hash"
+      ],
+      "stable_id": "KFM-P1-PROG-0029"
+    },
+    {
+      "expanded_fields": [
+        "pass_10_addenda",
+        "source_attribution",
+        "spec_hash"
+      ],
+      "stable_id": "KFM-P2-PROG-0003"
+    },
+    {
+      "expanded_fields": [
+        "pass_10_addenda",
+        "source_attribution",
+        "spec_hash"
+      ],
+      "stable_id": "KFM-P2-PROG-0004"
+    },
+    {
+      "expanded_fields": [
+        "pass_10_addenda",
+        "source_attribution",
+        "spec_hash"
+      ],
+      "stable_id": "KFM-P5-PROG-0009"
+    },
+    {
+      "expanded_fields": [
+        "pass_10_addenda",
+        "source_attribution",
+        "spec_hash"
+      ],
+      "stable_id": "KFM-P7-PROG-0009"
+    },
+    {
+      "expanded_fields": [
+        "pass_10_addenda",
+        "source_attribution",
+        "spec_hash"
+      ],
+      "stable_id": "KFM-P8-PROG-0001"
+    },
+    {
+      "expanded_fields": [
+        "pass_10_addenda",
+        "source_attribution",
+        "spec_hash"
+      ],
+      "stable_id": "KFM-P8-PROG-0003"
+    },
+    {
+      "expanded_fields": [
+        "pass_10_addenda",
+        "source_attribution",
+        "spec_hash"
+      ],
+      "stable_id": "KFM-P8-PROG-0004"
+    },
+    {
+      "expanded_fields": [
+        "pass_10_addenda",
+        "source_attribution",
+        "spec_hash"
+      ],
+      "stable_id": "KFM-P8-PROG-0023"
+    },
+    {
+      "expanded_fields": [
+        "pass_10_addenda",
+        "source_attribution",
+        "spec_hash"
+      ],
+      "stable_id": "KFM-P8-PROG-0025"
+    },
+    {
+      "expanded_fields": [
+        "pass_10_addenda",
+        "source_attribution",
+        "spec_hash"
+      ],
+      "stable_id": "KFM-P1-PROG-0032"
+    },
+    {
+      "expanded_fields": [
+        "pass_10_addenda",
+        "source_attribution",
+        "spec_hash"
+      ],
+      "stable_id": "KFM-P1-IDEA-0056"
+    },
+    {
+      "expanded_fields": [
+        "pass_10_addenda",
+        "source_attribution",
+        "spec_hash"
+      ],
+      "stable_id": "KFM-P1-IDEA-0059"
+    },
+    {
+      "expanded_fields": [
+        "pass_10_addenda",
+        "source_attribution",
+        "spec_hash"
+      ],
+      "stable_id": "KFM-P1-PROG-0017"
+    },
+    {
+      "expanded_fields": [
+        "pass_10_addenda",
+        "source_attribution",
+        "spec_hash"
+      ],
+      "stable_id": "KFM-P5-PROG-0013"
+    },
+    {
+      "expanded_fields": [
+        "pass_10_addenda",
+        "source_attribution",
+        "spec_hash"
+      ],
+      "stable_id": "KFM-P6-PROG-0010"
+    },
+    {
+      "expanded_fields": [
+        "pass_10_addenda",
+        "source_attribution",
+        "spec_hash"
+      ],
+      "stable_id": "KFM-P1-FEAT-0066"
+    },
+    {
+      "expanded_fields": [
+        "pass_10_addenda",
+        "source_attribution",
+        "spec_hash"
+      ],
+      "stable_id": "KFM-P1-FEAT-0068"
+    }
+  ],
+  "pass_number": 10,
+  "prior_pass_number": 9,
+  "quarantined": [],
+  "run_date": "2026-05-16",
+  "superseded": [],
+  "unchanged": [
+    "KFM-P1-IDEA-0064",
+    "KFM-P1-IDEA-0073",
+    "KFM-P1-PROG-0063",
+    "KFM-P3-IDEA-0002",
+    "KFM-P4-IDEA-0001",
+    "KFM-P8-IDEA-0003",
+    "KFM-P9-FEAT-0005",
+    "KFM-P9-FEAT-0006",
+    "KFM-P9-FEAT-0007",
+    "KFM-P9-FEAT-0008",
+    "KFM-P9-FEAT-0009",
+    "KFM-P9-FEAT-0010",
+    "KFM-P9-FEAT-0017",
+    "KFM-P9-FEAT-0018",
+    "KFM-P9-FEAT-0019",
+    "KFM-P9-FEAT-0020",
+    "KFM-P9-FEAT-0021",
+    "KFM-P9-FEAT-0022",
+    "KFM-P9-FEAT-0023",
+    "KFM-P9-FEAT-0024",
+    "KFM-P9-FEAT-0025",
+    "KFM-P9-FEAT-0026",
+    "KFM-P9-FEAT-0027",
+    "KFM-P9-FEAT-0028",
+    "KFM-P9-FEAT-0029",
+    "KFM-P9-FEAT-0030",
+    "KFM-P9-FEAT-0031",
+    "KFM-P9-FEAT-0032",
+    "KFM-P9-IDEA-0021",
+    "KFM-P9-IDEA-0022",
+    "KFM-P9-IDEA-0023",
+    "KFM-P9-IDEA-0024",
+    "KFM-P9-IDEA-0025",
+    "KFM-P9-IDEA-0026",
+    "KFM-P9-IDEA-0027",
+    "KFM-P9-IDEA-0028",
+    "KFM-P9-IDEA-0029",
+    "KFM-P9-IDEA-0030",
+    "KFM-P9-IDEA-0031",
+    "KFM-P9-IDEA-0032",
+    "KFM-P9-IDEA-0033",
+    "KFM-P9-IDEA-0034",
+    "KFM-P9-IDEA-0035",
+    "KFM-P9-IDEA-0036",
+    "KFM-P9-IDEA-0037",
+    "KFM-P9-IDEA-0038",
+    "KFM-P9-PROG-0029",
+    "KFM-P9-PROG-0030",
+    "KFM-P9-PROG-0031",
+    "KFM-P9-PROG-0032",
+    "KFM-P9-PROG-0033",
+    "KFM-P9-PROG-0034",
+    "KFM-P9-PROG-0035",
+    "KFM-P9-PROG-0036",
+    "KFM-P9-PROG-0037",
+    "KFM-P9-PROG-0038",
+    "KFM-P9-PROG-0039",
+    "KFM-P9-PROG-0040",
+    "KFM-P9-PROG-0041",
+    "KFM-P9-PROG-0042",
+    "KFM-P9-PROG-0043",
+    "KFM-P9-PROG-0044",
+    "KFM-P9-PROG-0045",
+    "KFM-P9-PROG-0046",
+    "KFM-P9-PROG-0047",
+    "KFM-P9-PROG-0080",
+    "KFM-P9-PROG-0081",
+    "KFM-P9-PROG-0082",
+    "KFM-P1-IDEA-0020",
+    "KFM-P1-IDEA-0069",
+    "KFM-P1-IDEA-0070",
+    "KFM-P1-IDEA-0071",
+    "KFM-P8-PROG-0006",
+    "KFM-P1-IDEA-0006",
+    "KFM-P1-IDEA-0011",
+    "KFM-P1-PROG-0007",
+    "KFM-P1-PROG-0008",
+    "KFM-P1-PROG-0009",
+    "KFM-P1-PROG-0010",
+    "KFM-P2-IDEA-0018",
+    "KFM-P2-IDEA-0019",
+    "KFM-P2-IDEA-0020",
+    "KFM-P2-IDEA-0021",
+    "KFM-P2-IDEA-0022",
+    "KFM-P2-IDEA-0023",
+    "KFM-P2-IDEA-0024",
+    "KFM-P2-IDEA-0025",
+    "KFM-P2-IDEA-0026",
+    "KFM-P2-IDEA-0027",
+    "KFM-P2-IDEA-0028",
+    "KFM-P2-IDEA-0029",
+    "KFM-P4-PROG-0001",
+    "KFM-P4-PROG-0004",
+    "KFM-P6-PROG-0001",
+    "KFM-P6-PROG-0015",
+    "KFM-P9-FEAT-0002",
+    "KFM-P9-IDEA-0008",
+    "KFM-P9-IDEA-0009",
+    "KFM-P9-IDEA-0010",
+    "KFM-P9-PROG-0003",
+    "KFM-P9-PROG-0004",
+    "KFM-P9-PROG-0005",
+    "KFM-P9-PROG-0006",
+    "KFM-P9-PROG-0007",
+    "KFM-P9-PROG-0008",
+    "KFM-P9-PROG-0009",
+    "KFM-P1-IDEA-0001",
+    "KFM-P1-IDEA-0002",
+    "KFM-P1-IDEA-0003",
+    "KFM-P1-IDEA-0004",
+    "KFM-P1-IDEA-0005",
+    "KFM-P2-PROG-0030",
+    "KFM-P2-PROG-0031",
+    "KFM-P3-FEAT-0005",
+    "KFM-P7-PROG-0007",
+    "KFM-P7-PROG-0008",
+    "KFM-P8-PROG-0020",
+    "KFM-P8-PROG-0028",
+    "KFM-P8-PROG-0029",
+    "KFM-P8-PROG-0030",
+    "KFM-P8-PROG-0031",
+    "KFM-P8-PROG-0032",
+    "KFM-P8-PROG-0033",
+    "KFM-P9-IDEA-0001",
+    "KFM-P9-PROG-0001",
+    "KFM-P1-IDEA-0012",
+    "KFM-P1-IDEA-0014",
+    "KFM-P1-IDEA-0019",
+    "KFM-P1-PROG-0013",
+    "KFM-P1-PROG-0015",
+    "KFM-P1-PROG-0016",
+    "KFM-P1-PROG-0018",
+    "KFM-P3-PROG-0001",
+    "KFM-P6-PROG-0009",
+    "KFM-P7-IDEA-0001",
+    "KFM-P8-IDEA-0001",
+    "KFM-P9-FEAT-0003",
+    "KFM-P9-IDEA-0012",
+    "KFM-P9-IDEA-0013",
+    "KFM-P9-IDEA-0014",
+    "KFM-P9-IDEA-0015",
+    "KFM-P9-PROG-0019",
+    "KFM-P9-PROG-0020",
+    "KFM-P9-PROG-0021",
+    "KFM-P9-PROG-0022",
+    "KFM-P9-PROG-0023",
+    "KFM-P9-PROG-0024",
+    "KFM-P1-FEAT-0039",
+    "KFM-P1-FEAT-0042",
+    "KFM-P1-FEAT-0044",
+    "KFM-P1-PROG-0043",
+    "KFM-P2-FEAT-0012",
+    "KFM-P2-FEAT-0013",
+    "KFM-P2-FEAT-0032",
+    "KFM-P2-FEAT-0035",
+    "KFM-P2-FEAT-0036",
+    "KFM-P2-IDEA-0014",
+    "KFM-P2-IDEA-0033",
+    "KFM-P2-IDEA-0034",
+    "KFM-P5-PROG-0003",
+    "KFM-P5-PROG-0004",
+    "KFM-P5-PROG-0012",
+    "KFM-P7-FEAT-0001",
+    "KFM-P7-PROG-0006",
+    "KFM-P9-FEAT-0001",
+    "KFM-P9-FEAT-0011",
+    "KFM-P9-FEAT-0012",
+    "KFM-P9-FEAT-0013",
+    "KFM-P9-FEAT-0014",
+    "KFM-P9-FEAT-0015",
+    "KFM-P9-FEAT-0016",
+    "KFM-P9-IDEA-0002",
+    "KFM-P9-IDEA-0003",
+    "KFM-P9-IDEA-0004",
+    "KFM-P9-IDEA-0005",
+    "KFM-P9-IDEA-0006",
+    "KFM-P9-IDEA-0007",
+    "KFM-P9-IDEA-0039",
+    "KFM-P9-IDEA-0040",
+    "KFM-P9-IDEA-0041",
+    "KFM-P9-IDEA-0042",
+    "KFM-P9-IDEA-0043",
+    "KFM-P9-IDEA-0044",
+    "KFM-P9-IDEA-0045",
+    "KFM-P9-IDEA-0049",
+    "KFM-P9-PROG-0002",
+    "KFM-P9-PROG-0048",
+    "KFM-P9-PROG-0049",
+    "KFM-P9-PROG-0050",
+    "KFM-P9-PROG-0051",
+    "KFM-P9-PROG-0052",
+    "KFM-P9-PROG-0053",
+    "KFM-P9-PROG-0054",
+    "KFM-P9-PROG-0055",
+    "KFM-P9-PROG-0056",
+    "KFM-P9-PROG-0057",
+    "KFM-P9-PROG-0058",
+    "KFM-P9-PROG-0071",
+    "KFM-P9-PROG-0072",
+    "KFM-P9-PROG-0073",
+    "KFM-P9-PROG-0074",
+    "KFM-P9-PROG-0075",
+    "KFM-P1-PROG-0022",
+    "KFM-P1-PROG-0023",
+    "KFM-P6-PROG-0003",
+    "KFM-P7-PROG-0001",
+    "KFM-P1-IDEA-0045",
+    "KFM-P1-IDEA-0046",
+    "KFM-P1-IDEA-0047",
+    "KFM-P1-IDEA-0049",
+    "KFM-P1-IDEA-0050",
+    "KFM-P1-IDEA-0051",
+    "KFM-P1-IDEA-0072",
+    "KFM-P1-PROG-0048",
+    "KFM-P1-PROG-0052",
+    "KFM-P2-IDEA-0016",
+    "KFM-P2-PROG-0017",
+    "KFM-P4-PROG-0005",
+    "KFM-P4-PROG-0006",
+    "KFM-P4-PROG-0007",
+    "KFM-P5-PROG-0008",
+    "KFM-P6-PROG-0002",
+    "KFM-P8-PROG-0024",
+    "KFM-P9-IDEA-0011",
+    "KFM-P9-PROG-0010",
+    "KFM-P9-PROG-0011",
+    "KFM-P9-PROG-0012",
+    "KFM-P9-PROG-0013",
+    "KFM-P9-PROG-0014",
+    "KFM-P9-PROG-0015",
+    "KFM-P9-PROG-0016",
+    "KFM-P9-PROG-0017",
+    "KFM-P9-PROG-0018",
+    "KFM-P1-PROG-0024",
+    "KFM-P1-PROG-0025",
+    "KFM-P1-PROG-0027",
+    "KFM-P1-PROG-0028",
+    "KFM-P1-PROG-0030",
+    "KFM-P2-PROG-0001",
+    "KFM-P2-PROG-0002",
+    "KFM-P2-PROG-0005",
+    "KFM-P2-PROG-0006",
+    "KFM-P2-PROG-0007",
+    "KFM-P2-PROG-0008",
+    "KFM-P2-PROG-0009",
+    "KFM-P2-PROG-0010",
+    "KFM-P2-PROG-0011",
+    "KFM-P6-IDEA-0001",
+    "KFM-P6-PROG-0004",
+    "KFM-P6-PROG-0005",
+    "KFM-P6-PROG-0006",
+    "KFM-P6-PROG-0011",
+    "KFM-P6-PROG-0013",
+    "KFM-P7-PROG-0002",
+    "KFM-P8-PROG-0002",
+    "KFM-P8-PROG-0005",
+    "KFM-P9-PROG-0025",
+    "KFM-P9-PROG-0026",
+    "KFM-P9-PROG-0027",
+    "KFM-P9-PROG-0028",
+    "KFM-P9-PROG-0062",
+    "KFM-P9-PROG-0063",
+    "KFM-P9-PROG-0064",
+    "KFM-P9-PROG-0065",
+    "KFM-P9-PROG-0066",
+    "KFM-P9-PROG-0067",
+    "KFM-P9-PROG-0068",
+    "KFM-P9-PROG-0069",
+    "KFM-P9-PROG-0070",
+    "KFM-P1-IDEA-0031",
+    "KFM-P1-IDEA-0033",
+    "KFM-P1-IDEA-0034",
+    "KFM-P1-IDEA-0036",
+    "KFM-P1-IDEA-0037",
+    "KFM-P1-PROG-0035",
+    "KFM-P2-IDEA-0015",
+    "KFM-P3-IDEA-0003",
+    "KFM-P5-PROG-0001",
+    "KFM-P5-PROG-0005",
+    "KFM-P5-PROG-0006",
+    "KFM-P5-PROG-0007",
+    "KFM-P7-PROG-0004",
+    "KFM-P9-FEAT-0004",
+    "KFM-P9-IDEA-0016",
+    "KFM-P9-IDEA-0017",
+    "KFM-P9-IDEA-0018",
+    "KFM-P9-IDEA-0019",
+    "KFM-P9-IDEA-0020",
+    "KFM-P1-PROG-0057",
+    "KFM-P1-PROG-0058",
+    "KFM-P1-PROG-0060",
+    "KFM-P4-IDEA-0002",
+    "KFM-P6-PROG-0007",
+    "KFM-P6-PROG-0008",
+    "KFM-P6-PROG-0012",
+    "KFM-P7-PROG-0003",
+    "KFM-P9-IDEA-0046",
+    "KFM-P9-IDEA-0047",
+    "KFM-P9-IDEA-0048",
+    "KFM-P9-PROG-0059",
+    "KFM-P9-PROG-0060",
+    "KFM-P9-PROG-0061",
+    "KFM-P1-PROG-0053",
+    "KFM-P1-PROG-0054",
+    "KFM-P1-PROG-0055",
+    "KFM-P4-PROG-0003",
+    "KFM-P5-FEAT-0001",
+    "KFM-P5-PROG-0002",
+    "KFM-P5-PROG-0010",
+    "KFM-P7-PROG-0005",
+    "KFM-P8-IDEA-0002",
+    "KFM-P8-PROG-0007",
+    "KFM-P8-PROG-0008",
+    "KFM-P8-PROG-0009",
+    "KFM-P8-PROG-0010",
+    "KFM-P8-PROG-0011",
+    "KFM-P8-PROG-0012",
+    "KFM-P8-PROG-0013",
+    "KFM-P8-PROG-0014",
+    "KFM-P8-PROG-0015",
+    "KFM-P8-PROG-0016",
+    "KFM-P8-PROG-0017",
+    "KFM-P8-PROG-0018",
+    "KFM-P8-PROG-0021",
+    "KFM-P8-PROG-0026",
+    "KFM-P8-PROG-0027",
+    "KFM-P1-FEAT-0065",
+    "KFM-P1-FEAT-0067",
+    "KFM-P1-FEAT-0074",
+    "KFM-P4-FEAT-0001",
+    "KFM-P5-PROG-0011",
+    "KFM-P6-FEAT-0001",
+    "KFM-P6-FEAT-0002",
+    "KFM-P6-FEAT-0003",
+    "KFM-P7-FEAT-0002",
+    "KFM-P9-PROG-0076",
+    "KFM-P9-PROG-0077",
+    "KFM-P9-PROG-0078",
+    "KFM-P9-PROG-0079"
+  ],
+  "withdrawn_on_evidence": []
+}

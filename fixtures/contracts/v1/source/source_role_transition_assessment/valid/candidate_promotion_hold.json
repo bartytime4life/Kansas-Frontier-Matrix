@@ -1,0 +1,46 @@
+{
+  "object_type": "SourceRoleTransitionAssessment",
+  "schema_version": "1.0.0",
+  "assessment_id": "kfm:source-role:candidate-promotion-hold:v1",
+  "operation": "PROMOTE_LIFECYCLE",
+  "inputs": [
+    {
+      "source_ref": "kfm:source:candidate:historic-site-1",
+      "source_role": "CANDIDATE",
+      "evidence_bundle_ref": "kfm:evidence-bundle:candidate:historic-site-1"
+    }
+  ],
+  "output": {
+    "artifact_ref": "kfm:artifact:candidate:historic-site-1",
+    "source_role": "CANDIDATE",
+    "lineage_roles": [
+      "CANDIDATE"
+    ]
+  },
+  "receipts": {
+    "aggregation_receipt_ref": null,
+    "model_run_receipt_ref": null,
+    "representation_receipt_ref": null,
+    "reality_boundary_note_ref": null
+  },
+  "outcome": "HOLD",
+  "reason_codes": [
+    "CANDIDATE_INPUT_REQUIRES_RESOLUTION"
+  ],
+  "obligations": [
+    "RESOLVE_EVIDENCE_AND_STEWARD_REVIEW"
+  ],
+  "validator_error_ref": null,
+  "evaluated_at": "2026-08-07T23:00:00Z",
+  "governance": {
+    "fixture_only": true,
+    "lifecycle_write": false,
+    "source_activation": false,
+    "truth_authority": false,
+    "policy_authority": false,
+    "review_authority": false,
+    "release_authority": false,
+    "publication_authority": false
+  },
+  "spec_hash": "sha256:415fd6757f4871253872a9e19f6ec0f6a0d48a2e2b615db91044a0842828d3c8"
+}

@@ -1,0 +1,164 @@
+{
+  "receipt_id": "genrec-inaturalist-observations-readme-c2159cbf",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "connectors/inaturalist/observations/README.md"
+  ],
+  "artifact_hashes": {
+    "connectors/inaturalist/observations/README.md": "sha256:212124d06e6a8c9dbc635756891bf96552731ca27e29a7b6fb436accd9b17a40"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-07-12-session"
+  },
+  "prompt_or_contract": "sha256:660986921294985ce55b01d73d009f5c2e848434d17ad7abc555b9a4b3fe3616",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "file_search",
+      "python"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:bd74fd4bf9129fdfbd0e262727b94bc770302a8bb186a9ae3655b1e5e6768ae4",
+      "sha256:3111f073fe8398d3007d5589f6de52e7a1ccecc21d4434854e32203829a26ef3",
+      "sha256:4d26d341a4fbf2103224d27b0f4667271bc769a851c496f5b732288881b8a85f",
+      "sha256:81baf0a1702f1dc9dbf460af4697ae32fa612b6d52949136d6971b081c0df583",
+      "sha256:d67d6cdd5c9c19f99ebfeb0815d53bd085d81b19d714a9ee0dd3c905160e95b4"
+    ],
+    "attached_docs": [
+      "KFM GitHub Repository Documentation Implementation Agent — Full Operating Prompt v3",
+      "Directory Rules.pdf"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/c607263b6134049effd64140da7f7a85be8cd01f",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/c607263b6134049effd64140da7f7a85be8cd01f/connectors/inaturalist/observations/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/c607263b6134049effd64140da7f7a85be8cd01f/connectors/inaturalist/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/c607263b6134049effd64140da7f7a85be8cd01f/connectors/inaturalist/src/inaturalist/descriptor.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/c607263b6134049effd64140da7f7a85be8cd01f/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/c607263b6134049effd64140da7f7a85be8cd01f/docs/sources/catalog/inaturalist/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/c607263b6134049effd64140da7f7a85be8cd01f/docs/sources/catalog/inaturalist/research-grade-observations.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/c607263b6134049effd64140da7f7a85be8cd01f/docs/domains/fauna/CANONICAL_PATHS.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/c607263b6134049effd64140da7f7a85be8cd01f/contracts/domains/fauna/occurrence_evidence.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/c607263b6134049effd64140da7f7a85be8cd01f/data/raw/fauna/inaturalist/README.md"
+    ]
+  },
+  "truth_labels": {
+    "connectors/inaturalist/observations/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-preflight",
+      "outcome": "PASS",
+      "reason": "Repository, permissions, default branch, pinned base commit, target blob, duplicate PR/branch state, and adjacent evidence were inspected."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "The README remains under the existing source-specific connectors/ responsibility root; no path move or parallel authority was created."
+    },
+    {
+      "gate": "remote-readback",
+      "outcome": "PASS",
+      "reason": "Updated UTF-8 Markdown was read back from agent/inaturalist-observations-readme at commit c2159cbf356a3d900b15edb02d0a39eff31c3e93."
+    },
+    {
+      "gate": "artifact-integrity",
+      "outcome": "PASS",
+      "reason": "Raw UTF-8 SHA-256 is 212124d06e6a8c9dbc635756891bf96552731ca27e29a7b6fb436accd9b17a40 and Git blob SHA-1 is 216a409fd1bb751412c419dbbfb9210b48f21e97."
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "Meta block, headings, quick-jump targets, tables, fenced blocks, Mermaid lifecycle diagram, definition of done, verification backlog, and rollback section were checked."
+    },
+    {
+      "gate": "evidence-boundary-review",
+      "outcome": "PASS",
+      "reason": "Repository scaffolds, placeholders, conflicts, and absence claims are bounded to the pinned ref and inspected paths; no runtime or activation claim was inferred."
+    },
+    {
+      "gate": "sensitive-data-review",
+      "outcome": "PASS",
+      "reason": "No source payload, observer data, exact occurrence geometry, private coordinates, media bytes, or credentials were introduced."
+    },
+    {
+      "gate": "live-source-access",
+      "outcome": "SKIPPED",
+      "reason": "No iNaturalist, GBIF, taxonomy, media, or other biodiversity source interaction was authorized or required."
+    },
+    {
+      "gate": "generated-receipt-schema",
+      "outcome": "PASS",
+      "reason": "Receipt was validated against a compact Draft 2020-12 mirror of the inspected repository schema; repository CI remains authoritative."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "KFM-OPERATING-PROMPT-V3",
+      "validated": true,
+      "evidence_ref": "attached://KFM GitHub Repository Documentation Implementation Agent — Full Operating Prompt v3"
+    },
+    {
+      "id": "KFM-DIRECTORY-RULES",
+      "validated": true,
+      "evidence_ref": "attached://Directory Rules.pdf"
+    },
+    {
+      "id": "REPO-DIRECTORY-RULES",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/c607263b6134049effd64140da7f7a85be8cd01f/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "CONNECTORS-ROOT",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/c607263b6134049effd64140da7f7a85be8cd01f/connectors/README.md"
+    },
+    {
+      "id": "INATURALIST-SOURCE-PROFILE",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/c607263b6134049effd64140da7f7a85be8cd01f/docs/sources/catalog/inaturalist/README.md"
+    },
+    {
+      "id": "INATURALIST-RESEARCH-GRADE-PRODUCT",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/c607263b6134049effd64140da7f7a85be8cd01f/docs/sources/catalog/inaturalist/research-grade-observations.md"
+    },
+    {
+      "id": "FAUNA-CANONICAL-PATHS",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/c607263b6134049effd64140da7f7a85be8cd01f/docs/domains/fauna/CANONICAL_PATHS.md"
+    },
+    {
+      "id": "OCCURRENCE-EVIDENCE-CONTRACT",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/c607263b6134049effd64140da7f7a85be8cd01f/contracts/domains/fauna/occurrence_evidence.md"
+    },
+    {
+      "id": "INATURALIST-RAW-FAUNA-LANE",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/c607263b6134049effd64140da7f7a85be8cd01f/data/raw/fauna/inaturalist/README.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-12T00:50:45Z",
+  "emitter": "ai-builder/openai-gpt-5.6-pro",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored documentation update on a scoped review branch. The README hash is the raw UTF-8 SHA-256 of the exact committed content and is cross-checked against the Git blob SHA-1. The receipt records repository conflicts without resolving descriptor, schema, product, or policy authority. No live biodiversity source was contacted. Human review is intentionally pending; this receipt is well-formed but not merge-authorizing."
+}

@@ -1,0 +1,132 @@
+{
+  "receipt_id": "genrec-site-v166-single-toolbar-20261006",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/site/README.md",
+    "apps/site/source/app/globals.css",
+    "apps/site/source/app/page.tsx",
+    "apps/site/source/docs/SITE_PRESERVATION.md",
+    "apps/site/source/scripts/verify-explorer-geometry.mjs",
+    "apps/site/source/tests/mobile-compatibility.test.mjs",
+    "apps/site/source/tests/rendered-html.test.mjs",
+    "apps/site/source/tests/runtime-resilience.test.mjs",
+    "data/receipts/generated/site-v166-single-toolbar-20261006.json"
+  ],
+  "artifact_hashes": {
+    "apps/site/README.md": "sha256:dfe2a69c5f5c93fa5569a90e9e1714cf70108c382beed035471308ab52b82167",
+    "apps/site/source/app/globals.css": "sha256:cdb3ce8a3314914d24d95eecbac141ba79289869da728fc6c5182b1440ca8f25",
+    "apps/site/source/app/page.tsx": "sha256:f0c51a9c6979763181fc2d2ac833e3fa09fc3200045e5c2aef2924532390723b",
+    "apps/site/source/docs/SITE_PRESERVATION.md": "sha256:6552d9f21e18d47dbb92bb17005636c3f5f46cb2c2391b128066f4fb7f4065b6",
+    "apps/site/source/scripts/verify-explorer-geometry.mjs": "sha256:2bb1ebb311c2db22d9df5999c28720e99306e503ec226a17ab539bc7e9bfc208",
+    "apps/site/source/tests/mobile-compatibility.test.mjs": "sha256:e4cfef4b1b8a2af0d69344d951527dd0d5b7fc31f522c50b74297081bb1ae2c7",
+    "apps/site/source/tests/rendered-html.test.mjs": "sha256:15bcfd42305b0c444ae582b88b67a9140f51143598e9709379c5f7fef105f312",
+    "apps/site/source/tests/runtime-resilience.test.mjs": "sha256:bc99f6dd78aae960e92e80d5be6b809d0fa75b616f754b3a0c552be25f7d1075",
+    "data/receipts/generated/site-v166-single-toolbar-20261006.json": "sha256:6103c0dc70d797a81859dbd97b9f985ad568efae631b3763918899400454d364"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6",
+    "version": "not-disclosed"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "tools_enabled": [
+      "local-shell",
+      "GitHub-readback",
+      "parent-Sites-browser-readback"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "git:283ed3d32ffb0ea46d55cd53a92ee5e63d778e0b",
+      "sites:appgprj_6aa0b1c41bc08191bfd86003920f1631@a4d6b3dc69721fbfb270906a9ff3e44dd941d5c0",
+      "docs/doctrine/directory-rules.md",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ],
+    "evidence_hashes": [
+      "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7"
+    ]
+  },
+  "truth_labels": {
+    "apps/site/README.md": "CONFIRMED",
+    "apps/site/source/app/globals.css": "CONFIRMED",
+    "apps/site/source/app/page.tsx": "CONFIRMED",
+    "apps/site/source/docs/SITE_PRESERVATION.md": "CONFIRMED",
+    "apps/site/source/scripts/verify-explorer-geometry.mjs": "CONFIRMED",
+    "apps/site/source/tests/mobile-compatibility.test.mjs": "CONFIRMED",
+    "apps/site/source/tests/rendered-html.test.mjs": "CONFIRMED",
+    "apps/site/source/tests/runtime-resilience.test.mjs": "CONFIRMED",
+    "data/receipts/generated/site-v166-single-toolbar-20261006.json": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Exact same-Site source parity",
+      "outcome": "PASS",
+      "reason": "699 source paths match final immutable source a4d6b3dc69721fbfb270906a9ff3e44dd941d5c0."
+    },
+    {
+      "gate": "Application build, TypeScript, Node and lint",
+      "outcome": "PASS",
+      "reason": "Reused root validation of byte-identical final source: 552 tests, no skips/failures; lint zero errors/46 inherited warnings. No duplicate application run in mirror."
+    },
+    {
+      "gate": "Bounded browser smoke",
+      "outcome": "PASS",
+      "reason": "Root observed desktop/mobile one-row geometry and menu focus behavior; evaluator reviewed root captures. Separate evaluator capture unavailable."
+    },
+    {
+      "gate": "Documentation links",
+      "outcome": "PASS",
+      "reason": "Two changed Markdown documents, 16 local targets."
+    },
+    {
+      "gate": "Repository topology",
+      "outcome": "FAIL",
+      "reason": "Six exact inherited KFM-TOPO-017 failure findings match baseline 283ed3d on DP-15 inventory artifacts; zero new toolbar findings and zero invariant failures."
+    },
+    {
+      "gate": "Historical mirror review",
+      "outcome": "FAIL",
+      "reason": "MIRROR_REVIEW_REQUIRED remains held; historical receipt unchanged."
+    },
+    {
+      "gate": "Independent human review and exact-head CI",
+      "outcome": "SKIPPED",
+      "reason": "Pending; validation does not imply approval."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "directory-rules",
+      "validated": true,
+      "evidence_ref": "docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "adr-0029",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "source-comparison",
+      "validated": true,
+      "evidence_ref": "data/receipts/generated/site-v166-single-toolbar-20261006.json"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-10-07T04:04:07.058238Z",
+  "emitter": "Codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Generation provenance only, covering final authored artifact bytes except this self-referential record. No prompts, secrets, private payloads, hidden reasoning or approval claims. Local/source/hosted verification remains separate from dataset release and review."
+}

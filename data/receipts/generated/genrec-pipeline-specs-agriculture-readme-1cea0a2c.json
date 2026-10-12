@@ -1,0 +1,204 @@
+{
+  "receipt_id": "genrec-pipeline-specs-agriculture-readme-1cea0a2c",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "pipeline_specs/agriculture/README.md"
+  ],
+  "artifact_hashes": {
+    "pipeline_specs/agriculture/README.md": "sha256:1cea0a2c5e78f216e2aa5325c30555ec4f64e9b157183571422e43fb53cbd849"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-15-session"
+  },
+  "prompt_or_contract": "sha256:831d78db2fb33d4753d91355fa30cad5a8c962eeb712a1f9e13fcd25c95f6b34",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "container"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "Directory Rules.pdf",
+      "Kansas Frontier Matrix — AI Build Operating Contract.md"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/63a04206d7cb5c51b6fc45caf684c1c731cc177d",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/63a04206d7cb5c51b6fc45caf684c1c731cc177d/pipeline_specs/agriculture/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/63a04206d7cb5c51b6fc45caf684c1c731cc177d/pipeline_specs/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/63a04206d7cb5c51b6fc45caf684c1c731cc177d/pipeline_specs/domains/agriculture/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/63a04206d7cb5c51b6fc45caf684c1c731cc177d/pipeline_specs/agriculture/nass_quickstats.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/63a04206d7cb5c51b6fc45caf684c1c731cc177d/pipelines/domains/agriculture/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/63a04206d7cb5c51b6fc45caf684c1c731cc177d/docs/domains/agriculture/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/63a04206d7cb5c51b6fc45caf684c1c731cc177d/docs/domains/agriculture/PIPELINE.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/63a04206d7cb5c51b6fc45caf684c1c731cc177d/docs/domains/agriculture/CANONICAL_PATHS.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/63a04206d7cb5c51b6fc45caf684c1c731cc177d/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/63a04206d7cb5c51b6fc45caf684c1c731cc177d/connectors/nass/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/63a04206d7cb5c51b6fc45caf684c1c731cc177d/data/registry/sources/agriculture/nass_quickstats.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/63a04206d7cb5c51b6fc45caf684c1c731cc177d/contracts/domains/agriculture/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/63a04206d7cb5c51b6fc45caf684c1c731cc177d/schemas/contracts/v1/domains/agriculture/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/63a04206d7cb5c51b6fc45caf684c1c731cc177d/policy/domains/agriculture/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/63a04206d7cb5c51b6fc45caf684c1c731cc177d/tests/domains/agriculture/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/63a04206d7cb5c51b6fc45caf684c1c731cc177d/tests/domains/agriculture/test_nass_aggregate_only.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/63a04206d7cb5c51b6fc45caf684c1c731cc177d/tests/domains/agriculture/test_policy_denial_field_level_nass.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/63a04206d7cb5c51b6fc45caf684c1c731cc177d/fixtures/domains/agriculture/nass_quickstats/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/63a04206d7cb5c51b6fc45caf684c1c731cc177d/.github/workflows/domain-agriculture.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/63a04206d7cb5c51b6fc45caf684c1c731cc177d/.github/CODEOWNERS",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/63a04206d7cb5c51b6fc45caf684c1c731cc177d/.github/PULL_REQUEST_TEMPLATE.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/63a04206d7cb5c51b6fc45caf684c1c731cc177d/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    ]
+  },
+  "truth_labels": {
+    "pipeline_specs/agriculture/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-preflight",
+      "outcome": "PASS",
+      "reason": "Repository identity, permissions, main head, target blob, duplicate branch/PR state, parent and adjacent Agriculture surfaces were inspected."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "The README remains in the existing pipeline_specs/ responsibility root; the receipt uses the established data/receipts/generated/ lane. No root or parallel authority home is created."
+    },
+    {
+      "gate": "bounded-inventory",
+      "outcome": "PASS",
+      "reason": "The direct lane contains the README and nass_quickstats.yaml; the nested Agriculture lane is an explicit compatibility guardrail. Bounded searches did not surface pipeline-spec-specific test or fixture directories."
+    },
+    {
+      "gate": "compatibility-lane-reconciliation",
+      "outcome": "PASS",
+      "reason": "The revision records pipeline_specs/domains/agriculture/ as guardrail-only and does not create aliases, duplicate specs, precedence, or migrations."
+    },
+    {
+      "gate": "placeholder-maturity",
+      "outcome": "PASS",
+      "reason": "The QuickStats spec and source record, NASS tests, domain workflow, and related indexes are described at their observed placeholder, scaffold, draft, or unknown maturity without activation claims."
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "Meta block, heading hierarchy, tables, Mermaid block, fenced examples, no-loss assessment, verification register, rollback, and final newline were checked."
+    },
+    {
+      "gate": "internal-link-and-anchor",
+      "outcome": "PASS",
+      "reason": "All 37 internal anchor links resolved and referenced repository paths were verified by direct fetch or bounded search."
+    },
+    {
+      "gate": "illustrative-yaml-parse",
+      "outcome": "PASS",
+      "reason": "The one YAML example parsed successfully and is visibly labeled illustrative, non-canonical, and inactive."
+    },
+    {
+      "gate": "secret-and-sensitive-content-review",
+      "outcome": "PASS",
+      "reason": "No private keys, common token patterns, credentials, private endpoints, live queries, operator records, field geometries, or restricted payloads were introduced."
+    },
+    {
+      "gate": "workflow-trigger-preflight",
+      "outcome": "PASS",
+      "reason": "Only documentation and its required provenance receipt change; no executable spec, source, workflow, policy, schema, runtime, lifecycle, or release artifact is modified."
+    },
+    {
+      "gate": "remote-readback",
+      "outcome": "PASS",
+      "reason": "The committed README was read back from the scoped branch with Git blob SHA 2889265142b83da0c3df4f3e852a96b47ea82e87, matching the locally calculated blob."
+    },
+    {
+      "gate": "artifact-integrity",
+      "outcome": "PASS",
+      "reason": "README raw UTF-8 SHA-256 is 1cea0a2c5e78f216e2aa5325c30555ec4f64e9b157183571422e43fb53cbd849."
+    },
+    {
+      "gate": "executable-spec-tests",
+      "outcome": "SKIPPED",
+      "reason": "No executable or active pipeline specification, parser, consumer, source binding, or schedule was created or modified."
+    },
+    {
+      "gate": "live-source-runtime-release-tests",
+      "outcome": "SKIPPED",
+      "reason": "Live NASS access, runtime execution, lifecycle writes, release, and publication are outside this documentation-only change."
+    },
+    {
+      "gate": "generated-receipt-schema",
+      "outcome": "PASS",
+      "reason": "Required fields, allowed properties, hash patterns, truth-label and validation enums, review state, timestamps, citations, and notes were validated against the inspected Draft 2020-12 schema."
+    },
+    {
+      "gate": "repository-native-ci",
+      "outcome": "SKIPPED",
+      "reason": "Pull-request checks have not run at receipt emission time; the repository's Agriculture workflow is known to contain TODO echo steps and cannot be treated as substantive validation."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "TARGET-README",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/63a04206d7cb5c51b6fc45caf684c1c731cc177d/pipeline_specs/agriculture/README.md"
+    },
+    {
+      "id": "PIPELINE-SPECS-ROOT",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/63a04206d7cb5c51b6fc45caf684c1c731cc177d/pipeline_specs/README.md"
+    },
+    {
+      "id": "AGRICULTURE-COMPAT-GUARDRAIL",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/63a04206d7cb5c51b6fc45caf684c1c731cc177d/pipeline_specs/domains/agriculture/README.md"
+    },
+    {
+      "id": "NASS-QUICKSTATS-SPEC",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/63a04206d7cb5c51b6fc45caf684c1c731cc177d/pipeline_specs/agriculture/nass_quickstats.yaml"
+    },
+    {
+      "id": "AGRICULTURE-PIPELINE",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/63a04206d7cb5c51b6fc45caf684c1c731cc177d/pipelines/domains/agriculture/README.md"
+    },
+    {
+      "id": "DIRECTORY-RULES",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/63a04206d7cb5c51b6fc45caf684c1c731cc177d/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "NASS-CONNECTOR",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/63a04206d7cb5c51b6fc45caf684c1c731cc177d/connectors/nass/README.md"
+    },
+    {
+      "id": "AGRICULTURE-POLICY",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/63a04206d7cb5c51b6fc45caf684c1c731cc177d/policy/domains/agriculture/README.md"
+    },
+    {
+      "id": "GENERATED-RECEIPT-SCHEMA",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/63a04206d7cb5c51b6fc45caf684c1c731cc177d/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-15T16:15:42Z",
+  "emitter": "ai-builder/openai-gpt-5.6-thinking",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored documentation-only revision on a scoped branch. The README is reconciled with current repository evidence, the direct Agriculture spec lane, the nested compatibility guardrail, the QuickStats placeholder, NASS placement drift, Agriculture domain/pipeline/contracts/schemas/policy/test/fixture surfaces, Directory Rules, CODEOWNERS, the PR contract, and the generated-receipt schema. No active pipeline spec, parser, consumer, connector, credential, source activation, test implementation, workflow, lifecycle record, receipt instance other than this provenance record, release decision, runtime behavior, or public artifact was created or changed. Human review remains pending; this receipt is well-formed but not merge-authorizing."
+}

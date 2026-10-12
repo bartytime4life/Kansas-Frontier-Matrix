@@ -1,0 +1,88 @@
+{
+  "receipt_id": "genrec-domain-settlements-infrastructure-workflow-70c56c0e",
+  "contract_version": "3.0.0",
+  "receipt_type": "GenerationReceipt",
+  "status": "PROPOSED",
+  "generated_at": "2026-07-18T00:00:00-05:00",
+  "repository": "bartytime4life/Kansas-Frontier-Matrix",
+  "base_commit": "14a0be53f8fde399e20888b8fbf18174d41a8376",
+  "branch": "agent/domain-settlements-infrastructure-workflow-20260718",
+  "target_path": ".github/workflows/domain-settlements-infrastructure.yml",
+  "previous_blob": "f1005588b56c5aa103af254accd5d33ab7152fa6",
+  "new_blob": "70c56c0e3938f059e546e39897acb1fe7f54ad30",
+  "content_digest": {
+    "algorithm": "git-blob-sha1",
+    "value": "70c56c0e3938f059e546e39897acb1fe7f54ad30"
+  },
+  "truth_labels": {
+    "confirmed": [
+      "The prior validate-settlements-infrastructure, build-proof-settlements-infrastructure, and publish-dry-run-settlements-infrastructure jobs only executed TODO echo commands.",
+      "Baseline workflow run 29654753583 completed successfully without Settlements/Infrastructure validation, proof construction, or release dry-run execution.",
+      "The Settlements/Infrastructure test index records executable tests, fixture shapes, schema bindings, validators, CI coverage, release integration, and pass rates as needing verification.",
+      "Sampled Settlements/Infrastructure test modules contain only PROPOSED placeholder docstrings.",
+      "The per-domain validator index records executables, schemas, fixtures, policy bundles, and CI wiring as unverified.",
+      "Sampled domain validator files use a main function that raises NotImplementedError and therefore do not establish executable validation.",
+      "Concrete JSON Schema files exist under the domain schema root, while fixture lanes currently contain placeholder marker files rather than JSON payloads.",
+      "The domain policy README remains a PROPOSED greenfield scaffold.",
+      "The proof lane is draft and records emitted proof objects, schemas, validators, fixtures, CI workflows, source descriptors, release gates, and rollback drills as needing verification.",
+      "The release-candidate lane is pre-publication and states that a candidate is not a release.",
+      "Published artifacts remain downstream public-safe carriers with live artifact maturity and release approval unverified.",
+      "Workflow name domain-settlements-infrastructure and all three job ids are preserved."
+    ],
+    "proposed": [
+      "Bounded structural validation plus explicit semantic-validation, proof, and release holds are the safest current CI behavior.",
+      "Docstring-only tests and exact main/NotImplementedError validator modules should be recognized as scaffolds without being represented as enforceability proof."
+    ],
+    "needs_verification": [
+      "Final-head GitHub Actions conclusions.",
+      "Accepted settlements-infrastructure versus settlement schema, contract, package, pipeline, and published-layer topology.",
+      "Accepted Settlements/Infrastructure validator ownership and deterministic no-network semantic test suite.",
+      "Executable policy and sensitivity controls for critical assets, condition and vulnerability data, dependency graphs, cultural and sovereignty review, living-person proximity, and public-safe geometry.",
+      "Concrete EvidenceBundle and proof producer contracts, schemas, fixtures, manifests, access controls, and receipts.",
+      "Accepted candidate, ReleaseManifest, correction, withdrawal, graph or cache invalidation, and rollback contracts.",
+      "Branch-protection dependencies, independent infrastructure-sensitivity review ownership, and immutable action pinning."
+    ]
+  },
+  "changes": [
+    "Added workflow_dispatch, contents: read permission, concurrency cancellation, deterministic Python setup, and five-minute job timeouts.",
+    "Disabled persisted checkout credentials.",
+    "Converted the validation TODO into a bounded structural readiness check with an explicit WORKFLOW_HOLD outcome.",
+    "Added required-boundary checks across domain doctrine, contracts, schemas, fixtures, policy, tests, validators, source registry, proofs, release candidates, and published lanes.",
+    "Added AST-based detection for substantive Settlements/Infrastructure tests while recognizing docstring-only test modules as scaffolds.",
+    "Added deterministic JSON Schema parsing and structural identity checks without treating schema status as semantic acceptance.",
+    "Added parsing for any future JSON fixtures while preserving the current placeholder-marker fixture posture.",
+    "Added AST recognition for exact main/NotImplementedError validator scaffolds and fail-closed detection for substantive validator bodies.",
+    "Added a policy-posture check for the current domain scaffold.",
+    "Converted proof and release TODO jobs into explicit WORKFLOW_SKIPPED_EXPLICIT and WORKFLOW_HOLD readiness checks.",
+    "Added fail-closed detection for proof artifacts, proof producers, candidate records, Make targets, and changed candidate posture.",
+    "Added bounded summaries preserving municipal-status, census-vintage, critical-asset, operator, condition, service-area, dependency, cultural, sovereignty, safety, emergency, correction, withdrawal, and rollback boundaries."
+  ],
+  "authority_boundary": "A green held result is repository-readiness evidence only. It is not settlement, municipality, census-place, facility, operator, condition, service-area, dependency, critical-infrastructure, legal-status, safety, emergency, EvidenceBundle, proof, lifecycle promotion, release, or publication authority.",
+  "directory_rules_basis": [
+    ".github/workflows remains the existing CI orchestration location.",
+    "contracts and schemas remain separate meaning and shape roots.",
+    "tests and fixtures remain the enforceability and bounded synthetic-input roots.",
+    "tools remains the validator and helper root.",
+    "policy remains the admissibility and sensitivity root.",
+    "data/registry remains the source-admission and registry root.",
+    "data/proofs remains the proof-support root.",
+    "release remains the release-decision root.",
+    "data/published remains the released-payload root.",
+    "data/receipts/generated remains the existing generated process-memory lane."
+  ],
+  "validation": {
+    "workflow_yaml_parse": "PASS",
+    "workflow_and_job_identities_preserved": "PASS",
+    "schema_fixture_test_validator_runtime_checks": "PENDING_FINAL_HEAD_CI",
+    "exact_changed_paths": [
+      ".github/workflows/domain-settlements-infrastructure.yml",
+      "data/receipts/generated/genrec-domain-settlements-infrastructure-workflow-70c56c0e.json"
+    ],
+    "final_head_ci": "PENDING",
+    "human_review": "PENDING"
+  },
+  "rollback": {
+    "strategy": "Close the pull request without merge or revert the single atomic workflow-and-receipt commit.",
+    "restores_blob": "f1005588b56c5aa103af254accd5d33ab7152fa6"
+  }
+}

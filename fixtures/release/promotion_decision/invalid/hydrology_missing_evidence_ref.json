@@ -1,0 +1,15 @@
+{
+  "id": "promo:hydrology:run-2026-05-12T00-00-00Z",
+  "version": "v1",
+  "domain": "hydrology",
+  "run_id": "run-2026-05-12T00-00-00Z",
+  "decision": "APPROVE",
+  "evidence_bundle_uri": "data/proofs/hydrology/run-2026-05-12T00-00-00Z.promotion_proof.json",
+  "rollback_card_uri": "release/rollback_cards/hydrology/run-2026-05-12T00-00-00Z.md",
+  "policy_bundle": "policy/promotion/hydrology@v1",
+  "decided_at": "2026-05-12T00:00:00Z",
+  "review": {
+    "reviewer": "release-steward",
+    "ticket": "REL-123"
+  }
+}

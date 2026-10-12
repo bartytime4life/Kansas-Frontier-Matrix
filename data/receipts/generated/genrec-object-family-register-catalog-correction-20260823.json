@@ -1,0 +1,134 @@
+{
+  "receipt_id": "genrec-object-family-register-catalog-correction-20260823",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/object-family-register.yml",
+    "control_plane/object_family_register.yaml"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/object-family-register.yml": "sha256:d17fbcdacee82de127067a738fc7d233238affc77a1f0c095b5d8ee966e03373",
+    "control_plane/object_family_register.yaml": "sha256:3a8e71c32a747e1da252c91682646661642a424b2951769e36fd6754a89adcda"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "ChatGPT",
+    "version": "GPT-5.6 Pro"
+  },
+  "prompt_or_contract": "sha256:4ddf150f9f41e7ea438092c3d9b5873efea6b9e5690783f309f7933dd13e8ba0",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "repository evidence inspection",
+      "Python JSON projection checks",
+      "workflow YAML parser",
+      "SHA-256 artifact binding"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/13757e3e4eb1d3ab0915f51be1fefa013b20f4b4",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3360",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/3422",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/3423",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/3424",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/13757e3e4eb1d3ab0915f51be1fefa013b20f4b4/control_plane/object_family_register.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/13757e3e4eb1d3ab0915f51be1fefa013b20f4b4/.github/workflows/object-family-register.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/13757e3e4eb1d3ab0915f51be1fefa013b20f4b4/tools/validators/correction/validate_correction_notice.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/13757e3e4eb1d3ab0915f51be1fefa013b20f4b4/tools/validators/data/validate_validation_report.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/13757e3e4eb1d3ab0915f51be1fefa013b20f4b4/tests/validators/test_validate_correction_notice.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/13757e3e4eb1d3ab0915f51be1fefa013b20f4b4/tests/validators/test_validate_validation_report.py"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/object-family-register.yml": "PROPOSED",
+    "control_plane/object_family_register.yaml": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Pinned the correction baseline to current main 13757e3e4eb1d3ab0915f51be1fefa013b20f4b4 after PR #3439 merged, and found no open pull request overlapping this catalog slice."
+    },
+    {
+      "gate": "landed-surface-reconciliation",
+      "outcome": "PASS",
+      "reason": "Recorded the merged CorrectionNotice fixture, canonical validator, compatibility entry point, and focused test from #3422, plus the merged generic ValidationReport fixture, validator, and focused test from #3423. No contract, schema, policy, emitter, or authority candidate was selected."
+    },
+    {
+      "gate": "family-maturity-and-conflict-classification",
+      "outcome": "PASS",
+      "reason": "CorrectionNotice advances from partial to covered because contract, schemas, fixture, validators, and test are present while a dedicated family workflow is absent. ValidationReport remains hardened because the family already has a soil-specific workflow. Both remain CONFLICTED, and the required-family conflict count remains eleven."
+    },
+    {
+      "gate": "finite-workflow-watch-closure",
+      "outcome": "PASS",
+      "reason": "Added only the newly declared CorrectionNotice and generic ValidationReport fixture roots to both pull_request and main-push filters. All declared catalog paths are covered recursively without adding a broad fixtures root glob."
+    },
+    {
+      "gate": "bounded-local-projection-checks",
+      "outcome": "PASS",
+      "reason": "Parsed the proposed register and workflow, verified the exact 16 required plus three retained families, eleven required conflicts, canonical changed path ordering, maturity and implementation-status derivation, relationship preservation, and per-event recursive workflow coverage."
+    },
+    {
+      "gate": "new-path-current-main-existence",
+      "outcome": "PASS",
+      "reason": "Inspected the new canonical validators, focused tests, and fixture roots on current main at the pinned baseline."
+    },
+    {
+      "gate": "local-artifact-sha256-binding",
+      "outcome": "PASS",
+      "reason": "Bound the final proposed register and workflow bytes to this pending-review successor receipt with full SHA-256 digests."
+    },
+    {
+      "gate": "repository-validator-and-hosted-exact-head",
+      "outcome": "SKIPPED",
+      "reason": "The full repository validator suite and hosted exact-head workflow are not claimed before the draft pull-request head exists; they remain NEEDS VERIFICATION."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "issue-3360",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3360"
+    },
+    {
+      "id": "correction-notice-validator-pr",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/3422"
+    },
+    {
+      "id": "validation-report-validator-pr",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/3423"
+    },
+    {
+      "id": "object-family-workflow-watch-pr",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/3424"
+    },
+    {
+      "id": "current-main-register",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/13757e3e4eb1d3ab0915f51be1fefa013b20f4b4/control_plane/object_family_register.yaml"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-23T15:03:28Z",
+  "emitter": "openai/chatgpt-gpt-5.6-pro",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Bounded catalog correction for landed structural validator evidence only. The change updates navigational maturity and declared paths, preserves all candidate conflicts, and carries forward the event-specific workflow-watch invariant. It does not select authority, approve human review, authorize a source or policy decision, execute an emitter, merge, release, deploy, promote, correct, withdraw, or publish anything. Rollback is the proposed register/workflow commit; the prior receipt remains immutable process memory."
+}

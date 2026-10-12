@@ -1,0 +1,11 @@
+[Unit]
+Description=KFM hourly candidate staging, never activation
+
+[Timer]
+OnCalendar=hourly
+RandomizedDelaySec=120
+Persistent=false
+Unit=kfm-water-candidate.service
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,126 @@
+{
+  "receipt_id": "genrec-stable-diff-review-handoff-20260830",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/stable-diff-review-handoff.yml",
+    "docs/runbooks/STABLE_DIFF_REVIEW_HANDOFF.md",
+    "tests/diff/test_build_stable_diff_review_handoff.py",
+    "tools/ci/build_stable_diff_review_handoff.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/stable-diff-review-handoff.yml": "sha256:ea8e103524df4c06db926223c8d8812a492aca3375d80f582580953c68613f2b",
+    "docs/runbooks/STABLE_DIFF_REVIEW_HANDOFF.md": "sha256:73817d0155ef229659f983c01894ba4eb21ec2475c42f7fe28f46b096f43ca93",
+    "tests/diff/test_build_stable_diff_review_handoff.py": "sha256:79f224372c3c548d8182c8b6e5b696a98890780d3d43a03347fe421c5cac2489",
+    "tools/ci/build_stable_diff_review_handoff.py": "sha256:c1e7ac6764cb689c01163c453b72180dd8a7c0fa20f9d40819d3333f9b2b43cf"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Sol",
+    "version": "2026-08-30"
+  },
+  "prompt_or_contract": "sha256:a1c61c7dcc335f635730c2782ae030053a36af0a19e519a6ac0a9646e934b6db",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector repository inspection and mutation",
+      "Notion connector coordination",
+      "Google Drive connector read-only orchestration inspection"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/31f5ade589b9f20d87a59ce83be228e577f51cca/.github/workflows/stable-diff-review-handoff.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/31f5ade589b9f20d87a59ce83be228e577f51cca/tests/diff/test_stable_diff.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/31f5ade589b9f20d87a59ce83be228e577f51cca/tests/diff/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/31f5ade589b9f20d87a59ce83be228e577f51cca/tools/validators/validate_generated_receipt.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/31f5ade589b9f20d87a59ce83be228e577f51cca/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/issues/3672",
+      "drive://1UcPOllhuhNMg2eXV6g881zekMlj92ivxKh0bOiP7iFA"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/stable-diff-review-handoff.yml": "PROPOSED",
+    "docs/runbooks/STABLE_DIFF_REVIEW_HANDOFF.md": "PROPOSED",
+    "tests/diff/test_build_stable_diff_review_handoff.py": "PROPOSED",
+    "tools/ci/build_stable_diff_review_handoff.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "active-work-and-overlap-reconciliation",
+      "outcome": "PASS",
+      "reason": "Prior stable-diff documentation owner PR #3924 merged before this milestone slice was commissioned; no open foreign pull request owned the stable-diff workflow or tests/diff acceptance boundary at delivery."
+    },
+    {
+      "gate": "focused-pytest-collection",
+      "outcome": "PASS",
+      "reason": "Hosted exact-head execution collected and passed 28 focused comparator, renderer, and handoff tests after switching the dedicated workflow from unittest module loading to pytest collection."
+    },
+    {
+      "gate": "exact-input-handoff-smoke",
+      "outcome": "PASS",
+      "reason": "Hosted exact-head execution bound synthetic artifact, report, summary, and context inputs and produced REVIEW_REQUIRED with unauthenticated review and POTENTIAL policy-impact classification as expected."
+    },
+    {
+      "gate": "artifact-hash-replay",
+      "outcome": "PASS",
+      "reason": "The workflow emitted SHA-256 ea8e103524df4c06db926223c8d8812a492aca3375d80f582580953c68613f2b for its final proposed bytes; unchanged handoff artifacts retain their previously bound SHA-256 digests."
+    },
+    {
+      "gate": "local-repository-native-tests",
+      "outcome": "SKIPPED",
+      "reason": "No mounted repository checkout is available in this connector run; focused repository-native execution is provided by hosted exact-head CI."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "The successor receipt creates a new immutable task head; final hosted validation is evaluated from that head after this receipt is committed."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request; this automation does not request, submit, or approve reviews."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "repository:stable-diff-handoff-workflow",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/31f5ade589b9f20d87a59ce83be228e577f51cca/.github/workflows/stable-diff-review-handoff.yml"
+    },
+    {
+      "id": "repository:stable-diff-comparator-tests",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/31f5ade589b9f20d87a59ce83be228e577f51cca/tests/diff/test_stable_diff.py"
+    },
+    {
+      "id": "repository:generated-receipt-validator",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/31f5ade589b9f20d87a59ce83be228e577f51cca/tools/validators/validate_generated_receipt.py"
+    },
+    {
+      "id": "repository:directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/31f5ade589b9f20d87a59ce83be228e577f51cca/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-30T17:15:00Z",
+  "emitter": "OpenAI ChatGPT automation runtime",
+  "links": {
+    "pr_number": 3941,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Successor provenance receipt for the stable-diff review-handoff workflow after the M06 pytest-collection repair. The historical 20260808 receipt is preserved unchanged. This receipt and workflow create no evidence, policy, authenticated review, proof, promotion, release, publication, or public-use authority."
+}

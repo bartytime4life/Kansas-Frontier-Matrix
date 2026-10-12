@@ -1,0 +1,251 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/common/analytical_query_cost_profile.schema.json",
+  "title": "AnalyticalQueryCostProfileCandidate",
+  "description": "Fixture-only analytical query performance disclosure with no raw SQL, plan text, execution, telemetry authentication, or authority effects.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "profile_spec_hash",
+    "source_card",
+    "observed_at",
+    "query_ref",
+    "query_digest",
+    "engine",
+    "input_scope",
+    "plan_capture",
+    "index_assumptions",
+    "budget",
+    "observation",
+    "disclosure",
+    "limitations",
+    "authority_claims"
+  ],
+  "properties": {
+    "object_type": {"const": "AnalyticalQueryCostProfileCandidate"},
+    "schema_version": {"const": "1.0.0"},
+    "profile": {"const": "kfm.common.analytical-query-cost-profile.fixture.v1"},
+    "profile_spec_hash": {"$ref": "#/$defs/sha256"},
+    "source_card": {"const": "KFM-P18-INV-406"},
+    "observed_at": {"type": "string", "format": "date-time"},
+    "query_ref": {"$ref": "#/$defs/ref"},
+    "query_digest": {"$ref": "#/$defs/sha256"},
+    "engine": {"$ref": "#/$defs/engine"},
+    "input_scope": {"$ref": "#/$defs/input_scope"},
+    "plan_capture": {"$ref": "#/$defs/plan_capture"},
+    "index_assumptions": {"$ref": "#/$defs/index_assumptions"},
+    "budget": {"$ref": "#/$defs/budget"},
+    "observation": {"$ref": "#/$defs/observation"},
+    "disclosure": {"$ref": "#/$defs/disclosure"},
+    "limitations": {
+      "const": [
+        "DECLARATION_ONLY",
+        "NO_RAW_SQL_OR_PLAN_TEXT",
+        "NO_QUERY_EXECUTION",
+        "NO_TELEMETRY_AUTHENTICATION",
+        "NO_POLICY_OR_REVIEW_AUTHORITY",
+        "NO_RELEASE_OR_PUBLICATION_AUTHORITY"
+      ]
+    },
+    "authority_claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "query_execution_authority",
+        "telemetry_authority",
+        "evidence_authority",
+        "policy_authority",
+        "review_authority",
+        "promotion_authority",
+        "release_authority",
+        "deployment_authority",
+        "publication_authority",
+        "public_use_authority"
+      ],
+      "properties": {
+        "query_execution_authority": {"const": false},
+        "telemetry_authority": {"const": false},
+        "evidence_authority": {"const": false},
+        "policy_authority": {"const": false},
+        "review_authority": {"const": false},
+        "promotion_authority": {"const": false},
+        "release_authority": {"const": false},
+        "deployment_authority": {"const": false},
+        "publication_authority": {"const": false},
+        "public_use_authority": {"const": false}
+      }
+    }
+  },
+  "$defs": {
+    "ref": {
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 512,
+      "pattern": "^[A-Za-z][A-Za-z0-9+.-]*:[^\\s]+$"
+    },
+    "nullable_ref": {"anyOf": [{"$ref": "#/$defs/ref"}, {"type": "null"}]},
+    "sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "nullable_sha256": {"anyOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]},
+    "nullable_uint": {
+      "anyOf": [
+        {"type": "integer", "minimum": 0, "maximum": 9007199254740991},
+        {"type": "null"}
+      ]
+    },
+    "field_name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z_][A-Za-z0-9_.-]*$"
+    },
+    "engine": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "profile_ref", "portability"],
+      "properties": {
+        "kind": {"enum": ["GENERIC_SQL", "POSTGRESQL", "SQLITE", "DUCKDB", "OTHER", "UNRESOLVED"]},
+        "profile_ref": {"$ref": "#/$defs/nullable_ref"},
+        "portability": {"enum": ["SINGLE_ENGINE", "CROSS_ENGINE_DECLARED", "UNRESOLVED"]}
+      }
+    },
+    "input_scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["basis", "dataset_refs", "estimated_rows", "estimated_bytes"],
+      "properties": {
+        "basis": {"enum": ["MEASURED", "ESTIMATED", "DECLARED", "UNRESOLVED"]},
+        "dataset_refs": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 64,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/ref"}
+        },
+        "estimated_rows": {"$ref": "#/$defs/nullable_uint"},
+        "estimated_bytes": {"$ref": "#/$defs/nullable_uint"}
+      }
+    },
+    "plan_capture": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "format", "plan_digest", "parameter_names", "raw_plan_stored", "raw_sql_stored"],
+      "properties": {
+        "state": {"enum": ["CAPTURED", "NOT_CAPTURED", "UNRESOLVED"]},
+        "format": {"enum": ["GENERIC_SUMMARY", "EXPLAIN_TEXT", "EXPLAIN_JSON", "NONE"]},
+        "plan_digest": {"$ref": "#/$defs/nullable_sha256"},
+        "parameter_names": {
+          "type": "array",
+          "maxItems": 64,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/field_name"}
+        },
+        "raw_plan_stored": {"const": false},
+        "raw_sql_stored": {"const": false}
+      }
+    },
+    "index_assumption": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["logical_name", "field_names", "access_kind", "required_for_budget"],
+      "properties": {
+        "logical_name": {"$ref": "#/$defs/field_name"},
+        "field_names": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/field_name"}
+        },
+        "access_kind": {"enum": ["BTREE", "HASH", "BRIN", "GIST", "GIN", "SPATIAL", "OTHER"]},
+        "required_for_budget": {"type": "boolean"}
+      }
+    },
+    "index_assumptions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "items"],
+      "properties": {
+        "state": {"enum": ["DECLARED", "NONE", "UNRESOLVED"]},
+        "items": {
+          "type": "array",
+          "maxItems": 32,
+          "items": {"$ref": "#/$defs/index_assumption"}
+        }
+      }
+    },
+    "budget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "max_duration_ms",
+        "max_rows_read",
+        "max_bytes_read",
+        "max_peak_memory_bytes",
+        "cost_posture",
+        "billing_profile_ref"
+      ],
+      "properties": {
+        "max_duration_ms": {"$ref": "#/$defs/nullable_uint"},
+        "max_rows_read": {"$ref": "#/$defs/nullable_uint"},
+        "max_bytes_read": {"$ref": "#/$defs/nullable_uint"},
+        "max_peak_memory_bytes": {"$ref": "#/$defs/nullable_uint"},
+        "cost_posture": {"enum": ["RESOURCE_BUDGET_ONLY", "BILLING_PROFILE_REFERENCED", "UNRESOLVED"]},
+        "billing_profile_ref": {"$ref": "#/$defs/nullable_ref"}
+      },
+      "anyOf": [
+        {"properties": {"max_duration_ms": {"type": "integer"}}},
+        {"properties": {"max_rows_read": {"type": "integer"}}},
+        {"properties": {"max_bytes_read": {"type": "integer"}}},
+        {"properties": {"max_peak_memory_bytes": {"type": "integer"}}}
+      ]
+    },
+    "observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state",
+        "duration_ms",
+        "rows_read",
+        "bytes_read",
+        "peak_memory_bytes",
+        "run_receipt_ref",
+        "telemetry_ref",
+        "budget_result"
+      ],
+      "properties": {
+        "state": {"enum": ["MEASURED", "NOT_RUN", "UNRESOLVED", "ERROR"]},
+        "duration_ms": {"$ref": "#/$defs/nullable_uint"},
+        "rows_read": {"$ref": "#/$defs/nullable_uint"},
+        "bytes_read": {"$ref": "#/$defs/nullable_uint"},
+        "peak_memory_bytes": {"$ref": "#/$defs/nullable_uint"},
+        "run_receipt_ref": {"$ref": "#/$defs/nullable_ref"},
+        "telemetry_ref": {"$ref": "#/$defs/nullable_ref"},
+        "budget_result": {"enum": ["WITHIN_BUDGET", "EXCEEDED", "NOT_RUN", "UNRESOLVED", "ERROR"]}
+      }
+    },
+    "disclosure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "intended_use", "summary", "review_record_refs"],
+      "properties": {
+        "state": {"enum": ["COMPLETE_FOR_DECLARED_SCOPE", "INCOMPLETE", "UNKNOWN"]},
+        "intended_use": {"enum": ["INTERNAL_REVIEW", "REPRODUCIBILITY_PACKET", "PUBLIC_CANDIDATE"]},
+        "summary": {
+          "anyOf": [
+            {"type": "string", "minLength": 12, "maxLength": 512, "pattern": "^[^\\r\\n]+$"},
+            {"type": "null"}
+          ]
+        },
+        "review_record_refs": {
+          "type": "array",
+          "maxItems": 32,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/ref"}
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,405 @@
+{
+  "object_type": "TemporalReferenceIntegrityAssessmentFixtureManifest",
+  "schema_version": "1.0.0",
+  "profile": "kfm.common.temporal-reference-integrity-assessment.fixture.v1",
+  "base_candidate": {
+    "object_type": "TemporalReferenceIntegrityAssessmentCandidate",
+    "schema_version": "1.0.0",
+    "profile": "kfm.common.temporal-reference-integrity-assessment.fixture.v1",
+    "profile_spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "source_card": "KFM-P18-INV-490",
+    "assessed_at": "2026-08-11T04:10:00Z",
+    "relationship_ref": "kfm:temporal-relationship:synthetic:observation-geography:001",
+    "relationship_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "subject": {
+      "ref": "kfm:observation:synthetic:001",
+      "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+      "record_kind": "OBSERVATION",
+      "presence": "PRESENT"
+    },
+    "target": {
+      "ref": "kfm:geography-version:synthetic:county-001:2026",
+      "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+      "record_kind": "GEOGRAPHY_VERSION",
+      "presence": "PRESENT"
+    },
+    "target_role": "GEOGRAPHY_VERSION",
+    "temporal_mode": "VALID_TIME",
+    "checks": [
+      {
+        "axis": "VALID_TIME",
+        "constraint": "SUBJECT_WITHIN_TARGET",
+        "subject_window": {
+          "window_ref": "kfm:temporal-window:synthetic:observation-valid:001",
+          "resolution": "RESOLVED",
+          "start": "2026-01-10T00:00:00Z",
+          "end": "2026-01-20T00:00:00Z",
+          "start_inclusive": true,
+          "end_inclusive": false
+        },
+        "target_window": {
+          "window_ref": "kfm:temporal-window:synthetic:geography-valid:001",
+          "resolution": "RESOLVED",
+          "start": "2026-01-01T00:00:00Z",
+          "end": "2026-02-01T00:00:00Z",
+          "start_inclusive": true,
+          "end_inclusive": false
+        },
+        "declared_state": "SATISFIED",
+        "evaluation_fixture_ref": "kfm:fixture:synthetic:temporal-reference-integrity:valid-within"
+      }
+    ],
+    "declared_overall_state": "SATISFIED",
+    "failure_handling": {
+      "recommended_action": "NONE",
+      "recommendation_only": true,
+      "disposition_executed": false,
+      "failure_policy_profile_ref": "kfm:policy-profile:synthetic:temporal-reference-integrity:review-required",
+      "review_record_refs": [],
+      "correction_ref": "kfm:correction-path:synthetic:temporal-reference-integrity",
+      "rollback_ref": "kfm:rollback:synthetic:temporal-reference-integrity"
+    },
+    "evidence_refs": [
+      "kfm:evidence-bundle:synthetic:temporal-reference-integrity:001",
+      "kfm:evidence-bundle:synthetic:temporal-reference-integrity:002"
+    ],
+    "authority_claims": {
+      "reference_mutation_authority": false,
+      "constraint_execution_authority": false,
+      "quarantine_authority": false,
+      "evidence_authority": false,
+      "policy_authority": false,
+      "review_authority": false,
+      "promotion_authority": false,
+      "release_authority": false,
+      "publication_authority": false,
+      "public_use_authority": false
+    }
+  },
+  "cases": [
+    {
+      "name": "pass_valid_time_geography_within",
+      "patch": {},
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_transaction_time_source_overlap",
+      "patch": {
+        "target": {"record_kind": "SOURCE_VERSION", "ref": "kfm:source-version:synthetic:001"},
+        "target_role": "SOURCE_VERSION",
+        "temporal_mode": "TRANSACTION_TIME",
+        "checks": [
+          {
+            "axis": "TRANSACTION_TIME",
+            "constraint": "SUBJECT_OVERLAPS_TARGET",
+            "subject_window": {"window_ref": "kfm:temporal-window:synthetic:observation-transaction:001", "resolution": "RESOLVED", "start": "2026-01-20T00:00:00Z", "end": "2026-02-10T00:00:00Z", "start_inclusive": true, "end_inclusive": false},
+            "target_window": {"window_ref": "kfm:temporal-window:synthetic:source-transaction:001", "resolution": "RESOLVED", "start": "2026-02-01T00:00:00Z", "end": "2026-03-01T00:00:00Z", "start_inclusive": true, "end_inclusive": false},
+            "declared_state": "SATISFIED",
+            "evaluation_fixture_ref": "kfm:fixture:synthetic:temporal-reference-integrity:transaction-overlap"
+          }
+        ]
+      },
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_bitemporal_identity",
+      "patch": {
+        "target": {"record_kind": "IDENTITY_VERSION", "ref": "kfm:identity-version:synthetic:001"},
+        "target_role": "IDENTITY_VERSION",
+        "temporal_mode": "BITEMPORAL",
+        "checks": [
+          {
+            "axis": "VALID_TIME",
+            "constraint": "SUBJECT_WITHIN_TARGET",
+            "subject_window": {"window_ref": "kfm:temporal-window:synthetic:identity-subject-valid", "resolution": "RESOLVED", "start": "2026-01-10T00:00:00Z", "end": "2026-01-20T00:00:00Z", "start_inclusive": true, "end_inclusive": false},
+            "target_window": {"window_ref": "kfm:temporal-window:synthetic:identity-target-valid", "resolution": "RESOLVED", "start": "2026-01-01T00:00:00Z", "end": "2026-02-01T00:00:00Z", "start_inclusive": true, "end_inclusive": false},
+            "declared_state": "SATISFIED",
+            "evaluation_fixture_ref": "kfm:fixture:synthetic:temporal-reference-integrity:bitemporal-valid"
+          },
+          {
+            "axis": "TRANSACTION_TIME",
+            "constraint": "SUBJECT_OVERLAPS_TARGET",
+            "subject_window": {"window_ref": "kfm:temporal-window:synthetic:identity-subject-transaction", "resolution": "RESOLVED", "start": "2026-03-01T00:00:00Z", "end": "2026-03-20T00:00:00Z", "start_inclusive": true, "end_inclusive": true},
+            "target_window": {"window_ref": "kfm:temporal-window:synthetic:identity-target-transaction", "resolution": "RESOLVED", "start": "2026-02-15T00:00:00Z", "end": "2026-03-10T00:00:00Z", "start_inclusive": true, "end_inclusive": false},
+            "declared_state": "SATISFIED",
+            "evaluation_fixture_ref": "kfm:fixture:synthetic:temporal-reference-integrity:bitemporal-transaction"
+          }
+        ]
+      },
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_subject_start_within_other",
+      "patch": {
+        "target": {"record_kind": "OTHER", "ref": "kfm:version-record:synthetic:other:001"},
+        "target_role": "OTHER",
+        "checks": [
+          {
+            "axis": "VALID_TIME",
+            "constraint": "SUBJECT_START_WITHIN_TARGET",
+            "subject_window": {"window_ref": "kfm:temporal-window:synthetic:subject-start", "resolution": "RESOLVED", "start": "2026-01-01T00:00:00Z", "end": "2026-02-10T00:00:00Z", "start_inclusive": true, "end_inclusive": false},
+            "target_window": {"window_ref": "kfm:temporal-window:synthetic:target-start", "resolution": "RESOLVED", "start": "2026-01-01T00:00:00Z", "end": "2026-02-01T00:00:00Z", "start_inclusive": true, "end_inclusive": false},
+            "declared_state": "SATISFIED",
+            "evaluation_fixture_ref": "kfm:fixture:synthetic:temporal-reference-integrity:start-within"
+          }
+        ]
+      },
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "pass_subject_end_within_source",
+      "patch": {
+        "target": {"record_kind": "SOURCE_VERSION", "ref": "kfm:source-version:synthetic:002"},
+        "target_role": "SOURCE_VERSION",
+        "checks": [
+          {
+            "axis": "VALID_TIME",
+            "constraint": "SUBJECT_END_WITHIN_TARGET",
+            "subject_window": {"window_ref": "kfm:temporal-window:synthetic:subject-end", "resolution": "RESOLVED", "start": "2026-01-15T00:00:00Z", "end": "2026-02-01T00:00:00Z", "start_inclusive": true, "end_inclusive": true},
+            "target_window": {"window_ref": "kfm:temporal-window:synthetic:target-end", "resolution": "RESOLVED", "start": "2026-01-01T00:00:00Z", "end": "2026-02-01T00:00:00Z", "start_inclusive": true, "end_inclusive": true},
+            "declared_state": "SATISFIED",
+            "evaluation_fixture_ref": "kfm:fixture:synthetic:temporal-reference-integrity:end-within"
+          }
+        ]
+      },
+      "expected": {"outcome": "PASS", "codes": []}
+    },
+    {
+      "name": "abstain_subject_record_unresolved",
+      "patch": {"subject": {"presence": "UNRESOLVED"}, "declared_overall_state": "UNRESOLVED"},
+      "expected": {"outcome": "ABSTAIN", "codes": ["SUBJECT_RECORD_UNRESOLVED"]}
+    },
+    {
+      "name": "abstain_target_record_unresolved",
+      "patch": {"target": {"presence": "UNRESOLVED"}, "declared_overall_state": "UNRESOLVED"},
+      "expected": {"outcome": "ABSTAIN", "codes": ["TARGET_RECORD_UNRESOLVED"]}
+    },
+    {
+      "name": "abstain_subject_window_unresolved",
+      "patch": {
+        "checks": [
+          {
+            "axis": "VALID_TIME",
+            "constraint": "SUBJECT_WITHIN_TARGET",
+            "subject_window": {"window_ref": "kfm:temporal-window:synthetic:observation-valid:001", "resolution": "UNRESOLVED", "start": "2026-01-10T00:00:00Z", "end": "2026-01-20T00:00:00Z", "start_inclusive": true, "end_inclusive": false},
+            "target_window": {"window_ref": "kfm:temporal-window:synthetic:geography-valid:001", "resolution": "RESOLVED", "start": "2026-01-01T00:00:00Z", "end": "2026-02-01T00:00:00Z", "start_inclusive": true, "end_inclusive": false},
+            "declared_state": "UNRESOLVED",
+            "evaluation_fixture_ref": "kfm:fixture:synthetic:temporal-reference-integrity:subject-unresolved"
+          }
+        ],
+        "declared_overall_state": "UNRESOLVED"
+      },
+      "expected": {"outcome": "ABSTAIN", "codes": ["SUBJECT_WINDOW_UNRESOLVED"]}
+    },
+    {
+      "name": "abstain_target_window_unresolved",
+      "patch": {
+        "checks": [
+          {
+            "axis": "VALID_TIME",
+            "constraint": "SUBJECT_WITHIN_TARGET",
+            "subject_window": {"window_ref": "kfm:temporal-window:synthetic:observation-valid:001", "resolution": "RESOLVED", "start": "2026-01-10T00:00:00Z", "end": "2026-01-20T00:00:00Z", "start_inclusive": true, "end_inclusive": false},
+            "target_window": {"window_ref": "kfm:temporal-window:synthetic:geography-valid:001", "resolution": "UNRESOLVED", "start": "2026-01-01T00:00:00Z", "end": "2026-02-01T00:00:00Z", "start_inclusive": true, "end_inclusive": false},
+            "declared_state": "UNRESOLVED",
+            "evaluation_fixture_ref": "kfm:fixture:synthetic:temporal-reference-integrity:target-unresolved"
+          }
+        ],
+        "declared_overall_state": "UNRESOLVED"
+      },
+      "expected": {"outcome": "ABSTAIN", "codes": ["TARGET_WINDOW_UNRESOLVED"]}
+    },
+    {
+      "name": "deny_target_record_missing_quarantine_recommendation",
+      "patch": {
+        "target": {"presence": "MISSING"},
+        "declared_overall_state": "VIOLATED",
+        "failure_handling": {"recommended_action": "QUARANTINE_CANDIDATE", "review_record_refs": ["kfm:review-record:synthetic:temporal-integrity:target-missing"]}
+      },
+      "expected": {"outcome": "DENY", "codes": ["TARGET_RECORD_MISSING"]}
+    },
+    {
+      "name": "deny_subject_record_missing",
+      "patch": {
+        "subject": {"presence": "MISSING"},
+        "declared_overall_state": "VIOLATED",
+        "failure_handling": {"recommended_action": "DENY_CANDIDATE", "review_record_refs": ["kfm:review-record:synthetic:temporal-integrity:subject-missing"]}
+      },
+      "expected": {"outcome": "DENY", "codes": ["SUBJECT_RECORD_MISSING"]}
+    },
+    {
+      "name": "deny_subject_not_within_target",
+      "patch": {
+        "checks": [
+          {
+            "axis": "VALID_TIME",
+            "constraint": "SUBJECT_WITHIN_TARGET",
+            "subject_window": {"window_ref": "kfm:temporal-window:synthetic:outside-subject", "resolution": "RESOLVED", "start": "2025-12-25T00:00:00Z", "end": "2026-01-10T00:00:00Z", "start_inclusive": true, "end_inclusive": false},
+            "target_window": {"window_ref": "kfm:temporal-window:synthetic:outside-target", "resolution": "RESOLVED", "start": "2026-01-01T00:00:00Z", "end": "2026-02-01T00:00:00Z", "start_inclusive": true, "end_inclusive": false},
+            "declared_state": "VIOLATED",
+            "evaluation_fixture_ref": "kfm:fixture:synthetic:temporal-reference-integrity:outside"
+          }
+        ],
+        "declared_overall_state": "VIOLATED",
+        "failure_handling": {"recommended_action": "DENY_CANDIDATE", "review_record_refs": ["kfm:review-record:synthetic:temporal-integrity:outside"]}
+      },
+      "expected": {"outcome": "DENY", "codes": ["TEMPORAL_REFERENCE_INVALID"]}
+    },
+    {
+      "name": "deny_disjoint_overlap",
+      "patch": {
+        "checks": [
+          {
+            "axis": "VALID_TIME",
+            "constraint": "SUBJECT_OVERLAPS_TARGET",
+            "subject_window": {"window_ref": "kfm:temporal-window:synthetic:disjoint-subject", "resolution": "RESOLVED", "start": "2026-02-02T00:00:00Z", "end": "2026-02-03T00:00:00Z", "start_inclusive": true, "end_inclusive": false},
+            "target_window": {"window_ref": "kfm:temporal-window:synthetic:disjoint-target", "resolution": "RESOLVED", "start": "2026-01-01T00:00:00Z", "end": "2026-02-01T00:00:00Z", "start_inclusive": true, "end_inclusive": false},
+            "declared_state": "VIOLATED",
+            "evaluation_fixture_ref": "kfm:fixture:synthetic:temporal-reference-integrity:disjoint"
+          }
+        ],
+        "declared_overall_state": "VIOLATED",
+        "failure_handling": {"recommended_action": "QUARANTINE_CANDIDATE", "review_record_refs": ["kfm:review-record:synthetic:temporal-integrity:disjoint"]}
+      },
+      "expected": {"outcome": "DENY", "codes": ["TEMPORAL_REFERENCE_INVALID"]}
+    },
+    {
+      "name": "deny_shared_endpoint_excluded",
+      "patch": {
+        "checks": [
+          {
+            "axis": "VALID_TIME",
+            "constraint": "SUBJECT_OVERLAPS_TARGET",
+            "subject_window": {"window_ref": "kfm:temporal-window:synthetic:meeting-subject", "resolution": "RESOLVED", "start": "2026-01-15T00:00:00Z", "end": "2026-02-01T00:00:00Z", "start_inclusive": true, "end_inclusive": true},
+            "target_window": {"window_ref": "kfm:temporal-window:synthetic:meeting-target", "resolution": "RESOLVED", "start": "2026-02-01T00:00:00Z", "end": "2026-03-01T00:00:00Z", "start_inclusive": false, "end_inclusive": false},
+            "declared_state": "VIOLATED",
+            "evaluation_fixture_ref": "kfm:fixture:synthetic:temporal-reference-integrity:meeting-excluded"
+          }
+        ],
+        "declared_overall_state": "VIOLATED",
+        "failure_handling": {"recommended_action": "DENY_CANDIDATE", "review_record_refs": ["kfm:review-record:synthetic:temporal-integrity:meeting-excluded"]}
+      },
+      "expected": {"outcome": "DENY", "codes": ["TEMPORAL_REFERENCE_INVALID"]}
+    },
+    {
+      "name": "deny_check_state_mismatch",
+      "patch": {
+        "checks": [
+          {
+            "axis": "VALID_TIME",
+            "constraint": "SUBJECT_WITHIN_TARGET",
+            "subject_window": {"window_ref": "kfm:temporal-window:synthetic:mismatch-subject", "resolution": "RESOLVED", "start": "2025-12-25T00:00:00Z", "end": "2026-01-10T00:00:00Z", "start_inclusive": true, "end_inclusive": false},
+            "target_window": {"window_ref": "kfm:temporal-window:synthetic:mismatch-target", "resolution": "RESOLVED", "start": "2026-01-01T00:00:00Z", "end": "2026-02-01T00:00:00Z", "start_inclusive": true, "end_inclusive": false},
+            "declared_state": "SATISFIED",
+            "evaluation_fixture_ref": "kfm:fixture:synthetic:temporal-reference-integrity:mismatch"
+          }
+        ],
+        "declared_overall_state": "VIOLATED",
+        "failure_handling": {"recommended_action": "DENY_CANDIDATE", "review_record_refs": ["kfm:review-record:synthetic:temporal-integrity:mismatch"]}
+      },
+      "expected": {"outcome": "DENY", "codes": ["CHECK_STATE_MISMATCH", "TEMPORAL_REFERENCE_INVALID"]}
+    },
+    {
+      "name": "deny_overall_state_mismatch",
+      "patch": {"declared_overall_state": "VIOLATED"},
+      "expected": {"outcome": "DENY", "codes": ["OVERALL_STATE_MISMATCH"]}
+    },
+    {
+      "name": "deny_mode_axis_set_mismatch",
+      "patch": {"temporal_mode": "BITEMPORAL"},
+      "expected": {"outcome": "DENY", "codes": ["TEMPORAL_AXIS_SET_MISMATCH"]}
+    },
+    {
+      "name": "deny_duplicate_temporal_axis",
+      "patch": {
+        "temporal_mode": "BITEMPORAL",
+        "checks": [
+          {
+            "axis": "VALID_TIME",
+            "constraint": "SUBJECT_WITHIN_TARGET",
+            "subject_window": {"window_ref": "kfm:temporal-window:synthetic:duplicate-axis-subject-a", "resolution": "RESOLVED", "start": "2026-01-10T00:00:00Z", "end": "2026-01-20T00:00:00Z", "start_inclusive": true, "end_inclusive": false},
+            "target_window": {"window_ref": "kfm:temporal-window:synthetic:duplicate-axis-target-a", "resolution": "RESOLVED", "start": "2026-01-01T00:00:00Z", "end": "2026-02-01T00:00:00Z", "start_inclusive": true, "end_inclusive": false},
+            "declared_state": "SATISFIED",
+            "evaluation_fixture_ref": "kfm:fixture:synthetic:temporal-reference-integrity:duplicate-axis-a"
+          },
+          {
+            "axis": "VALID_TIME",
+            "constraint": "SUBJECT_WITHIN_TARGET",
+            "subject_window": {"window_ref": "kfm:temporal-window:synthetic:duplicate-axis-subject-b", "resolution": "RESOLVED", "start": "2026-03-10T00:00:00Z", "end": "2026-03-20T00:00:00Z", "start_inclusive": true, "end_inclusive": false},
+            "target_window": {"window_ref": "kfm:temporal-window:synthetic:duplicate-axis-target-b", "resolution": "RESOLVED", "start": "2026-03-01T00:00:00Z", "end": "2026-04-01T00:00:00Z", "start_inclusive": true, "end_inclusive": false},
+            "declared_state": "SATISFIED",
+            "evaluation_fixture_ref": "kfm:fixture:synthetic:temporal-reference-integrity:duplicate-axis-b"
+          }
+        ]
+      },
+      "expected": {"outcome": "DENY", "codes": ["TEMPORAL_AXIS_SET_MISMATCH"]}
+    },
+    {
+      "name": "deny_target_role_kind_mismatch",
+      "patch": {"target_role": "SOURCE_VERSION"},
+      "expected": {"outcome": "DENY", "codes": ["TARGET_ROLE_KIND_MISMATCH"]}
+    },
+    {
+      "name": "deny_self_reference",
+      "patch": {"target": {"ref": "kfm:observation:synthetic:001"}},
+      "expected": {"outcome": "DENY", "codes": ["SELF_REFERENCE_INVALID"]}
+    },
+    {
+      "name": "deny_assessed_at_not_utc",
+      "patch": {"assessed_at": "2026-08-10T23:10:00-05:00"},
+      "expected": {"outcome": "DENY", "codes": ["UTC_TIMESTAMP_REQUIRED"]}
+    },
+    {
+      "name": "deny_interval_order_invalid",
+      "patch": {
+        "checks": [
+          {
+            "axis": "VALID_TIME",
+            "constraint": "SUBJECT_WITHIN_TARGET",
+            "subject_window": {"window_ref": "kfm:temporal-window:synthetic:reversed-subject", "resolution": "RESOLVED", "start": "2026-01-20T00:00:00Z", "end": "2026-01-10T00:00:00Z", "start_inclusive": true, "end_inclusive": false},
+            "target_window": {"window_ref": "kfm:temporal-window:synthetic:reversed-target", "resolution": "RESOLVED", "start": "2026-01-01T00:00:00Z", "end": "2026-02-01T00:00:00Z", "start_inclusive": true, "end_inclusive": false},
+            "declared_state": "VIOLATED",
+            "evaluation_fixture_ref": "kfm:fixture:synthetic:temporal-reference-integrity:reversed"
+          }
+        ],
+        "declared_overall_state": "VIOLATED",
+        "failure_handling": {"recommended_action": "DENY_CANDIDATE", "review_record_refs": ["kfm:review-record:synthetic:temporal-integrity:reversed"]}
+      },
+      "expected": {"outcome": "DENY", "codes": ["INTERVAL_ORDER_INVALID"]}
+    },
+    {
+      "name": "deny_noncanonical_evidence_refs",
+      "patch": {"evidence_refs": ["kfm:evidence-bundle:synthetic:temporal-reference-integrity:002", "kfm:evidence-bundle:synthetic:temporal-reference-integrity:001"]},
+      "expected": {"outcome": "DENY", "codes": ["ARRAY_NOT_CANONICAL"]}
+    },
+    {
+      "name": "deny_failure_action_mismatch",
+      "patch": {"failure_handling": {"recommended_action": "QUARANTINE_CANDIDATE"}},
+      "expected": {"outcome": "DENY", "codes": ["FAILURE_ACTION_MISMATCH"]}
+    },
+    {
+      "name": "deny_failure_review_reference_missing",
+      "patch": {
+        "target": {"presence": "MISSING"},
+        "declared_overall_state": "VIOLATED",
+        "failure_handling": {"recommended_action": "DENY_CANDIDATE"}
+      },
+      "expected": {"outcome": "DENY", "codes": ["FAILURE_REVIEW_REFERENCE_REQUIRED", "TARGET_RECORD_MISSING"]}
+    },
+    {
+      "name": "deny_profile_hash_tamper",
+      "patch": {},
+      "tamper": "profile_hash",
+      "expected": {"outcome": "DENY", "codes": ["PROFILE_SPEC_HASH_MISMATCH"]}
+    },
+    {
+      "name": "error_unknown_field",
+      "patch": {"database_rows": [1, 2, 3]},
+      "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}
+    },
+    {
+      "name": "error_authority_overclaim",
+      "patch": {"authority_claims": {"constraint_execution_authority": true}},
+      "expected": {"outcome": "ERROR", "codes": ["SCHEMA_INVALID"]}
+    }
+  ]
+}

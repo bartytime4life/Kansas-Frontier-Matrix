@@ -1,0 +1,283 @@
+{
+  "receipt_id": "genrec-atmosphere-low-cost-sensor-calibration-20260803",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/domain-atmosphere.yml",
+    "docs/domains/atmosphere/README.md",
+    "docs/intake/NEW_IDEAS_INDEX.md",
+    "docs/intake/exploratory/new-ideas-12-20-25-source-map.md",
+    "docs/intake/new-ideas-register.md",
+    "fixtures/domains/atmosphere/README.md",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/README.md",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/metric_driven_promotion.expected_error.txt",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/metric_driven_promotion.json",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/missing_bound_model_evidence.expected_error.txt",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/missing_bound_model_evidence.json",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/missing_caveat.expected_error.txt",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/missing_caveat.json",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/missing_confidence_limitations_rollback.expected_error.txt",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/missing_confidence_limitations_rollback.json",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/missing_correction_identity.expected_error.txt",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/missing_correction_identity.json",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/missing_evaluation_bounds.expected_error.txt",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/missing_evaluation_bounds.json",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/missing_meteorology_inputs.expected_error.txt",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/missing_meteorology_inputs.json",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/missing_reference_collocation.expected_error.txt",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/missing_reference_collocation.json",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/modeled_output_as_raw.expected_error.txt",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/modeled_output_as_raw.json",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/peer_consensus_reference.expected_error.txt",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/peer_consensus_reference.json",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/precise_site_exposure.expected_error.txt",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/precise_site_exposure.json",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/raw_corrected_pair_collapsed.expected_error.txt",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/raw_corrected_pair_collapsed.json",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/real_county_exposure.expected_error.txt",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/real_county_exposure.json",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/reference_grade_overclaim.expected_error.txt",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/reference_grade_overclaim.json",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/unbounded_transfer_claim.expected_error.txt",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/unbounded_transfer_claim.json",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/unknown_transferability_drift.expected_error.txt",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/unknown_transferability_drift.json",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/valid/caveated_context.json",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/valid/corrected_with_lineage.json",
+    "tests/domains/atmosphere/README.md",
+    "tests/domains/atmosphere/policy-deny/low-cost-sensor-caveat/README.md",
+    "tests/domains/atmosphere/test_low_cost_sensor_caveat_required.py",
+    "tools/validators/domains/atmosphere/README.md",
+    "tools/validators/domains/atmosphere/validate_low_cost_sensor_caveats.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/domain-atmosphere.yml": "sha256:24006196d7bc9805faeec06389de1bffd3552c6bdbffd4b768fccdb5b3d97e79",
+    "docs/domains/atmosphere/README.md": "sha256:7de4d9651927a9f08a5a05ea5e31266b297da0a720adca3a735aca20ee6f366e",
+    "docs/intake/NEW_IDEAS_INDEX.md": "sha256:da0947ac052c948b0dc138c6bc48cbc5910eecd0005d0042adccc2d8c0a0d476",
+    "docs/intake/exploratory/new-ideas-12-20-25-source-map.md": "sha256:6b8d42308eba86444a132d7aa27ceae94a483e5c11853a90ef9a78c0acae4a8a",
+    "docs/intake/new-ideas-register.md": "sha256:a988ff84c532a2fd18128fc2e023b5b39b58b37909b1523737d4848bf4900e25",
+    "fixtures/domains/atmosphere/README.md": "sha256:e90af8ce6fe3ceb11d21a3b942e9bf64523d2aa50b03fa1f799e6cdad16eff22",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/README.md": "sha256:0c60622c528e670093ac10a2954f320772de86c67b424ea2e7a3a63065a2785d",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/metric_driven_promotion.expected_error.txt": "sha256:be7dc6ddaef310cf90a2a067b254062806f3481e352ee78b3f3b778971b108d8",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/metric_driven_promotion.json": "sha256:83582668993e0daee1d48804f2f37e81e90be3698daa67c2339cba9457ac41f2",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/missing_bound_model_evidence.expected_error.txt": "sha256:1c166b9b1241f10cfec5ea89e90b9f2c85bca07a856ee688a05db47a91f11132",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/missing_bound_model_evidence.json": "sha256:d8e2b20f6ee4cf2c820abebc9ec882b7405f99f73a8c723929e4fc34bd2ab214",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/missing_caveat.expected_error.txt": "sha256:8fee5f8732ca121b8502c820de00e8491ec54436a76bb5b89b5dccf199edccd2",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/missing_caveat.json": "sha256:41ab9cb2d9d8ff85491026d4b10a271e697f26674ac08b1608f8d7e289ede58d",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/missing_confidence_limitations_rollback.expected_error.txt": "sha256:280db27ffad634e70ad81e3585e017c8c6557026d2f69b934d87542cb6fafd07",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/missing_confidence_limitations_rollback.json": "sha256:40b8a39f6668679a3bcb741295afb106ce29be06f7cc10dce63a4e953f41f18a",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/missing_correction_identity.expected_error.txt": "sha256:2ac23063b00a94b7e0ec5e11a73c55f1ea6afe1a425d1a2e57cc59e8dfe69c54",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/missing_correction_identity.json": "sha256:2fbd0ccc87f5caee3a32af63eaca7251cd8cb5cdbeb16b2cce5eb71e9c1a30f2",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/missing_evaluation_bounds.expected_error.txt": "sha256:56e641b5886720cd98e397f603d1252a072fad61e4ad9e651f47985895893a31",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/missing_evaluation_bounds.json": "sha256:48791484eef15c57d546fc1b3d1fb5f824e487d06b7809d2241fcb3b0c417a07",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/missing_meteorology_inputs.expected_error.txt": "sha256:7fbdc6b17997bdce71c9e60363d1b5d1e702c67bfdcfa272374fc397251c165d",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/missing_meteorology_inputs.json": "sha256:777bb4b8e7def64cce6fc90a48a7018290a880f4b82f99eed5dd1c0738db4caf",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/missing_reference_collocation.expected_error.txt": "sha256:9175dac77de7f0d5f4e4c04017dcdd04b0684e435b4e8ad8e51e017bf6ae995a",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/missing_reference_collocation.json": "sha256:c66b9c3e61cfa6b5221925661d2dd187142ef8c4144d276e11d396bef219638e",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/modeled_output_as_raw.expected_error.txt": "sha256:def1f994a7247480b55f742c28e48face5cb43659dded8da04f77cdf0b9ee9b4",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/modeled_output_as_raw.json": "sha256:20015bfcf7fa81ba0d0080016f00a3a5f29b2414709c24b4d11bd62ea8bc471f",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/peer_consensus_reference.expected_error.txt": "sha256:0d765c98696cc754820f71d4c2ac32314757e58e363ae9cf580d9d6d6736833f",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/peer_consensus_reference.json": "sha256:43b860481e5381ff80ef6d696d375267940d062eca2ab010881483063cf6c165",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/precise_site_exposure.expected_error.txt": "sha256:e3bf3473d004a2d5e839ae53814080872a5a7b73e3bfa08bed0685ae45bdd2b8",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/precise_site_exposure.json": "sha256:4cfc3f00beb67a5c3540e9fc3803e484bf7020927303d7034f380d2cb3cd4d13",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/raw_corrected_pair_collapsed.expected_error.txt": "sha256:78e78c5579fb1cbed178c1db8001bcabae854ed0e2d0c0d04de4e217142d4049",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/raw_corrected_pair_collapsed.json": "sha256:3b4fabee0e3ab18371f3f19fa85ef4715cf703df54c161dd9576769aa9823567",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/real_county_exposure.expected_error.txt": "sha256:964e2537f8853e00c050f916cdf5b3598aab53c589c9b93ffc84b771024cffc7",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/real_county_exposure.json": "sha256:9d1ada12a4d6b9bce91b142c2108652455487d8de34664d73b12e578a47e764a",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/reference_grade_overclaim.expected_error.txt": "sha256:38f463f13bab7744e7ef809c8978621d143992fa140b8a81fdd3c8a7502bffbe",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/reference_grade_overclaim.json": "sha256:9b856e2818af0cd0a86c55045cb2c9891238d1b4bd791ed5ab10b632d9b847e5",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/unbounded_transfer_claim.expected_error.txt": "sha256:e4caf7c8acb7e59cb3d35949646480a6b1855fb18b09110a5e11579ea3962d2a",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/unbounded_transfer_claim.json": "sha256:49a8bce555634d74153ec4da22189b959484d8005e38c8dba96fbc3f3bc0137c",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/unknown_transferability_drift.expected_error.txt": "sha256:fc16e4b7df0a0dcd52adf55e5ef5ab9d04a42a985f7e71fc6f032ee857d0c9b0",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/unknown_transferability_drift.json": "sha256:972d23030e3f8e217f3e40a23891052660f5849910b6a304003a73287c39b1d2",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/valid/caveated_context.json": "sha256:0caddaf8626480e14057f5541179fbbb4ab685ad1f4414410bf6211f4ad8230f",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/valid/corrected_with_lineage.json": "sha256:50449cd13ae30b488b173bfb7737b938f994796ce459ddb3efe5116663af06c0",
+    "tests/domains/atmosphere/README.md": "sha256:672717cd8b00d16bd76d00229efb0794f92984218434593043e84083d7002016",
+    "tests/domains/atmosphere/policy-deny/low-cost-sensor-caveat/README.md": "sha256:78d3d5effbde87ed5919ff073d204d3d07b39fcc430fdfa30ed79a5736c4268e",
+    "tests/domains/atmosphere/test_low_cost_sensor_caveat_required.py": "sha256:92cb21067258f826ea38db2e39e0717b754750aec2666f84dc5dac111259a53a",
+    "tools/validators/domains/atmosphere/README.md": "sha256:489f10e6968d3c0c92da9a00d0bb9eef6b707e6a9e952f70ad4b94d61427e8af",
+    "tools/validators/domains/atmosphere/validate_low_cost_sensor_caveats.py": "sha256:46ed05cb6387d654ba790bc94c8a6d7e8d345692b4ded676536f965bf24b36c1"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "ChatGPT Work Mode 2026-08-03"
+  },
+  "prompt_or_contract": "sha256:c060dcf1e611ae464635ba3762e1c02cd160c7aab3f3c55fb4ddbff3435ee953",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "connected GitHub app repository inspection and atomic pull-request writes",
+      "local PDF identity, text, and visual inspection",
+      "standard-library fixture validator and no-network tests",
+      "deterministic JSON, YAML, link, secret-pattern, and SHA-256 checks"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:89b0231a26c34e8a383d5bbfcafa7e84b5e1072b26859ce8b2dcc0aaf2d9add2"
+    ],
+    "attached_docs": [
+      "New Ideas 12-20-25.docx.pdf"
+    ],
+    "evidence_refs": [
+      "attachment://New-Ideas-12-20-25.docx.pdf#sha256=89b0231a26c34e8a383d5bbfcafa7e84b5e1072b26859ce8b2dcc0aaf2d9add2",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/99e73d87e0aed536b25f2f282f88a386f35654b5",
+      "github://bartytime4life/Kansas-Frontier-Matrix/pull/1936",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/99e73d87e0aed536b25f2f282f88a386f35654b5/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/99e73d87e0aed536b25f2f282f88a386f35654b5/docs/dashboards/domain/air/PM_SENSOR_CALIBRATION_REVIEW.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/99e73d87e0aed536b25f2f282f88a386f35654b5/docs/sources/catalog/epa/barkjohn-correction.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/99e73d87e0aed536b25f2f282f88a386f35654b5/contracts/domains/atmosphere/PM25Observation.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/99e73d87e0aed536b25f2f282f88a386f35654b5/contracts/domains/atmosphere/knowledge_character.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/domain-atmosphere.yml": "CONFIRMED",
+    "docs/domains/atmosphere/README.md": "CONFIRMED",
+    "docs/intake/NEW_IDEAS_INDEX.md": "CONFIRMED",
+    "docs/intake/exploratory/new-ideas-12-20-25-source-map.md": "PROPOSED",
+    "docs/intake/new-ideas-register.md": "CONFIRMED",
+    "fixtures/domains/atmosphere/README.md": "CONFIRMED",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/README.md": "CONFIRMED",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/metric_driven_promotion.expected_error.txt": "CONFIRMED",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/metric_driven_promotion.json": "CONFIRMED",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/missing_bound_model_evidence.expected_error.txt": "CONFIRMED",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/missing_bound_model_evidence.json": "CONFIRMED",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/missing_caveat.expected_error.txt": "CONFIRMED",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/missing_caveat.json": "CONFIRMED",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/missing_confidence_limitations_rollback.expected_error.txt": "CONFIRMED",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/missing_confidence_limitations_rollback.json": "CONFIRMED",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/missing_correction_identity.expected_error.txt": "CONFIRMED",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/missing_correction_identity.json": "CONFIRMED",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/missing_evaluation_bounds.expected_error.txt": "CONFIRMED",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/missing_evaluation_bounds.json": "CONFIRMED",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/missing_meteorology_inputs.expected_error.txt": "CONFIRMED",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/missing_meteorology_inputs.json": "CONFIRMED",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/missing_reference_collocation.expected_error.txt": "CONFIRMED",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/missing_reference_collocation.json": "CONFIRMED",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/modeled_output_as_raw.expected_error.txt": "CONFIRMED",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/modeled_output_as_raw.json": "CONFIRMED",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/peer_consensus_reference.expected_error.txt": "CONFIRMED",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/peer_consensus_reference.json": "CONFIRMED",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/precise_site_exposure.expected_error.txt": "CONFIRMED",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/precise_site_exposure.json": "CONFIRMED",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/raw_corrected_pair_collapsed.expected_error.txt": "CONFIRMED",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/raw_corrected_pair_collapsed.json": "CONFIRMED",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/real_county_exposure.expected_error.txt": "CONFIRMED",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/real_county_exposure.json": "CONFIRMED",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/reference_grade_overclaim.expected_error.txt": "CONFIRMED",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/reference_grade_overclaim.json": "CONFIRMED",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/unbounded_transfer_claim.expected_error.txt": "CONFIRMED",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/unbounded_transfer_claim.json": "CONFIRMED",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/unknown_transferability_drift.expected_error.txt": "CONFIRMED",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/invalid/unknown_transferability_drift.json": "CONFIRMED",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/valid/caveated_context.json": "CONFIRMED",
+    "fixtures/domains/atmosphere/low_cost_sensor_calibration/valid/corrected_with_lineage.json": "CONFIRMED",
+    "tests/domains/atmosphere/README.md": "CONFIRMED",
+    "tests/domains/atmosphere/policy-deny/low-cost-sensor-caveat/README.md": "CONFIRMED",
+    "tests/domains/atmosphere/test_low_cost_sensor_caveat_required.py": "CONFIRMED",
+    "tools/validators/domains/atmosphere/README.md": "CONFIRMED",
+    "tools/validators/domains/atmosphere/validate_low_cost_sensor_caveats.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "source-packet-identity-and-coverage",
+      "outcome": "PASS",
+      "reason": "The attachment filename, title, 717542-byte size, 37-page count, SHA-256 digest, extracted-text counts, and representative visual pages across all five idea families were checked. Packet research and external standards claims remain unverified."
+    },
+    {
+      "gate": "repository-authority-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Directory Rules, ADR-0029, current main at 99e73d87e0aed536b25f2f282f88a386f35654b5, current open pull requests, and merged PR #1936 were inspected. PR #1936 changes release and promotion-gate paths only; no target path overlaps."
+    },
+    {
+      "gate": "atmosphere-calibration-profile-boundary",
+      "outcome": "PASS",
+      "reason": "The bounded profile freezes exact fixture-local source, observation, reference, model, training, specification, evaluation, evidence, deployment-regime, and fictional-county identities. It changes no canonical schema, contract, Rego policy, source descriptor, live record, scientific model, release, or publication surface."
+    },
+    {
+      "gate": "focused-fixture-polarity-and-no-network",
+      "outcome": "PASS",
+      "reason": "Sixteen standard-library tests passed. Two positive fixtures were accepted; sixteen exact-negative JSON/sidecar pairs were rejected with sorted code/path findings; parser, size, deterministic CLI, non-echo, identity-digest, location, and active no-network checks passed."
+    },
+    {
+      "gate": "workflow-inventory-and-read-only-posture",
+      "outcome": "PASS",
+      "reason": "The existing Atmosphere workflow explicitly inventories and executes the new validator/test and positive/expected-negative fixture polarity while retaining contents: read, no live requests, and broader proof/release holds."
+    },
+    {
+      "gate": "documentation-json-yaml-and-security-shape",
+      "outcome": "PASS",
+      "reason": "All 18 profile JSON fixtures parse, the workflow YAML parses, the 16 sidecar pairs are nonempty and sorted, the new source-map relative targets resolve in the verified tree, and the credential-pattern scan is clean."
+    },
+    {
+      "gate": "artifact-integrity",
+      "outcome": "PASS",
+      "reason": "This self-excluding receipt SHA-256 binds exactly 46 authored or substantively modified artifacts; artifact_hashes and truth_labels use the same exact key set."
+    },
+    {
+      "gate": "repository-generated-receipt-validator",
+      "outcome": "SKIPPED",
+      "reason": "The local runtime does not provide the repository validator's admitted jsonschema dependency. Equivalent standard-library required-field, exact-key-set, canonical-path, SHA-256, truth-label, citation, and pending-review checks passed; the repository validator remains for hosted exact-head execution."
+    },
+    {
+      "gate": "hosted-exact-head-checks",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks have not yet been observed for the draft pull-request head and are not claimed by this receipt."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review, scientific acceptance, source admission, policy acceptance, and merge authority remain pending and are not inferred."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "new-ideas-12-20-25-attachment-identity",
+      "validated": true,
+      "evidence_ref": "attachment://New-Ideas-12-20-25.docx.pdf#sha256=89b0231a26c34e8a383d5bbfcafa7e84b5e1072b26859ce8b2dcc0aaf2d9add2"
+    },
+    {
+      "id": "current-repository-snapshot",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/99e73d87e0aed536b25f2f282f88a386f35654b5"
+    },
+    {
+      "id": "directory-rules-authority",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/99e73d87e0aed536b25f2f282f88a386f35654b5/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "atmosphere-low-cost-sensor-contract-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/99e73d87e0aed536b25f2f282f88a386f35654b5/contracts/domains/atmosphere/PM25Observation.md"
+    },
+    {
+      "id": "atmosphere-calibration-review-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/99e73d87e0aed536b25f2f282f88a386f35654b5/docs/dashboards/domain/air/PM_SENSOR_CALIBRATION_REVIEW.md"
+    },
+    {
+      "id": "barkjohn-correction-documentation-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/99e73d87e0aed536b25f2f282f88a386f35654b5/docs/sources/catalog/epa/barkjohn-correction.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-03T06:21:01Z",
+  "emitter": "OpenAI Codex via ChatGPT Work Mode",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Bounded synthetic fixture validation only. Identity-string digests prevent substitution within the frozen profile but are not hashes of trained model bytes, source data, or scientific evidence. The packet remains exploratory. No result selects or validates a scientific correction, evaluates a live observation, admits a source, resolves evidence, executes Rego, grants reference or regulatory equivalence, issues health or life-safety guidance, promotes, releases, deploys, or publishes."
+}

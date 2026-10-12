@@ -1,0 +1,217 @@
+{
+  "receipt_id": "genrec-schemas-policy-readme-9e16ecfd",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "schemas/policy/README.md"
+  ],
+  "artifact_hashes": {
+    "schemas/policy/README.md": "sha256:9e16ecfde22fe65d32512f02099cc031e84724b969b39ce981c05297ff86c670"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5 Codex",
+    "version": "2026-08-13"
+  },
+  "prompt_or_contract": "sha256:b8eed045ce2b88c7fc4e59112eb2dfe07fbbc5516e6a3854921edd6289d81ac3",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "exact remote Git tree and file inspection",
+      "current-main GitHub Actions run and log inspection",
+      "local apply_patch candidate authoring",
+      "repository-native metadata and freshness validation",
+      "remote exact-tree local-link resolution",
+      "Pandoc GitHub-Flavored Markdown parsing",
+      "static schema-family maturity and trust-boundary reconciliation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:9e16ecfde22fe65d32512f02099cc031e84724b969b39ce981c05297ff86c670"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "repo:commit@57466766124f2f64448a5d8ba1cb682367fc1d72",
+      "repo:tree@8682429c4eb5108bc46b1c780900a2314736afb7",
+      "repo:tree/schemas/policy@2fe22c2280bb7bd68d7cfee12c4daf38c4264981",
+      "repo:schemas/policy/README.md@92cc831c2f22e8b7fb0fcb7b876efa53e78ab850",
+      "repo:schemas/policy/tests/README.md@955264812535fe6a7a10e38821b049b401bc0fe9",
+      "repo:tree/schemas/contracts/v1/policy@9f28503b77a7876f09e1f786221828b2f170661e",
+      "repo:schemas/contracts/v1/policy/README.md@5129bc970b8c87dc1350b09611c21dbd697c368e",
+      "repo:tree/fixtures/contracts/v1/policy@90038604cefe81e8c0e1c05664f53f340ddfd6c9",
+      "repo:tree/contracts/policy@d013aed619117f286d01f697428f8af1e6ba5734",
+      "repo:tree/tools/validators/policy@9d27cf72099a1234e2ba0187fd0247e5f8ac9760",
+      "repo:tree/tests/schemas@d03bdeed77cc084c0c926d05be8d71b2f43df6b1",
+      "repo:tree/tests/contracts@7aaff0b5ffe5361d51a94006efc0501b60cb6734",
+      "repo:schemas/README.md@ce53d0ddb998ddcb8208d0367c90f9c25e31a8ad",
+      "repo:policy/README.md@52877f1befd3112f1aec0eb122669d3fdc2634e6",
+      "repo:docs/doctrine/directory-rules.md@fd49a0b83e55cef52c1124281f093e263526898d",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@3ba5f902ffe20a65a259cb0a7dab07f1725d204b",
+      "repo:docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md@3c520ea8f2f8bcb3d478329a87d98b135ea335fd",
+      "repo:docs/adr/ADR-0002-contracts-vs-schemas-split.md@e626d82970932c319a690fc6044727ed114ada6a",
+      "repo:docs/adr/ADR-0003-policy-singular-is-canonical-(policies-is-compatibility).md@08ed360975943e69b171f53346a860f4a4a11bd4",
+      "repo:control_plane/root_registry.yaml@024f668b5f0a9239bafa4f8b09e2afd86300ff8c",
+      "repo:.github/CODEOWNERS@dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61",
+      "repo:.github/workflows/schema-validation.yml@0e1562f539323daa401184738a0c490b51e2999b",
+      "repo:.github/workflows/policy-test.yml@ac8f125e8a4d3634d86f66836d2aa2c0e3925e75",
+      "repo:.github/workflows/policy-boundary-guards.yml@1d7ba1df0f8ed291a15b1d9a44e404ba95d9e35c",
+      "repo:actions/run/31757075637",
+      "repo:actions/run/31757075636"
+    ]
+  },
+  "truth_labels": {
+    "schemas/policy/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Pinned current main, repository tree, target blob, target history, open pull requests, and the absence of target overlap before authoring."
+    },
+    {
+      "gate": "complete-baseline-read",
+      "outcome": "PASS",
+      "reason": "Read the complete v0.1 target and preserved its purpose, routing, status, boundary, inventory, belongs/prohibited rules, compatibility controls, validation intent, and open questions in corrected form."
+    },
+    {
+      "gate": "accepted-authority-reconciliation",
+      "outcome": "PASS",
+      "reason": "Used accepted ADR-0029 and exact adopted Directory Rules bytes for placement; kept ADR-0001 and ADR-0003 proposed, ADR-0002 draft/effectively proposed, and the root registry projection non-authoritative."
+    },
+    {
+      "gate": "exact-compatibility-tree-inventory",
+      "outcome": "PASS",
+      "reason": "Confirmed five subtree entries: the directory, this README, tests/, tests/README.md, and an empty tests/.gitkeep; no direct JSON, executable test, fixture, validator, or policy payload exists."
+    },
+    {
+      "gate": "complete-versioned-family-inventory",
+      "outcome": "PASS",
+      "reason": "Read all 16 JSON artifacts under schemas/contracts/v1/policy and reconciled 15 Draft 2020-12 schemas with unique IDs plus one non-schema placeholder, including shape strictness, declared maturity, missing metadata targets, and five observed ID base patterns."
+    },
+    {
+      "gate": "adjacent-responsibility-reconciliation",
+      "outcome": "PASS",
+      "reason": "Mapped semantic contracts, machine schemas, normative policy, fixtures, executable tests, validators, decision instances, and release authority to separate owning lanes without creating parallel authority."
+    },
+    {
+      "gate": "current-hosted-evidence",
+      "outcome": "PASS",
+      "reason": "Inspected exact-head Actions runs and logs: policy-test passed its bounded readiness holds; schema-validation passed JSON/meta-schema/identity preflight but failed at make schemas because repository-topology rejected, so downstream schema/contract tests were skipped. The README discloses this baseline and claims no fix."
+    },
+    {
+      "gate": "metadata-validation",
+      "outcome": "PASS",
+      "reason": "Repository-native required-profile metadata validation passed with report digest sha256:d604beaefce68326ec8e45e37160dd40b7e61b2991dedcbf879f68e2fbd25563."
+    },
+    {
+      "gate": "freshness-validation",
+      "outcome": "PASS",
+      "reason": "Repository-native bounded-required stale scan passed at 2026-08-13 with report digest sha256:b6f6b78068f04c232e596395ea10c5247b7350756e0650ecbee8c4d5b0593195."
+    },
+    {
+      "gate": "remote-local-link-resolution",
+      "outcome": "PASS",
+      "reason": "Resolved all 37 local Markdown targets against the exact recursive main tree with zero missing paths; two GitHub Actions URLs remain classified as external evidence links."
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "Confirmed one H1 outside fences, 50 unique headings, balanced code fences, valid internal fragments, no trailing whitespace, and no unresolved internal anchors."
+    },
+    {
+      "gate": "pandoc-gfm-parse",
+      "outcome": "PASS",
+      "reason": "Pandoc parsed the complete artifact as GitHub-Flavored Markdown without error."
+    },
+    {
+      "gate": "repository-native-link-and-graph-on-pr",
+      "outcome": "SKIPPED",
+      "reason": "The surviving local validation copy is intentionally sparse after automated worktree pruning and lacks several exact remote targets. Native link and graph checks therefore report local materialization misses; exact remote-tree resolution passed, and full-repository PR checks remain required."
+    },
+    {
+      "gate": "no-loss-reconciliation",
+      "outcome": "PASS",
+      "reason": "The explicit no-loss ledger maps every v0.1 concern to v0.2 while correcting stale tests/contract and fail-open || true guidance to the workflow-backed tests/contracts command."
+    },
+    {
+      "gate": "scope-and-non-effects",
+      "outcome": "PASS",
+      "reason": "The proposed scope is one README plus this generated receipt. No schema, fixture, validator, policy rule, evaluator, runtime, data, release, publication, repository setting, workflow, or authority state is changed."
+    }
+  ],
+  "policy_decisions": [
+    "schemas/policy/README.md",
+    "schemas/README.md",
+    "docs/doctrine/directory-rules.md"
+  ],
+  "citations": [
+    {
+      "id": "schemas-policy-v0.1-baseline",
+      "validated": true,
+      "evidence_ref": "repo:schemas/policy/README.md@92cc831c2f22e8b7fb0fcb7b876efa53e78ab850"
+    },
+    {
+      "id": "current-compatibility-tree",
+      "validated": true,
+      "evidence_ref": "repo:tree/schemas/policy@2fe22c2280bb7bd68d7cfee12c4daf38c4264981"
+    },
+    {
+      "id": "current-versioned-policy-schema-family",
+      "validated": true,
+      "evidence_ref": "repo:tree/schemas/contracts/v1/policy@9f28503b77a7876f09e1f786221828b2f170661e"
+    },
+    {
+      "id": "accepted-directory-rules-bytes",
+      "validated": true,
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md@fd49a0b83e55cef52c1124281f093e263526898d"
+    },
+    {
+      "id": "accepted-directory-governance-decision",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@3ba5f902ffe20a65a259cb0a7dab07f1725d204b"
+    },
+    {
+      "id": "schemas-root-machine-projection",
+      "validated": true,
+      "evidence_ref": "repo:control_plane/root_registry.yaml@024f668b5f0a9239bafa4f8b09e2afd86300ff8c"
+    },
+    {
+      "id": "schema-validation-definition",
+      "validated": true,
+      "evidence_ref": "repo:.github/workflows/schema-validation.yml@0e1562f539323daa401184738a0c490b51e2999b"
+    },
+    {
+      "id": "schema-validation-current-head-run",
+      "validated": true,
+      "evidence_ref": "repo:actions/run/31757075637"
+    },
+    {
+      "id": "policy-readiness-current-head-run",
+      "validated": true,
+      "evidence_ref": "repo:actions/run/31757075636"
+    },
+    {
+      "id": "verified-github-review-route",
+      "validated": true,
+      "evidence_ref": "repo:.github/CODEOWNERS@dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-14T00:33:42Z",
+  "emitter": "OpenAI Codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Documentation and provenance only. The receipt is emitted before pull-request creation so the first reviewable branch head contains the complete declared scope. It preserves canonical versioned schema writes, all policy/evaluator/consumer/required-check/independent-review/migration/retirement/promotion/release/deployment/publication holds, and the current-main schema-validation baseline failure without claiming remediation."
+}

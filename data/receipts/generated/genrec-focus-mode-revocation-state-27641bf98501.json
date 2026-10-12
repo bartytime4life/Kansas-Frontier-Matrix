@@ -1,0 +1,189 @@
+{
+  "receipt_id": "genrec-focus-mode-revocation-state-27641bf98501",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/focus-mode/state/revocation-state.md"
+  ],
+  "artifact_hashes": {
+    "docs/focus-mode/state/revocation-state.md": "sha256:27641bf9850143eb018f0673dec6d712fedf674e7884584e40f27a8b25ce49dd"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "exact serving revision not exposed"
+  },
+  "prompt_or_contract": "sha256:5ad6bafcebf6114e3b1c635c63bd9dc50b1813158cfdeb1c330aedeb687fbcf7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "current-repository inspection",
+      "same-path Markdown modernization",
+      "Python SHA-256 and structural validation",
+      "remote diff verification"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [],
+    "attached_docs": [],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/ec58517b74a02f5ce7dda3f407769c31d1393bb7",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ec58517b74a02f5ce7dda3f407769c31d1393bb7/docs/focus-mode/state/revocation-state.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ec58517b74a02f5ce7dda3f407769c31d1393bb7/docs/focus-mode/state/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ec58517b74a02f5ce7dda3f407769c31d1393bb7/docs/focus-mode/state/transitions/published-to-revoked.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ec58517b74a02f5ce7dda3f407769c31d1393bb7/docs/focus-mode/state/transitions/rollback-to-prior.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ec58517b74a02f5ce7dda3f407769c31d1393bb7/release/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ec58517b74a02f5ce7dda3f407769c31d1393bb7/contracts/release/rollback_card.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ec58517b74a02f5ce7dda3f407769c31d1393bb7/schemas/contracts/v1/release/rollback_card.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ec58517b74a02f5ce7dda3f407769c31d1393bb7/tools/validators/release/validate_rollback_card.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ec58517b74a02f5ce7dda3f407769c31d1393bb7/tests/validators/test_validate_rollback_card.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ec58517b74a02f5ce7dda3f407769c31d1393bb7/contracts/release/withdrawal_notice.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ec58517b74a02f5ce7dda3f407769c31d1393bb7/schemas/contracts/v1/release/withdrawal_notice.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ec58517b74a02f5ce7dda3f407769c31d1393bb7/schemas/contracts/v1/release/release_state.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ec58517b74a02f5ce7dda3f407769c31d1393bb7/schemas/contracts/v1/runtime/runtime_response_envelope.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ec58517b74a02f5ce7dda3f407769c31d1393bb7/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ec58517b74a02f5ce7dda3f407769c31d1393bb7/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ec58517b74a02f5ce7dda3f407769c31d1393bb7/.github/CODEOWNERS"
+    ]
+  },
+  "truth_labels": {
+    "docs/focus-mode/state/revocation-state.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main-target-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Pinned main at ec58517b74a02f5ce7dda3f407769c31d1393bb7; the target remained at prior blob 89c032bb7e8e08dbfbf9b6c9e73f4ea97acdbcea, and exact open-PR and task-branch searches found no overlapping revocation-state task."
+    },
+    {
+      "gate": "complete-target-parent-and-release-evidence-read",
+      "outcome": "PASS",
+      "reason": "Read the complete prior target in bounded ranges, the current parent state boundary, both linked transition documents, release root, RollbackCard contract/schema/validator/fixtures/tests, WithdrawalNotice contract/schema, release-state scaffold, runtime envelope schema, Directory Rules adoption evidence, CODEOWNERS, and contribution guidance."
+    },
+    {
+      "gate": "same-path-placement-review",
+      "outcome": "PASS",
+      "reason": "The tracked document remains at docs/focus-mode/state/revocation-state.md under the docs responsibility root. Accepted ADR-0029 supports same-path documentation repair; no move, split, mirror, alias, deletion, or parallel authority was introduced."
+    },
+    {
+      "gate": "current-implementation-reconciliation",
+      "outcome": "PASS",
+      "reason": "The document now distinguishes the absent generic revocation-manifest schema, thin proposed WithdrawalNotice, fixture-first non-executing RollbackCard stack, empty release-state scaffold, four-outcome runtime envelope, and held operational release/rollback behavior."
+    },
+    {
+      "gate": "legacy-anchor-compatibility",
+      "outcome": "PASS",
+      "reason": "All material v0.1 section anchors were retained as explicit compatibility anchors while the v1.0 structure received its own unique anchors."
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "One KFM metadata block, one H1, unique explicit anchors, resolving local fragments, supported GFM alerts, balanced fences, consistent tables, no tabs or trailing whitespace, LF-only text, and a final newline."
+    },
+    {
+      "gate": "repository-relative-link-review",
+      "outcome": "PASS",
+      "reason": "Every introduced repository-relative link is limited to an inspected target, adjacent state document, governing document, contract, schema, validator, fixture family, test, or release-root surface."
+    },
+    {
+      "gate": "security-rights-and-public-state-boundary",
+      "outcome": "PASS",
+      "reason": "The documentation introduces no credentials, private records, sensitive locations, release payloads, operational invalidation data, signing keys, or claims that public state was mutated."
+    },
+    {
+      "gate": "exact-sha256-artifact-binding",
+      "outcome": "PASS",
+      "reason": "Computed SHA-256 from the final UTF-8 README bytes: 27641bf9850143eb018f0673dec6d712fedf674e7884584e40f27a8b25ce49dd."
+    },
+    {
+      "gate": "json-schema-draft-2020-12-receipt-validation",
+      "outcome": "PASS",
+      "reason": "The receipt was validated in-session against the current generated receipt schema shape and format constraints."
+    },
+    {
+      "gate": "repository-native-generated-receipt-validator",
+      "outcome": "SKIPPED",
+      "reason": "No mounted checkout was available to execute tools/validators/validate_generated_receipt.py."
+    },
+    {
+      "gate": "repository-native-markdown-and-full-validator-suite",
+      "outcome": "SKIPPED",
+      "reason": "Connector-only execution did not expose a mounted checkout or repository-native command runner."
+    },
+    {
+      "gate": "operational-revocation-withdrawal-rollback-and-cache-validation",
+      "outcome": "SKIPPED",
+      "reason": "No policy engine, evidence resolver, signing system, release operator, cache invalidator, governed runtime, deployment, or public endpoint was exercised; the document records those boundaries rather than claiming them."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "pinned-current-main",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/ec58517b74a02f5ce7dda3f407769c31d1393bb7"
+    },
+    {
+      "id": "prior-revocation-state",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ec58517b74a02f5ce7dda3f407769c31d1393bb7/docs/focus-mode/state/revocation-state.md"
+    },
+    {
+      "id": "state-parent-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ec58517b74a02f5ce7dda3f407769c31d1393bb7/docs/focus-mode/state/README.md"
+    },
+    {
+      "id": "release-root",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ec58517b74a02f5ce7dda3f407769c31d1393bb7/release/README.md"
+    },
+    {
+      "id": "rollback-card-contract",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ec58517b74a02f5ce7dda3f407769c31d1393bb7/contracts/release/rollback_card.md"
+    },
+    {
+      "id": "rollback-card-schema",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ec58517b74a02f5ce7dda3f407769c31d1393bb7/schemas/contracts/v1/release/rollback_card.schema.json"
+    },
+    {
+      "id": "rollback-card-validator",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ec58517b74a02f5ce7dda3f407769c31d1393bb7/tools/validators/release/validate_rollback_card.py"
+    },
+    {
+      "id": "withdrawal-notice-contract",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ec58517b74a02f5ce7dda3f407769c31d1393bb7/contracts/release/withdrawal_notice.md"
+    },
+    {
+      "id": "withdrawal-notice-schema",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ec58517b74a02f5ce7dda3f407769c31d1393bb7/schemas/contracts/v1/release/withdrawal_notice.schema.json"
+    },
+    {
+      "id": "runtime-response-schema",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ec58517b74a02f5ce7dda3f407769c31d1393bb7/schemas/contracts/v1/runtime/runtime_response_envelope.schema.json"
+    },
+    {
+      "id": "directory-rules-adoption",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ec58517b74a02f5ce7dda3f407769c31d1393bb7/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-22T08:13:02Z",
+  "emitter": "ChatGPT GitHub connector",
+  "notes": "Documentation/provenance-only change. The receipt binds the final revocation-state Markdown bytes and records human review as pending. It does not prove factual truth, policy approval, actor authority, revocation, withdrawal, correction, rollback execution, invalidation, release, deployment, publication, or mergeability. The prompt hash binds a concise visible task contract, not hidden reasoning."
+}

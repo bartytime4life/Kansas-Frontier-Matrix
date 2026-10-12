@@ -1,0 +1,572 @@
+<!-- kfm-showcase:start -->
+<p align="center">
+  <a href="../../README.md#see-it-in-action"><picture><source media="(prefers-color-scheme: dark)" srcset="../brand/readme/kfm-banner-verification-backlog-dark.svg" /><img src="../brand/readme/kfm-banner-verification-backlog.svg" alt="Register banner: know it, propose it, or check it." width="100%" /></picture></a>
+</p>
+<sub>Illustration — no current trust, promotion or acceptance state is asserted.</sub>
+<!-- kfm-showcase:end -->
+
+# VERIFICATION_BACKLOG register
+
+<!-- kfm-showcase:start -->
+<p>
+  <a href="#verificationbacklog-register"><img src="https://img.shields.io/badge/register-verification%20backlog-9a7a12?style=flat-square" alt="register page" /></a>
+  <a href="#verificationbacklog-register"><img src="https://img.shields.io/badge/read-~43%20min-6b6b6b?style=flat-square" alt="About 43 minutes to read" /></a>
+  <a href="../../README.md"><img src="https://img.shields.io/badge/%E2%86%A9-project%20home-0b1f3a?style=flat-square" alt="Back to the project home" /></a>
+  <a href="../../README.md#take-the-tour"><img src="https://img.shields.io/badge/tour-10%20workspaces-2f6f4e?style=flat-square" alt="Take the Explorer tour" /></a>
+</p>
+<!-- kfm-showcase:end -->
+
+Indexes the corresponding `control_plane/*.yaml` register.
+
+## Exact-head repository conformance baseline — 2026-08-12
+
+**Status:** PROPOSED baseline; human review is pending.  
+**Source proposal:** `KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md`, EXP-009.  
+**Snapshot:** `main@753dfe4c4d17482c51bdf90ae8f8bb93e8644d3c`; recursive inventory contained **16,906 path entries**. The scan inspected repository paths and selected governing documents; it did not execute hosted CI, probe deployments, inspect branch protection, or assert runtime effectiveness.
+
+| Category | CONFIRMED on the snapshot | PROPOSED convergence work | NEEDS VERIFICATION |
+|---|---|---|---|
+| **DOC** | `docs/` contains 2,085 path entries. `docs/doctrine/directory-rules.md` and adopting `docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md` are present. | Resolve the compatibility posture of `docs/architecture/directory-rules.md` and the naming parity between `OBJECT_FAMILY.md` and `OBJECT_FAMILY_MAP.md` through the existing governance process. | Confirm document-registry parity, metadata-block coverage, links, and steward acceptance; path presence alone is not semantic conformance. |
+| **VAL** | `tools/validators/` contains 946 path entries and `tests/` contains 1,472. The generated-receipt schema, validator, and verification-backlog workflow are present. | Either project the open human-readable backlog into `control_plane/verification_backlog.yaml` or explicitly document why the views intentionally diverge. | Run exact-head hosted checks and measure validator coverage. The control-plane backlog currently has zero entries while this register has open items. |
+| **REL** | `release/` contains 193 path entries; `contracts/release/` contains 29; and `schemas/contracts/v1/release/` contains 27. Promotion decisions, manifests, correction notices, withdrawal notices, and rollback cards have repository homes. | Reconcile any remaining duplicate object-family homes before introducing new release artifacts. | Verify current manifest integrity, signatures, rollback readiness, and deployment behavior. No publication or release-state change was performed by this scan. |
+| **POL** | `policy/` contains 519 path entries, including `policy/promotion/`; policy contracts and schemas are present under their canonical responsibility roots. | Bind newly proposed policy behavior to existing contracts, fixtures, and finite outcomes instead of creating parallel policy homes. | Verify policy-bundle completeness, deny-path fixtures, request-time enforcement, and hosted CI outcomes. Structural presence does not prove effective enforcement. |
+
+### Snapshot findings
+
+- **CONFIRMED:** the repository has distinct documentation, contract, schema, policy, proof/receipt, and release responsibility roots.
+- **CONFIRMED:** the human-readable and machine-readable verification backlog views are not currently in parity.
+- **PROPOSED:** treat this section as the dated EXP-009 baseline and supersede it with a new exact-head section rather than rewriting historical observations.
+- **NEEDS VERIFICATION:** semantic conformance, current deployment posture, protected-branch settings, runtime gate behavior, and steward approval.
+- **UNKNOWN:** whether uninspected external services or unpublished branches contain additional implementation evidence.
+
+### Non-effects
+
+This baseline creates no schema, contract, policy rule, source activation, release, deployment, publication, or runtime authority. It records exact-head evidence for review and planning only.
+
+- 2026-05-09: NEEDS VERIFICATION: domain-specific evidence_bundle duplicates should be migrated to $ref in follow-up PR.
+- 2026-05-09: CONFIRMED PR-001 closes the local-resolver gap. Open: domain-specific schemas not yet on `$ref` form remain candidates for follow-up; runtime/UI/policy slices still UNKNOWN.
+
+
+- 2026-05-09 — OPEN: Release manifest schema is intentionally permissive in PR-001; fields for signed manifests, layer manifests, and rollback linkage are PROPOSED for ADR-0023 follow-up.
+
+- 2026-05-14 — OPEN: `docs/registers/CANONICAL_LINEAGE_EXPLORATORY.md` path and template exist as PROPOSED governance scaffold; first steward-reviewed entry and citation pattern are NEEDS VERIFICATION.
+- 2026-05-15 — OPEN: `docs/doctrine/directory-rules.md` created as PROPOSED canonical-home stub; NEEDS VERIFICATION steward decision on authority cutover vs mirror pattern from `docs/doctrine/directory-rules.md`.
+- 2026-05-15 — OPEN: `docs/registers/AUTHORITY_LADDER.md` and `docs/registers/OBJECT_FAMILY_MAP.md` created as PROPOSED naming-parity scaffolds; NEEDS VERIFICATION whether legacy `OBJECT_FAMILY.md` remains canonical, is superseded, or is maintained as compatibility mirror.
+
+- 2026-05-15 — RESOLVED: Re-ran branch-local checks and attached evidence in `control_plane/normalized_summary_consumer_readiness.yaml`; consumer statuses restored to `validated` on 2026-05-16.
+
+- 2026-05-15 — OPEN: Populate steward-approved authoritative `source_url` values in `control_plane/doctrine_artifact_provenance_sources.yaml` for each required doctrine artifact before provenance status may be promoted.
+
+- 2026-05-15 — OPEN: Resolve canonical filename/path mapping for required doctrine artifacts and promote `control_plane/document_registry_doctrine_required.yaml` entries from `needs_verification` only after steward-approved path + provenance evidence is attached.
+
+- 2026-05-15 — RESOLVED: Remediated parser compatibility for `needs_verification` status; `run_doctrine_artifact_preflight.py` no longer trips the prior check path and downstream consistency tests now pass.
+
+- 2026-05-15 — RESOLVED: Reran `pytest -q tests/policy/test_preflight_summary_consistency.py` (5 passed) and promoted consumer readiness to `validated` with 2026-05-16 evidence timestamp.
+- 2026-05-16 — OPEN (superseded by 2026-05-17 action split): Finalize canonical path + provenance mapping for doctrine inputs (atlas canonical form + naming decisions for `New Ideas 5-8-26` and `DomainDriven Design Reference`).
+- 2026-05-17 — OPEN (superseded by steward-signoff action below): Canonicalization action set with three tracked decisions (atlas canonical form, plus authoritative naming decisions for `New Ideas 5-8-26` and `DomainDriven Design Reference`).
+- 2026-05-17 — OPEN: Produce steward sign-off record that maps each current path variant to one canonical target name (`KFM_Domains_Culmination_Atlas_v1_1.pdf`, `New_Ideas_5-8-26.pdf`, `DomainDriven_Design_Reference.pdf`) and updates register/provenance entries atomically in the same change set.
+
+## Source-corpus reconciliation tranche 1 — issue #2874 — 2026-08-14
+
+**Status:** PROPOSED evidence ledger; first bounded tranche; issue #2874 remains open.  
+**Exact repository snapshot:** `main@cbee7add137b9738b3d123b17d41ac3d44d9745b`.  
+**Placement authority:** accepted ADR-0029, the adopted exact bytes at `docs/doctrine/directory-rules.md`, and the current `control_plane/root_registry.yaml` projection.  
+**Overlap preflight:** no open pull request was returned before branch creation; current issues, recent merges, and the collision guards recorded in #2874 and #2768 were inspected before selecting this docs-only ledger update.  
+**Baseline workflow state:** exact-main `validator-suite` run `31861180349` completed with failure before this branch. The failure is inherited and is not attributed to this documentation-only tranche without job-level causal evidence.  
+**Inspection boundary:** supplied documents plus read-only GitHub repository, issue, pull-request, workflow, contract, schema, policy, fixture, validator, test, receipt, application, and ADR evidence. No live source, deployed runtime, policy evaluator, signer trust root, publication service, public client, repository setting, or operational rollback was exercised.
+
+### Classification vocabulary
+
+| Status | Meaning in this tranche |
+|---|---|
+| `IMPLEMENTED` | Current repository behavior is closed enough to support the source idea within a declared bounded scope. |
+| `PARTIAL` | Material contract, schema, fixture, validator, test, workflow, or application slices exist, but authority or end-to-end closure is incomplete. |
+| `ABSENT` | A bounded search found no current repository implementation for the candidate. |
+| `SUPERSEDED` | A source proposal or status was replaced by later accepted repository authority or a more current governed implementation. |
+| `CONTRADICTED` | Current accepted authority or executable behavior conflicts with the source proposal. |
+| `BLOCKED` | A meaningful slice exists, but an explicit prerequisite or trust boundary prevents graduation. |
+| `NEEDS VERIFICATION` | Evidence was insufficient to classify the full candidate safely. |
+
+A row may carry two labels when the source artifact's governance status and the implementation maturity are different. For example, an adoption proposal may be `SUPERSEDED` by accepted doctrine while post-adoption implementation remains `PARTIAL`.
+
+### Reconciliation ledger
+
+| ID | Candidate idea | Source and locator | Intended outcome | Current repository evidence | Status | Authority, safety, and conflict notes | Smallest next slice, validation, and rollback |
+|---|---|---|---|---|---|---|---|
+| `SC-001` | Adopt Directory Governance Standard v2 and enforce responsibility-root placement. | *KFM Directory Governance Standard v2.0.0-draft.1*, cover and §§1–7. | Establish one deterministic placement authority, canonical root registry, finite placement outcomes, and reversible convergence. | `docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md` is accepted; exact source bytes are adopted at `docs/doctrine/directory-rules.md`; root, alias, domain-lane, and seam projections plus topology validation exist. | `SUPERSEDED` source adoption posture / `PARTIAL` implementation | The PDF's `PROPOSED FOR ADOPTION` status no longer describes repository authority. ADR-0029 is the only accepted numbered ADR. Inherited topology debt, hosted exact-head evidence, compatibility tombstoning, and consumer closure remain separate. | HOLD broad migration. Continue only monotonic, reviewed topology-ratchet reductions with focused topology tests and rollback to the prior baseline blob. |
+| `SC-002` | Governed daily briefing intake using `BriefingSignal` and `TemporalAuthorityEnvelope`. | *KFM Briefing-to-System Integration Architecture*, pp. 2–4 and §§3–11. | Convert generated briefings into typed, deterministic, non-authoritative discovery records before official-source verification and domain modeling. | `docs/architecture/briefing-integration.md` v0.7; `BriefingSignal`, `TemporalAuthorityEnvelope`, issue projection/read, source-snapshot candidate, evidence-chain, and obligation-propagation contracts/schemas/fixtures/validators/tests/workflows are present. Authenticated GitHub observation is read-only and inactive by default. | `PARTIAL` | The repository correctly denies a direct path from briefing prose to evidence, mutation, lifecycle promotion, or public products. Live official-source retrieval, authoritative evidence and policy resolution, issue mutation, domain events, and public surfaces remain outside the bounded profile. | Do not create a second briefing family. Next work, if selected, should close one existing HOLD such as authenticated source-snapshot verification with no write authority. Run the existing briefing and GitHub-read focused suites; revert the bounded slice on failure. |
+| `SC-003` | Make `schemas/contracts/v1/` the machine-schema home and separate semantic contracts from policy. | *Implementation Reference* and *Comprehensive Research and Verification Agenda*, schema-authority sections and C-02. | Remove parallel schema authority and make family routing, migration, validation, and compatibility explicit. | Accepted Directory Rules already route contract-backed shapes to `schemas/contracts/v1/<family>/`; ADR-0001 remains proposed as the dedicated migration/enforcement record. Its current evidence reports 878 tracked schema files and unresolved compatibility debt. | `PARTIAL` | Adopted placement does not accept ADR-0001 or prove all existing shapes canonical. `contracts/` owns meaning and `policy/` owns admissibility; no source document may collapse those roles. | Prefer one evidence-backed alias/convergence repair at a time, with schema fixture polarity, registry parity, inbound-reference checks, and rollback through the migration record. Do not perform a broad schema move. |
+| `SC-004` | Govern source admission through `SourceDescriptor`, activation, intake, rights, sensitivity, and operation-specific decisions. | *Greenfield Building Plan* §2 and §7.29; *Comprehensive Research and Verification Agenda* W05; *Pipeline Living Manual* source-registry sections. | Prevent connectors or external feeds from entering the lifecycle without reviewable identity, role, rights, sensitivity, scope, and finite disposition. | ADR-0017 remains proposed. Rich SourceDescriptor and SourceActivationDecision contracts/schemas, fixtures, validators, tests, and read-only workflows exist; singular/plural descriptor paths converge. The authority register has no entries, registry mechanics remain placeholder-level, and source/intake policy is non-enforcing or documentation-only. | `PARTIAL` / `BLOCKED` | Shape validity is not source admission. No current evidence proves admitted authority, live connector enforcement, policy evaluation, lifecycle writes, release, or publication. Unknown rights or sensitivity remains fail-closed. | HOLD live activation. The smallest useful slice is one fixture-first authority-resolution or policy-prerequisite profile tied to existing object families, with deny/hold fixtures and no network. Roll back by reverting the additive slice; no source cleanup should be needed. |
+| `SC-005` | Resolve consequential claims through shared `EvidenceRef` and `EvidenceBundle` objects. | *Connected-Dots Architecture Brief* §§2–6; *Whole-System Build Reference* §§2–4; *Soil Architecture* §§12 and 16. | Make evidence closure, citations, rights, sensitivity, checksums, and claim scope explicit before authoritative answers or release. | The shared EvidenceBundle contract/schema/fixtures/validator/policy references exist under `contracts/evidence/` and `schemas/contracts/v1/evidence/`. Domain-local EvidenceBundle shapes and aliases still appear across multiple domain lanes, and runtime/public resolver closure is incomplete. | `PARTIAL` | The shared family is stronger than domain-local writable duplicates. A schema-valid bundle does not authenticate source records, citations, rights, policy, review, or release state. | Select only a proven duplicate-to-`$ref` convergence with contract, fixture, validator, and consumer parity. Validate both positive and negative domain fixtures plus resolver tests; rollback to prior alias/schema blobs. |
+| `SC-006` | Govern the query-save-validate-compile-review-promote-recompile loop. | *Pipeline Living Implementation Manual v0.3*, pp. 3–7 and §§16–17. | Store auditable query/evidence/candidate/manifest records and rebuild derivatives without autonomous mutation or publication. | `QueryRunRecord`, `EvidenceResolutionRecord`, `AIChangeProposal`, and `RecompileManifest` surfaces exist. `RecompileManifest` is `PROPOSED_INACTIVE`, fixture-only, no-network, no-write, JSON-only, and restricted to `WORK`; deterministic replay and rollback binding are tested. | `PARTIAL` | The repository deliberately reused `AIChangeProposal` instead of creating a parallel `CandidateDelta`. No authenticated reviewer, policy evaluator, destination authorization, write executor, correction executor, or promotion integration is established. | HOLD any writer. A later executor requires a separate authority decision and dependency-closed policy/review/write/rollback contract. Current validation is the focused query/recompile fixture and replay suite; rollback is commit reversion only. |
+| `SC-007` | Record final promotion readiness with ordered A–G gates and `PromotionReceipt`. | *Greenfield Building Plan* §§2 and 7.31; *Research Agenda* C-08; *Pipeline Living Manual* publication sections. | Make final readiness finite, auditable, fail-closed, and distinct from policy approval, transition application, release, and publication. | ADR-0018 remains proposed. A bounded no-network A–G validator, PromotionReceipt contract/schema/fixtures/validator/tests/workflow, and PromotionDecision family exist. The policy lane remains inactive, review is fixture-only, and repository documents still contain multiple A–G vocabularies. | `PARTIAL` / `BLOCKED` | `PASS` means only bounded `APPROVE_READY`; it is not approval or an applied transition. Generated-receipt integrity and vocabulary convergence remain separate from the functional fixture proof. | Do not create another gate family. First repair a verified current receipt binding through its legitimate producer or resolve the vocabulary authority through review. Validate promotion-gate and receipt suites plus generated-receipt integrity; revert only the bounded repair. |
+| `SC-008` | Require STAC, DCAT, and PROV catalog agreement through a CatalogMatrix closure packet. | *Greenfield Building Plan* catalog-closure sections; *Master MapLibre Components-Functions-Features* artifact/catalog chapters; *Research Agenda* trust-chain workstreams. | Bind catalog vocabularies to the same artifact identity, digest, evidence, and release reference before promotion. | ADR-0022 remains proposed. Four bounded profile slices provide closed schemas, deterministic validators, synthetic fixtures, focused tests, and workflows. The broad schema remains permissive, the generic entrypoint remains a stub, aggregate validator registration is incomplete, and observed hosted runs retain receipt-integrity failures. | `PARTIAL` / `BLOCKED` | CatalogMatrix is a descriptor, not proof, policy, review, promotion, or publication authority. Creating another catalog home would violate Directory Rules and ADR-0011 separation. | Strongest next slice is existing-profile convergence into the registered validator surface only after stale receipt bindings are corrected legitimately. Run all four profile suites, aggregate registry checks, and receipt verification; rollback by reverting the integration commit. |
+| `SC-009` | Bind PMTiles and COG carriers to a geo manifest, integrity evidence, signing trust, release state, correction, and rollback. | *Master MapLibre Components-Functions-Features* pp. 3–5 and tile-strategy chapters; *Greenfield Building Plan* §§7.30–7.32. | Make geospatial delivery artifacts immutable, inspectable, tamper-evident, policy-gated, and reversible. | ADR-0023 remains proposed. KFMGeoManifest has fixture proof; PMTiles has structural, mobile, split-bundle, declared-manifest, RunReceipt-subject, and shape-only signature-carrier checks; COG has a synthetic byte-range integrity profile; MapReleaseManifest modeling exists. | `PARTIAL` / `BLOCKED` | This is a collision guard from #2768, not a fresh candidate. Cryptographic verification, admitted trust roots, signer registry, policy evaluation, release authorization, serving anti-bypass behavior, and production rollback remain held. | Next work is a decision packet for trust-root/key admission and verifier authority, not another structural fixture. Validate current structural suites and preserve explicit cryptographic HOLD. Rollback is repository-only until a real release exists. |
+| `SC-010` | Keep AI providers behind a governed adapter and expose finite runtime envelopes. | *MapLibre Operating Architecture* §§12–14; *AI Build Operating Contract* §§20–23; *Whole-System Build Reference* governed-AI sections. | Ensure generated language remains subordinate to evidence, policy, citation, precision, freshness, correction, and release state. | ADR-0019 remains proposed. A deterministic no-I/O MockAdapter covers four finite outcomes; RuntimeResponseEnvelope fixtures, builder, precision profile, and proof tests exist; AIReceipt has a validator. OllamaAdapter remains a placeholder, runtime Rego is non-enforcing, and no governed AI route or live provider is admitted. | `PARTIAL` / `BLOCKED` | This is another #2768 collision guard. Mock selection is not semantic orchestration; a provider response is never the public contract. EvidenceBundle resolution, policy/citation execution, receipt emission, and public `ANSWER` remain absent or held. | Do not add a live provider. Close one existing evidence/policy/citation boundary first, with finite negative fixtures and no network. Validate runtime envelope, MockAdapter, AIReceipt, governed-API fail-closed, and telemetry policy suites; rollback by reverting the bounded change. |
+| `SC-011` | Build a MapLibre shell with Evidence Drawer, Focus Mode, finite negative states, and governed API-only claim delivery. | *KFM MapLibre Operating Architecture*, pp. 3–7 and §§5–8. | Make map interaction a downstream trust surface that resolves visual candidates through governed envelopes and evidence. | The earlier `apps/explorer-web/` implementation and its tests were retired in commit `1142ff16c50af20dd3496bbea79b694d6cbd809b`; the directory is absent at `main@0fb7054948486e057f50a7b4d8b4c8bccdd310ca`. Focus and Evidence Drawer contracts remain documentary or separately scoped evidence. The owned `apps/site/source/` is a distinct preserved Site boundary. | `NEEDS VERIFICATION` | Historical Explorer tests do not prove a current public interaction. Direct lifecycle-store, direct model, or raw feature-property claim paths remain prohibited. | Identify the current owned public-client implementation and its accepted source boundary before choosing a governed client-to-drawer slice. Validate that exact implementation, accessibility, and no-direct-store guards; retain the Site preservation hold. |
+| `SC-012` | Use MapLibre GL JS as the sole browser-side renderer and retire a dual-renderer posture. | `maplibre3d.md` §§0–2. | Reduce renderer drift and preserve one governed camera, layer, evidence, receipt, and policy boundary for 2D/2.5D/3D. | ADR-0007 is registered but remains `legacy-proposed`; ADR-0006 is also proposed. MapLibre wrapper, renderer-capability profile, source maps, tests, and receipts exist, while Cesium compatibility surfaces remain present. | `PARTIAL` / `NEEDS VERIFICATION` | The source recommendation is not an accepted architecture decision. ADR-0029 is the only accepted numbered ADR; repository presence of MapLibre code does not silently retire Cesium or accept ADR-0007. | HOLD dependency retirement. First produce a current consumer/import/capability comparison and explicit ADR review packet. Validate renderer-boundary guards and all affected app/package tests; rollback by retaining the compatibility dependency until zero-consumer evidence exists. |
+| `SC-013` | Build Soil as separate static-survey, station, satellite-grid, profile, and interpretation support types. | *KFM Soil Architecture Extended Pro*, pp. 4–8 and §§8–20. | Prevent source/support collapse while proving a public-safe, evidence-bearing Soil thin slice. | `docs/domains/soil/README.md` is repository-grounded and marks implementation partial. Extensive docs/contracts/schemas/registry/policy/pipeline/package/UI/test scaffolding exists. Three deterministic no-network suites cover a public-safe candidate, station soil moisture, and SMAP L4 anti-collapse. | `PARTIAL` | No live source activation, complete ingestion path, catalog closure, proof-bearing release, or published Soil product is established. Active fixture support values and richer documentation vocabulary are not one accepted global enum. | Resolve one support-type vocabulary/convergence boundary before widening runtime use. Run Soil smoke, moisture-QC, SMAP anti-collapse, public-safe, identity, and receipt checks; rollback by reverting the additive profile or mapping change. |
+| `SC-014` | Build Geology and Natural Resources with anti-collapse semantics and public-safe exact-location controls. | *KFM Geology and Natural Resources Architecture*, pp. 3–7 and §§7–18. | Keep observed, interpreted, modeled, legal/administrative, resource, extraction, and public-safe representations distinct. | A geology documentation lane, contracts/schemas, source/policy scaffolds, Evidence Drawer payload, and focused convergence tests exist. The current landing README is dated and still labels many paths and implementation claims proposed; it also records unresolved lane-path vocabulary conflicts. | `PARTIAL` / `NEEDS VERIFICATION` | Documentation presence does not prove source admission, live ingestion, public-safe transformation, release, or runtime behavior. Exact borehole, private-well, sample, and sensitive resource locations remain fail-closed. | First refresh the geology lane's repository evidence and resolve one contract/schema path conflict without inventing a new home. Validate geology schema, public-safe geometry, evidence-drawer convergence, source-role, and deny-path fixtures; rollback by restoring prior docs/schema aliases. |
+
+### Collision and blocker conclusions
+
+- `SC-009` and `SC-010` are already materially advanced under #2768 and are retained here as collision guards only. They are not selected as new implementation work by this tranche.
+- The strongest newly reconciled repository slice is `SC-002`: the briefing architecture has moved well beyond a document-only proposal into a broad but deliberately non-authoritative fixture/read-only foundation. Its remaining work is live-authority closure, not a second object family.
+- `SC-001` is the clearest supersession: the supplied Directory Standard's adoption posture is historical because ADR-0029 accepted the exact bytes. Post-adoption repository convergence is still partial.
+- `SC-003`, `SC-004`, `SC-005`, `SC-007`, and `SC-008` are trust-spine dependencies. Broad domain or public-surface expansion should not outrun their remaining authority, compatibility, policy, and receipt-integrity holds.
+- `SC-013` and `SC-014` show that domain lanes have substantial repository surface, but neither source plan may be translated into live ingestion or publication merely because the planning document is detailed.
+
+### Current candidate queue after tranche 1
+
+| Order | Candidate | Disposition |
+|---:|---|---|
+| 1 | Exact stale generated-receipt binding in an already functional trust-spine profile | `NEEDS VERIFICATION` — inspect the failing exact-main job and legitimate producer before selecting a repair. |
+| 2 | EvidenceBundle duplicate-to-shared-`$ref` convergence | `PROPOSED` — select one domain only after consumer and fixture closure are proven. |
+| 3 | Briefing official-source snapshot verification | `PROPOSED HOLD` — fixture-first or authenticated read-only only; no source activation or lifecycle write. |
+| 4 | Soil support-type vocabulary convergence | `PROPOSED` — contract, schema, fixtures, validators, and docs must move together. |
+| 5 | Geology lane repository-evidence refresh and one path/shape convergence | `PROPOSED` — no live source or public-location exposure. |
+| 6 | PMTiles trust-root and cryptographic-verifier authority decision packet | `BLOCKED` — decision and admission evidence before implementation. |
+| 7 | Live model/provider integration | `BLOCKED` — evidence, policy, citation, receipt, and governed-route prerequisites remain incomplete. |
+
+No implementation candidate is selected by this documentation-only tranche. The exact-main workflow failure must be inspected first so a new PR does not misattribute inherited debt or duplicate a legitimate current repair.
+
+### Validation for this ledger change
+
+The changed area should run:
+
+```bash
+python tools/validators/validate_docs_links.py docs/registers/VERIFICATION_BACKLOG.md
+python tools/validators/check_doc_metadata.py docs/registers/VERIFICATION_BACKLOG.md
+python tools/validators/check_docs_stale.py
+python tools/validators/validate_docs_graph.py
+```
+
+Use the repository's current command names if these entrypoints have changed. Hosted changed-area, documentation, metadata, link, graph, generated-receipt, schema, and validator-suite checks remain authoritative for the branch head. Pending or inherited failures must be reported separately from introduced failures.
+
+### Rollback and non-effects
+
+Revert this one documentation commit or restore prior blob `fe8aab2f7d3a22c0112a3cbf7de07e52ecbe15e5`. This tranche creates no new root, contract, schema, policy, source descriptor, receipt, proof, release record, runtime route, source activation, lifecycle transition, deployment, publication, or repository-setting change. It does not accept any proposed ADR, authenticate any evidence, authorize any reviewer, or close issue #2874.
+
+## Bounded reconciliation refresh — issue #2874 — 2026-08-16
+
+**Status:** current-main override for the three bounded capability claims below; the dated 2026-08-14 tranche remains historical.  
+**Exact repository snapshot:** `main@97f5f965d1a684eedd3f0c61be8af774ee7790a0`.  
+**Placement authority:** unchanged — accepted ADR-0029, `docs/doctrine/directory-rules.md`, and the existing `docs/registers/VERIFICATION_BACKLOG.md` ledger home.  
+**Inspection boundary:** issue #2874, current `main`, merged PRs #2976, #2977, and #2979, and the current-main files owned by those merges. This refresh did not rescan the source corpus, inspect live services, select new implementation candidates, or create backlog work.
+
+### Bounded capability ledger refresh
+
+| Ledger reference | Capability | Current repository evidence | Status | Preserved authority, runtime, and publication gaps | Superseded text and remaining disposition |
+|---|---|---|---|---|---|
+| `SC-015` | Deterministic synthetic rollback, withdrawal, and correction rehearsal. | Merged PR #2976 replaced the one-line helper placeholder with a marker-protected, `synthetic: true`, no-network planner/applier plus fixtures, eight focused tests, a read-only workflow, and a runbook. The rehearsal verifies current/target release identity, canonical manifest and artifact digests, alias rollback or withdrawal, append-only correction lineage, the complete API/CDN/tile/catalog/triplet/search/vector/AI/downstream invalidation set, and byte preservation of affected release history. | `IMPLEMENTED` only for the deterministic synthetic rehearsal claim / `PARTIAL` and `BLOCKED` for production execution. | No live source is activated. No RollbackCard signature, reviewer, signer, policy decision, release authority, production alias, `release/` state, cache, catalog, search, API, deployment, or publication is authenticated or mutated. The report is test evidence, not rollback authority. | Remove only any next-step statement that the repository still lacks a synthetic rollback/correction rehearsal. Retain a separate HOLD for any production executor until an accepted RollbackCard and authenticated release authority are dependency-closed. No new follow-up is selected here. |
+| `SC-016` | Deterministic synthetic `FrontierClassification` assessment packet. | Merged PR #2977 added a proposed evidence-owned contract and closed schema, a sealed fixture registry, 38 positive/negative cases, 16 focused tests, and a bounded workflow. It composes existing `FrontierDefinition`, `CountyYearPanel`, geography, observation, uncertainty, evidence-reference, threshold-policy-reference, identity, and correction surfaces and proves finite `FRONTIER`, `NOT_FRONTIER`, and fail-closed `UNCLASSIFIED` behavior without network or model calls. | `IMPLEMENTED` only for the fixture-bound synthetic assessment and validator/test claim / `PARTIAL` and `BLOCKED` for real classification or governed use. | No source admission, real county data, reusable EvidenceRef-to-EvidenceBundle resolution, evidence authentication, threshold or policy decision, review approval, lifecycle write, runtime consumer, release, public API, map layer, deployment, or publication is established. The contract remains proposed and synthetic-only. | Remove only any next-step statement that the initial synthetic FrontierClassification proof is absent. Reusable evidence resolution and any real producer/consumer path remain separately governed and are not selected as work by this refresh. |
+| `SC-008` current override | Dependency-closed synthetic STAC/DCAT/PROV release-catalog closure proof. | Merged PR #2979 added one proposed additive profile, a closed schema, 17 fixtures, nine focused tests, and a read-only workflow. From one already assembled synthetic release candidate it deterministically derives STAC Collection/Item, DCAT Dataset/Distribution, and PROV Entity/Activity/Agent records; proves shared identity, digest, spatial/temporal extent, source role, rights, review/release posture, correction, and rollback agreement; and preserves deterministic correction/withdrawal replay. | `IMPLEMENTED` only for the bounded synthetic cross-profile integration seam / `PARTIAL` and `BLOCKED` for an actual governed catalog, release, serving, or publication path. | The profile does not resolve evidence, authenticate receipts or proofs, execute policy, approve review, create or authorize a ReleaseManifest, write lifecycle state, bind a real artifact store, serve a standards-complete STAC/DCAT/PROV endpoint, deploy, or publish. Aggregate validator-registry admission and binding to an actual release-candidate producer remain unproven. | Supersede only the interpretation that a dependency-closed synthetic STAC/DCAT/PROV integration proof is still missing. Preserve the prior aggregate-registry and actual-producer binding gaps as `PARTIAL` / `BLOCKED`; neither is selected as new work here. |
+
+### Supersession boundary
+
+- PR #2976 supersedes only the missing **synthetic rehearsal** claim; it does not supersede production rollback authentication or authority gaps.
+- PR #2977 supersedes only the missing **synthetic FrontierClassification packet** claim; it does not supersede source, evidence, policy, review, runtime, release, API/map, or publication gaps.
+- PR #2979 supersedes only the missing **dependency-closed synthetic cross-profile catalog proof** claim; it does not supersede aggregate admission, real producer binding, catalog serving, release authorization, or publication gaps.
+- The existing candidate queue is intentionally unchanged, and this refresh creates no new backlog item.
+
+### Validation and rollback for this refresh
+
+The existing documentation checks remain the changed-area validation surface. Hosted checks must classify any failure as introduced or inherited against `main@97f5f965d1a684eedd3f0c61be8af774ee7790a0`.
+
+Rollback is one documentation commit: remove this bounded refresh section and restore the prior `docs/registers/VERIFICATION_BACKLOG.md` blob. No source, contract, schema, policy, fixture, validator, runtime, release, deployment, publication, or repository setting changes with this ledger update.
+
+## Modernization campaign checkpoint — 2026-10-01
+
+**Status:** partial, read-only repository checkpoint. This section records the
+inspected surfaces and next dependencies; it does not declare repository-wide
+completion. **Base:** `main@8a40477bc6f8f102cb6b8fe852a739ded02838fa`.
+Accepted ADR-0029 and the adopted Directory Rules place this human-readable
+checkpoint in the existing `docs/registers/` responsibility root. It creates no
+new register or authority. No live source, hosted Site, deployed API, activated
+release, or rendered browser journey was exercised for this checkpoint.
+
+### Resolved reviewed slices
+
+The following are **CONFIRMED merged** in the GitHub pull-request readback at
+this checkpoint. Each resolves only its stated scope:
+
+| Scope | Merged changes | Boundary retained |
+|---|---|---|
+| Bounded input and pipeline planning | [#4818](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4818), [#4820](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4820), [#4825](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4825) | Numeric and retry behavior was repaired; this does not activate declarative pipelines. |
+| Water capture, freshness, health, and serving | [#4821](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4821), [#4822](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4822), [#4823](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4823), [#4826](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4826), [#4827](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4827) | These changes establish bounded local behavior, not source admission, a public release, or browser acceptance with activated data. |
+| Claim and mirror documentation | [#4819](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4819), [#4824](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4824) | Historical telemetry claims were corrected and the Site mirror hold was recorded, not cleared. |
+
+### Open gap ledger
+
+Priority orders the next investigation or review, not permission to activate
+data or accept a proposed decision. `CONFIRMED` applies only to the cited
+repository fact; a proposed fix remains `PROPOSED` until reviewed.
+
+| ID / priority / status | Evidence and impact | Dependency, owning responsibility root, proposed next slice, and verification |
+|---|---|---|
+| `MOD-01` / P1 / **REVIEW PENDING** | The [saved v139 mirror candidate](../runbooks/water-pilot.md#saved-site-v139-mirror-candidate--2026-10-04) follows merged PR #4876 and changes five existing Site files while retaining 336-file source parity. The authoritative Site passed its production build, 346 Node tests, TypeScript, and full lint with zero errors and 39 warnings. The MapLibre inventory remains a separate inherited hold; topology has zero new drift. A fresh audit of the unchanged lockfile found eight high findings, with disposition open. Browser acceptance and hosted equivalence remain unverified. | Site source owner, `apps/site/source/`, and existing `data/receipts/generated/` and `tools/qa/` roots. Review the new source/overlay comparison and candidate receipt, current dependency findings, and new-head CI. Perform a real browser journey when browser control is available. Keep historical receipts; parity does not establish deployment, release activation, or publication. |
+| `MOD-02` / P1 / **NEEDS VERIFICATION** | `connectors/usgs/water_data/pilot_capture.py` records station IDs per attempt, while `tools/generators/telemetry/water_operational_receipt.py` selects the final failed attempt across the whole capture for each station health object. A second-station failure may be attributed to the first station. No station-specific failure reproduction was run for this checkpoint. | Connector and telemetry owners, `connectors/` and `tools/generators/telemetry/`. Reproduce a mixed-station capture, identify whether the existing SourceHealthAssessment vocabulary can truthfully represent global incompleteness and station-local retrieval, then make a contract-closed change with per-station tests and validator coverage. Preserve `UNAVAILABLE` until candidate closure is proven. |
+| `MOD-03` / P2 / **CONFIRMED inactive; PROPOSED implementation** | [Pipeline specifications](../../pipeline_specs/README.md) say 109 YAML declarations are `NOT_IMPLEMENTED`, and the generic `pipelines/{ingest,validate,catalog,triplets,rollback}/main.py` files are comments only. A named stage is not an executable lifecycle transition. | Pipeline and domain owners, `pipeline_specs/` and `pipelines/`. Select one fixture-first, dependency-closed stage after contract, source-role, evidence, policy, receipt, idempotency, quarantine, and rollback review. Verify its declared profile, negative paths, changed-area tests, and no unauthorized lifecycle write. Do not turn the placeholders into apparent success. |
+| `MOD-04` / P1 / **CONFIRMED proposed hold** | [Telemetry policy boundary](../../policy/telemetry/README.md) labels `no_restricted_coords.rego` a proposed stub with `default deny := false`; the file has no operative denial rule. Its presence cannot be cited as runtime redaction enforcement. | Policy and telemetry owners, `policy/telemetry/`. First settle proposed ADR-0016 and the policy input/consumer boundary, then review a fail-closed rule with restricted-coordinate negative fixtures and active-consumer proof. Until then, keep this module explicitly inactive and do not claim it protects exposed telemetry. |
+| `MOD-05` / P2 / **CONFIRMED partial projection** | `control_plane/verification_backlog.yaml` currently has 747 entries, declares `completeness: partial`, and pins `base_ref: 6994a65843c4999313fda01183b63333213134f3`. The 2026-08-12 statement above that it had zero entries is historical, not current. Human and machine ledger parity is still unverified. | Register and control-plane owners, `docs/registers/` and `control_plane/`. Use the existing projection producer and validator to reconcile only reviewed entries against an exact base. Verify stable IDs, digests, completeness labels, and historical preservation; do not hand-edit a generated registry to imply closure. |
+| `MOD-06` / P2 / **NEEDS VERIFICATION** | Local water package/API/Site tests and Site builds passed for the reviewed slices, but no activated release was used in a browser. A build and an `ANSWER` fixture do not prove the station, evidence, expiry, withdrawal, and export journey is visible and usable. | Site and release owners, `apps/site/source/`, `apps/governed-api/`, and `packages/release/`. After a separately reviewed synthetic or authorized release setup, exercise the normal-scale browser flow, expiry and withdrawal, map rendering, evidence, and export. Record version, source identity, timestamps, and failure states without converting the exercise into owner acceptance or publication. |
+| `MOD-07` / P3 / **UNKNOWN** | This checkpoint did not trace every domain, source adapter, policy bundle, registry, API consumer, scheduled workflow, or public artifact end to end. The machine backlog itself is partial. | Each existing owning responsibility root. Continue the contract-to-implementation-to-test-to-runtime inventory in dependency order; classify each new finding with evidence before editing. Repository-wide completion remains unclaimed. |
+
+### MOD-01 currentness — 2026-10-04
+
+The [saved v140 Site candidate](../runbooks/water-pilot.md#saved-site-v140-mirror-candidate--2026-10-04)
+supersedes the v139 source and mirror checkpoint in the `MOD-01` row above.
+Its four changed existing paths add selected-station evidence and export
+identity checks; the 336-file mirror comparison and receipt check pass locally.
+The Site build, TypeScript, 349 Node tests, and lint with zero errors pass.
+The eight high development-dependency audit findings, browser acceptance,
+source review, new-head CI, and hosted equivalence remain open. The row above
+is retained as the prior checkpoint, not as a claim that v139 is current.
+
+### Modernization currentness — 2026-10-01
+
+At `main@5dc0ec2785663ea226a493a8f4ca7de6fe40e2e3`, `MOD-02` is
+**CONFIRMED resolved for station-local water health classification** by merged
+[PR #4829](https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4829).
+A synthetic mixed-station capture reproduced the cross-station timeout error;
+the producer, SourceHealthAssessment schema and validator, tests, and runbook
+were changed together. The water workflow selection passed 251 tests locally.
+This does not prove live source admission, release, external consumer readiness,
+or browser behavior. The original `MOD-02` row remains the dated pre-fix finding.
+
+`MOD-05` remains **CONFIRMED partial**: the projection producer's read-only
+check reconciles 949 pinned markers to 747 artifact entries, but human/machine
+parity and implementation closure are unverified. The control-plane README
+population correction in this tranche changes documentation only.
+
+### Validation and non-effects
+
+This checkpoint is documentation only. Run the register's current metadata,
+link, freshness, graph, and topology checks; attribute any inherited failure
+separately from a new one. Revert this section to roll back the checkpoint.
+It does not change a validator baseline, receipt, source state, policy rule,
+pipeline activation, release, deployment, publication, or owner acceptance.
+
+### Water staging resource boundary — 2026-10-01
+
+`MOD-08` / P1 / **CONFIRMED on `main@e429853f575dcc05781c4d6fafab66bd47c771b9`**:
+`tools/local_data/water_pilot.py` wrote quarantine objects before checking the
+capture's aggregate object count or bytes. A synthetic incomplete capture with
+thirteen objects wrote all thirteen before normalization quarantined it.
+The operator and hydrology test owners are `tools/local_data/` and
+`tests/domains/hydrology/`. This slice adds pre-write count, byte, digest, and
+manifest checks, plus a replay page-reference check. The staging byte ceiling
+accounts for the final over-budget page that acquisition retains for quarantine.
+Changed-area tests must demonstrate rejected input leaves no new lifecycle
+objects; exact-head hosted checks and operational replay remain separate
+verification. This change grants no source admission, release, or publication.
+
+### Water package request identity — 2026-10-01
+
+`MOD-09` / P1 / **CONFIRMED on `main@02cce9e8f187c3ae7c79a206102f88c8462803e9`**:
+`tools/release/water_snapshot.py` accepted a valid WORK candidate copied under
+a different digest path and returned `PREPARED` with the requested, incorrect
+candidate ID. The package itself was built from the candidate's actual ID.
+The release-operator owner is `tools/release/`; executable conformance belongs
+under `tests/tools/`. This slice checks requested and stored identity before
+package construction. A negative test verifies the mismatch writes no snapshot,
+and a positive test preserves normal preparation. Hosted validation and review
+remain open; no activation or release is implied.
+
+### Water replay request identity — 2026-10-01
+
+`MOD-10` / P1 / **CONFIRMED on `main@9123ace195b8b3e3cc3d12d9f054e43fdec8168b`**:
+`tools/local_data/water_pilot.py` accepted a valid capture manifest copied
+under a different run digest path. Replay returned `CANDIDATE_READY` for the
+manifest's actual capture ID even though the caller requested another ID.
+The local-data operator and hydrology test owners are `tools/local_data/` and
+`tests/domains/hydrology/`. This slice rejects a path/content identity mismatch
+before loading referenced page objects. Synthetic positive and negative replay
+tests verify the boundary. Hosted validation and operational replay remain
+unverified; this creates no source admission or release authority.
+
+### WBD HUC12 numeric input closure — 2026-10-01
+
+`MOD-11` / P1 / **CONFIRMED on `main@c7c88c0c949442fd0a76e696c9fe876652009ff6`**:
+the fixture-first WBD HUC12 producer parsed JSON exponent overflow such as
+`1e999` to an infinite float, then raised an uncaught exception during
+canonical hashing. Its promised finite, value-free diagnostic was absent.
+The pipeline owner is `pipelines/domains/hydrology/ingest_wbd_huc/`, with
+semantics in `contracts/domains/hydrology/` and executable conformance in
+`tests/pipelines/domains/hydrology/`. This slice rejects overflowing exponents
+at parse time and returns a finite finding for non-serializable programmatic
+inputs. It does not enable retrieval, lifecycle writes, source admission,
+release, or publication. Hosted validation remains open.
+
+### WBD HUC12 review-output boundary — 2026-10-01
+
+`MOD-12` / P1 / **CONFIRMED on `cfba3bf97d957caa865fab52936473d61aca17b3`**:
+the fixture-first WBD HUC12 producer's optional `--output` followed a
+symlinked parent directory. A temporary-directory reproduction returned
+success and wrote the candidate through that alias. The existing path check
+also permitted repository lifecycle paths despite the declaration's
+`writes_targets: false` posture. The pipeline owner is
+`pipelines/domains/hydrology/ingest_wbd_huc/`; the output contract and tests
+stay in their existing responsibility roots. This follow-up requires an
+existing external directory, rejects symlinked parents and repository paths,
+and creates files without overwriting. It is stacked on the numeric-input
+repair and grants no lifecycle write, admission, release, or publication.
+
+### WBD HUC12 bounded input read — 2026-10-01
+
+`MOD-20` / P1 / **CONFIRMED on `main@30b244361c2eabe4cd92161c6afff5b1592da600`**:
+the fixture-first producer checked a source package's size, then used an
+unbounded text read. A file that grew after the size check could exceed the
+declared 8 MiB cap. The input path also accepted an observed symlinked parent.
+The owning implementation root is `pipelines/domains/hydrology/ingest_wbd_huc/`,
+with existing contract and test roots. This slice bounds the actual read,
+requires a stable regular file, and denies observed symlinked parents. Tests
+cover stale path-size metadata and a symlinked parent. Filesystem paths remain
+caller-controlled and mutable; the fix does not authenticate the capture,
+admit a source, write lifecycle state, or permit release or publication.
+
+### WBD HUC12 schema diagnostic memory bound — 2026-10-01
+
+`MOD-21` / P2 / **CONFIRMED on `main@1c20868b1bfecd47d4b565867411b7c2d56a6b65`**:
+the fixture-first producer converted every schema validation error to a list
+and sorted the entire list before applying `MAX_SCHEMA_FINDINGS = 100`.
+The source-package schema permits an unbounded `request.out_fields` array, so
+a package within the 8 MiB input limit can produce many more than 100 errors.
+The owning implementation root is `pipelines/domains/hydrology/ingest_wbd_huc/`,
+with semantics and regression tests in their existing `contracts/` and `tests/`
+roots. This slice retains only the 100 smallest path/validator keys and the
+existing truncation finding; a streaming regression checks bounded retention
+and stable ordering. It does not bound total schema evaluation time, admit a
+source, write lifecycle state, or permit release or publication.
+
+### Water station revision chronology — 2026-10-01
+
+`MOD-22` / P1 / **CONFIRMED on `main@711fb0eefdab7fa8be39fabfb7914bd809e948f7`**:
+the water candidate validator checked station page retrieval times but did not
+parse or order an optional station `provider_revision_at`. A candidate rehashed
+with a malformed or future station revision time returned a `PASS` validation
+receipt. The normalizer also copied this field without checking it. The
+Hydrology pipeline owner is `pipelines/domains/hydrology/`; regression tests
+belong in `tests/domains/hydrology/` and operator behavior in the existing
+water runbook. This slice requires a supplied revision time to be valid and no
+later than station retrieval; absent revision remains unknown. Synthetic tests
+cover valid, malformed, and future values, validator rejection, and quarantine
+without a WORK candidate. This does not authenticate USGS metadata, admit the
+source, promote data, or authorize a release or publication.
+
+### Telemetry fixture manifest truth and bounds — 2026-10-01
+
+`MOD-23` / P1 / **CONFIRMED on `main@c24354c64ce07184eb31453abc8fc770ae76dc8b`**:
+both fixture-only lineage generators converted the manifest value
+`"telemetry_allowed": "false"` to `True`, producing a `PASS` projection. Their
+CLI entry points also read manifest text without a byte limit or duplicate-key
+check, unlike the corresponding validators. The owners are the existing
+`tools/generators/telemetry/`, `contracts/telemetry/`, and
+`tests/validators/telemetry/` roots. This slice requires real JSON booleans,
+uses the shared bounded JSON loader, and emits a finite manifest diagnostic.
+Focused tests cover both generators, string flags, duplicate keys, and
+oversized input. It does not activate telemetry export, settle proposed
+telemetry policy, or grant public-use, release, or publication authority.
+The two workflow receipt checks now replay their unchanged historical artifact
+bytes at authoring commit `25a58f324e6ada808714aecdf9e745d139e1b3bc`;
+current generator behavior remains covered by the unit and fixture checks.
+The touched OpenLineage contract's inherited multi-label metadata `type` was
+also corrected to the existing `semantic-contract` value so changed-document
+validation can pass; that edit creates no new authority.
+
+### Local water snapshot validation replay — 2026-10-01
+
+`MOD-24` / P1 / **CONFIRMED on `main@b2fccd98d084b01f01f6e8c905aa369725c6f955`**:
+the local release carrier accepted a fully resealed water package whose embedded
+`PASS` receipt falsely set `release_authorized` to `true`, although a fresh
+candidate validation returned `false`. Local staging and activation called only
+the carrier hash/reference validator. The owning implementation and conformance
+roots are `packages/release/` and `tests/packages/release/`. This slice requires
+the local owner caller to supply the domain candidate validator and checks exact
+receipt equality before either transition, preserving package-to-pipeline
+dependency direction; a rejected stage creates no release store, and activation
+rejects a previously staged fabricated package. The existing water contract and
+runbook describe the boundary. This does not authenticate independent review,
+change the Site Worker, implement hosted administration, or approve any release.
+
+### WBD HUC12 request-scope binding — 2026-10-01
+
+`MOD-25` / P1 / **CONFIRMED on `main@4920447692b6c4a066fc82e45491193fa55d99dc`**:
+the fixture-first WBD producer accepted a rehashed source package whose declared
+HUC12 disagreed with its request clause or encoded query URL, and still emitted
+a `NO_CHANGE_RECEIPT`. The existing `pipelines/domains/hydrology/ingest_wbd_huc/`
+owner now checks the declared clause, endpoint, and bounded query parameters
+before candidate projection. Adversarial tests cover the wrong HUC, endpoint
+suffix, duplicate query key, and `304` path. The domain contract and lane
+README describe these semantics. This checks internal request evidence only;
+it does not authenticate capture bytes, activate the source, write RAW or
+QUARANTINE, promote, release, or publish data.
+
+### WBD HUC12 requested-field binding — 2026-10-01
+
+`MOD-26` / P1 / **CONFIRMED on `main@4193bfdd29b46ea95fe75bd7213bd3f23a39c481`**:
+all six fixture source packages declared four `request.out_fields` values,
+but their recorded GET URLs omitted `outFields`. The fixture-first producer
+accepted a rehashed package with a different declared field list and emitted
+a candidate. The owning `pipelines/domains/hydrology/ingest_wbd_huc/` producer
+now requires one encoded `outFields` parameter matching the ordered declared
+list. Fixture hashes were recomputed, the contract was updated, and focused
+tests cover missing, different, duplicate, and conflicting values for HTTP
+`200` and `304`. The historical generated receipt remains pinned to its
+original Git artifact ref. This is internal request consistency only; live
+capture authenticity, source admission, lifecycle writes, and release remain
+**NEEDS VERIFICATION**.
+
+### Water station last-success time — 2026-10-01
+
+`MOD-27` / P1 / **CONFIRMED on `main@a479bf40da10c13f5f740bd7e9bdd1b3c4d08643`**:
+the local water telemetry producer set every station's `last_success_at` to
+the capture completion time whenever a normalized candidate existed. A
+synthetic capture with an advancing clock showed successful attempts at
+18:01:02Z and 18:01:06Z but both health records reported completion at
+18:01:08Z. The producer now reads each station's latest recorded successful
+attempt and keeps completion in `probed_at`. Focused tests check both
+returned and persisted health receipts. This changes local candidate
+telemetry and receipt digests. The operational receipt's `code_ref` now
+includes the telemetry producer bytes so this change affects its code
+identity as well. It does not authenticate live source health, admit the
+source, or approve release.
+
+### Water capture attempt-page consistency — 2026-10-02
+
+`MOD-28` / P1 / **CONFIRMED on `main@774b0d24d98a4eea8f4cf9adc25efe710ee080b5`**:
+`normalize_capture` accepted a rehashed, complete-looking manifest with
+valid page bytes but no recorded retrieval attempts. It produced a `COMPLETE`
+candidate and the local health producer labeled both stations `HEALTHY`
+despite `last_success_at: null`. The hydrology normalizer now reconciles
+bounded successful attempts to pages by station, collection, count, status,
+and time before candidate creation. Negative tests cover absent, mis-scoped,
+future, malformed-status, and extra success attempts; a retry followed by
+success remains valid. The quarantine path retains finite, valid health
+receipts and excludes future-dated or contradictory success metadata from
+`last_success_at`. These checks establish internal consistency, not proof
+of provider origin, source admission, or release.
+
+### Site mirror source-identity guard — 2026-10-01
+
+`MOD-13` / P1 / **CONFIRMED on `main@9465a573d8859cd1564124897d10d848f9c7c350`**:
+`tools/qa/site_mirror.py --source` read standalone Site working-tree bytes
+while reporting the checkout's `HEAD` as `source_commit`. A dirty checkout
+could therefore be represented as the immutable commit. The Site comparison
+owner is `tools/qa/`; synthetic conformance belongs under `tests/qa/` and
+operational context under `docs/runbooks/`. This slice rejects a dirty source
+before comparison and rechecks its commit and worktree status after file reads.
+It preserves the historical receipt and the `MOD-01` Site mirror hold. A clean
+local Site commit currently has 51 differing shared paths and lacks 50
+monorepo mirror paths; source/overlay review, successor receipt, browser
+behavior, and publication remain **NEEDS VERIFICATION**.
+
+### Hydrology promotion entry-point hold — 2026-10-01
+
+`MOD-14` / P1 / **CONFIRMED on `main@9ec5ccda4e8a664424e9d994167147e5415d5310`**:
+`pipelines/domains/hydrology/promote.py` could be run directly to write an
+`APPROVE` decision with fabricated automation review and unresolved proof and
+rollback references. The promotion and proof workflows deliberately avoided
+executing it but asserted that those unsafe markers remained. The broader
+Hydrology workflow also requires explicit admission of substantive tests. The pipeline
+owner is `pipelines/domains/hydrology/`; existing workflow, test, policy,
+runbook, and review-console roots own their respective safeguards and status
+text. This slice makes the entry point return `HOLD` /
+`PROMOTION_NOT_IMPLEMENTED` without writing, tests it in isolation, updates
+workflow assertions, and admits that test to the Hydrology workflow's bounded
+test set. The tracked smoke record remains historical
+held evidence, not an active decision. Promotion, release, and publication
+remain **NOT IMPLEMENTED / NOT AUTHORIZED**.
+
+`MOD-15` / P2 / **CONFIRMED absent on the same base; NEEDS VERIFICATION for
+coverage**: `policy/data/README.md` and other historical guidance referenced
+`tests/policy/test_explorer_web_adapter_boundary.py`, but that file is absent
+from the current tracked tree. Commit
+`1142ff16c50af20dd3496bbea79b694d6cbd809b` explicitly retired that test,
+the `apps/explorer-web/` tree, and the `ui-build` and `accessibility` workflows.
+The policy and UI test owners should trace the current owned public client and
+its boundary before implementing a substantive replacement guard. The
+historical `tests/ui/README.md` and proposed ADR-0005 are marked with a
+currentness correction. A passing unrelated policy suite is not proof of
+public-client boundary or browser coverage.
+
+### Site Qwen context boundary — 2026-10-01
+
+`MOD-16` / P1 / **CONFIRMED on `main@4f28130de544974e9af8e5b3225aff6f44dcfe45`**:
+the hosted `/api/qwen` route accepted arbitrary nested context fields and
+forwarded the whole object to a configured model. The local Qwen bridge
+checked only top-level fields and a few nested values, so an undeclared
+telemetry or camera field could also reach local inference. The Site source
+owner is `apps/site/source/`; its app-local tests and README own the executable
+boundary and behavior description. This slice rejects undeclared context
+fields recursively in both paths before any inference request. It does not
+authenticate declared user-supplied context, resolve EvidenceBundles, constrain
+free-form questions, admit a model, or authorize an answer as KFM truth. The
+Site mirror review hold and browser acceptance remain **NEEDS VERIFICATION**.
+
+### Qwen availability state semantics — 2026-10-01
+
+`MOD-17` / P2 / **CONFIRMED on `main@46d4d399c7d17869b315e9ef791d0821a7ec61b4`**:
+the local bridge's `/health` checked whether Ollama listed the configured
+model but returned `ready`; the Site displayed `LOCAL QWEN READY`. A successful
+hosted fallback also set the same local-ready UI state. Neither observation
+proved a local inference response. The existing Site source and app-local tests
+own this behavior. This slice labels the model-list check `installed`, records
+local and hosted answers separately, and keeps endpoint selection bound to the
+local state. A label after one response is a dated interaction observation, not
+continuous connectivity. The visual browser check was blocked by the
+admin-enforced browser security policy; normal-scale acceptance remains
+**NEEDS VERIFICATION**. The Site mirror review hold remains unchanged.
+
+### Current Site client store boundary — 2026-10-01
+
+`MOD-15` / P2 / **PARTIAL resolution on `main@f0fe4794f87cda30d65b51a6add5922a10ad8f16`**:
+the retired Explorer boundary test was absent, while the owned Site has 23
+`use client` entrypoints. An app-local static guard now follows those
+entrypoints' relative runtime import graph and rejects reachable server store
+modules, route handlers, and server-only capabilities. The existing Site test
+command collects the guard. This establishes a source-level module boundary
+for the inspected checkout; complete network, browser, governed-release, and
+public artifact boundaries remain **NEEDS VERIFICATION**. The Site mirror
+review hold remains unchanged.
+
+### Reviewed-water browser status — 2026-10-01
+
+`MOD-18` / P2 / **CONFIRMED on `main@4cd427e2732bfa0584ed1d070d58455cf8300b00`**:
+the Site reviewed-water control cleared data on failed requests but labeled
+every empty browser state `No released data`, including transport failures,
+storage errors, evidence timeouts, and withdrawn or expired responses. That
+label could imply an absent release without a successful negative answer. The
+Site source owner, existing app-local tests, and governed-water notes own this
+slice. It now labels the observed browser state as checking, received, no
+reviewed release active, withheld, or unavailable. This changes presentation
+only; the governed API, source admission, activation, and release gates remain
+unchanged. Browser visual acceptance and the Site mirror review remain
+**NEEDS VERIFICATION**.
+
+### Site mirror drift diagnostics — 2026-10-01
+
+`MOD-19` / P2 / **CONFIRMED on `main@5021bc0a686a9b0df67858ac8ddf624ec1663030`**:
+the mirror conformance CLI returned only `MIRROR_REVIEW_REQUIRED` for current
+drift, requiring manual receipt parsing to identify affected paths. The
+existing `tools/qa/` owner now provides a read-only `--diagnose` mode that
+reports changed working-tree hashes and file-set differences, explicitly marks
+dirty checkout state, and exits nonzero while review is needed. The original
+`--check` hold and historical receipt are unchanged. This supports per-file
+overlay review; source equivalence, successor receipt approval, Site deployment,
+and browser acceptance remain **NEEDS VERIFICATION**.
+
+<!-- kfm-showcase:start -->
+<p align="center">
+  <img src="../brand/readme/kfm-divider.svg" alt="" width="100%" />
+</p>
+
+<p align="center">
+  <a href="../../README.md"><b>↩ Project home</b></a> ·
+  <a href="../../README.md#see-it-in-action">See it in action</a> ·
+  <a href="../../README.md#take-the-tour">Tour</a> ·
+  <a href="../../README.md#things-to-try">Things to try</a> ·
+  <a href="../../README.md#faq">FAQ</a> ·
+  <a href="../brand/readme/README.md">Artwork</a>
+</p>
+<!-- kfm-showcase:end -->

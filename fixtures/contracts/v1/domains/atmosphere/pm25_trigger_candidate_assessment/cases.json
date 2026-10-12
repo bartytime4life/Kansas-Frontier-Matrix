@@ -1,0 +1,61 @@
+{
+  "bases": {
+    "trigger": {
+      "profile": "PM25_TRIGGER_CANDIDATE_ASSESSMENT_V1",
+      "assessment_id": "GENERATED",
+      "spec_hash": "GENERATED",
+      "subject": {
+        "observation_ref": "kfm:observation:synthetic-pm25-001",
+        "source_ref": "kfm:source:synthetic-monitored-air-001",
+        "trailing_median_ref": "kfm:baseline:synthetic-pm25-median-001",
+        "observed_at": "2026-08-01T12:00:00Z",
+        "retrieved_at": "2026-08-01T12:05:00Z",
+        "knowledge_character": "OBSERVED_SENSOR",
+        "threshold_relation": "ABOVE_MONITORED_THRESHOLD",
+        "trailing_median_relation": "ABOVE_TRAILING_MEDIAN",
+        "evidence_refs": ["evidence:synthetic-pm25-baseline-001", "evidence:synthetic-pm25-observation-001"]
+      },
+      "integrity": {"input_state": "AVAILABLE", "freshness": "FRESH", "quality": "ACCEPTABLE", "source_state": "MONITORED"},
+      "assessment": {"outcome": "PROPOSED_TRIGGER_CANDIDATE", "reason_codes": ["ABOVE_MONITORED_THRESHOLD", "ABOVE_TRAILING_MEDIAN"]},
+      "governance": {
+        "execution_mode": "FIXTURE_ONLY",
+        "network_attempted": false,
+        "numeric_threshold_computed": false,
+        "detector_configuration_mutated": false,
+        "air_quality_event_declared": false,
+        "regulatory_compliance_decided": false,
+        "health_advice_issued": false,
+        "policy_evaluated": false,
+        "review_approved": false,
+        "promotion_authorized": false,
+        "release_authorized": false,
+        "publication_authorized": false,
+        "public_use_allowed": false
+      }
+    }
+  },
+  "cases": [
+    {"case_id": "trigger-pass", "base": "trigger", "expected_outcome": "PASS", "expected_findings": []},
+    {"case_id": "no-trigger-pass", "base": "trigger", "mutations": [
+      {"path": "/subject/threshold_relation", "value": "AT_OR_BELOW_MONITORED_THRESHOLD"},
+      {"path": "/assessment/outcome", "value": "NO_TRIGGER_CANDIDATE"},
+      {"path": "/assessment/reason_codes", "value": ["AT_OR_BELOW_REFERENCE"]}
+    ], "expected_outcome": "PASS", "expected_findings": []},
+    {"case_id": "hold-abstain", "base": "trigger", "mutations": [
+      {"path": "/subject/trailing_median_relation", "value": "UNKNOWN"},
+      {"path": "/assessment/outcome", "value": "HOLD"},
+      {"path": "/assessment/reason_codes", "value": ["CONTEXT_INSUFFICIENT"]}
+    ], "expected_outcome": "ABSTAIN", "expected_findings": [{"code": "PM25_TRIGGER_CONTEXT_HELD", "path": "/assessment/outcome"}]},
+    {"case_id": "upstream-error", "base": "trigger", "mutations": [
+      {"path": "/integrity/input_state", "value": "ERROR"},
+      {"path": "/assessment/outcome", "value": "ERROR"},
+      {"path": "/assessment/reason_codes", "value": ["UPSTREAM_ERROR"]}
+    ], "expected_outcome": "ERROR", "expected_findings": [{"code": "PM25_TRIGGER_UPSTREAM_ERROR", "path": "/assessment/outcome"}]},
+    {"case_id": "trigger-with-one-evidence-ref", "base": "trigger", "mutations": [{"path": "/subject/evidence_refs", "value": ["evidence:synthetic-pm25-observation-001"]}], "expected_outcome": "DENY", "expected_findings": [{"code": "PM25_TRIGGER_EVIDENCE_INSUFFICIENT", "path": "/subject/evidence_refs"}]},
+    {"case_id": "trigger-with-stale-source", "base": "trigger", "mutations": [{"path": "/integrity/freshness", "value": "STALE"}], "expected_outcome": "DENY", "expected_findings": [{"code": "PM25_TRIGGER_ASSESSMENT_MISMATCH", "path": "/assessment"}]},
+    {"case_id": "observation-baseline-collapse", "base": "trigger", "mutations": [{"path": "/subject/trailing_median_ref", "value": "kfm:observation:synthetic-pm25-001"}], "expected_outcome": "DENY", "expected_findings": [{"code": "PM25_TRIGGER_REFERENCE_ROLE_COLLAPSE", "path": "/subject/trailing_median_ref"}]},
+    {"case_id": "time-order-invalid", "base": "trigger", "mutations": [{"path": "/subject/retrieved_at", "value": "2026-08-01T11:59:00Z"}], "expected_outcome": "DENY", "expected_findings": [{"code": "PM25_TRIGGER_TIME_ORDER_INVALID", "path": "/subject/retrieved_at"}]},
+    {"case_id": "authority-overreach", "base": "trigger", "mutations": [{"path": "/governance/health_advice_issued", "value": true}], "expected_outcome": "DENY", "expected_findings": [{"code": "PM25_TRIGGER_SCHEMA_INVALID", "path": "/governance/health_advice_issued"}]},
+    {"case_id": "identity-corrupt", "base": "trigger", "spec_hash_override": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "expected_outcome": "DENY", "expected_findings": [{"code": "PM25_TRIGGER_SPEC_HASH_MISMATCH", "path": "/spec_hash"}]}
+  ]
+}

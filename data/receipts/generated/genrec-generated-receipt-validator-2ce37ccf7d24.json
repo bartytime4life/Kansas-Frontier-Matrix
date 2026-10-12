@@ -1,0 +1,189 @@
+{
+  "receipt_id": "genrec:generated-receipt-validator:2ce37ccf7d24041a",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/README.md",
+    ".github/workflows/validator-suite.yml",
+    "data/receipts/generated/README.md",
+    "fixtures/generated_receipt/README.md",
+    "fixtures/generated_receipt/artifacts/minimal.txt",
+    "fixtures/generated_receipt/invalid/README.md",
+    "fixtures/generated_receipt/invalid/missing_contract_version.expected_error.txt",
+    "fixtures/generated_receipt/invalid/missing_contract_version.json",
+    "fixtures/generated_receipt/valid/README.md",
+    "fixtures/generated_receipt/valid/minimal.json",
+    "policy/ai_builder/README.md",
+    "tests/validators/README.md",
+    "tests/validators/test_validate_generated_receipt.py",
+    "tools/validators/README.md",
+    "tools/validators/validate_generated_receipt.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/README.md": "sha256:534015119663f498791b50c940a9d6cc3178ead1c8c9800e1f5aa1091d425ea6",
+    ".github/workflows/validator-suite.yml": "sha256:73cbd164c8882114195f0ae338e240619b2fd4b2f46ec6d2faf178bf753ba4c1",
+    "data/receipts/generated/README.md": "sha256:57d6fd0ec7061b06eb56e9ec525a0980d33e4e44314c57efac7766edb24fe4b1",
+    "fixtures/generated_receipt/README.md": "sha256:7eefa2fce5f7a1d1bba353a46fc5f564cfbd3864ee25d2f613e5856c1ec36ef5",
+    "fixtures/generated_receipt/artifacts/minimal.txt": "sha256:a04fd36d3f1e8e8c63308cb7498a4b2f5e062110cc47a4b934669bc5db5f6f06",
+    "fixtures/generated_receipt/invalid/README.md": "sha256:29c9a88852d4713aa0bf8d5e465f5a9633e9beb8f763fa2264314f2fd9937c03",
+    "fixtures/generated_receipt/invalid/missing_contract_version.expected_error.txt": "sha256:018a7caf53b9ae920cfee29b6df8b252e8b85ee43d6637a540a3187327bc405d",
+    "fixtures/generated_receipt/invalid/missing_contract_version.json": "sha256:336d0c23a2b86d287b29097764147660d9101a4ba412c0dc32cc45bb732df300",
+    "fixtures/generated_receipt/valid/README.md": "sha256:8f8b37003caf90a286704169b972e0c94a9f0e6647e299e9bccc01465a97e487",
+    "fixtures/generated_receipt/valid/minimal.json": "sha256:c5a199cccceeefbb4d506f480a2f82f91082011e426cb9cd149e7aaa9587cb48",
+    "policy/ai_builder/README.md": "sha256:9f14cce59dd15546e88aa518609eea34588c6046160b70add54dec5dfdd240b4",
+    "tests/validators/README.md": "sha256:cf8c78d11a3dba8d7c24c23a157c6210b027e95c917241e9127b20d31f5fac4a",
+    "tests/validators/test_validate_generated_receipt.py": "sha256:0aac78db212e85f03a87aa1f8c0a94aecc4d533d4e5fae3a31d4fd0fceeaf924",
+    "tools/validators/README.md": "sha256:25f7b60d4ff52b58239fa1d7a79ab767e58b32d549bce0e23ab7491ae936ac1e",
+    "tools/validators/validate_generated_receipt.py": "sha256:8400af58ef3f976a995a314ede22c3f8e5fff95d896f7ea6fade8dec74496931"
+  },
+  "model_identity": {
+    "provider": "openai",
+    "model": "codex",
+    "version": "gpt-5"
+  },
+  "prompt_or_contract": "sha256:b9b52e4f6f24cd5fa335277720660c951c3c365c9f141aa51c1c7861fe7e47ac",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "tools_enabled": [
+      "apply_patch",
+      "exec_command",
+      "github",
+      "view"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:b9b52e4f6f24cd5fa335277720660c951c3c365c9f141aa51c1c7861fe7e47ac"
+    ],
+    "attached_docs": [
+      "KFM_COMPLETION_V4 activation prompt"
+    ],
+    "evidence_refs": [
+      "git:main@029ed6b66240358aaacc97e0b18ad3f0378b9de1",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1675#issuecomment-5143810920",
+      "schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "docs/doctrine/ai-build-operating-contract.md",
+      "policy/ai_builder/README.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/README.md": "PROPOSED",
+    ".github/workflows/validator-suite.yml": "PROPOSED",
+    "data/receipts/generated/README.md": "PROPOSED",
+    "fixtures/generated_receipt/README.md": "PROPOSED",
+    "fixtures/generated_receipt/artifacts/minimal.txt": "PROPOSED",
+    "fixtures/generated_receipt/invalid/README.md": "PROPOSED",
+    "fixtures/generated_receipt/invalid/missing_contract_version.expected_error.txt": "PROPOSED",
+    "fixtures/generated_receipt/invalid/missing_contract_version.json": "PROPOSED",
+    "fixtures/generated_receipt/valid/README.md": "PROPOSED",
+    "fixtures/generated_receipt/valid/minimal.json": "PROPOSED",
+    "policy/ai_builder/README.md": "PROPOSED",
+    "tests/validators/README.md": "PROPOSED",
+    "tests/validators/test_validate_generated_receipt.py": "PROPOSED",
+    "tools/validators/README.md": "PROPOSED",
+    "tools/validators/validate_generated_receipt.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-unittest-24",
+      "outcome": "PASS",
+      "reason": "Observed with the repository-local Python 3.12 environment after the final validator behavior change."
+    },
+    {
+      "gate": "generated-receipt-fixture-polarity",
+      "outcome": "PASS",
+      "reason": "One integrity-bound valid fixture passed and the one-defect invalid fixture matched its pinned finding."
+    },
+    {
+      "gate": "aggregate-validator-runner",
+      "outcome": "PASS",
+      "reason": "The existing seven-entry aggregate passed with the repository-local Python 3.12 environment."
+    },
+    {
+      "gate": "changed-readme-local-links",
+      "outcome": "PASS",
+      "reason": "Seven changed owning READMEs passed the repository link checker; four pre-existing workflow README targets were verified in the base Git tree because the sparse worktree omits them."
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-json-fixture-parse",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-self-validation",
+      "outcome": "PASS",
+      "reason": "The emitted pending-review receipt passed bounded schema, parity, path, and SHA-256 artifact-integrity validation."
+    },
+    {
+      "gate": "generated-receipt-json-parse",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "repository-make-validate",
+      "outcome": "SKIPPED",
+      "reason": "The sparse local environment has no python executable on PATH and no pytest; network installs are prohibited. Hosted CI remains configured to install declared development requirements."
+    },
+    {
+      "gate": "hosted-ci",
+      "outcome": "SKIPPED",
+      "reason": "Pending draft pull request."
+    },
+    {
+      "gate": "git-diff-check",
+      "outcome": "PASS"
+    }
+  ],
+  "policy_decisions": [
+    "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1675#issuecomment-5143810920"
+  ],
+  "citations": [
+    {
+      "id": "KFM-OWNER-CONTROL-1675-5143810920",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1675#issuecomment-5143810920"
+    },
+    {
+      "id": "GENERATED_RECEIPT_SCHEMA_V1",
+      "validated": true,
+      "evidence_ref": "schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    },
+    {
+      "id": "AI_BUILD_OPERATING_CONTRACT_V3",
+      "validated": true,
+      "evidence_ref": "docs/doctrine/ai-build-operating-contract.md"
+    },
+    {
+      "id": "DIRECTORY_RULES",
+      "validated": true,
+      "evidence_ref": "docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "ADR_0011_RECEIPT_SEPARATION",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md"
+    },
+    {
+      "id": "PULL_REQUEST_TEMPLATE",
+      "validated": true,
+      "evidence_ref": ".github/PULL_REQUEST_TEMPLATE.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-02T07:01:34Z",
+  "emitter": "openai/codex-gpt-5",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Bounded feature-branch implementation under the exact KFM_COMPLETION_V4 activation and the cited owner control decision. Receipt validity records provenance only: it does not authenticate citations, policy references, reviewer or approver identity, scope, or expiry; authorize repository mutation, ready-for-review, merge, release, deployment, or publication; or establish BLAKE3 support. Human review remains pending."
+}

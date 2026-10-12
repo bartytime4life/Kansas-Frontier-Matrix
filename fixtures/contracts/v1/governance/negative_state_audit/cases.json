@@ -1,0 +1,452 @@
+{
+  "cases": [
+    {
+      "name": "valid_three_way_matrix",
+      "expected": "PASS",
+      "record": {
+        "audit_id": "negative-audit-valid",
+        "scope": "pass11-negative-state-audit",
+        "deterministic": true,
+        "network_access": false,
+        "audit_outcome": "PASS",
+        "spec_hash": "sha256:dce102980b5e7a73945d4109c0c3528369292aacc296c7587f12c48a34a07aa8",
+        "cases": [
+          {
+            "case_id": "approved-001",
+            "case_kind": "APPROVED_ARTIFACT",
+            "public_outcome": "ANSWER",
+            "lifecycle_state": "PUBLISHED",
+            "policy_outcome": "ALLOW",
+            "validation_outcome": "PASS",
+            "citation_outcome": "PASS",
+            "artifact_ref": "artifact://published/hydrology/demo-1",
+            "evidence_bundle_refs": [
+              "evidence://bundle/hydrology-demo-1"
+            ],
+            "policy_decision_ref": "policy://decision/allow-hydrology-demo-1",
+            "validation_report_refs": [
+              "validation://report/hydrology-demo-1"
+            ],
+            "citation_validation_report_ref": "citation://report/hydrology-demo-1",
+            "release_manifest_ref": "release://manifest/hydrology-demo-1",
+            "reason_codes": []
+          },
+          {
+            "case_id": "denied-001",
+            "case_kind": "POLICY_DENIAL",
+            "public_outcome": "DENY",
+            "lifecycle_state": "QUARANTINE",
+            "policy_outcome": "DENY",
+            "validation_outcome": "NOT_EVALUATED",
+            "citation_outcome": "NOT_EVALUATED",
+            "policy_decision_ref": "policy://decision/deny-sensitive-location-1",
+            "reason_codes": [
+              "POLICY_DENIED"
+            ]
+          },
+          {
+            "case_id": "failure-001",
+            "case_kind": "CITATION_OR_VALIDATION_FAILURE",
+            "public_outcome": "ABSTAIN",
+            "lifecycle_state": "WORK",
+            "policy_outcome": "ALLOW",
+            "validation_outcome": "PASS",
+            "citation_outcome": "FAIL",
+            "policy_decision_ref": "policy://decision/allow-review-1",
+            "validation_report_refs": [
+              "validation://report/review-1"
+            ],
+            "citation_validation_report_ref": "citation://report/review-1",
+            "failure_report_ref": "failure://citation/unresolved-evidence-ref-1",
+            "reason_codes": [
+              "CITATION_UNRESOLVED"
+            ]
+          }
+        ],
+        "profile": "kfm.governance.negative-state-audit.v1",
+        "schema_version": "1.0.0"
+      }
+    },
+    {
+      "name": "missing_required_case",
+      "expected": "ERROR",
+      "record": {
+        "audit_id": "negative-audit-missing",
+        "scope": "pass11-negative-state-audit",
+        "deterministic": true,
+        "network_access": false,
+        "audit_outcome": "PASS",
+        "spec_hash": "sha256:f2bc494cce799df06fdfeff86a8225fa7873547283d2fecde51a6d43c70c8f09",
+        "cases": [
+          {
+            "case_id": "approved-001",
+            "case_kind": "APPROVED_ARTIFACT",
+            "public_outcome": "ANSWER",
+            "lifecycle_state": "PUBLISHED",
+            "policy_outcome": "ALLOW",
+            "validation_outcome": "PASS",
+            "citation_outcome": "PASS",
+            "artifact_ref": "artifact://published/hydrology/demo-1",
+            "evidence_bundle_refs": [
+              "evidence://bundle/hydrology-demo-1"
+            ],
+            "policy_decision_ref": "policy://decision/allow-hydrology-demo-1",
+            "validation_report_refs": [
+              "validation://report/hydrology-demo-1"
+            ],
+            "citation_validation_report_ref": "citation://report/hydrology-demo-1",
+            "release_manifest_ref": "release://manifest/hydrology-demo-1",
+            "reason_codes": []
+          },
+          {
+            "case_id": "denied-001",
+            "case_kind": "POLICY_DENIAL",
+            "public_outcome": "DENY",
+            "lifecycle_state": "QUARANTINE",
+            "policy_outcome": "DENY",
+            "validation_outcome": "NOT_EVALUATED",
+            "citation_outcome": "NOT_EVALUATED",
+            "policy_decision_ref": "policy://decision/deny-sensitive-location-1",
+            "reason_codes": [
+              "POLICY_DENIED"
+            ]
+          }
+        ],
+        "profile": "kfm.governance.negative-state-audit.v1",
+        "schema_version": "1.0.0"
+      }
+    },
+    {
+      "name": "policy_denial_leaks_release",
+      "expected": "DENY",
+      "record": {
+        "audit_id": "negative-audit-denial-release",
+        "scope": "pass11-negative-state-audit",
+        "deterministic": true,
+        "network_access": false,
+        "audit_outcome": "PASS",
+        "spec_hash": "sha256:e1985497278d9a14586092441889be913b3e9924138183847cd7ebc241cadc3c",
+        "cases": [
+          {
+            "case_id": "approved-001",
+            "case_kind": "APPROVED_ARTIFACT",
+            "public_outcome": "ANSWER",
+            "lifecycle_state": "PUBLISHED",
+            "policy_outcome": "ALLOW",
+            "validation_outcome": "PASS",
+            "citation_outcome": "PASS",
+            "artifact_ref": "artifact://published/hydrology/demo-1",
+            "evidence_bundle_refs": [
+              "evidence://bundle/hydrology-demo-1"
+            ],
+            "policy_decision_ref": "policy://decision/allow-hydrology-demo-1",
+            "validation_report_refs": [
+              "validation://report/hydrology-demo-1"
+            ],
+            "citation_validation_report_ref": "citation://report/hydrology-demo-1",
+            "release_manifest_ref": "release://manifest/hydrology-demo-1",
+            "reason_codes": []
+          },
+          {
+            "case_id": "denied-001",
+            "case_kind": "POLICY_DENIAL",
+            "public_outcome": "DENY",
+            "lifecycle_state": "QUARANTINE",
+            "policy_outcome": "DENY",
+            "validation_outcome": "NOT_EVALUATED",
+            "citation_outcome": "NOT_EVALUATED",
+            "policy_decision_ref": "policy://decision/deny-sensitive-location-1",
+            "reason_codes": [
+              "POLICY_DENIED"
+            ],
+            "release_manifest_ref": "release://manifest/unsafe-denial"
+          },
+          {
+            "case_id": "failure-001",
+            "case_kind": "CITATION_OR_VALIDATION_FAILURE",
+            "public_outcome": "ABSTAIN",
+            "lifecycle_state": "WORK",
+            "policy_outcome": "ALLOW",
+            "validation_outcome": "PASS",
+            "citation_outcome": "FAIL",
+            "policy_decision_ref": "policy://decision/allow-review-1",
+            "validation_report_refs": [
+              "validation://report/review-1"
+            ],
+            "citation_validation_report_ref": "citation://report/review-1",
+            "failure_report_ref": "failure://citation/unresolved-evidence-ref-1",
+            "reason_codes": [
+              "CITATION_UNRESOLVED"
+            ]
+          }
+        ],
+        "profile": "kfm.governance.negative-state-audit.v1",
+        "schema_version": "1.0.0"
+      }
+    },
+    {
+      "name": "approved_case_missing_evidence",
+      "expected": "DENY",
+      "record": {
+        "audit_id": "negative-audit-approved-no-evidence",
+        "scope": "pass11-negative-state-audit",
+        "deterministic": true,
+        "network_access": false,
+        "audit_outcome": "PASS",
+        "spec_hash": "sha256:67beb27c7aa088541049063d0f1fee8d4740a3d7ba1c8a11b55511aa3c403646",
+        "cases": [
+          {
+            "case_id": "approved-001",
+            "case_kind": "APPROVED_ARTIFACT",
+            "public_outcome": "ANSWER",
+            "lifecycle_state": "PUBLISHED",
+            "policy_outcome": "ALLOW",
+            "validation_outcome": "PASS",
+            "citation_outcome": "PASS",
+            "artifact_ref": "artifact://published/hydrology/demo-1",
+            "policy_decision_ref": "policy://decision/allow-hydrology-demo-1",
+            "validation_report_refs": [
+              "validation://report/hydrology-demo-1"
+            ],
+            "citation_validation_report_ref": "citation://report/hydrology-demo-1",
+            "release_manifest_ref": "release://manifest/hydrology-demo-1",
+            "reason_codes": []
+          },
+          {
+            "case_id": "denied-001",
+            "case_kind": "POLICY_DENIAL",
+            "public_outcome": "DENY",
+            "lifecycle_state": "QUARANTINE",
+            "policy_outcome": "DENY",
+            "validation_outcome": "NOT_EVALUATED",
+            "citation_outcome": "NOT_EVALUATED",
+            "policy_decision_ref": "policy://decision/deny-sensitive-location-1",
+            "reason_codes": [
+              "POLICY_DENIED"
+            ]
+          },
+          {
+            "case_id": "failure-001",
+            "case_kind": "CITATION_OR_VALIDATION_FAILURE",
+            "public_outcome": "ABSTAIN",
+            "lifecycle_state": "WORK",
+            "policy_outcome": "ALLOW",
+            "validation_outcome": "PASS",
+            "citation_outcome": "FAIL",
+            "policy_decision_ref": "policy://decision/allow-review-1",
+            "validation_report_refs": [
+              "validation://report/review-1"
+            ],
+            "citation_validation_report_ref": "citation://report/review-1",
+            "failure_report_ref": "failure://citation/unresolved-evidence-ref-1",
+            "reason_codes": [
+              "CITATION_UNRESOLVED"
+            ]
+          }
+        ],
+        "profile": "kfm.governance.negative-state-audit.v1",
+        "schema_version": "1.0.0"
+      }
+    },
+    {
+      "name": "network_access_forbidden",
+      "expected": "DENY",
+      "record": {
+        "audit_id": "negative-audit-network",
+        "scope": "pass11-negative-state-audit",
+        "deterministic": true,
+        "network_access": true,
+        "audit_outcome": "PASS",
+        "spec_hash": "sha256:ef94cd83f7a83b4575e378cfc0b2b1ecb980e382adb32ef9a99a1e7688344161",
+        "cases": [
+          {
+            "case_id": "approved-001",
+            "case_kind": "APPROVED_ARTIFACT",
+            "public_outcome": "ANSWER",
+            "lifecycle_state": "PUBLISHED",
+            "policy_outcome": "ALLOW",
+            "validation_outcome": "PASS",
+            "citation_outcome": "PASS",
+            "artifact_ref": "artifact://published/hydrology/demo-1",
+            "evidence_bundle_refs": [
+              "evidence://bundle/hydrology-demo-1"
+            ],
+            "policy_decision_ref": "policy://decision/allow-hydrology-demo-1",
+            "validation_report_refs": [
+              "validation://report/hydrology-demo-1"
+            ],
+            "citation_validation_report_ref": "citation://report/hydrology-demo-1",
+            "release_manifest_ref": "release://manifest/hydrology-demo-1",
+            "reason_codes": []
+          },
+          {
+            "case_id": "denied-001",
+            "case_kind": "POLICY_DENIAL",
+            "public_outcome": "DENY",
+            "lifecycle_state": "QUARANTINE",
+            "policy_outcome": "DENY",
+            "validation_outcome": "NOT_EVALUATED",
+            "citation_outcome": "NOT_EVALUATED",
+            "policy_decision_ref": "policy://decision/deny-sensitive-location-1",
+            "reason_codes": [
+              "POLICY_DENIED"
+            ]
+          },
+          {
+            "case_id": "failure-001",
+            "case_kind": "CITATION_OR_VALIDATION_FAILURE",
+            "public_outcome": "ABSTAIN",
+            "lifecycle_state": "WORK",
+            "policy_outcome": "ALLOW",
+            "validation_outcome": "PASS",
+            "citation_outcome": "FAIL",
+            "policy_decision_ref": "policy://decision/allow-review-1",
+            "validation_report_refs": [
+              "validation://report/review-1"
+            ],
+            "citation_validation_report_ref": "citation://report/review-1",
+            "failure_report_ref": "failure://citation/unresolved-evidence-ref-1",
+            "reason_codes": [
+              "CITATION_UNRESOLVED"
+            ]
+          }
+        ],
+        "profile": "kfm.governance.negative-state-audit.v1",
+        "schema_version": "1.0.0"
+      }
+    },
+    {
+      "name": "failure_case_without_failure",
+      "expected": "DENY",
+      "record": {
+        "audit_id": "negative-audit-false-failure",
+        "scope": "pass11-negative-state-audit",
+        "deterministic": true,
+        "network_access": false,
+        "audit_outcome": "PASS",
+        "spec_hash": "sha256:40267c3f46232fc3bf36b4b1579ec68e3e3a05aa6c6bc4d37d2988562c534637",
+        "cases": [
+          {
+            "case_id": "approved-001",
+            "case_kind": "APPROVED_ARTIFACT",
+            "public_outcome": "ANSWER",
+            "lifecycle_state": "PUBLISHED",
+            "policy_outcome": "ALLOW",
+            "validation_outcome": "PASS",
+            "citation_outcome": "PASS",
+            "artifact_ref": "artifact://published/hydrology/demo-1",
+            "evidence_bundle_refs": [
+              "evidence://bundle/hydrology-demo-1"
+            ],
+            "policy_decision_ref": "policy://decision/allow-hydrology-demo-1",
+            "validation_report_refs": [
+              "validation://report/hydrology-demo-1"
+            ],
+            "citation_validation_report_ref": "citation://report/hydrology-demo-1",
+            "release_manifest_ref": "release://manifest/hydrology-demo-1",
+            "reason_codes": []
+          },
+          {
+            "case_id": "denied-001",
+            "case_kind": "POLICY_DENIAL",
+            "public_outcome": "DENY",
+            "lifecycle_state": "QUARANTINE",
+            "policy_outcome": "DENY",
+            "validation_outcome": "NOT_EVALUATED",
+            "citation_outcome": "NOT_EVALUATED",
+            "policy_decision_ref": "policy://decision/deny-sensitive-location-1",
+            "reason_codes": [
+              "POLICY_DENIED"
+            ]
+          },
+          {
+            "case_id": "failure-001",
+            "case_kind": "CITATION_OR_VALIDATION_FAILURE",
+            "public_outcome": "ABSTAIN",
+            "lifecycle_state": "WORK",
+            "policy_outcome": "ALLOW",
+            "validation_outcome": "PASS",
+            "citation_outcome": "PASS",
+            "policy_decision_ref": "policy://decision/allow-review-1",
+            "validation_report_refs": [
+              "validation://report/review-1"
+            ],
+            "citation_validation_report_ref": "citation://report/review-1",
+            "reason_codes": [
+              "CITATION_UNRESOLVED"
+            ]
+          }
+        ],
+        "profile": "kfm.governance.negative-state-audit.v1",
+        "schema_version": "1.0.0"
+      }
+    },
+    {
+      "name": "spec_hash_mismatch",
+      "expected": "ERROR",
+      "record": {
+        "audit_id": "negative-audit-hash-mismatch",
+        "scope": "pass11-negative-state-audit",
+        "deterministic": true,
+        "network_access": false,
+        "audit_outcome": "PASS",
+        "spec_hash": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "cases": [
+          {
+            "case_id": "approved-001",
+            "case_kind": "APPROVED_ARTIFACT",
+            "public_outcome": "ANSWER",
+            "lifecycle_state": "PUBLISHED",
+            "policy_outcome": "ALLOW",
+            "validation_outcome": "PASS",
+            "citation_outcome": "PASS",
+            "artifact_ref": "artifact://published/hydrology/demo-1",
+            "evidence_bundle_refs": [
+              "evidence://bundle/hydrology-demo-1"
+            ],
+            "policy_decision_ref": "policy://decision/allow-hydrology-demo-1",
+            "validation_report_refs": [
+              "validation://report/hydrology-demo-1"
+            ],
+            "citation_validation_report_ref": "citation://report/hydrology-demo-1",
+            "release_manifest_ref": "release://manifest/hydrology-demo-1",
+            "reason_codes": []
+          },
+          {
+            "case_id": "denied-001",
+            "case_kind": "POLICY_DENIAL",
+            "public_outcome": "DENY",
+            "lifecycle_state": "QUARANTINE",
+            "policy_outcome": "DENY",
+            "validation_outcome": "NOT_EVALUATED",
+            "citation_outcome": "NOT_EVALUATED",
+            "policy_decision_ref": "policy://decision/deny-sensitive-location-1",
+            "reason_codes": [
+              "POLICY_DENIED"
+            ]
+          },
+          {
+            "case_id": "failure-001",
+            "case_kind": "CITATION_OR_VALIDATION_FAILURE",
+            "public_outcome": "ABSTAIN",
+            "lifecycle_state": "WORK",
+            "policy_outcome": "ALLOW",
+            "validation_outcome": "PASS",
+            "citation_outcome": "FAIL",
+            "policy_decision_ref": "policy://decision/allow-review-1",
+            "validation_report_refs": [
+              "validation://report/review-1"
+            ],
+            "citation_validation_report_ref": "citation://report/review-1",
+            "failure_report_ref": "failure://citation/unresolved-evidence-ref-1",
+            "reason_codes": [
+              "CITATION_UNRESOLVED"
+            ]
+          }
+        ],
+        "profile": "kfm.governance.negative-state-audit.v1",
+        "schema_version": "1.0.0"
+      }
+    }
+  ]
+}

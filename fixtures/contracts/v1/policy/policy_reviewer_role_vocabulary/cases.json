@@ -1,0 +1,1 @@
+{"cases":[{"name":"valid_registry","expected":"PASS","path":"policy/decision/reviewer_roles.v1.json"},{"name":"duplicate_role","expected":"DENY","record":{"roles":[{"code":"POLICY_STEWARD","review_scopes":["policy"]},{"code":"POLICY_STEWARD","review_scopes":["policy"]}]}},{"name":"authority_leak","expected":"DENY","record":{"governance":{"release_authorized":true}}}]}

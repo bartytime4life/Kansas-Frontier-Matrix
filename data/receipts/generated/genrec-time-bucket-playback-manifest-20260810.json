@@ -1,0 +1,163 @@
+{
+  "receipt_id": "genrec-time-bucket-playback-manifest-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/time-bucket-playback-manifest.yml",
+    "contracts/ui/time_bucket_playback_manifest.md",
+    "docs/intake/exploratory/time-bucket-playback-manifest-source-map.md",
+    "fixtures/contracts/v1/ui/time_bucket_playback_manifest/cases.json",
+    "schemas/contracts/v1/ui/time_bucket_playback_manifest.schema.json",
+    "tests/validators/ui/test_time_bucket_playback_manifest.py",
+    "tools/validators/ui/validate_time_bucket_playback_manifest.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/time-bucket-playback-manifest.yml": "sha256:30cf6ecbdc22aa2c098148b3b7965c079d6b44c711af0aaaadbc6fc4569e8682",
+    "contracts/ui/time_bucket_playback_manifest.md": "sha256:e7bc2f4007ad5c52eba907ffc08f1844bafbf233de387ecd56cc85be7f5f0ee8",
+    "docs/intake/exploratory/time-bucket-playback-manifest-source-map.md": "sha256:9cd70430c8263bffacd3bfbc8143b8272875535b97a5b6e64da658e35ede8f8e",
+    "fixtures/contracts/v1/ui/time_bucket_playback_manifest/cases.json": "sha256:23f1bfd7fd6756dcd91ad00cb0f219f0859af6ff14bd776ed8a9a59b92a524e5",
+    "schemas/contracts/v1/ui/time_bucket_playback_manifest.schema.json": "sha256:4c705dd19139a8c3bca9a6d038d4bb0dcf1930e38ea2cbf61d389c5ac108e335",
+    "tests/validators/ui/test_time_bucket_playback_manifest.py": "sha256:f4d7187a8500e27103c00ee48c272f717f3116f14f840d79110741f895ffee9d",
+    "tools/validators/ui/validate_time_bucket_playback_manifest.py": "sha256:dd9ebbc090ff93cc0733945539af8fe7736e7587a592a0193db8f71271b9453f"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-10"
+  },
+  "prompt_or_contract": "sha256:e7bc2f4007ad5c52eba907ffc08f1844bafbf233de387ecd56cc85be7f5f0ee8",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector corpus discovery",
+      "GitHub connector repository inspection and mutation",
+      "local deterministic Markdown, JSON, YAML, and Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:07c7765576df1997e0be88141bd3cd213930e7281d490a8ae62afd78abe8f445",
+      "sha256:036ed4ebbd22f3f0643dd1dc88331d1c9759888dd1cdfbff5044e65cf8830692"
+    ],
+    "attached_docs": [
+      "KFM_Full_Atlas_seed_cards (Google Drive document)",
+      "New Ideas 4-16-26 (Google Drive document)"
+    ],
+    "evidence_refs": [
+      "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho#KFM-TRIAD-039",
+      "gdrive://1IqoqVHWERGK8VtLSUX69VBBmFNXqS62xBC2HE380Jrc",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/149af17075f7f12d716aa14de439ea22ee6a343e/docs/intake/exploratory/new-ideas-4-16-source-map.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/149af17075f7f12d716aa14de439ea22ee6a343e/contracts/ui/camera_path.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/149af17075f7f12d716aa14de439ea22ee6a343e/contracts/runtime/verified_rendering_resource_envelope.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/149af17075f7f12d716aa14de439ea22ee6a343e/docs/doctrine/directory-rules.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/time-bucket-playback-manifest.yml": "CONFIRMED",
+    "contracts/ui/time_bucket_playback_manifest.md": "PROPOSED",
+    "docs/intake/exploratory/time-bucket-playback-manifest-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/ui/time_bucket_playback_manifest/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/ui/time_bucket_playback_manifest.schema.json": "PROPOSED",
+    "tests/validators/ui/test_time_bucket_playback_manifest.py": "CONFIRMED",
+    "tools/validators/ui/validate_time_bucket_playback_manifest.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "python-syntax-compilation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "draft-2020-12-schema-meta-validation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "focused-unittest-suite",
+      "outcome": "PASS",
+      "reason": "Ten deterministic TimeBucketPlaybackManifest tests passed in the declared-dependency environment."
+    },
+    {
+      "gate": "exact-fixture-replay",
+      "outcome": "PASS",
+      "reason": "Twenty-four exact PASS and DENY cases matched reviewed findings."
+    },
+    {
+      "gate": "adjacent-camera-and-resource-envelope-tests",
+      "outcome": "PASS",
+      "reason": "Eighteen adjacent CameraPath and VerifiedRenderingResourceEnvelope tests passed."
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "no-network-boundary",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "docs/adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md"
+  ],
+  "citations": [
+    {
+      "id": "google-drive-full-atlas-triad-039",
+      "validated": true,
+      "evidence_ref": "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho#KFM-TRIAD-039"
+    },
+    {
+      "id": "google-drive-new-ideas-4-16",
+      "validated": true,
+      "evidence_ref": "gdrive://1IqoqVHWERGK8VtLSUX69VBBmFNXqS62xBC2HE380Jrc"
+    },
+    {
+      "id": "repository-april-16-source-map",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/149af17075f7f12d716aa14de439ea22ee6a343e/docs/intake/exploratory/new-ideas-4-16-source-map.md"
+    },
+    {
+      "id": "adjacent-camera-path-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/149af17075f7f12d716aa14de439ea22ee6a343e/contracts/ui/camera_path.md"
+    },
+    {
+      "id": "adjacent-resource-envelope-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/149af17075f7f12d716aa14de439ea22ee6a343e/contracts/runtime/verified_rendering_resource_envelope.md"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/149af17075f7f12d716aa14de439ea22ee6a343e/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-10T16:03:52Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT GitHub and Google Drive connectors",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0007 — MapLibre GL JS Is the Sole Browser-Side Renderer.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only TimeBucketPlaybackManifestCandidate packet derived from the connected April 16 idea corpus and Full Atlas KFM-TRIAD-039, reconciled against current CameraPath, StoryManifest, rendering resource envelope, evidence, release, and Directory Rules boundaries. It validates one-clock bucket order, explicit gaps, digest/release/evidence references, worker-message constraints, safe transport modes, and reduced-motion display requirements without executing playback or workers, fetching or verifying artifacts, resolving evidence, deciding policy, selecting a renderer, or authorizing release, deployment, publication, or public use."
+}

@@ -1,0 +1,116 @@
+{
+  "receipt_id": "genrec-ci-fanout-controls-20260906",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/object-family-register.yml",
+    ".github/workflows/docs-build.yml",
+    ".github/workflows/docs-control-plane.yml",
+    ".github/workflows/link-check.yml",
+    ".github/workflows/README.md"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/object-family-register.yml": "sha256:95ca2b49830ced9a366f2244a11f278fc24e1ce9f0989df8f5dc6eaa4404fe5e",
+    ".github/workflows/docs-build.yml": "sha256:8938fe5b3ba4b552dacfbcee666bffb133683cd993d06cb99ca71c4c8b64d507",
+    ".github/workflows/docs-control-plane.yml": "sha256:76351fd127bdbb9cd0016cb2d9bff8613971c745004e52236d30610b38a5a6b8",
+    ".github/workflows/link-check.yml": "sha256:8f2065352431be85cd5c151f37bb3a8f7997d3ceabaa7b2bb1dbdd5d1cabebc3",
+    ".github/workflows/README.md": "sha256:874b7b1207ec973d02315659d85bdf07b30cf0b976b46aae72a0b93089cdd5fb"
+  },
+  "citations": [
+    {
+      "id": "ADR-0029-directory-rules-v2",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@a4de0d7a96b78da59cfc499d1025e1508afd8dd9"
+    },
+    {
+      "id": "KFM-contributor-reliability-system",
+      "validated": true,
+      "evidence_ref": "drive:1yJpf-Rvb0kAcfgPQjU0kllsMMg4DDlB6"
+    },
+    {
+      "id": "KFM-repository-workbench",
+      "validated": true,
+      "evidence_ref": "notion:https://app.notion.com/p/3c9a92021bf68195b8b1f3a8d694b447"
+    }
+  ],
+  "created_at": "2026-09-06T18:36:42.022Z",
+  "emitter": "Codex (GPT-5) via ChatGPT",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [],
+    "evidence_refs": [
+      "repo:main@61368f63707df32d3f796a29028e66e715d083c9",
+      "drive:1yJpf-Rvb0kAcfgPQjU0kllsMMg4DDlB6",
+      "notion:https://app.notion.com/p/3c9a92021bf68195b8b1f3a8d694b447",
+      "repo:codex/ci-fanout-controls-clean-20260906@61368f63707df32d3f796a29028e66e715d083c9"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "GPT-5",
+    "provider": "OpenAI",
+    "version": "2026-09-06"
+  },
+  "notes": "Authoring provenance for a bounded CI workflow-fanout control slice. The receipt excludes itself from artifact hashes and binds the five modified paths to the exact draft branch tree. The change preserves historical workflow/run evidence, manual dispatch, workflow/job names, repository permissions, and ruleset/settings state. No merge, release, deployment, promotion, publication, source activation, or repository setting change is created. Local make workflow-security execution is pending because the connected runtime could not provide a checkout; hosted exact-head checks and independent human review remain pending.",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Google Drive connector (read-only lineage)",
+      "Notion connector (coordination)",
+      "remote exact-ref structural readback"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:b62d8334da51ae09d89f1307df3cd34691900d0ebdebf429158575c19672bf44",
+  "truth_labels": {
+    ".github/workflows/object-family-register.yml": "PROPOSED",
+    ".github/workflows/docs-build.yml": "PROPOSED",
+    ".github/workflows/docs-control-plane.yml": "PROPOSED",
+    ".github/workflows/link-check.yml": "PROPOSED",
+    ".github/workflows/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main-and-head-pin",
+      "outcome": "PASS",
+      "reason": "The clean branch starts at current main@61368f63707df32d3f796a29028e66e715d083c9; the proposed tree is a single review commit plus this provenance receipt."
+    },
+    {
+      "gate": "changed-path-and-trigger-structure",
+      "outcome": "PASS",
+      "reason": "Remote exact-ref readback found only the five intended paths; targeted lanes retain manual dispatch and self-trigger paths."
+    },
+    {
+      "gate": "remote-artifact-hash-readback",
+      "outcome": "PASS",
+      "reason": "SHA-256 hashes were computed from the five exact-head file contents returned by GitHub."
+    },
+    {
+      "gate": "local-workflow-security-and-focused-tests",
+      "outcome": "SKIPPED",
+      "reason": "The connected runtime did not provide a repository checkout for local execution; no local pass is claimed."
+    },
+    {
+      "gate": "hosted-exact-head-checks",
+      "outcome": "SKIPPED",
+      "reason": "The branch is not yet attached to a draft pull request; hosted exact-head evidence is pending."
+    },
+    {
+      "gate": "independent-human-review",
+      "outcome": "SKIPPED",
+      "reason": "No human review has been recorded; the pull request will remain draft."
+    }
+  ]
+}

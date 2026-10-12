@@ -1,0 +1,153 @@
+{
+  "receipt_id": "genrec-correction-notice-validator-20260823",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "fixtures/correction/correction_notice/README.md",
+    "fixtures/correction/correction_notice/invalid/missing_id.json",
+    "fixtures/correction/correction_notice/valid/minimal.json",
+    "tests/validators/test_validate_correction_notice.py",
+    "tools/validators/correction/validate_correction_notice.py",
+    "tools/validators/validate_correction_notice.py"
+  ],
+  "artifact_hashes": {
+    "fixtures/correction/correction_notice/README.md": "sha256:a4905a4cf0d63d083087dd914d779caa60a2ac13ac3d1d11c652b0b46548dc18",
+    "fixtures/correction/correction_notice/invalid/missing_id.json": "sha256:a870f91f7e88ffaffd13d501f080592b3254c701f62dd61efa8dcb6c0bd3d56a",
+    "fixtures/correction/correction_notice/valid/minimal.json": "sha256:fcc183dab82dc817cd36c7b9a2b63b1efe0f381844c8cb05cc0032acb8dc63e2",
+    "tests/validators/test_validate_correction_notice.py": "sha256:0d659931207bce2b617804c87192e0611f9e03a4729e314d2f8f82840c894ece",
+    "tools/validators/correction/validate_correction_notice.py": "sha256:646f7607204abe796d0ab25708c7486153d755d5c51e3de23116e82a38aa2e8f",
+    "tools/validators/validate_correction_notice.py": "sha256:9a1d9b74a3f5c8281a0ba304d10a989037ccc5a29021dfeef11b1a5939680a8a"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-22"
+  },
+  "prompt_or_contract": "sha256:20cdee04ece6b1c84aea2f327675999f60d66cb5415d7f9ec5c99e310ebb0c59",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Google Drive connector",
+      "attached-file inspection",
+      "no-network Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:20cdee04ece6b1c84aea2f327675999f60d66cb5415d7f9ec5c99e310ebb0c59",
+      "sha256:2b8db8901f893d9aabb94bb32db5cbc2e0bb0c881bf74068551e9b3b76602893",
+      "sha256:b1d79a368e219a500e7b861f42ecb2f100b00e5bbb48a6a13f9451871cd57da0"
+    ],
+    "attached_docs": [
+      "Kansas Frontier Matrix — AI Build Operating Contract.md",
+      "KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf",
+      "Kansas Frontier Matrix — Connected-Dots Architecture Brief.md",
+      "KFM_Briefing_to_System_Integration_Architecture.docx"
+    ],
+    "evidence_refs": [
+      "repo:main@101f9ca6983ffb8427855db60b9b4b30c82cb164",
+      "repo:contracts/correction/correction_notice.md@101f9ca6983ffb8427855db60b9b4b30c82cb164",
+      "repo:schemas/contracts/v1/correction/correction_notice.schema.json@101f9ca6983ffb8427855db60b9b4b30c82cb164",
+      "repo:tools/validators/validate_correction_notice.py@101f9ca6983ffb8427855db60b9b4b30c82cb164",
+      "repo:control_plane/object_family_register.yaml@101f9ca6983ffb8427855db60b9b4b30c82cb164",
+      "github://bartytime4life/Kansas-Frontier-Matrix/issues/3360"
+    ]
+  },
+  "truth_labels": {
+    "fixtures/correction/correction_notice/README.md": "PROPOSED",
+    "fixtures/correction/correction_notice/invalid/missing_id.json": "PROPOSED",
+    "fixtures/correction/correction_notice/valid/minimal.json": "PROPOSED",
+    "tests/validators/test_validate_correction_notice.py": "PROPOSED",
+    "tools/validators/correction/validate_correction_notice.py": "PROPOSED",
+    "tools/validators/validate_correction_notice.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "authority_ownership_and_overlap_reconciliation",
+      "outcome": "PASS",
+      "reason": "Accepted ADR-0029, adopted Directory Rules, the paired contract/schema metadata, issue #3360, current open PR #3420, and recent merged validator work were inspected; no path overlap was found."
+    },
+    {
+      "gate": "correction_notice_focused_tests",
+      "outcome": "PASS",
+      "reason": "Eight no-network unit tests passed, covering Draft 2020-12 schema validity, fixture polarity, duplicate keys, non-object roots, non-finite values, compatibility-entry equivalence, and both CLI entry points."
+    },
+    {
+      "gate": "correction_notice_fixture_profile",
+      "outcome": "PASS",
+      "reason": "Both canonical and compatibility CLI entry points returned CORRECTION_NOTICE_FIXTURES_VALID with one positive and one negative synthetic fixture."
+    },
+    {
+      "gate": "artifact_sha256_integrity",
+      "outcome": "PASS",
+      "reason": "All six AI-authored or substantively modified artifacts are bound to final SHA-256 values; this receipt intentionally does not bind itself."
+    },
+    {
+      "gate": "object_family_catalog_reconciliation",
+      "outcome": "SKIPPED",
+      "reason": "Issue #3360 owns the navigational catalog reconciliation; this slice does not select among four conflicting CorrectionNotice schema candidates or silently upgrade catalog maturity."
+    },
+    {
+      "gate": "repository_wide_hosted_checks",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks run only after the draft pull-request head is published."
+    },
+    {
+      "gate": "accountable_human_review",
+      "outcome": "SKIPPED",
+      "reason": "Human correction/release/root-owner review remains pending and cannot be inferred from the generated receipt or draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "kfm://adr/ADR-0029"
+  ],
+  "citations": [
+    {
+      "id": "KFM-CORRECTION-NOTICE-CONTRACT",
+      "validated": true,
+      "evidence_ref": "repo:contracts/correction/correction_notice.md@101f9ca6983ffb8427855db60b9b4b30c82cb164"
+    },
+    {
+      "id": "KFM-CORRECTION-NOTICE-SCHEMA",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/correction/correction_notice.schema.json@101f9ca6983ffb8427855db60b9b4b30c82cb164"
+    },
+    {
+      "id": "KFM-DIRECTORY-RULES-V2",
+      "validated": true,
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md@101f9ca6983ffb8427855db60b9b4b30c82cb164"
+    },
+    {
+      "id": "KFM-MRTS-03",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/3360"
+    },
+    {
+      "id": "KFM-AI-BUILD-CONTRACT-24",
+      "validated": true,
+      "evidence_ref": "attachment:Kansas Frontier Matrix — AI Build Operating Contract.md#24"
+    },
+    {
+      "id": "KFM-DIRECTORY-STANDARD-19.5",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf#page=26"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-23T01:00:58Z",
+  "emitter": "OpenAI GPT-5.6 Pro",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Adds a bounded schema-declared CorrectionNotice validator, synthetic fixture polarity, focused tests, and a compatibility wrapper for the pre-existing root stub. It does not select a canonical schema among conflicting candidates, issue or apply a correction, change policy or review state, mutate release/publication state, activate sources, deploy, publish, or widen access."
+}

@@ -1,0 +1,8 @@
+{
+  "status": "PROPOSED",
+  "source_doc": "docs/domains/atmosphere/MISSING_OR_PLANNED_FILES.md",
+  "path": "fixtures/domains/atmosphere/objects/AirObservation.invalid.aqi_as_concentration.json",
+  "notes": [
+    "Placeholder created from docs/domains markdown inventory."
+  ]
+}

@@ -1,0 +1,195 @@
+{
+  "receipt_id": "genrec-local-pc-data-store-20260917",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".env.example",
+    ".github/workflows/local-data-store.yml",
+    "Makefile",
+    "README.md",
+    "configs/examples/README.md",
+    "configs/examples/local-data-manifest.json",
+    "connectors/local_upload/README.md",
+    "connectors/local_upload/src/README.md",
+    "connectors/local_upload/src/local_upload/README.md",
+    "connectors/local_upload/src/local_upload/descriptor.yaml",
+    "connectors/local_upload/src/local_upload/fetch.py",
+    "contracts/source/local_data_manifest.md",
+    "docs/runbooks/README.md",
+    "docs/runbooks/local-pc-data-store.md",
+    "docs/sources/catalog/local_upload.md",
+    "fixtures/source/local_data/README.md",
+    "fixtures/source/local_data/sample.txt",
+    "schemas/contracts/v1/source/local_data_manifest.schema.json",
+    "tests/local_data/README.md",
+    "tests/local_data/test_doctor.py",
+    "tests/local_data/test_independent_boundaries.py",
+    "tests/local_data/test_manage.py",
+    "tests/local_data/test_manifest_contract.py",
+    "tools/local_data/README.md",
+    "tools/local_data/doctor.py",
+    "tools/local_data/manage.py",
+    "tools/validators/directory_governance/repository_topology_baseline.json"
+  ],
+  "artifact_hashes": {
+    ".env.example": "sha256:ea611e0607ac926ea2f65878c73101ebf2f4bd60c27a3042c26a7692a1634dc7",
+    ".github/workflows/local-data-store.yml": "sha256:0ed3c006a40fed7674cbb06b255399e36f205e66d65378656ca81bc0af23de04",
+    "Makefile": "sha256:4f0216539931ba6474ef5a1b2aec0aa61af4135c6bc0751905d7025540170c7c",
+    "README.md": "sha256:47f41f8bdcae4faf3eb6c2aa8280b07f7c57dd611b1bbfbf5d8db9b2d287da15",
+    "configs/examples/README.md": "sha256:0128c4664d2cababa04443758adc3bbbcb279cdaed38c1b7af613f7ab541bd15",
+    "configs/examples/local-data-manifest.json": "sha256:847ec7a964aef7c730ecfb0b191f6ce2467bd57deb1d78187075a6d5e90f47b5",
+    "connectors/local_upload/README.md": "sha256:0ad27f976054c13900e9fa7b319de9597b50014565571f2016b95ea96930c403",
+    "connectors/local_upload/src/README.md": "sha256:af4290caf5883efbd21852f499ebf7964169550c4335b18b49f79b333b37a5b6",
+    "connectors/local_upload/src/local_upload/README.md": "sha256:4607990a1849f2a2afe3af54125c34d469e11a9912a9e2041a6989259dae4497",
+    "connectors/local_upload/src/local_upload/descriptor.yaml": "sha256:bee3440996d57cf60c73369d681244cc23f9bf699adca6b1a9c4e2d007501213",
+    "connectors/local_upload/src/local_upload/fetch.py": "sha256:b225fc32fd4e47b429fa3c5714682718160463d3ae6d87d936bd6e708d913ab4",
+    "contracts/source/local_data_manifest.md": "sha256:3d988b70486124f7f55fbfd0cf7a69f8470ff5989a84bccc9ea02f23aec02857",
+    "docs/runbooks/README.md": "sha256:b8d7b393fa6429d066a9f5cc94fa236cc1514a38f19550603b12985ecd78640f",
+    "docs/runbooks/local-pc-data-store.md": "sha256:97fd23ec420a64ff9961769fcb865a6d01b36a2678fa6b719246c3d7090c601f",
+    "docs/sources/catalog/local_upload.md": "sha256:d3ebfd483a58801b1c1fc88b03f8283dc9fc5af874eefed2049a3b751bc4a6c8",
+    "fixtures/source/local_data/README.md": "sha256:0a573fda29a36c070704cce24b142f50716fe8f708de7e897e3e86a0aeff025c",
+    "fixtures/source/local_data/sample.txt": "sha256:4015764aceca92154d13ea36238272a7471d2e43fc6f0ef392c0b0ca159fc166",
+    "schemas/contracts/v1/source/local_data_manifest.schema.json": "sha256:0f08e21698ff786b4da1cd110791a79accc6d080d865a21269c08c6b697fcf59",
+    "tests/local_data/README.md": "sha256:6755f1810e2ab93fb9f5fb185d0300dfadfa0abb0c83b22984f12310374919de",
+    "tests/local_data/test_doctor.py": "sha256:241da7c49f2d87a92227eadfcfeec0fc6cf8c96cde72bbdf8b18c260c055e2e2",
+    "tests/local_data/test_independent_boundaries.py": "sha256:4fd625af2570d57acb952f4cf37b5b00b7d248cbaaee2a48748b93568d0fc6a3",
+    "tests/local_data/test_manage.py": "sha256:552301684555745746c4d1dfbdfdc9d7a1f759fcade0ba59e7ca3053291b66b7",
+    "tests/local_data/test_manifest_contract.py": "sha256:6266432597fb737f5e1e4e6e7fd5cc254309139d6d5137abaf56dedb9a415ce7",
+    "tools/local_data/README.md": "sha256:e330859ddec14eaa9c0c0cc064c221cf1290b9f40f8e417a98bc0791795bb065",
+    "tools/local_data/doctor.py": "sha256:deb0bb849248c9a9c013617719ec07aa02fd048bf612e397bd985aa5731358e1",
+    "tools/local_data/manage.py": "sha256:daf97f50db178e21fd61ecdbe7ceb6270b14c5b6b5d9e8e6f00e00a1c50a1875",
+    "tools/validators/directory_governance/repository_topology_baseline.json": "sha256:91eb4e7caf8c00f995bfe9cb7d639a6631ccda724bee234ec266ec718a576868"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "not-exposed"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "local repository inspection",
+      "GitHub",
+      "Google Drive",
+      "Notion",
+      "Sites read-only",
+      "local tests",
+      "AI peer review"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Full_Atlas_seed_cards.md (bounded excerpt)",
+      "Kansas_Frontier_Matrix_Pipeline_Living_Implementation_Manual_v0.3.pdf (pages1-12 text excerpt)"
+    ],
+    "evidence_refs": [
+      "main@91aeee1ca163bcb3f007577a541a825f60dcddc2",
+      "docs/doctrine/directory-rules.md",
+      "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4228",
+      "https://app.notion.com/p/3c9a92021bf68195b8b1f3a8d694b447",
+      "https://docs.google.com/document/d/1uTqdIEFZE2cq3gyISetoRYM6LIlnKqTc3FobtEx7Cbs/edit",
+      "Sites project appgprj_6aa0b1c41bc08191bfd86003920f1631 version44 source b893683c33ef1a85d75f88db58e27e361c7e01a0"
+    ]
+  },
+  "truth_labels": {
+    ".env.example": "CONFIRMED",
+    ".github/workflows/local-data-store.yml": "CONFIRMED",
+    "Makefile": "CONFIRMED",
+    "README.md": "CONFIRMED",
+    "configs/examples/README.md": "CONFIRMED",
+    "configs/examples/local-data-manifest.json": "CONFIRMED",
+    "connectors/local_upload/README.md": "CONFIRMED",
+    "connectors/local_upload/src/README.md": "CONFIRMED",
+    "connectors/local_upload/src/local_upload/README.md": "CONFIRMED",
+    "connectors/local_upload/src/local_upload/descriptor.yaml": "CONFIRMED",
+    "connectors/local_upload/src/local_upload/fetch.py": "CONFIRMED",
+    "contracts/source/local_data_manifest.md": "PROPOSED",
+    "docs/runbooks/README.md": "CONFIRMED",
+    "docs/runbooks/local-pc-data-store.md": "CONFIRMED",
+    "docs/sources/catalog/local_upload.md": "CONFIRMED",
+    "fixtures/source/local_data/README.md": "CONFIRMED",
+    "fixtures/source/local_data/sample.txt": "CONFIRMED",
+    "schemas/contracts/v1/source/local_data_manifest.schema.json": "CONFIRMED",
+    "tests/local_data/README.md": "CONFIRMED",
+    "tests/local_data/test_doctor.py": "CONFIRMED",
+    "tests/local_data/test_independent_boundaries.py": "CONFIRMED",
+    "tests/local_data/test_manage.py": "CONFIRMED",
+    "tests/local_data/test_manifest_contract.py": "CONFIRMED",
+    "tools/local_data/README.md": "CONFIRMED",
+    "tools/local_data/doctor.py": "CONFIRMED",
+    "tools/local_data/manage.py": "CONFIRMED",
+    "tools/validators/directory_governance/repository_topology_baseline.json": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "make local-data-check",
+      "outcome": "PASS",
+      "reason": "63 tests and16 subtests; offline synthetic inputs, doctor, manifest shape, streaming capture, immutable versions, no-overwrite, path/symlink/special-file denial, limits, no-write planning, interrupted recovery, multi-source restore, describe validation before reads."
+    },
+    {
+      "gate": "CLI smoke and backup restore",
+      "outcome": "PASS",
+      "reason": "init INITIALIZED; plan PLANNED; sync SYNCED; repeat sync NOOP; verify VERIFIED; restored full stored manifest VERIFIED; describe emitted one manifest item."
+    },
+    {
+      "gate": "workflow-security local-data-store.yml",
+      "outcome": "PASS",
+      "reason": "1 workflow,0 invariants,0 new drift."
+    },
+    {
+      "gate": "trusted topology baseline transition",
+      "outcome": "PASS",
+      "reason": "Only configs/examples removed from scaffold-only inventory,1270 to1269; no added member or metadata/expiry mutation. Existing strict-subset positive/negative transition test passed."
+    },
+    {
+      "gate": "repository topology",
+      "outcome": "FAIL",
+      "reason": "Base and final candidate retain identical inherited KFM-TOPO-004 catalog fingerprint sha256:71a120ae8ca2b69896266c9ddd52f6d03577ea91fa2de4390b7d57b9ceeb912f;124 baselined warnings,0 invariants. Catalog bytes and catalog waiver unchanged."
+    },
+    {
+      "gate": "documentation links and diff whitespace",
+      "outcome": "PASS",
+      "reason": "New contract/runbook/source guide links exist, one H1 and balanced fences; git diff --cached --check passes."
+    },
+    {
+      "gate": "hosted CI and independent human acceptance",
+      "outcome": "SKIPPED",
+      "reason": "Not yet run at receipt authoring. AI peer review is not human acceptance. #4024 requires branch-only delivery."
+    },
+    {
+      "gate": "full repository, actual PC, provider acquisition, native Windows, live map integration",
+      "outcome": "SKIPPED",
+      "reason": "Outside bounded offline local-capture validation; no downloaded provider payloads, source activation, scheduling, public serving, app deployment or release."
+    },
+    {
+      "gate": "generated-receipt semantic validator",
+      "outcome": "FAIL",
+      "reason": "POLICY_DECISION_REQUIRED: new schema under schemas/contracts/v1 requires an applicable policy-decision reference. No such decision was established; policy_decisions remains empty instead of inventing approval. Schema shape and all artifact digests checked separately."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "directory-rules-adoption",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@91aeee1ca163bcb3f007577a541a825f60dcddc2"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-17T01:54:16.392871+00:00",
+  "emitter": "Codex local-PC data-store implementation",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "VALIDATED_BRANCH_ONLY. Exact base91aeee1; no open PR at pre-write readback. No PR creation, ready/merge, settings, frozen catalog correction, source admission, release, deployment or publication. Local files remain QUARANTINE with private physical storage outside Git. Initial schema test exposed missing locally installed declared rfc3339-validator; after installing declared0.1.4 the test passed. AI review discovered POSIX double-slash aliases and incomplete multi-source replay snapshots; both repaired with regression evidence. Rollback: abandon unintegrated branch; after separately authorized integration revert bounded change while retaining data. Generated receipt itself is excluded from artifact hashes to avoid circularity. Receipt semantic policy-decision gate remains HOLD; branch functionality validation is not policy acceptance."
+}

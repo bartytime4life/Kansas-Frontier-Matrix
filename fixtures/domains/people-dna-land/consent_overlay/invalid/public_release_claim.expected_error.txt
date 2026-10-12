@@ -1,0 +1,4 @@
+DISCLOSURE_LEVEL_INVALID	$.disclosure_level
+GOVERNANCE_STATE_INVALID	$.governance.promotion_eligible
+GOVERNANCE_STATE_INVALID	$.governance.public_exposure
+GOVERNANCE_STATE_INVALID	$.governance.release_state

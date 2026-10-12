@@ -1,0 +1,4 @@
+# connectors/kansas_state_archives pyproject — greenfield placeholder
+[project]
+name = "kfm-connector-kansas_state_archives"
+version = "0.0.0"

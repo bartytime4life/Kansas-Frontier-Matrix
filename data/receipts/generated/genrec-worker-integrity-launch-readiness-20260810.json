@@ -1,0 +1,156 @@
+{
+  "receipt_id": "genrec-worker-integrity-launch-readiness-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/worker-integrity-launch-readiness.yml",
+    "contracts/runtime/worker_integrity_launch_readiness.md",
+    "docs/intake/exploratory/worker-integrity-launch-readiness-source-map.md",
+    "fixtures/contracts/v1/runtime/worker_integrity_launch_readiness/cases.json",
+    "schemas/contracts/v1/runtime/worker_integrity_launch_readiness.schema.json",
+    "tests/validators/test_worker_integrity_launch_readiness.py",
+    "tools/validators/runtime/validate_worker_integrity_launch_readiness.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/worker-integrity-launch-readiness.yml": "sha256:7e81b77c6072e5081828cc755171eb70176e11eed3be4c6464864e8524b2f4fe",
+    "contracts/runtime/worker_integrity_launch_readiness.md": "sha256:4d027399dbaca6303171c8ab1ee40e308ba5fa5d4b99078b3bb30a7bad056a3a",
+    "docs/intake/exploratory/worker-integrity-launch-readiness-source-map.md": "sha256:b742a3007c07544525ad8badeb8bdde3aa69c09ab2df742f553cacdfb5fdb4f7",
+    "fixtures/contracts/v1/runtime/worker_integrity_launch_readiness/cases.json": "sha256:e330e36b6a23f25c4b2eb950ec1c43746d277c9d821b18851528e8a8013bf5bc",
+    "schemas/contracts/v1/runtime/worker_integrity_launch_readiness.schema.json": "sha256:78f68639ea6c5042eea3130ec137696560573c7cc3810d002636e8f9365896c3",
+    "tests/validators/test_worker_integrity_launch_readiness.py": "sha256:f1b9f63aa43541ac9ca12911e95a4e60f1d6cbcfb6657916a054ed91a0723dd4",
+    "tools/validators/runtime/validate_worker_integrity_launch_readiness.py": "sha256:fe8b0ed201e094fd68398f0646bf8b94cdeb1ffcff73e0f616ede1a86c90bc85"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-10"
+  },
+  "prompt_or_contract": "sha256:4d027399dbaca6303171c8ab1ee40e308ba5fa5d4b99078b3bb30a7bad056a3a",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector corpus discovery",
+      "GitHub connector repository and pull-request inspection and mutation",
+      "local deterministic Markdown, JSON, YAML, and Python validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "Google Drive: New Ideas 4-12-26"
+    ],
+    "evidence_refs": [
+      "gdrive://1iSqUHB-ktYXfc0HdKvQe7yJCzigS7YuZfZSOBdrALnc#Runtime-Proof-Worker-Integrity",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/5f615a3b86332d55af7cb7e9c6c2e2427cf443d5/contracts/runtime/runtime_verification.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/5f615a3b86332d55af7cb7e9c6c2e2427cf443d5/contracts/runtime/verified_rendering_resource_envelope.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/pull/2400",
+      "github://bartytime4life/Kansas-Frontier-Matrix/pull/484",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/5f615a3b86332d55af7cb7e9c6c2e2427cf443d5/docs/doctrine/directory-rules.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/worker-integrity-launch-readiness.yml": "CONFIRMED",
+    "contracts/runtime/worker_integrity_launch_readiness.md": "PROPOSED",
+    "docs/intake/exploratory/worker-integrity-launch-readiness-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/runtime/worker_integrity_launch_readiness/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/runtime/worker_integrity_launch_readiness.schema.json": "PROPOSED",
+    "tests/validators/test_worker_integrity_launch_readiness.py": "CONFIRMED",
+    "tools/validators/runtime/validate_worker_integrity_launch_readiness.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "python-syntax-compilation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "draft-2020-12-schema-meta-validation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "focused-unittest-suite",
+      "outcome": "PASS",
+      "reason": "Eight deterministic worker launch-readiness tests passed in an isolated declared-dependency environment."
+    },
+    {
+      "gate": "exact-fixture-replay",
+      "outcome": "PASS",
+      "reason": "Twenty-one exact cases passed across PASS, ABSTAIN, and DENY."
+    },
+    {
+      "gate": "adjacent-runtime-verification-and-render-envelope-tests",
+      "outcome": "PASS",
+      "reason": "Twenty-six tests and sixty-one parameterized subtests passed across the new and two adjacent runtime families."
+    },
+    {
+      "gate": "documentation-metadata-validation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "no-network-boundary",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "drive-worker-integrity-proposal",
+      "validated": true,
+      "evidence_ref": "gdrive://1iSqUHB-ktYXfc0HdKvQe7yJCzigS7YuZfZSOBdrALnc#Runtime-Proof-Worker-Integrity"
+    },
+    {
+      "id": "runtime-verification-proof-authority",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/5f615a3b86332d55af7cb7e9c6c2e2427cf443d5/contracts/runtime/runtime_verification.md"
+    },
+    {
+      "id": "verified-rendering-trace-authority",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/5f615a3b86332d55af7cb7e9c6c2e2427cf443d5/contracts/runtime/verified_rendering_resource_envelope.md"
+    },
+    {
+      "id": "historical-legacy-worker-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/pull/484"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/5f615a3b86332d55af7cb7e9c6c2e2427cf443d5/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-10T15:14:46Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only WorkerIntegrityLaunchReadinessCandidate derived from the Drive worker-integrity proposal and reconciled to the current RuntimeVerificationProof and VerifiedRenderingResourceEnvelopeCandidate families. It composes synthetic proof state and runtime capabilities without reading bytes, resolving or emitting proofs, starting a worker, changing headers, evaluating policy, or authorizing release, deployment, publication, or public use."
+}

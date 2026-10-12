@@ -1,0 +1,360 @@
+{
+  "base": {
+    "profile_version": "kfm.source-terms-drift-disposition.fixture.v1",
+    "assessment_id": "kfm:source-terms-drift:000000000000000000000000",
+    "spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "source_descriptor_ref": "kfm://source/example-agency-dataset",
+    "descriptor_spec_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "assessed_at": "2026-05-02T00:00:00Z",
+    "assessment_state": "COMPLETE",
+    "prior_snapshot": {
+      "snapshot_ref": "kfm:source-terms-snapshot:example-2026-04",
+      "snapshot_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "captured_at": "2026-04-01T00:00:00Z",
+      "effective_from": "2026-03-01T00:00:00Z",
+      "expires_at": null,
+      "verification_state": "VERIFIED",
+      "terms_uri": "https://example.invalid/dataset/terms",
+      "terms_content_hash": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+      "license_id": "LicenseRef-Agency-Open-v1",
+      "scope_hash": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+      "use_posture": {
+        "attribution": "NOT_REQUIRED",
+        "redistribution": "ALLOWED",
+        "commercial_use": "ALLOWED",
+        "derivative_use": "ALLOWED",
+        "retention": "ALLOWED",
+        "access": "PUBLIC"
+      },
+      "obligation_refs": [
+        "kfm:obligation:citation-v1",
+        "kfm:obligation:preserve-source-lineage-v1"
+      ]
+    },
+    "current_snapshot": {
+      "snapshot_ref": "kfm:source-terms-snapshot:example-2026-05",
+      "snapshot_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "captured_at": "2026-05-01T00:00:00Z",
+      "effective_from": "2026-03-01T00:00:00Z",
+      "expires_at": null,
+      "verification_state": "VERIFIED",
+      "terms_uri": "https://example.invalid/dataset/terms",
+      "terms_content_hash": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+      "license_id": "LicenseRef-Agency-Open-v1",
+      "scope_hash": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+      "use_posture": {
+        "attribution": "NOT_REQUIRED",
+        "redistribution": "ALLOWED",
+        "commercial_use": "ALLOWED",
+        "derivative_use": "ALLOWED",
+        "retention": "ALLOWED",
+        "access": "PUBLIC"
+      },
+      "obligation_refs": [
+        "kfm:obligation:citation-v1",
+        "kfm:obligation:preserve-source-lineage-v1"
+      ]
+    },
+    "drift": {
+      "classification": "NO_CHANGE",
+      "changed_fields": [],
+      "scope_match": true,
+      "evidence_complete": true
+    },
+    "downstream_dependencies": [
+      {
+        "dependency_ref": "kfm:cache:example-public-query-v1",
+        "dependency_kind": "CACHE",
+        "obligation_propagated": true,
+        "proposed_action": "NO_ACTION"
+      },
+      {
+        "dependency_ref": "kfm:release:example-dataset-2026-04",
+        "dependency_kind": "RELEASE",
+        "obligation_propagated": true,
+        "proposed_action": "NO_ACTION"
+      }
+    ],
+    "disposition": {
+      "status": "NO_ACTION",
+      "reason_codes": ["NO_TERMS_CHANGE"]
+    },
+    "boundary": {
+      "fixture_only": true,
+      "network_attempted": false,
+      "legal_determination_made": false,
+      "source_activation_authorized": false,
+      "lifecycle_write_performed": false,
+      "hold_executed": false,
+      "recomputation_executed": false,
+      "withdrawal_executed": false,
+      "release_authorized": false,
+      "publication_authorized": false
+    }
+  },
+  "cases": [
+    {
+      "case_id": "valid_no_change",
+      "mutations": [],
+      "expected_outcome": "PASS",
+      "expected_state": "NO_ACTION",
+      "expected_findings": []
+    },
+    {
+      "case_id": "valid_non_restrictive_attribution_change",
+      "mutations": [
+        {"path": "/prior_snapshot/use_posture/attribution", "value": "REQUIRED"},
+        {"path": "/drift/classification", "value": "NON_RESTRICTIVE_CHANGE"},
+        {"path": "/drift/changed_fields", "value": ["ATTRIBUTION"]},
+        {"path": "/downstream_dependencies/0/proposed_action", "value": "REASSESS"},
+        {"path": "/downstream_dependencies/1/proposed_action", "value": "REASSESS"},
+        {"path": "/disposition/status", "value": "REASSESS"},
+        {"path": "/disposition/reason_codes", "value": ["TERMS_CHANGE_REQUIRES_REASSESSMENT"]}
+      ],
+      "expected_outcome": "PASS",
+      "expected_state": "REASSESS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "valid_terms_content_change",
+      "mutations": [
+        {"path": "/current_snapshot/terms_content_hash", "value": "sha256:4444444444444444444444444444444444444444444444444444444444444444"},
+        {"path": "/drift/classification", "value": "NON_RESTRICTIVE_CHANGE"},
+        {"path": "/drift/changed_fields", "value": ["TERMS_CONTENT"]},
+        {"path": "/downstream_dependencies/0/proposed_action", "value": "REASSESS"},
+        {"path": "/downstream_dependencies/1/proposed_action", "value": "REASSESS"},
+        {"path": "/disposition/status", "value": "REASSESS"},
+        {"path": "/disposition/reason_codes", "value": ["TERMS_CHANGE_REQUIRES_REASSESSMENT"]}
+      ],
+      "expected_outcome": "PASS",
+      "expected_state": "REASSESS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "valid_restrictive_redistribution_change",
+      "mutations": [
+        {"path": "/current_snapshot/use_posture/redistribution", "value": "RESTRICTED"},
+        {"path": "/drift/classification", "value": "RESTRICTIVE_CHANGE"},
+        {"path": "/drift/changed_fields", "value": ["REDISTRIBUTION"]},
+        {"path": "/downstream_dependencies/0/proposed_action", "value": "RECOMPUTE_REVIEW"},
+        {"path": "/downstream_dependencies/1/proposed_action", "value": "WITHDRAWAL_REVIEW"},
+        {"path": "/disposition/status", "value": "HOLD"},
+        {"path": "/disposition/reason_codes", "value": ["RESTRICTIVE_TERMS_CHANGE"]}
+      ],
+      "expected_outcome": "PASS",
+      "expected_state": "HOLD",
+      "expected_findings": []
+    },
+    {
+      "case_id": "valid_expired_permission",
+      "mutations": [
+        {"path": "/current_snapshot/expires_at", "value": "2026-05-01T12:00:00Z"},
+        {"path": "/drift/classification", "value": "RESTRICTIVE_CHANGE"},
+        {"path": "/drift/changed_fields", "value": ["EXPIRY"]},
+        {"path": "/downstream_dependencies/0/proposed_action", "value": "RECOMPUTE_REVIEW"},
+        {"path": "/downstream_dependencies/1/proposed_action", "value": "WITHDRAWAL_REVIEW"},
+        {"path": "/disposition/status", "value": "HOLD"},
+        {"path": "/disposition/reason_codes", "value": ["RESTRICTIVE_TERMS_CHANGE", "TERMS_EXPIRED"]}
+      ],
+      "expected_outcome": "PASS",
+      "expected_state": "HOLD",
+      "expected_findings": []
+    },
+    {
+      "case_id": "valid_unverified_current_terms",
+      "mutations": [
+        {"path": "/current_snapshot/verification_state", "value": "UNVERIFIED"},
+        {"path": "/drift/classification", "value": "UNRESOLVED"},
+        {"path": "/drift/evidence_complete", "value": false},
+        {"path": "/downstream_dependencies/0/proposed_action", "value": "HOLD"},
+        {"path": "/downstream_dependencies/1/proposed_action", "value": "HOLD"},
+        {"path": "/disposition/status", "value": "HOLD"},
+        {"path": "/disposition/reason_codes", "value": ["TERMS_EVIDENCE_UNRESOLVED"]}
+      ],
+      "expected_outcome": "PASS",
+      "expected_state": "HOLD",
+      "expected_findings": []
+    },
+    {
+      "case_id": "valid_scope_mismatch_hold",
+      "mutations": [
+        {"path": "/current_snapshot/scope_hash", "value": "sha256:5555555555555555555555555555555555555555555555555555555555555555"},
+        {"path": "/drift/classification", "value": "UNRESOLVED"},
+        {"path": "/drift/changed_fields", "value": ["SCOPE"]},
+        {"path": "/drift/scope_match", "value": false},
+        {"path": "/downstream_dependencies/0/proposed_action", "value": "HOLD"},
+        {"path": "/downstream_dependencies/1/proposed_action", "value": "HOLD"},
+        {"path": "/disposition/status", "value": "HOLD"},
+        {"path": "/disposition/reason_codes", "value": ["RIGHTS_SCOPE_MISMATCH"]}
+      ],
+      "expected_outcome": "PASS",
+      "expected_state": "HOLD",
+      "expected_findings": []
+    },
+    {
+      "case_id": "valid_explicit_assessment_error",
+      "mutations": [
+        {"path": "/assessment_state", "value": "ERROR"},
+        {"path": "/drift/classification", "value": "UNRESOLVED"},
+        {"path": "/drift/evidence_complete", "value": false},
+        {"path": "/downstream_dependencies/0/proposed_action", "value": "HOLD"},
+        {"path": "/downstream_dependencies/1/proposed_action", "value": "HOLD"},
+        {"path": "/disposition/status", "value": "ERROR"},
+        {"path": "/disposition/reason_codes", "value": ["ASSESSMENT_ERROR"]}
+      ],
+      "expected_outcome": "PASS",
+      "expected_state": "ERROR",
+      "expected_findings": []
+    },
+    {
+      "case_id": "restrictive_change_misclassified",
+      "mutations": [
+        {"path": "/current_snapshot/use_posture/commercial_use", "value": "PROHIBITED"},
+        {"path": "/drift/changed_fields", "value": ["COMMERCIAL_USE"]}
+      ],
+      "expected_outcome": "DENY",
+      "expected_state": null,
+      "expected_findings": [
+        {"code": "TERMS_DRIFT_CLASSIFICATION_MISMATCH", "path": "/drift/classification"},
+        {"code": "TERMS_DRIFT_DISPOSITION_MISMATCH", "path": "/disposition/status"},
+        {"code": "TERMS_DRIFT_DOWNSTREAM_ACTION_MISMATCH", "path": "/downstream_dependencies/0/proposed_action"},
+        {"code": "TERMS_DRIFT_DOWNSTREAM_ACTION_MISMATCH", "path": "/downstream_dependencies/1/proposed_action"},
+        {"code": "TERMS_DRIFT_REASON_CODES_MISMATCH", "path": "/disposition/reason_codes"}
+      ]
+    },
+    {
+      "case_id": "changed_fields_incomplete",
+      "mutations": [
+        {"path": "/current_snapshot/license_id", "value": "LicenseRef-Agency-Open-v2"},
+        {"path": "/drift/classification", "value": "NON_RESTRICTIVE_CHANGE"},
+        {"path": "/downstream_dependencies/0/proposed_action", "value": "REASSESS"},
+        {"path": "/downstream_dependencies/1/proposed_action", "value": "REASSESS"},
+        {"path": "/disposition/status", "value": "REASSESS"},
+        {"path": "/disposition/reason_codes", "value": ["TERMS_CHANGE_REQUIRES_REASSESSMENT"]}
+      ],
+      "expected_outcome": "DENY",
+      "expected_state": null,
+      "expected_findings": [
+        {"code": "TERMS_DRIFT_CHANGED_FIELDS_MISMATCH", "path": "/drift/changed_fields"}
+      ]
+    },
+    {
+      "case_id": "evidence_completeness_overclaim",
+      "mutations": [
+        {"path": "/current_snapshot/verification_state", "value": "UNAVAILABLE"},
+        {"path": "/drift/classification", "value": "UNRESOLVED"},
+        {"path": "/downstream_dependencies/0/proposed_action", "value": "HOLD"},
+        {"path": "/downstream_dependencies/1/proposed_action", "value": "HOLD"},
+        {"path": "/disposition/status", "value": "HOLD"},
+        {"path": "/disposition/reason_codes", "value": ["TERMS_EVIDENCE_UNRESOLVED"]}
+      ],
+      "expected_outcome": "DENY",
+      "expected_state": null,
+      "expected_findings": [
+        {"code": "TERMS_DRIFT_EVIDENCE_COMPLETENESS_MISMATCH", "path": "/drift/evidence_complete"}
+      ]
+    },
+    {
+      "case_id": "downstream_obligation_not_propagated",
+      "mutations": [
+        {"path": "/downstream_dependencies/1/obligation_propagated", "value": false}
+      ],
+      "expected_outcome": "DENY",
+      "expected_state": null,
+      "expected_findings": [
+        {"code": "TERMS_DRIFT_DISPOSITION_MISMATCH", "path": "/disposition/status"},
+        {"code": "TERMS_DRIFT_DOWNSTREAM_OBLIGATION_UNPROPAGATED", "path": "/downstream_dependencies/1/obligation_propagated"},
+        {"code": "TERMS_DRIFT_REASON_CODES_MISMATCH", "path": "/disposition/reason_codes"}
+      ]
+    },
+    {
+      "case_id": "downstream_action_underreacts",
+      "mutations": [
+        {"path": "/current_snapshot/use_posture/access", "value": "AGREEMENT_REQUIRED"},
+        {"path": "/drift/classification", "value": "RESTRICTIVE_CHANGE"},
+        {"path": "/drift/changed_fields", "value": ["ACCESS"]},
+        {"path": "/downstream_dependencies/0/proposed_action", "value": "RECOMPUTE_REVIEW"},
+        {"path": "/disposition/status", "value": "HOLD"},
+        {"path": "/disposition/reason_codes", "value": ["RESTRICTIVE_TERMS_CHANGE"]}
+      ],
+      "expected_outcome": "DENY",
+      "expected_state": null,
+      "expected_findings": [
+        {"code": "TERMS_DRIFT_DOWNSTREAM_ACTION_MISMATCH", "path": "/downstream_dependencies/1/proposed_action"}
+      ]
+    },
+    {
+      "case_id": "dependency_refs_unsorted",
+      "mutations": [
+        {"path": "/downstream_dependencies/0/dependency_ref", "value": "kfm:release:z-example"},
+        {"path": "/downstream_dependencies/1/dependency_ref", "value": "kfm:cache:a-example"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_state": null,
+      "expected_findings": [
+        {"code": "TERMS_DRIFT_DEPENDENCY_ORDER_INVALID", "path": "/downstream_dependencies"}
+      ]
+    },
+    {
+      "case_id": "obligation_refs_unsorted",
+      "mutations": [
+        {
+          "path": "/current_snapshot/obligation_refs",
+          "value": [
+            "kfm:obligation:preserve-source-lineage-v1",
+            "kfm:obligation:citation-v1"
+          ]
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_state": null,
+      "expected_findings": [
+        {"code": "TERMS_DRIFT_OBLIGATION_ORDER_INVALID", "path": "/current_snapshot/obligation_refs"}
+      ]
+    },
+    {
+      "case_id": "capture_order_invalid",
+      "mutations": [
+        {"path": "/prior_snapshot/captured_at", "value": "2026-05-02T00:00:00Z"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_state": null,
+      "expected_findings": [
+        {"code": "TERMS_DRIFT_CAPTURE_ORDER_INVALID", "path": "/current_snapshot/captured_at"}
+      ]
+    },
+    {
+      "case_id": "snapshot_hash_tampered",
+      "mutations": [],
+      "current_snapshot_hash_override": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "expected_outcome": "DENY",
+      "expected_state": null,
+      "expected_findings": [
+        {"code": "TERMS_DRIFT_ID_MISMATCH", "path": "/assessment_id"},
+        {"code": "TERMS_DRIFT_SNAPSHOT_HASH_MISMATCH", "path": "/current_snapshot/snapshot_hash"},
+        {"code": "TERMS_DRIFT_SPEC_HASH_MISMATCH", "path": "/spec_hash"}
+      ]
+    },
+    {
+      "case_id": "assessment_identity_tampered",
+      "mutations": [],
+      "spec_hash_override": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "expected_outcome": "DENY",
+      "expected_state": null,
+      "expected_findings": [
+        {"code": "TERMS_DRIFT_SPEC_HASH_MISMATCH", "path": "/spec_hash"}
+      ]
+    },
+    {
+      "case_id": "withdrawal_execution_overreach",
+      "mutations": [
+        {"path": "/boundary/withdrawal_executed", "value": true}
+      ],
+      "expected_outcome": "DENY",
+      "expected_state": null,
+      "expected_findings": [
+        {"code": "TERMS_DRIFT_SCHEMA_INVALID", "path": "/boundary/withdrawal_executed"}
+      ]
+    }
+  ]
+}

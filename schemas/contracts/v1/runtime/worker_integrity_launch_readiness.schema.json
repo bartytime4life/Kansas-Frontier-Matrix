@@ -1,0 +1,252 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/runtime/worker_integrity_launch_readiness.schema.json",
+  "title": "WorkerIntegrityLaunchReadinessCandidate",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "profile_version",
+    "candidate_id",
+    "spec_hash",
+    "worker",
+    "requirements",
+    "capabilities",
+    "verification",
+    "readiness",
+    "boundary"
+  ],
+  "properties": {
+    "profile_version": {
+      "const": "kfm.worker-integrity-launch-readiness.v1"
+    },
+    "candidate_id": {
+      "type": "string",
+      "pattern": "^kfm:worker-launch-readiness:[a-f0-9]{24}$"
+    },
+    "spec_hash": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "worker": {
+      "$ref": "#/$defs/worker"
+    },
+    "requirements": {
+      "$ref": "#/$defs/requirements"
+    },
+    "capabilities": {
+      "$ref": "#/$defs/capabilities"
+    },
+    "verification": {
+      "$ref": "#/$defs/verification"
+    },
+    "readiness": {
+      "$ref": "#/$defs/readiness"
+    },
+    "boundary": {
+      "$ref": "#/$defs/boundary"
+    }
+  },
+  "$defs": {
+    "worker": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["worker_ref", "asset_ref", "runtime_version"],
+      "properties": {
+        "worker_ref": {
+          "type": "string",
+          "pattern": "^urn:kfm:synthetic:worker:[a-z0-9][a-z0-9._-]{2,95}$",
+          "maxLength": 128
+        },
+        "asset_ref": {
+          "type": "string",
+          "pattern": "^urn:kfm:synthetic:worker-asset:[a-z0-9][a-z0-9._-]{2,159}$",
+          "maxLength": 200
+        },
+        "runtime_version": {
+          "const": "kfm.worker-runtime.v1"
+        }
+      }
+    },
+    "requirements": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "verification_required",
+        "isolation_required",
+        "shared_array_buffer_required",
+        "wasm_required"
+      ],
+      "properties": {
+        "verification_required": {
+          "const": true
+        },
+        "isolation_required": {
+          "type": "boolean"
+        },
+        "shared_array_buffer_required": {
+          "type": "boolean"
+        },
+        "wasm_required": {
+          "type": "boolean"
+        }
+      }
+    },
+    "capabilities": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "worker_supported",
+        "cross_origin_isolated",
+        "shared_array_buffer_available",
+        "wasm_supported"
+      ],
+      "properties": {
+        "worker_supported": {
+          "type": "boolean"
+        },
+        "cross_origin_isolated": {
+          "type": "boolean"
+        },
+        "shared_array_buffer_available": {
+          "type": "boolean"
+        },
+        "wasm_supported": {
+          "type": "boolean"
+        }
+      }
+    },
+    "verification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["proof_ref", "declared_outcome", "declaration_basis"],
+      "properties": {
+        "proof_ref": {
+          "oneOf": [
+            {
+              "type": "string",
+              "pattern": "^kfm://proof/runtime-verification/[a-z0-9][a-z0-9_.:-]{2,160}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "declared_outcome": {
+          "oneOf": [
+            {
+              "enum": ["ERROR", "INTERRUPTED", "MISMATCH", "MISSING_DECLARATION", "VERIFIED"]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "declaration_basis": {
+          "const": "SYNTHETIC_FIXTURE"
+        }
+      }
+    },
+    "readiness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "outcome",
+        "reason_code",
+        "obligations",
+        "review_required",
+        "worker_launch_authorized"
+      ],
+      "properties": {
+        "outcome": {
+          "enum": ["ABSTAIN", "DENY", "READY_CANDIDATE"]
+        },
+        "reason_code": {
+          "enum": [
+            "REQUIRED_RUNTIME_CAPABILITY_UNAVAILABLE",
+            "REQUIRED_WORKER_MANIFEST_MISSING",
+            "REQUIRED_WORKER_VERIFICATION_MISSING",
+            "RUNTIME_ISOLATION_REQUIRED_BUT_UNAVAILABLE",
+            "WORKER_INTEGRITY_MISMATCH",
+            "WORKER_READY_CANDIDATE",
+            "WORKER_UNSUPPORTED",
+            "WORKER_VERIFICATION_ERROR",
+            "WORKER_VERIFICATION_INTERRUPTED"
+          ]
+        },
+        "obligations": {
+          "type": "array",
+          "maxItems": 4,
+          "items": {
+            "enum": [
+              "COMPLETE_RUNTIME_VERIFICATION",
+              "ENABLE_CROSS_ORIGIN_ISOLATION",
+              "PROVIDE_REQUIRED_RUNTIME_CAPABILITY",
+              "PROVIDE_RUNTIME_VERIFICATION_PROOF",
+              "PUBLISH_REVIEWED_HASH_MANIFEST",
+              "USE_SUPPORTED_WORKER_RUNTIME"
+            ]
+          },
+          "uniqueItems": true
+        },
+        "review_required": {
+          "const": true
+        },
+        "worker_launch_authorized": {
+          "const": false
+        }
+      }
+    },
+    "boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "fixture_only",
+        "network_attempted",
+        "worker_started",
+        "artifact_bytes_read",
+        "proof_resolved",
+        "runtime_proof_emitted",
+        "policy_evaluated",
+        "release_authorized",
+        "deployment_authorized",
+        "publication_authorized",
+        "public_use_authorized"
+      ],
+      "properties": {
+        "fixture_only": {
+          "const": true
+        },
+        "network_attempted": {
+          "const": false
+        },
+        "worker_started": {
+          "const": false
+        },
+        "artifact_bytes_read": {
+          "const": false
+        },
+        "proof_resolved": {
+          "const": false
+        },
+        "runtime_proof_emitted": {
+          "const": false
+        },
+        "policy_evaluated": {
+          "const": false
+        },
+        "release_authorized": {
+          "const": false
+        },
+        "deployment_authorized": {
+          "const": false
+        },
+        "publication_authorized": {
+          "const": false
+        },
+        "public_use_authorized": {
+          "const": false
+        }
+      }
+    }
+  }
+}

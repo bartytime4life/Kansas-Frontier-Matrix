@@ -1,0 +1,180 @@
+{
+  "receipt_id": "genrec-pipelines-archaeology-ingest-readme-4f4096b5",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "pipelines/domains/archaeology/ingest/README.md"
+  ],
+  "artifact_hashes": {
+    "pipelines/domains/archaeology/ingest/README.md": "sha256:4f4096b5a3d0800c79cbec1d54f223f70518ef902180f24cd26b75b8e7ad9ed2"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-19"
+  },
+  "prompt_or_contract": "sha256:0a879603a5448d5a176c0e6a221e05d29169f0e819e1cdfe72113305d4b0625d",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "repository code search",
+      "repository file reads",
+      "remote branch and contents writes",
+      "local deterministic content validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:0a879603a5448d5a176c0e6a221e05d29169f0e819e1cdfe72113305d4b0625d"
+    ],
+    "attached_docs": [
+      "Pasted text(51).txt — KFM GitHub Repository Documentation Implementation Agent v3.1"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/860ccaececd0562dad22694a046215807495f1dc",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/860ccaececd0562dad22694a046215807495f1dc/pipelines/domains/archaeology/ingest/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/860ccaececd0562dad22694a046215807495f1dc/pipelines/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/860ccaececd0562dad22694a046215807495f1dc/pipelines/domains/archaeology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/860ccaececd0562dad22694a046215807495f1dc/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/860ccaececd0562dad22694a046215807495f1dc/pipeline_specs/archaeology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/860ccaececd0562dad22694a046215807495f1dc/pipeline_specs/archaeology/ingest.spec.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/860ccaececd0562dad22694a046215807495f1dc/data/registry/sources/archaeology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/860ccaececd0562dad22694a046215807495f1dc/data/registry/sources/archaeology/sources.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/860ccaececd0562dad22694a046215807495f1dc/data/registry/sources/archaeology/source_roles.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/860ccaececd0562dad22694a046215807495f1dc/contracts/domains/archaeology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/860ccaececd0562dad22694a046215807495f1dc/schemas/contracts/v1/domains/archaeology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/860ccaececd0562dad22694a046215807495f1dc/policy/domains/archaeology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/860ccaececd0562dad22694a046215807495f1dc/tests/domains/archaeology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/860ccaececd0562dad22694a046215807495f1dc/tools/validators/archaeology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/860ccaececd0562dad22694a046215807495f1dc/.github/workflows/domain-archaeology.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/860ccaececd0562dad22694a046215807495f1dc/docs/adr/ADR-0010-deny-by-default-for-dna-rare-species-archaeology-infrastructure.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/860ccaececd0562dad22694a046215807495f1dc/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/b4762106bf95d1dadbe93aa2fafd8015072cef13/pipelines/domains/archaeology/ingest/README.md"
+    ]
+  },
+  "truth_labels": {
+    "pipelines/domains/archaeology/ingest/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "task-contract-and-change-budget",
+      "outcome": "PASS",
+      "reason": "Scope is limited to one existing Archaeology ingest README plus this generated-work receipt; no executable, source activation, specification, contract, schema, policy, fixture, test, workflow, lifecycle, proof, release, runtime, route, map, AI, or protected-data behavior is changed."
+    },
+    {
+      "gate": "directory-authority-and-duplicate-preflight",
+      "outcome": "PASS",
+      "reason": "The existing pipelines/domains/archaeology/ingest path and stable document identity were retained. Directory Rules, parent pipeline, connector, source-registry, contract, schema, policy, test, validator, lifecycle, release, and public-serving boundaries were inspected without creating a parallel authority home."
+    },
+    {
+      "gate": "base-drift-and-concurrency-preflight",
+      "outcome": "PASS",
+      "reason": "Main was pinned at 860ccaececd0562dad22694a046215807495f1dc, the target blob remained 6968b9f2876b8ee3b7ec2cf2ad1f27e157b6e566 before mutation, and no matching open pull request or archaeology-ingest branch was surfaced."
+    },
+    {
+      "gate": "repository-inventory-and-no-overclaim",
+      "outcome": "PASS",
+      "reason": "The README distinguishes checked-path absence from exhaustive absence, identifies ingest.spec.yaml and inspected source-control files as placeholders, and keeps executable behavior, active sources, substantive tests, validators, CI, receipts, runtime, and production use verification-bounded."
+    },
+    {
+      "gate": "sensitive-domain-and-candidate-boundary",
+      "outcome": "PASS",
+      "reason": "The revision preserves candidate-not-site, exact and inferential location denial, burial and human-remains, sacred and culturally restricted knowledge, collection-security, looting-risk, private-land, consent, sovereignty, cultural-review, and rights-holder fail-closed controls."
+    },
+    {
+      "gate": "authority-and-lifecycle-separation",
+      "outcome": "PASS",
+      "reason": "Connector payload, source authority, source activation, RAW admission, normalization, validation, evidence, proof, policy, review, catalog, release, public serving, and generated interpretation remain separate authorities and states."
+    },
+    {
+      "gate": "markdown-meta-anchor-and-structure",
+      "outcome": "PASS",
+      "reason": "The final README has one H1, 53 headings with no hierarchy jumps or duplicate generated slugs, 35 resolved internal links, balanced code fences, no trailing whitespace outside seven intentional Markdown hard-break lines, and a final newline."
+    },
+    {
+      "gate": "repository-relative-link-validation",
+      "outcome": "PASS",
+      "reason": "All 24 repository-relative links resolve to 13 unique files inspected on the scoped branch or pinned base."
+    },
+    {
+      "gate": "security-and-protected-output",
+      "outcome": "PASS",
+      "reason": "The change contains no exact sites, protected cultural content, private-owner detail, consent secret, transformation offset, credential, source payload, lifecycle record, proof, release record, or public output."
+    },
+    {
+      "gate": "remote-readback-and-content-hash",
+      "outcome": "PASS",
+      "reason": "GitHub returned README blob fed5862825f70c293bf989a6097a285f3e4992ff on commit b4762106bf95d1dadbe93aa2fafd8015072cef13, matching the locally recomputed Git blob and SHA-256 4f4096b5a3d0800c79cbec1d54f223f70518ef902180f24cd26b75b8e7ad9ed2."
+    },
+    {
+      "gate": "repository-native-execution",
+      "outcome": "SKIPPED",
+      "reason": "The API-only workflow did not clone or execute repository code, and current evidence establishes no accepted Archaeology ingest runner or substantive no-network command. Pull-request workflows are observed separately."
+    },
+    {
+      "gate": "generated-receipt-shape",
+      "outcome": "PASS",
+      "reason": "The receipt includes every required generated-receipt field, valid hash patterns, allowed truth labels and gate outcomes, ISO-8601 time, pending human review, and no unknown top-level properties."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human governance review remains pending and separate from generation, source admission, cultural authority, policy approval, lifecycle promotion, release, and publication."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "user-request",
+      "validated": true,
+      "evidence_ref": "conversation://current#update-pipelines-domains-archaeology-ingest-readme"
+    },
+    {
+      "id": "uploaded-operating-prompt",
+      "validated": true,
+      "evidence_ref": "attachment://Pasted text(51).txt"
+    },
+    {
+      "id": "target-baseline",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/860ccaececd0562dad22694a046215807495f1dc/pipelines/domains/archaeology/ingest/README.md"
+    },
+    {
+      "id": "ingest-spec-placeholder",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/860ccaececd0562dad22694a046215807495f1dc/pipeline_specs/archaeology/ingest.spec.yaml"
+    },
+    {
+      "id": "source-control-placeholders",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/860ccaececd0562dad22694a046215807495f1dc/data/registry/sources/archaeology/sources.yaml"
+    },
+    {
+      "id": "archaeology-readiness-workflow",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/860ccaececd0562dad22694a046215807495f1dc/.github/workflows/domain-archaeology.yml"
+    },
+    {
+      "id": "remote-readback",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/b4762106bf95d1dadbe93aa2fafd8015072cef13"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-19T13:16:36-05:00",
+  "emitter": "OpenAI GPT-5.6 Thinking via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Task kfm-pipelines-archaeology-ingest-readme-v0-2-20260719. Documentation-only repository-grounded revision. This receipt records provenance and bounded validation; it is not archaeological evidence, cultural or rights-holder authority, policy approval, source admission, activation authority, validation or proof closure, lifecycle promotion, release approval, or publication authority."
+}

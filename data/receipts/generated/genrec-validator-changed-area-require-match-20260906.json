@@ -1,0 +1,153 @@
+{
+  "receipt_id": "genrec-validator-changed-area-require-match-20260906",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tools/validators/validate_all.py",
+    "tests/validators/test_validator_orchestrator.py",
+    "Makefile",
+    "docs/runbooks/VALIDATOR_ORCHESTRATOR.md",
+    "docs/wiki/Development-and-Validation.md",
+    "tools/README.md",
+    "schemas/README.md"
+  ],
+  "artifact_hashes": {
+    "Makefile": "sha256:259e02c27434596a4f8ed7e38a18639125df2d8dd12696f7e3c3cff073fcf01a",
+    "docs/runbooks/VALIDATOR_ORCHESTRATOR.md": "sha256:65f28689db015277045058d9c99afd64ea36c1c9ef392400ed2dc11aca36e25a",
+    "docs/wiki/Development-and-Validation.md": "sha256:b8fafb4ab57314d4448255b51278c5c9f82d2dcd4f69ae7771219379a50bad09",
+    "schemas/README.md": "sha256:95f056f9f5a4418777ee4d1c01672e50cd0363ebbe7203baaad7642d2148c536",
+    "tests/validators/test_validator_orchestrator.py": "sha256:6b3863848b948e049f6ba7e13100221e9ead689d07733ffcea93c09d90eb2848",
+    "tools/README.md": "sha256:c868201aeb235713da1ebcdb2aae0f25ef65594d0308fd19dd9c3f883c18b1ec",
+    "tools/validators/validate_all.py": "sha256:4386e5b42d3a6b885f8dd9006b4d0aeada56cbf547b5cfc94ec7bbd19b2b295e"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "2026-09-06"
+  },
+  "prompt_or_contract": "sha256:f706057db64000235f82b3969149e519d72dd8a9a321c34d3a20300943904f95",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Notion research",
+      "Google Drive lineage inspection",
+      "in-memory source diff checks"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:2f1ca48596d5759665c6aab94c2e5ed8c9cf6eb95426770d1aa2e2c19e8241ab",
+      "sha256:5fda1f0b17d5790b1653fce8168b2b2bc116473d3c30fddb8f8082f5c5133567",
+      "sha256:b2b8492d88046a8940814e0df639a33510ac50a5f9842c73c1a8470a41bc56fa"
+    ],
+    "attached_docs": [
+      "KFM System Chronicle",
+      "KFM Explorer — Living Atlas Interface, Default Views and Animation Design — v0.1"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/ca1b2d7a29cfe344d19860eb5311ce29222538cb",
+      "github://bartytime4life/Kansas-Frontier-Matrix/issues/3366",
+      "github://bartytime4life/Kansas-Frontier-Matrix/pull/4323",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ca1b2d7a29cfe344d19860eb5311ce29222538cb/tools/validators/validate_all.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ca1b2d7a29cfe344d19860eb5311ce29222538cb/tests/validators/test_validator_orchestrator.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ca1b2d7a29cfe344d19860eb5311ce29222538cb/Makefile",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ca1b2d7a29cfe344d19860eb5311ce29222538cb/docs/runbooks/VALIDATOR_ORCHESTRATOR.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ca1b2d7a29cfe344d19860eb5311ce29222538cb/docs/wiki/Development-and-Validation.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ca1b2d7a29cfe344d19860eb5311ce29222538cb/tools/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ca1b2d7a29cfe344d19860eb5311ce29222538cb/schemas/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ca1b2d7a29cfe344d19860eb5311ce29222538cb/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/ca1b2d7a29cfe344d19860eb5311ce29222538cb/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "truth_labels": {
+    "tools/validators/validate_all.py": "PROPOSED",
+    "tests/validators/test_validator_orchestrator.py": "PROPOSED",
+    "Makefile": "PROPOSED",
+    "docs/runbooks/VALIDATOR_ORCHESTRATOR.md": "PROPOSED",
+    "docs/wiki/Development-and-Validation.md": "PROPOSED",
+    "tools/README.md": "PROPOSED",
+    "schemas/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Current main was re-pinned to ca1b2d7a29cfe344d19860eb5311ce29222538cb after PR #4323 merged; no other open PR covers the validator/Make/docs paths."
+    },
+    {
+      "gate": "directory-placement",
+      "outcome": "PASS",
+      "reason": "The change stays in existing tools/, tests/, docs/, schemas/, the root Makefile, and the established data/receipts/generated/ family; no new root or authority home is introduced."
+    },
+    {
+      "gate": "mode-separation-and-static-integrity",
+      "outcome": "PASS",
+      "reason": "In-memory source checks confirm default ABSTAIN compatibility, explicit FAIL/exit-1 gating, CLI-to-orchestrator wiring, the Make-only opt-in, targeted regression coverage, final newlines, and no carriage returns or trailing whitespace."
+    },
+    {
+      "gate": "repository-native-runtime-validation",
+      "outcome": "SKIPPED",
+      "reason": "No mounted checkout/dependency environment is available in this session; the exec runtime rejected a read-only git probe at its usage limit."
+    },
+    {
+      "gate": "hosted-exact-head-checks",
+      "outcome": "SKIPPED",
+      "reason": "Pending after the draft pull request is created."
+    },
+    {
+      "gate": "independent-human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending; this receipt is provenance only and does not authorize merge, release, or publication."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "m06-validation-gate",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/issues/3366"
+    },
+    {
+      "id": "orchestrator-source",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ca1b2d7a29cfe344d19860eb5311ce29222538cb/tools/validators/validate_all.py"
+    },
+    {
+      "id": "orchestrator-regression",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ca1b2d7a29cfe344d19860eb5311ce29222538cb/tests/validators/test_validator_orchestrator.py"
+    },
+    {
+      "id": "make-operator-surface",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ca1b2d7a29cfe344d19860eb5311ce29222538cb/Makefile"
+    },
+    {
+      "id": "orchestrator-runbook",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ca1b2d7a29cfe344d19860eb5311ce29222538cb/docs/runbooks/VALIDATOR_ORCHESTRATOR.md"
+    },
+    {
+      "id": "directory-rules",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ca1b2d7a29cfe344d19860eb5311ce29222538cb/docs/doctrine/directory-rules.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-06T05:55:00.068Z",
+  "emitter": "openai/codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Bounded M06 slice: direct CLI changed-area routing remains ABSTAIN/exit 0 when empty; explicit --require-match returns FAIL/exit 1; only make validator-changed-area opts into the guarded mode. No validator registry entries, child validators, schemas, policy, source data, lifecycle state, repository settings, release, deployment, or publication were changed."
+}

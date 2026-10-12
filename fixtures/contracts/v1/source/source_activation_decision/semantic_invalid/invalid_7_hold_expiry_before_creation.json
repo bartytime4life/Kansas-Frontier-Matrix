@@ -1,0 +1,56 @@
+{
+  "object_type": "SourceActivationDecision",
+  "schema_version": "1.0.0",
+  "activation_decision_id": "activation:synthetic-hold-source:20260803",
+  "source_id": "src:synthetic:hold-source",
+  "source_descriptor_ref": "source-descriptor:src:synthetic:hold-source:0.8.0",
+  "descriptor_version": "0.8.0",
+  "source_descriptor_digest": "sha256:9999999999999999999999999999999999999999999999999999999999999999",
+  "source_role_ref": "source-descriptor:src:synthetic:hold-source:0.8.0#/source_role",
+  "operation": "initial_activation",
+  "context": {
+    "rights_status": "permission_required",
+    "sensitivity_class": "controlled",
+    "access_posture": "credentialed",
+    "descriptor_review_state": "needs_review",
+    "registry_state": "proposed"
+  },
+  "decision": {
+    "route": "HOLD",
+    "activation_state": "live_candidate",
+    "activation_scope": "none",
+    "reason_codes": [
+      "INTAKE_REVIEW_REQUIRED"
+    ],
+    "obligations": [
+      "require_rights_review",
+      "assign_source_steward",
+      "set_hold_expiry",
+      "block_automatic_retry"
+    ],
+    "policy_decision_refs": [
+      "policy:synthetic:permission-review"
+    ],
+    "review_state": "pending",
+    "review_refs": [
+      "review-route:synthetic:rights-holder"
+    ],
+    "decision_authority_ref": "authority:synthetic:pre-raw-router"
+  },
+  "timing": {
+    "created_at": "2026-08-03T12:00:00Z",
+    "effective_at": "2026-08-03T12:00:00Z",
+    "expires_at": null,
+    "hold_expires_at": "2026-08-02T12:00:00Z"
+  },
+  "lineage": {
+    "supersedes": null,
+    "superseded_by": null
+  },
+  "governance": {
+    "public_use_allowed": false,
+    "release_ref": null,
+    "spec_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "authority_created": false
+  }
+}

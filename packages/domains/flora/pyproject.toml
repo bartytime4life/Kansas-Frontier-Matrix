@@ -1,0 +1,4 @@
+# packages/domains/flora pyproject — greenfield placeholder
+[project]
+name = "kfm-domain-flora"
+version = "0.0.0"

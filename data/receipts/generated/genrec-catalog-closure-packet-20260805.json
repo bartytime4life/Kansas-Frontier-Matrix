@@ -1,0 +1,186 @@
+{
+  "receipt_id": "genrec-catalog-closure-packet-20260805",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/catalog-closure-packet.yml",
+    "contracts/data/catalog_closure_packet.md",
+    "fixtures/data/catalog_closure_packet/README.md",
+    "fixtures/data/catalog_closure_packet/invalid/expected_findings_manifest.json",
+    "fixtures/data/catalog_closure_packet/invalid/invalid_catalog_digest_mismatch.json",
+    "fixtures/data/catalog_closure_packet/invalid/invalid_catalog_family_incomplete.json",
+    "fixtures/data/catalog_closure_packet/invalid/invalid_catalog_identity_mismatch.json",
+    "fixtures/data/catalog_closure_packet/invalid/invalid_catalog_records_not_canonical.json",
+    "fixtures/data/catalog_closure_packet/invalid/invalid_governance_overclaim.json",
+    "fixtures/data/catalog_closure_packet/invalid/invalid_noncanonical_refs.json",
+    "fixtures/data/catalog_closure_packet/invalid/invalid_policy_allow_without_closure.json",
+    "fixtures/data/catalog_closure_packet/invalid/invalid_release_review_without_rollback.json",
+    "fixtures/data/catalog_closure_packet/invalid/invalid_review_approved_without_record.json",
+    "fixtures/data/catalog_closure_packet/invalid/invalid_spec_hash_mismatch.json",
+    "fixtures/data/catalog_closure_packet/invalid/invalid_unresolved_catalog_record.json",
+    "fixtures/data/catalog_closure_packet/valid/expected_outcomes.json",
+    "fixtures/data/catalog_closure_packet/valid/valid_catalog_review_ready.json",
+    "fixtures/data/catalog_closure_packet/valid/valid_deny_policy.json",
+    "fixtures/data/catalog_closure_packet/valid/valid_hold_rights_review.json",
+    "fixtures/data/catalog_closure_packet/valid/valid_release_review_ready.json",
+    "schemas/contracts/v1/data/catalog_closure_packet.schema.json",
+    "tests/validators/test_validate_catalog_closure.py",
+    "tools/validators/catalog_closure/validate_catalog_closure.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/catalog-closure-packet.yml": "sha256:007e7d7847b3d13d766d0a4bc08f923df50de583fadb9e893f7c4187b914b318",
+    "contracts/data/catalog_closure_packet.md": "sha256:d8817c015980a7193a5761649c3b140d90373c4b57e879c81edc94c8d95334cb",
+    "fixtures/data/catalog_closure_packet/README.md": "sha256:5db6779a758acc1e6876212be03d4730f5bb5ca6861535d431a3484ebf3016ca",
+    "fixtures/data/catalog_closure_packet/invalid/expected_findings_manifest.json": "sha256:5b74bbb97a3bd3176f6691d5d6b34b165f8f698f65c7f8580491cbe0322392ea",
+    "fixtures/data/catalog_closure_packet/invalid/invalid_catalog_digest_mismatch.json": "sha256:e58e79e7d043b704032a60ddf312f5a0744941fbfe2715acfcdef0230ee4d111",
+    "fixtures/data/catalog_closure_packet/invalid/invalid_catalog_family_incomplete.json": "sha256:29f72671b51b992422add7b60fc69593c2bdcb4bc6c07adb0e0b6729a20c3574",
+    "fixtures/data/catalog_closure_packet/invalid/invalid_catalog_identity_mismatch.json": "sha256:7d6f65752c7b2036d869ecf7a08452e63c172a834e46d7af984926f41639fa71",
+    "fixtures/data/catalog_closure_packet/invalid/invalid_catalog_records_not_canonical.json": "sha256:64c10caa2a40e7916678c5e5a8d04bb31b1800ada151d51b3ff2be9f181fb82c",
+    "fixtures/data/catalog_closure_packet/invalid/invalid_governance_overclaim.json": "sha256:b89981627681bbd85b2793415ef5d8ca4b52869421663a9a3e28fbb3979c51d0",
+    "fixtures/data/catalog_closure_packet/invalid/invalid_noncanonical_refs.json": "sha256:82cfd947c7b1c96a84526b87cf3a0dc4f0b5ce3e2c6d8e775314e0c52323aca9",
+    "fixtures/data/catalog_closure_packet/invalid/invalid_policy_allow_without_closure.json": "sha256:169f086550db1f726858889e8b42a3ff70db15585948061df568021ffef2a225",
+    "fixtures/data/catalog_closure_packet/invalid/invalid_release_review_without_rollback.json": "sha256:c35a0d6049800ccc3481da83b5b9107d07450edf4f8a279d31f92da49b3eb527",
+    "fixtures/data/catalog_closure_packet/invalid/invalid_review_approved_without_record.json": "sha256:1a101cdf5b06eb7b74d184c935f7f7090b22781e8b9114ae884f0cde682da210",
+    "fixtures/data/catalog_closure_packet/invalid/invalid_spec_hash_mismatch.json": "sha256:7afc42a35f8bb72dba93830d914134fb38801a004fef10a7a1c5b50e6e046bfb",
+    "fixtures/data/catalog_closure_packet/invalid/invalid_unresolved_catalog_record.json": "sha256:f523dd6b1a91e624dd0eeea764516566db6e6acac69ea787418fb12ac451a7e0",
+    "fixtures/data/catalog_closure_packet/valid/expected_outcomes.json": "sha256:34729df702ac0a272aeb4df878ceb096c90fd1d68aeebe80ff52a95d0b53e7ac",
+    "fixtures/data/catalog_closure_packet/valid/valid_catalog_review_ready.json": "sha256:6d9a1d8ef8a57186cda5471cb28fb6173a18fb7d4340e518280f350439b704ce",
+    "fixtures/data/catalog_closure_packet/valid/valid_deny_policy.json": "sha256:a1c91d09717b86d8e46c08665389bc0111f7e646a7863e6d26bee0db9787f642",
+    "fixtures/data/catalog_closure_packet/valid/valid_hold_rights_review.json": "sha256:386622ceee2df4327b6c72451d18fd49f4df388260f86381c0725f540a0b1e8d",
+    "fixtures/data/catalog_closure_packet/valid/valid_release_review_ready.json": "sha256:824a3744f02f9f0d70d59b1a83e138af0e61c4e9c1e394d0ecce998dd31c5eb3",
+    "schemas/contracts/v1/data/catalog_closure_packet.schema.json": "sha256:91da88b0ddb8870ba46ac3e4a33f0618b8039c37f146ae4b33d7cb30431b4f90",
+    "tests/validators/test_validate_catalog_closure.py": "sha256:bfb3375e4cef1c6736a41b25f3e60e77317f68869e813389d4c315083dc10cb1",
+    "tools/validators/catalog_closure/validate_catalog_closure.py": "sha256:327c9598547f4609f251f1041a845730a3e023b2b784a92b9c0934af6423262e"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-05"
+  },
+  "prompt_or_contract": "sha256:392cdcbebdb86d9c8595c5f13f070412c2bfd9eb61757615d3889967b542ace6",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector readback",
+      "uploaded-file search",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:47983cd76db4d3c0e971c61d6259f80f32ca861091d7f65020ad94c09ce76061"
+    ],
+    "attached_docs": [
+      "New Ideas 4-25-26.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:New Ideas 4-25-26.pdf",
+      "github:ac0f43afbd23557bbfb7389fbbf97bad120315bf",
+      "github:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github:pull/2007"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/catalog-closure-packet.yml": "PROPOSED",
+    "contracts/data/catalog_closure_packet.md": "PROPOSED",
+    "fixtures/data/catalog_closure_packet/README.md": "PROPOSED",
+    "fixtures/data/catalog_closure_packet/invalid/expected_findings_manifest.json": "PROPOSED",
+    "fixtures/data/catalog_closure_packet/invalid/invalid_catalog_digest_mismatch.json": "PROPOSED",
+    "fixtures/data/catalog_closure_packet/invalid/invalid_catalog_family_incomplete.json": "PROPOSED",
+    "fixtures/data/catalog_closure_packet/invalid/invalid_catalog_identity_mismatch.json": "PROPOSED",
+    "fixtures/data/catalog_closure_packet/invalid/invalid_catalog_records_not_canonical.json": "PROPOSED",
+    "fixtures/data/catalog_closure_packet/invalid/invalid_governance_overclaim.json": "PROPOSED",
+    "fixtures/data/catalog_closure_packet/invalid/invalid_noncanonical_refs.json": "PROPOSED",
+    "fixtures/data/catalog_closure_packet/invalid/invalid_policy_allow_without_closure.json": "PROPOSED",
+    "fixtures/data/catalog_closure_packet/invalid/invalid_release_review_without_rollback.json": "PROPOSED",
+    "fixtures/data/catalog_closure_packet/invalid/invalid_review_approved_without_record.json": "PROPOSED",
+    "fixtures/data/catalog_closure_packet/invalid/invalid_spec_hash_mismatch.json": "PROPOSED",
+    "fixtures/data/catalog_closure_packet/invalid/invalid_unresolved_catalog_record.json": "PROPOSED",
+    "fixtures/data/catalog_closure_packet/valid/expected_outcomes.json": "PROPOSED",
+    "fixtures/data/catalog_closure_packet/valid/valid_catalog_review_ready.json": "PROPOSED",
+    "fixtures/data/catalog_closure_packet/valid/valid_deny_policy.json": "PROPOSED",
+    "fixtures/data/catalog_closure_packet/valid/valid_hold_rights_review.json": "PROPOSED",
+    "fixtures/data/catalog_closure_packet/valid/valid_release_review_ready.json": "PROPOSED",
+    "schemas/contracts/v1/data/catalog_closure_packet.schema.json": "PROPOSED",
+    "tests/validators/test_validate_catalog_closure.py": "PROPOSED",
+    "tools/validators/catalog_closure/validate_catalog_closure.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-tests",
+      "outcome": "PASS",
+      "reason": "Ten focused deterministic tests passed."
+    },
+    {
+      "gate": "fixture-polarity",
+      "outcome": "PASS",
+      "reason": "Two PASS, one HOLD, one DENY, and eleven exact-negative fixture cases replayed."
+    },
+    {
+      "gate": "schema-self-check",
+      "outcome": "PASS",
+      "reason": "Draft 2020-12 schema self-check passed."
+    },
+    {
+      "gate": "workflow-yaml",
+      "outcome": "PASS",
+      "reason": "Workflow YAML parsed successfully."
+    },
+    {
+      "gate": "generated-receipt-integrity",
+      "outcome": "PASS",
+      "reason": "Artifact-path, SHA-256, and truth-label closure validated after final byte generation."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "No remote branch or draft pull request could be created because the connected GitHub mutation surface was unavailable."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Independent human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:new-ideas-4-25-26",
+      "validated": true,
+      "evidence_ref": "attachment:New Ideas 4-25-26.pdf"
+    },
+    {
+      "id": "repository:directory-governance",
+      "validated": true,
+      "evidence_ref": "github:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "repository:current-main",
+      "validated": true,
+      "evidence_ref": "github:ac0f43afbd23557bbfb7389fbbf97bad120315bf"
+    },
+    {
+      "id": "repository:occurrence-retrieval-coordination",
+      "validated": true,
+      "evidence_ref": "github:pull/2007"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-05T23:35:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-first CatalogClosurePacket readiness profile. PASS means readiness for the next review gate only and creates no catalog, evidence, policy, review, release, or publication authority. Prepared against current-main snapshot ac0f43afbd23557bbfb7389fbbf97bad120315bf."
+}

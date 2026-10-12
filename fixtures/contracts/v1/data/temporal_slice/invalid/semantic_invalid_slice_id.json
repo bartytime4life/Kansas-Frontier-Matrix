@@ -1,0 +1,77 @@
+{
+  "object_type": "TemporalSlice",
+  "schema_version": "1.0.0",
+  "slice_id": "kfm:temporal-slice:sha256:1111111111111111111111111111111111111111111111111111111111111111",
+  "identity_profile": "kfm-temporal-slice-id-v1",
+  "dataset_version_ref": "kfm:dataset-version:synthetic-observation:2026-08-06",
+  "temporal_window": {
+    "start": "2026-08-06T12:00:00Z",
+    "end": "2026-08-06T12:05:00Z",
+    "time_kind": "observed"
+  },
+  "cadence_hint": "PT5M",
+  "spatial": {
+    "footprint_hash": "sha256:4d70cb04152bdcc71a9e7bf86e089f427a45041cecf5901168a3950be1aabaef",
+    "support_type": "cell",
+    "grid_system": "h3",
+    "grid_key": "h3:8928308280fffff",
+    "geometry_ref": "kfm:geometry:synthetic-h3-cell-8928308280fffff"
+  },
+  "provenance": {
+    "evidence_bundle_refs": [
+      "kfm:evidence-bundle:synthetic-temporal-slice-001"
+    ],
+    "run_receipt_ref": "kfm:run-receipt:synthetic-temporal-slice-001",
+    "spec_hash": "sha256:287f71244eff3249c93b4ae3f73d72c487b69c48cc36a4b6c211ba67a0e4448e",
+    "processing_level": "L2",
+    "input_refs": [
+      "kfm:input:synthetic-observation-window-001"
+    ]
+  },
+  "verification": {
+    "promotion_gate_ref": null,
+    "check_refs": [
+      "kfm:check:synthetic-crs",
+      "kfm:check:synthetic-quality"
+    ],
+    "policy_decision_refs": [],
+    "policy_labels": [
+      "internal",
+      "synthetic"
+    ],
+    "obligations": []
+  },
+  "change": {
+    "state": "BASELINE",
+    "previous_slice_ref": null,
+    "material_change_assessment_ref": null,
+    "delta_proof_ref": null,
+    "delta_magnitude": null,
+    "change_flags": []
+  },
+  "materialization": {
+    "surfaces": [
+      "focus",
+      "map"
+    ],
+    "artifacts": [
+      {
+        "artifact_ref": "kfm:artifact:synthetic-temporal-slice-001",
+        "artifact_kind": "raster",
+        "media_type": "image/tiff",
+        "digest": "sha256:8e9c23a6b3d0fba9f6273d3e8724d024cdb89c9faada66bc1dfa040a4d3dc4f4"
+      }
+    ]
+  },
+  "lifecycle_stage": "PROCESSED",
+  "governance": {
+    "authority_created": false,
+    "evidence_closure_claimed": false,
+    "policy_evaluated": false,
+    "promotion_authorized": false,
+    "release_authorized": false,
+    "publication_authorized": false,
+    "public_use_allowed": false,
+    "release_ref": null
+  }
+}

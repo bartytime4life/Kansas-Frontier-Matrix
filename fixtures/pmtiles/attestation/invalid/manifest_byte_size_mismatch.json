@@ -1,0 +1,9 @@
+{
+  "case_id": "tile-manifest-byte-size-mismatch",
+  "expected": {
+    "issue_codes": ["TILE_MANIFEST_BYTE_SIZE_MISMATCH"],
+    "status": "DENY"
+  },
+  "fixture_profile": "kfm.pmtiles.tile-artifact-manifest.compat.v1",
+  "mutation": "manifest_byte_size_mismatch"
+}

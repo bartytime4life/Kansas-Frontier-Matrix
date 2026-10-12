@@ -1,0 +1,17 @@
+{
+  "profile": "kfm.explorer.huc-crosswalk.public-safe.v1",
+  "county_fips": "20177",
+  "huc12": "102600030101",
+  "outcome": "AVAILABLE",
+  "status": "VERIFIED_EXACT",
+  "reason_code": "CROSSWALK_VERIFIED",
+  "source_hash": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+  "crosswalk_ref": "kfm://manifest/hydrology/huc12-comid/102600030101/synthetic@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "crosswalk_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "validation_receipt_ref": "kfm://receipt/hydrology/crosswalk/synthetic@sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "station_refs": [
+    "kfm://station/nwis/06889000@sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "kfm://station/nwis/06889500@sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+  ],
+  "evaluated_at": "2026-08-10T16:00:00Z"
+}

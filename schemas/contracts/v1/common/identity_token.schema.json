@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/common/identity_token.schema.json",
+  "title": "identity_token",
+  "type": "object",
+  "description": "KFM contract for identity_token.",
+  "x-kfm": {
+    "contract_doc": "contracts/common/identity_token.md",
+    "fixtures_root": "fixtures/contracts/v1/common/identity_token/",
+    "validator": "tools/validators/validate_identity_token.py",
+    "policy": "policy/common/",
+    "status": "PROPOSED"
+  },
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "run",
+        "source",
+        "decision",
+        "review",
+        "bundle",
+        "actor"
+      ]
+    },
+    "issued_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "issuer": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "id",
+    "kind",
+    "issued_at"
+  ],
+  "additionalProperties": false
+}

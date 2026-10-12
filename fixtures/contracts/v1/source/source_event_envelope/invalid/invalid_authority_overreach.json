@@ -1,0 +1,66 @@
+{
+  "schema_version": "1.0.0",
+  "profile": "kfm.source_event_envelope_candidate.v1",
+  "execution_mode": "FIXTURE_ONLY",
+  "specversion": "1.0",
+  "event_id": "kfm:source-event:sha256:cbe09b6c3df3a5b9df4eef7067ece0f0a8ba62158eae770988636cca4fe54d1d",
+  "source_descriptor_ref": "src:synthetic:county-boundary-feed",
+  "source_role_ref": "src:synthetic:county-boundary-feed#/source_role",
+  "event_type": "OBJECT_UPDATED",
+  "subject": {
+    "subject_ref": "fixture://source-events/county-boundaries/2026-08-06",
+    "native_id": "county-boundaries-2026-08-06",
+    "media_type": "application/json",
+    "content_digest": "sha256:23ffae99da1b5155b2043b215344deee405008c127e3328a27c0561de47eb555",
+    "byte_count": 2048,
+    "etag": "\"synthetic-v2\"",
+    "last_modified": "2026-08-06T16:55:00Z"
+  },
+  "occurred_at": "2026-08-06T17:00:00Z",
+  "received_at": "2026-08-06T17:00:05Z",
+  "producer": {
+    "producer_id": "kfm-fixture-watcher",
+    "kind": "WATCHER",
+    "version": "1.0.0"
+  },
+  "payload": {
+    "payload_spec_hash": "sha256:b979e9845ee0a7c93c488c9ea1c8f3b1eb6b1158d5d7d67f168f6d78b93cce25",
+    "attributes": {
+      "change_kind": "content",
+      "material": true,
+      "record_count": 105
+    }
+  },
+  "routing": {
+    "disposition": "PROPOSE_SOURCE_ADMISSION",
+    "reason_codes": [
+      "SOURCE_EVENT_READY_FOR_ADMISSION_REVIEW"
+    ],
+    "review_required": true,
+    "source_activation_allowed": false,
+    "raw_write_allowed": false,
+    "publication_allowed": false
+  },
+  "governance": {
+    "rights_state": "KNOWN",
+    "sensitivity_state": "KNOWN",
+    "evidence_refs": [
+      "evidence:synthetic:county-boundary-change"
+    ],
+    "policy_refs": [
+      "policy:synthetic:source-admission-fixture"
+    ]
+  },
+  "claims": {
+    "deterministic_identity": true,
+    "idempotent_replay": true,
+    "cloudevents_core_attributes_present": true,
+    "cloudevents_conformance_claimed": false,
+    "network_access_performed": false,
+    "authority_created": false,
+    "source_activated": false,
+    "lifecycle_write_performed": false,
+    "released": false,
+    "published": true
+  }
+}

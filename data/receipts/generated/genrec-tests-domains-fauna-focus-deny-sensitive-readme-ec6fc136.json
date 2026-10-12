@@ -1,0 +1,210 @@
+{
+  "receipt_id": "genrec-tests-domains-fauna-focus-deny-sensitive-readme-ec6fc136",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tests/domains/fauna/focus/deny_sensitive/README.md"
+  ],
+  "artifact_hashes": {
+    "tests/domains/fauna/focus/deny_sensitive/README.md": "sha256:ec6fc1362588e64cec87f68e7a072089c938528f6d3624c6df2f9587568e8020"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-17-session"
+  },
+  "prompt_or_contract": "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Python validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM GitHub Repository Documentation Implementation Agent — Full Operating Prompt v3.1",
+      "Directory Rules.pdf",
+      "Kansas Frontier Matrix — AI Build Operating Contract.md"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/25be8016c3b221e427a4eb18568489b07a0a88c2",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/25be8016c3b221e427a4eb18568489b07a0a88c2/tests/domains/fauna/focus/deny_sensitive/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/25be8016c3b221e427a4eb18568489b07a0a88c2/tests/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/25be8016c3b221e427a4eb18568489b07a0a88c2/tests/domains/fauna/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/25be8016c3b221e427a4eb18568489b07a0a88c2/tests/domains/fauna/focus/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/25be8016c3b221e427a4eb18568489b07a0a88c2/tests/domains/fauna/focus/citation/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/25be8016c3b221e427a4eb18568489b07a0a88c2/CONTRIBUTING.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/25be8016c3b221e427a4eb18568489b07a0a88c2/docs/architecture/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/25be8016c3b221e427a4eb18568489b07a0a88c2/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/25be8016c3b221e427a4eb18568489b07a0a88c2/docs/registers/DRIFT_REGISTER.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/25be8016c3b221e427a4eb18568489b07a0a88c2/docs/architecture/governed-ai/FOCUS_FLOW.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/25be8016c3b221e427a4eb18568489b07a0a88c2/docs/domains/fauna/MAP_UI_CONTRACTS.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/25be8016c3b221e427a4eb18568489b07a0a88c2/docs/domains/fauna/SENSITIVITY.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/25be8016c3b221e427a4eb18568489b07a0a88c2/policy/domains/fauna/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/25be8016c3b221e427a4eb18568489b07a0a88c2/policy/sensitivity/fauna/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/25be8016c3b221e427a4eb18568489b07a0a88c2/policy/sensitivity/fauna/deny_default.rego",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/25be8016c3b221e427a4eb18568489b07a0a88c2/policy/sensitivity/fauna/geoprivacy.rego",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/25be8016c3b221e427a4eb18568489b07a0a88c2/policy/sensitivity/fauna/sensitive_taxa_deny.rego",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/25be8016c3b221e427a4eb18568489b07a0a88c2/policy/sensitivity/fauna/tier_mapping.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/25be8016c3b221e427a4eb18568489b07a0a88c2/policy/sensitivity/fauna/geoprivacy_transforms.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/25be8016c3b221e427a4eb18568489b07a0a88c2/policy/sensitivity/fauna/nest_den_roost_hibernacula_spawning.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/25be8016c3b221e427a4eb18568489b07a0a88c2/policy/sensitivity/fauna/sensitive_taxa.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/25be8016c3b221e427a4eb18568489b07a0a88c2/policy/focus/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/25be8016c3b221e427a4eb18568489b07a0a88c2/contracts/policy/policy_decision.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/25be8016c3b221e427a4eb18568489b07a0a88c2/contracts/runtime/decision_envelope.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/25be8016c3b221e427a4eb18568489b07a0a88c2/schemas/contracts/v1/policy/policy_decision.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/25be8016c3b221e427a4eb18568489b07a0a88c2/schemas/contracts/v1/runtime/decision_envelope.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/25be8016c3b221e427a4eb18568489b07a0a88c2/fixtures/contracts/v1/policy/policy_decision/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/25be8016c3b221e427a4eb18568489b07a0a88c2/fixtures/contracts/v1/runtime/decision_envelope/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/25be8016c3b221e427a4eb18568489b07a0a88c2/tools/validators/validate_decision_envelope.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/25be8016c3b221e427a4eb18568489b07a0a88c2/tools/validators/_common/run_all.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/25be8016c3b221e427a4eb18568489b07a0a88c2/tests/schemas/test_common_contracts.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/25be8016c3b221e427a4eb18568489b07a0a88c2/tests/policy/test_explorer_web_adapter_boundary.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/25be8016c3b221e427a4eb18568489b07a0a88c2/apps/governed-api/tests/test_boundary_guards.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/25be8016c3b221e427a4eb18568489b07a0a88c2/apps/governed-api/tests/test_abstain_routes.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/25be8016c3b221e427a4eb18568489b07a0a88c2/apps/governed-api/src/governed_api/routes/registry.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/25be8016c3b221e427a4eb18568489b07a0a88c2/tests/fixtures/focus/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/25be8016c3b221e427a4eb18568489b07a0a88c2/.github/workflows/policy-test.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/25be8016c3b221e427a4eb18568489b07a0a88c2/.github/workflows/deny-test.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/25be8016c3b221e427a4eb18568489b07a0a88c2/.github/workflows/focus-mock-test.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/25be8016c3b221e427a4eb18568489b07a0a88c2/.github/workflows/domain-fauna.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/25be8016c3b221e427a4eb18568489b07a0a88c2/Makefile",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/25be8016c3b221e427a4eb18568489b07a0a88c2/.github/PULL_REQUEST_TEMPLATE.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/25be8016c3b221e427a4eb18568489b07a0a88c2/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    ]
+  },
+  "truth_labels": {
+    "tests/domains/fauna/focus/deny_sensitive/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "The target remains under tests/, the canonical enforceability root, with fauna, focus, and deny_sensitive as nested responsibility segments. The duplicate Directory Rules authority path is surfaced and does not change the shared placement rule."
+    },
+    {
+      "gate": "target-precondition-overlap-and-drift",
+      "outcome": "PASS",
+      "reason": "The current main head and unchanged target blob were rechecked after unrelated base drift; no path-scoped AGENTS.md, matching open pull request, or matching Fauna-Focus-deny-sensitive task branch surfaced."
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "One H1, a closed KFM Meta Block, balanced code fences, unique heading anchors, valid internal fragments, and a final newline were verified locally."
+    },
+    {
+      "gate": "repository-evidence-grounding",
+      "outcome": "PASS",
+      "reason": "The README distinguishes fielded proposed PolicyDecision and DecisionEnvelope schemas plus generic shape/boundary tests from default-only Fauna Rego scaffolds, placeholder policy inputs, absent Focus routing/fixtures, TODO policy workflows, and unknown production behavior."
+    },
+    {
+      "gate": "test-profile-completeness",
+      "outcome": "PASS",
+      "reason": "The README covers scope, denial case contract, finite outcome semantics, valid/invalid/denied/abstained/quarantined/error scenarios, fixture ownership, no-network posture, deterministic setup, validation layers, gaps, rights/sensitivity, failure interpretation, passing-suite limits, and maintenance."
+    },
+    {
+      "gate": "secret-and-sensitive-content-scan",
+      "outcome": "PASS",
+      "reason": "No common credential pattern, exact sensitive coordinate pair, real observer identity, restricted source payload, operational geoprivacy parameter, or production evidence content was introduced."
+    },
+    {
+      "gate": "generated-receipt-shape",
+      "outcome": "PASS",
+      "reason": "The receipt parses as JSON and satisfies the repository schema's required field, identifier, hash, truth-label, validation-outcome, review-state, and timestamp constraints checked locally."
+    },
+    {
+      "gate": "executable-fauna-focus-deny-sensitive-tests",
+      "outcome": "SKIPPED",
+      "reason": "The change is documentation-only, and repository evidence did not establish an executable Fauna deny-sensitive test module, operational Focus policy evaluator, Focus route, denial fixture payloads, or canonical lane command."
+    },
+    {
+      "gate": "ci-status",
+      "outcome": "SKIPPED",
+      "reason": "Pull-request checks had not run when this receipt was emitted; final status must be read from the resulting PR head."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "tests/domains/fauna/focus/deny_sensitive/README.md@25be8016",
+      "validated": true
+    },
+    {
+      "id": "tests/README.md@25be8016",
+      "validated": true
+    },
+    {
+      "id": "tests/domains/fauna/focus/README.md@25be8016",
+      "validated": true
+    },
+    {
+      "id": "docs/architecture/directory-rules.md@25be8016",
+      "validated": true
+    },
+    {
+      "id": "docs/doctrine/directory-rules.md@25be8016",
+      "validated": true
+    },
+    {
+      "id": "docs/architecture/governed-ai/FOCUS_FLOW.md@25be8016",
+      "validated": true
+    },
+    {
+      "id": "docs/domains/fauna/MAP_UI_CONTRACTS.md@25be8016",
+      "validated": true
+    },
+    {
+      "id": "docs/domains/fauna/SENSITIVITY.md@25be8016",
+      "validated": true
+    },
+    {
+      "id": "policy/sensitivity/fauna/deny_default.rego@25be8016",
+      "validated": true
+    },
+    {
+      "id": "schemas/contracts/v1/policy/policy_decision.schema.json@25be8016",
+      "validated": true
+    },
+    {
+      "id": "schemas/contracts/v1/runtime/decision_envelope.schema.json@25be8016",
+      "validated": true
+    },
+    {
+      "id": "tools/validators/_common/run_all.py@25be8016",
+      "validated": true
+    },
+    {
+      "id": "tests/schemas/test_common_contracts.py@25be8016",
+      "validated": true
+    },
+    {
+      "id": "apps/governed-api/tests/test_boundary_guards.py@25be8016",
+      "validated": true
+    },
+    {
+      "id": ".github/workflows/policy-test.yml@25be8016",
+      "validated": true
+    },
+    {
+      "id": ".github/workflows/deny-test.yml@25be8016",
+      "validated": true
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-17T18:24:00Z",
+  "emitter": "OpenAI GPT-5.6 Thinking via GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Generated provenance receipt for the repository-grounded v0.2 Fauna Focus deny-sensitive test-lane README. The revision preserves the fail-closed boundary; records real PolicyDecision/DecisionEnvelope shape infrastructure and generic boundary guards; distinguishes those from default-only Fauna policy scaffolds, absent Focus routing and denial fixtures, and TODO-only policy/deny/Focus/Fauna CI; and changes no executable tests, fixtures, policies, schemas, validators, routes, workflows, lifecycle data, releases, or public surfaces. Human review remains pending."
+}

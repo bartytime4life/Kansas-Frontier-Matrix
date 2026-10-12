@@ -1,0 +1,169 @@
+{
+  "artifact_hashes": {
+    "docs/wiki/_Footer.md": "sha256:c86df3d46a64d1f59d4abac3ed3c03f15946fbc468eff2c57a53020262e39317"
+  },
+  "artifact_paths": [
+    "docs/wiki/_Footer.md"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "repo:docs/wiki/_Footer.md@dc5549980158a9df81d643e367dc9d861494f378",
+      "id": "KFM-wiki-footer-base",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/wiki/README.md@dc5549980158a9df81d643e367dc9d861494f378",
+      "id": "KFM-wiki-source-set-contract",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/wiki/Wiki-Maintenance.md@dc5549980158a9df81d643e367dc9d861494f378",
+      "id": "KFM-wiki-maintenance",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/wiki/_Sidebar.md@dc5549980158a9df81d643e367dc9d861494f378",
+      "id": "KFM-wiki-sidebar",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:tools/docs/wiki/README.md@dc5549980158a9df81d643e367dc9d861494f378",
+      "id": "KFM-wiki-sync-helper",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md@dc5549980158a9df81d643e367dc9d861494f378",
+      "id": "KFM-directory-rules-v2",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@dc5549980158a9df81d643e367dc9d861494f378",
+      "id": "ADR-0029",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:SECURITY.md@dc5549980158a9df81d643e367dc9d861494f378",
+      "id": "KFM-security-policy",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:data/receipts/generated/README.md@dc5549980158a9df81d643e367dc9d861494f378",
+      "id": "KFM-generated-receipt-lane",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@dc5549980158a9df81d643e367dc9d861494f378",
+      "id": "KFM-generated-receipt-schema",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-15T05:52:09Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [],
+    "evidence_refs": [
+      "repo:docs/wiki/_Footer.md@dc5549980158a9df81d643e367dc9d861494f378",
+      "repo:docs/wiki/README.md@dc5549980158a9df81d643e367dc9d861494f378",
+      "repo:docs/wiki/Wiki-Maintenance.md@dc5549980158a9df81d643e367dc9d861494f378",
+      "repo:docs/wiki/_Sidebar.md@dc5549980158a9df81d643e367dc9d861494f378",
+      "repo:tools/docs/wiki/README.md@dc5549980158a9df81d643e367dc9d861494f378",
+      "repo:docs/doctrine/directory-rules.md@dc5549980158a9df81d643e367dc9d861494f378",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@dc5549980158a9df81d643e367dc9d861494f378",
+      "repo:SECURITY.md@dc5549980158a9df81d643e367dc9d861494f378",
+      "repo:data/receipts/generated/README.md@dc5549980158a9df81d643e367dc9d861494f378",
+      "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@dc5549980158a9df81d643e367dc9d861494f378",
+      "user-request:sha256:8c73ec043b2673e43125f25a3a436a9a5419a03793e1de8b6d670bf2833e6063"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "GPT-5.6 Pro",
+    "provider": "OpenAI",
+    "version": "2026-08-15"
+  },
+  "notes": "Authoring provenance for the same-path modernization of docs/wiki/_Footer.md. The update preserves the special footer page identity and orientation-only authority role, adds source metadata, clearer trust and supersession language, compact reader navigation, main-repository documentation and source-packet links, correction and security routes, and an explicit reminder that native-wiki synchronization and map/AI/commit/merge events are not KFM publication authority. No native-wiki synchronization, release, deployment, promotion, data publication, policy change, contract change, schema change, runtime mutation, or repository-setting change occurred. The receipt excludes itself from artifact hashes. Base main was dc5549980158a9df81d643e367dc9d861494f378.",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local deterministic Markdown validation"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:8c73ec043b2673e43125f25a3a436a9a5419a03793e1de8b6d670bf2833e6063",
+  "receipt_id": "genrec-wiki-footer-c86df3d46a64",
+  "truth_labels": {
+    "docs/wiki/_Footer.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "target-authority-history-and-overlap-inspection",
+      "outcome": "PASS",
+      "reason": "The complete target, target history, current main SHA, parent wiki source contract, maintenance procedure, sidebar, synchronization helper, accepted ADR-0029, adopted Directory Rules bytes, generated-receipt lane/schema, and open pull-request overlap were inspected before authoring."
+    },
+    {
+      "gate": "same-path-special-page-identity",
+      "outcome": "PASS",
+      "reason": "The existing docs/wiki/_Footer.md path and native-wiki special-page role were preserved; no sibling footer, new root, mirror authority, or page-allowlist change was created."
+    },
+    {
+      "gate": "footer-purpose-and-authority-boundary",
+      "outcome": "PASS",
+      "reason": "The footer remains compact and reader-facing while clearly stating that repository evidence, adopted doctrine, accepted ADRs, owning contracts/schemas/policy, lifecycle evidence, and release/correction/rollback decisions outrank wiki prose."
+    },
+    {
+      "gate": "wiki-link-closure",
+      "outcome": "PASS",
+      "reason": "Every relative wiki link targets an existing allowlisted source page, and every repository link targets an inspected stable path or repository entry point."
+    },
+    {
+      "gate": "markdown-source-structure",
+      "outcome": "PASS",
+      "reason": "The special footer intentionally has no H1; its HTML metadata comment, separator, emphasis, links, punctuation, final newline, and whitespace were checked for compact valid GFM."
+    },
+    {
+      "gate": "native-wiki-and-publication-non-effects",
+      "outcome": "PASS",
+      "reason": "The source explicitly records that native-wiki synchronization is separate and that maps, AI answers, commits, merges, and wiki updates are not KFM publication authority."
+    },
+    {
+      "gate": "sensitive-content-review",
+      "outcome": "PASS",
+      "reason": "The public footer contains no credentials, private payloads, restricted evidence, living-person records, genomic data, or protected precise locations."
+    },
+    {
+      "gate": "generated-receipt-local-shape-and-hash",
+      "outcome": "PASS",
+      "reason": "Required receipt fields, enum values, artifact-path/hash parity, canonical local paths, JSON serialization, and the SHA-256 binding for docs/wiki/_Footer.md were checked locally."
+    },
+    {
+      "gate": "generated-receipt-repository-validator",
+      "outcome": "SKIPPED",
+      "reason": "The repository-owned validator will run after the receipt and artifact are committed on the feature branch."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Pending draft pull-request creation and hosted check scheduling."
+    },
+    {
+      "gate": "native-wiki-readback",
+      "outcome": "SKIPPED",
+      "reason": "Native-wiki synchronization is a separate reviewed public documentation action and is outside this source-only change."
+    }
+  ]
+}

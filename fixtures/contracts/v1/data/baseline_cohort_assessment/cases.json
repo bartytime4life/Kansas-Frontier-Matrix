@@ -1,0 +1,283 @@
+{
+  "profile": "kfm.data.baseline-cohort.fixture.v1",
+  "base": {
+    "object_type": "BaselineCohortAssessment",
+    "schema_version": "0.1.0",
+    "profile": "kfm.data.baseline-cohort.fixture.v1",
+    "assessment_id": "AUTO",
+    "subject_ref": "kfm:fixture:environmental-subject:alpha",
+    "baseline_manifest": {
+      "baseline_ref": "kfm:fixture:baseline:alpha-v1",
+      "baseline_version": "1.0.0",
+      "previous_baseline_ref": null,
+      "input_artifact_refs": [
+        "kfm:fixture:artifact:observation-alpha",
+        "kfm:fixture:artifact:observation-beta"
+      ],
+      "input_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+      "source_refs": [
+        "kfm:fixture:source:environment-alpha"
+      ],
+      "source_role_profile_ref": "kfm:fixture:source-role-profile:observation-v1",
+      "lookback_started_at": "2025-01-01T00:00:00Z",
+      "lookback_ended_at": "2026-06-30T23:59:59Z",
+      "seasonal_window_ref": "kfm:fixture:seasonal-window:annual-v1",
+      "eligibility_profile_ref": "kfm:fixture:eligibility-profile:alpha-v1",
+      "parameter_profile_ref": "kfm:fixture:parameter-profile:alpha-v1",
+      "uncertainty_profile_ref": "kfm:fixture:uncertainty-profile:alpha-v1",
+      "recalculation_cadence": "P30D",
+      "method_id": "FIXTURE_BASELINE_METHOD",
+      "method_version": "1.0.0",
+      "tool_versions": {
+        "baseline-builder": "0.1.0",
+        "stable-diff": "0.1.0"
+      }
+    },
+    "cohort_eligibility_report": {
+      "candidate_count": 100,
+      "eligible_count": 100,
+      "excluded_count": 0,
+      "missing_count": 0,
+      "missingness_state": "COMPLETE",
+      "exclusion_reason_counts": {},
+      "known_blind_spots": [
+        "SYNTHETIC_ONLY"
+      ]
+    },
+    "discontinuity_records": [],
+    "baseline_validation_report": {
+      "baseline_state": "REPLAYABLE",
+      "decision": "REVIEW_CANDIDATE",
+      "reason_codes": [
+        "BASELINE_REPLAYABLE"
+      ],
+      "obligations": [
+        "HUMAN_REVIEW_REQUIRED"
+      ],
+      "evaluated_at": "2026-07-01T02:00:00Z"
+    },
+    "baseline_rebuild_receipt": {
+      "rebuild_ref": "kfm:fixture:baseline-rebuild:alpha-v1",
+      "generated_at": "2026-07-01T01:00:00Z",
+      "output_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+      "toolchain_digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+      "supersedes_baseline_ref": null,
+      "correction_ref": null
+    },
+    "governance": {
+      "fixture_only": true,
+      "no_network": true,
+      "lifecycle_write": false,
+      "truth_authority": false,
+      "policy_authority": false,
+      "review_authority": false,
+      "release_authority": false,
+      "publication_authority": false
+    },
+    "spec_hash": "AUTO"
+  },
+  "cases": [
+    {
+      "name": "clean_cohort_is_replayable_review_candidate",
+      "mutations": [],
+      "expected_outcome": "HOLD",
+      "expected_findings": []
+    },
+    {
+      "name": "exclusions_create_qualified_review_candidate",
+      "mutations": [
+        {"path": "/cohort_eligibility_report/eligible_count", "value": 90},
+        {"path": "/cohort_eligibility_report/excluded_count", "value": 10},
+        {"path": "/cohort_eligibility_report/exclusion_reason_counts", "value": {"METHOD_INCOMPATIBLE": 10}},
+        {"path": "/baseline_validation_report/baseline_state", "value": "QUALIFIED"},
+        {"path": "/baseline_validation_report/reason_codes", "value": ["BASELINE_QUALIFIED"]},
+        {"path": "/baseline_validation_report/obligations", "value": ["REVIEW_EXCLUSIONS_AND_DISCONTINUITIES"]}
+      ],
+      "expected_outcome": "HOLD",
+      "expected_findings": []
+    },
+    {
+      "name": "missing_inputs_create_qualified_review_candidate",
+      "mutations": [
+        {"path": "/cohort_eligibility_report/eligible_count", "value": 90},
+        {"path": "/cohort_eligibility_report/missing_count", "value": 10},
+        {"path": "/cohort_eligibility_report/missingness_state", "value": "PARTIAL"},
+        {"path": "/baseline_validation_report/baseline_state", "value": "QUALIFIED"},
+        {"path": "/baseline_validation_report/reason_codes", "value": ["BASELINE_QUALIFIED"]},
+        {"path": "/baseline_validation_report/obligations", "value": ["REVIEW_EXCLUSIONS_AND_DISCONTINUITIES"]}
+      ],
+      "expected_outcome": "HOLD",
+      "expected_findings": []
+    },
+    {
+      "name": "resolved_sensor_relocation_segments_baseline",
+      "mutations": [
+        {"path": "/discontinuity_records", "value": [{"discontinuity_ref": "kfm:fixture:discontinuity:relocation-alpha", "kind": "SENSOR_RELOCATION", "effective_at": "2026-03-15T00:00:00Z", "resolution": "SEGMENT_BASELINE", "evidence_ref": "kfm:fixture:evidence:relocation-alpha", "predecessor_segment_ref": "kfm:fixture:baseline-segment:before-relocation", "successor_segment_ref": "kfm:fixture:baseline-segment:after-relocation"}]},
+        {"path": "/baseline_validation_report/baseline_state", "value": "QUALIFIED"},
+        {"path": "/baseline_validation_report/reason_codes", "value": ["BASELINE_QUALIFIED"]},
+        {"path": "/baseline_validation_report/obligations", "value": ["REVIEW_EXCLUSIONS_AND_DISCONTINUITIES"]}
+      ],
+      "expected_outcome": "HOLD",
+      "expected_findings": []
+    },
+    {
+      "name": "resolved_method_change_remains_qualified",
+      "mutations": [
+        {"path": "/discontinuity_records", "value": [{"discontinuity_ref": "kfm:fixture:discontinuity:method-alpha", "kind": "METHOD_CHANGE", "effective_at": "2026-02-01T00:00:00Z", "resolution": "INCLUDE_WITH_QUALIFICATION", "evidence_ref": "kfm:fixture:evidence:method-alpha", "predecessor_segment_ref": null, "successor_segment_ref": null}]},
+        {"path": "/baseline_validation_report/baseline_state", "value": "QUALIFIED"},
+        {"path": "/baseline_validation_report/reason_codes", "value": ["BASELINE_QUALIFIED"]},
+        {"path": "/baseline_validation_report/obligations", "value": ["REVIEW_EXCLUSIONS_AND_DISCONTINUITIES"]}
+      ],
+      "expected_outcome": "HOLD",
+      "expected_findings": []
+    },
+    {
+      "name": "empty_cohort_is_insufficient",
+      "mutations": [
+        {"path": "/cohort_eligibility_report/candidate_count", "value": 0},
+        {"path": "/cohort_eligibility_report/eligible_count", "value": 0},
+        {"path": "/cohort_eligibility_report/missingness_state", "value": "INSUFFICIENT"},
+        {"path": "/baseline_validation_report/baseline_state", "value": "INSUFFICIENT"},
+        {"path": "/baseline_validation_report/decision", "value": "HOLD"},
+        {"path": "/baseline_validation_report/reason_codes", "value": ["INSUFFICIENT_ELIGIBLE_COHORT"]},
+        {"path": "/baseline_validation_report/obligations", "value": ["REBUILD_COHORT_BEFORE_USE"]}
+      ],
+      "expected_outcome": "HOLD",
+      "expected_findings": []
+    },
+    {
+      "name": "fully_excluded_cohort_is_insufficient",
+      "mutations": [
+        {"path": "/cohort_eligibility_report/candidate_count", "value": 10},
+        {"path": "/cohort_eligibility_report/eligible_count", "value": 0},
+        {"path": "/cohort_eligibility_report/excluded_count", "value": 10},
+        {"path": "/cohort_eligibility_report/missingness_state", "value": "INSUFFICIENT"},
+        {"path": "/cohort_eligibility_report/exclusion_reason_counts", "value": {"METHOD_INCOMPATIBLE": 10}},
+        {"path": "/baseline_validation_report/baseline_state", "value": "INSUFFICIENT"},
+        {"path": "/baseline_validation_report/decision", "value": "HOLD"},
+        {"path": "/baseline_validation_report/reason_codes", "value": ["INSUFFICIENT_ELIGIBLE_COHORT"]},
+        {"path": "/baseline_validation_report/obligations", "value": ["REBUILD_COHORT_BEFORE_USE"]}
+      ],
+      "expected_outcome": "HOLD",
+      "expected_findings": []
+    },
+    {
+      "name": "unresolved_discontinuity_holds",
+      "mutations": [
+        {"path": "/discontinuity_records", "value": [{"discontinuity_ref": "kfm:fixture:discontinuity:method-unresolved", "kind": "METHOD_CHANGE", "effective_at": "2026-02-01T00:00:00Z", "resolution": "UNRESOLVED", "evidence_ref": "kfm:fixture:evidence:method-unresolved", "predecessor_segment_ref": null, "successor_segment_ref": null}]},
+        {"path": "/baseline_validation_report/baseline_state", "value": "DISCONTINUITY_UNRESOLVED"},
+        {"path": "/baseline_validation_report/decision", "value": "HOLD"},
+        {"path": "/baseline_validation_report/reason_codes", "value": ["BASELINE_DISCONTINUITY_UNRESOLVED"]},
+        {"path": "/baseline_validation_report/obligations", "value": ["RESOLVE_DISCONTINUITY_BEFORE_USE"]}
+      ],
+      "expected_outcome": "HOLD",
+      "expected_findings": []
+    },
+    {
+      "name": "corrected_rebuild_preserves_predecessor",
+      "mutations": [
+        {"path": "/baseline_manifest/baseline_version", "value": "1.1.0"},
+        {"path": "/baseline_manifest/previous_baseline_ref", "value": "kfm:fixture:baseline:alpha-v0"},
+        {"path": "/baseline_rebuild_receipt/supersedes_baseline_ref", "value": "kfm:fixture:baseline:alpha-v0"},
+        {"path": "/baseline_rebuild_receipt/correction_ref", "value": "kfm:fixture:correction:baseline-alpha-v0"}
+      ],
+      "expected_outcome": "HOLD",
+      "expected_findings": []
+    },
+    {
+      "name": "cohort_counts_must_close",
+      "mutations": [
+        {"path": "/cohort_eligibility_report/eligible_count", "value": 99}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["COHORT_COUNTS_DO_NOT_CLOSE"]
+    },
+    {
+      "name": "exclusion_reason_counts_must_close",
+      "mutations": [
+        {"path": "/cohort_eligibility_report/eligible_count", "value": 90},
+        {"path": "/cohort_eligibility_report/excluded_count", "value": 10},
+        {"path": "/cohort_eligibility_report/exclusion_reason_counts", "value": {"METHOD_INCOMPATIBLE": 9}},
+        {"path": "/baseline_validation_report/baseline_state", "value": "QUALIFIED"},
+        {"path": "/baseline_validation_report/reason_codes", "value": ["BASELINE_QUALIFIED"]},
+        {"path": "/baseline_validation_report/obligations", "value": ["REVIEW_EXCLUSIONS_AND_DISCONTINUITIES"]}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["EXCLUSION_COUNTS_DO_NOT_CLOSE"]
+    },
+    {
+      "name": "missingness_state_must_match_counts",
+      "mutations": [
+        {"path": "/cohort_eligibility_report/eligible_count", "value": 90},
+        {"path": "/cohort_eligibility_report/missing_count", "value": 10},
+        {"path": "/baseline_validation_report/baseline_state", "value": "QUALIFIED"},
+        {"path": "/baseline_validation_report/reason_codes", "value": ["BASELINE_QUALIFIED"]},
+        {"path": "/baseline_validation_report/obligations", "value": ["REVIEW_EXCLUSIONS_AND_DISCONTINUITIES"]}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["MISSINGNESS_STATE_MISMATCH"]
+    },
+    {
+      "name": "discontinuities_must_be_chronological",
+      "mutations": [
+        {"path": "/discontinuity_records", "value": [{"discontinuity_ref": "kfm:fixture:discontinuity:alpha", "kind": "SOURCE_CHANGE", "effective_at": "2026-05-01T00:00:00Z", "resolution": "INCLUDE_WITH_QUALIFICATION", "evidence_ref": "kfm:fixture:evidence:source-alpha", "predecessor_segment_ref": null, "successor_segment_ref": null}, {"discontinuity_ref": "kfm:fixture:discontinuity:beta", "kind": "INSTRUMENT_CHANGE", "effective_at": "2026-04-01T00:00:00Z", "resolution": "INCLUDE_WITH_QUALIFICATION", "evidence_ref": "kfm:fixture:evidence:instrument-beta", "predecessor_segment_ref": null, "successor_segment_ref": null}]},
+        {"path": "/baseline_validation_report/baseline_state", "value": "QUALIFIED"},
+        {"path": "/baseline_validation_report/reason_codes", "value": ["BASELINE_QUALIFIED"]},
+        {"path": "/baseline_validation_report/obligations", "value": ["REVIEW_EXCLUSIONS_AND_DISCONTINUITIES"]}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["DISCONTINUITIES_NOT_CHRONOLOGICAL"]
+    },
+    {
+      "name": "rebuild_supersession_must_match_manifest",
+      "mutations": [
+        {"path": "/baseline_manifest/previous_baseline_ref", "value": "kfm:fixture:baseline:alpha-v0"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["BASELINE_SUPERSESSION_MISMATCH"]
+    },
+    {
+      "name": "correction_requires_predecessor",
+      "mutations": [
+        {"path": "/baseline_rebuild_receipt/correction_ref", "value": "kfm:fixture:correction:orphan"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["CORRECTION_PREDECESSOR_REQUIRED"]
+    },
+    {
+      "name": "rebuild_cannot_precede_lookback_end",
+      "mutations": [
+        {"path": "/baseline_rebuild_receipt/generated_at", "value": "2026-06-01T00:00:00Z"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["REBUILD_BEFORE_LOOKBACK_END"]
+    },
+    {
+      "name": "qualified_cohort_cannot_self_report_replayable",
+      "mutations": [
+        {"path": "/cohort_eligibility_report/eligible_count", "value": 90},
+        {"path": "/cohort_eligibility_report/excluded_count", "value": 10},
+        {"path": "/cohort_eligibility_report/exclusion_reason_counts", "value": {"METHOD_INCOMPATIBLE": 10}}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["BASELINE_STATE_MISMATCH"]
+    },
+    {
+      "name": "publication_authority_is_rejected",
+      "mutations": [
+        {"path": "/governance/publication_authority", "value": true}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["SCHEMA_INVALID"]
+    },
+    {
+      "name": "identity_tamper_is_rejected",
+      "mutations": [
+        {"path": "/subject_ref", "value": "kfm:fixture:environmental-subject:tampered"}
+      ],
+      "reseal": false,
+      "expected_outcome": "DENY",
+      "expected_findings": ["SPEC_HASH_MISMATCH", "ASSESSMENT_ID_MISMATCH"]
+    }
+  ]
+}

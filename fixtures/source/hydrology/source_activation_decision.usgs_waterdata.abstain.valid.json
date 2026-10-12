@@ -1,7 +1,0 @@
-{
-  "id": "SAD-USGSWD-001",
-  "source_id": "SRC-HYD-USGS-WATERDATA-CANDIDATE",
-  "decision": "ABSTAIN",
-  "source_activation_state": "VERIFIED_INACTIVE",
-  "knowledge_character": "SYNTHETIC_TEST"
-}

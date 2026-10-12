@@ -1,0 +1,12 @@
+# Optional NWM binary reader; Linux x86_64 CPython 3.11/3.12 wheels.
+# Source: PyPI release JSON, verified 2026-10-07; no source distributions.
+certifi==2026.7.22 \
+    --hash=sha256:62f22742b58a1a33014a2b6b706588a8d7e2a88ae7bd1a6ebe8c992928483775
+cftime==1.6.6 \
+    --hash=sha256:59a2c7821642b62c18e71ea67f84ce13ec2bb51ce7ee348cf0a3c50d55fd91cb
+netcdf4==1.7.4 \
+    --hash=sha256:7ecf471ba8a6ddb2200121949bedfa0095db228822f38227d5da680694a38358 \
+    --hash=sha256:a72c9f58767779ec14cb7451c3b56bdd8fdc027a792fac2062b14e090c5617f3
+numpy==2.3.3 \
+    --hash=sha256:bc92a5dedcc53857249ca51ef29f5e5f2f8c513e22cfb90faeb20343b8c6f7a6 \
+    --hash=sha256:d9192da52b9745f7f0766531dcfa978b7763916f158bb63bdb8a1eca0068ab20

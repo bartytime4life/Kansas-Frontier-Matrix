@@ -1,0 +1,81 @@
+{
+  "schema_version": "1.0.0",
+  "profile": "kfm.replay_safe_effect_ledger_candidate.v1",
+  "execution_mode": "FIXTURE_ONLY",
+  "ledger_id": "kfm://runtime/replay-safe-effect-ledger/006a749a585cf0f319fec5a6",
+  "event": {
+    "event_id": "kfm:event:sha256:0827e83a4b8e9c98e7a0f46fbaf93eea022309c4f7fb292db11867f2e9494ada",
+    "event_type": "CANDIDATE_READY",
+    "subject_ref": "kfm://fixture/candidate/synthetic-001",
+    "occurred_at": "2026-08-09T12:00:00Z",
+    "payload_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+  },
+  "deliveries": [
+    {
+      "delivery_id": "delivery:attempt-001",
+      "attempt": 1,
+      "received_at": "2026-08-09T12:01:00Z",
+      "outcome": "ACCEPTED",
+      "predecessor_delivery_ref": null
+    }
+  ],
+  "effect_intent": {
+    "intent_id": "kfm:effect-intent:sha256:bfcfd05c58cc3c514184866eb2e6c2edc97b97227469f336750814969a78028b",
+    "effect_type": "RECORD_AUDIT_MARKER",
+    "idempotency_scope": "EVENT",
+    "effect_key": "sha256:bfcfd05c58cc3c514184866eb2e6c2edc97b97227469f336750814969a78028b",
+    "requested_at": "2026-08-09T12:01:05Z"
+  },
+  "reservation": {
+    "state": "RELEASED",
+    "reservation_token_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+    "reserved_by": "fixture-worker-01",
+    "reserved_at": "2026-08-09T12:01:10Z",
+    "effect_completed_at": null
+  },
+  "ledger_entries": [
+    {
+      "entry_id": "ledger-entry:0001",
+      "delivery_ref": "delivery:attempt-001",
+      "state": "RESERVED",
+      "recorded_at": "2026-08-09T12:01:10Z",
+      "reason_codes": [
+        "EFFECT_KEY_RESERVED"
+      ]
+    },
+    {
+      "entry_id": "ledger-entry:0002",
+      "delivery_ref": "delivery:attempt-001",
+      "state": "FAILED",
+      "recorded_at": "2026-08-09T12:01:15Z",
+      "reason_codes": [
+        "EFFECT_NOT_EXECUTED"
+      ]
+    },
+    {
+      "entry_id": "ledger-entry:0003",
+      "delivery_ref": "delivery:attempt-001",
+      "state": "RELEASED",
+      "recorded_at": "2026-08-09T12:01:20Z",
+      "reason_codes": [
+        "RESERVATION_RELEASED"
+      ]
+    }
+  ],
+  "result": {
+    "outcome": "FAILED",
+    "completed_effect_count": 0,
+    "duplicate_delivery_count": 0,
+    "reason_codes": [
+      "EFFECT_NOT_EXECUTED"
+    ]
+  },
+  "governance": {
+    "creates_effect_authority": false,
+    "creates_lifecycle_write_authority": false,
+    "creates_review_authority": false,
+    "creates_release_authority": false,
+    "creates_publication_authority": false
+  },
+  "spec_hash": "sha256:006a749a585cf0f319fec5a6c68944dbe60159eff2586b07189c8338f3d00282"
+}

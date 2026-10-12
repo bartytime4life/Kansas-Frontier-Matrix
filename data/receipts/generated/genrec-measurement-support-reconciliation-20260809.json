@@ -1,0 +1,164 @@
+{
+  "receipt_id": "genrec-measurement-support-reconciliation-20260809",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/measurement-support-reconciliation.yml",
+    "contracts/common/measurement_support_reconciliation.md",
+    "docs/intake/exploratory/measurement-support-reconciliation-source-map.md",
+    "fixtures/contracts/v1/common/measurement_support_reconciliation/cases.json",
+    "schemas/contracts/v1/common/measurement_support_reconciliation.schema.json",
+    "tests/validators/test_validate_measurement_support_reconciliation.py",
+    "tools/validators/validate_measurement_support_reconciliation.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/measurement-support-reconciliation.yml": "sha256:4ab425a90c3de12775572785a992026da62a6b9eb304acce8bdeafb08c1a5a5a",
+    "contracts/common/measurement_support_reconciliation.md": "sha256:2579d23bae5217ceeed65e29e82966c6b40600af124ea0bba63212a284fc0ed5",
+    "docs/intake/exploratory/measurement-support-reconciliation-source-map.md": "sha256:a1be1b5ce6d6e3f167bee3939f1ca26e4c8f261f16954b8d1e5242a694ebbaef",
+    "fixtures/contracts/v1/common/measurement_support_reconciliation/cases.json": "sha256:6945bee1d9d77814c8fd0cf6740bdc1a715e425870f837e46dbf1427fc34cc34",
+    "schemas/contracts/v1/common/measurement_support_reconciliation.schema.json": "sha256:b7ee1a9114f7db5857951ef0ff7f667a28a3af570184f2f0a7ff7d22effbdbb3",
+    "tests/validators/test_validate_measurement_support_reconciliation.py": "sha256:5227f7a200432a2317207082ee6af8e83137ea42919c335a6bf3bae0fa81a88b",
+    "tools/validators/validate_measurement_support_reconciliation.py": "sha256:e5fdfe50ff359ec1b414eaac7a70012626bd2e7496ff8ff531304dbe93a57048"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-09"
+  },
+  "prompt_or_contract": "sha256:2579d23bae5217ceeed65e29e82966c6b40600af124ea0bba63212a284fc0ed5",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector corpus discovery",
+      "GitHub connector repository inspection and mutation",
+      "local deterministic PDF and Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:07c7765576df1997e0be88141bd3cd213930e7281d490a8ae62afd78abe8f445",
+      "sha256:eb71cf66c59363580d3e5d277ee32828baf9adfb5ecd17ae4d79d3acee10eadd",
+      "sha256:dfbc9eaa4bf855fcf471bfd7196901ebb3094a1fa317fb59889dd896b784f01b",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:db2b79eed390d1ac2e7cacda30962a65a9b5d8d7c03420b5e8d54b2760794cad"
+    ],
+    "attached_docs": [
+      "KFM_Full_Atlas_seed_cards.md",
+      "Kansas Frontier Matrix Repository Structure Guiding Document.md"
+    ],
+    "evidence_refs": [
+      "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/1ab34018d7fb13ad41cfe8a79aed5d4763e58bf8/docs/kfm_full_atlas_seed_cards.md#kfm-triad-048",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/1ab34018d7fb13ad41cfe8a79aed5d4763e58bf8/docs/intake/exploratory/new-ideas-4-30-source-map.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/1ab34018d7fb13ad41cfe8a79aed5d4763e58bf8/contracts/common/condition_relation.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/1ab34018d7fb13ad41cfe8a79aed5d4763e58bf8/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/measurement-support-reconciliation.yml": "CONFIRMED",
+    "contracts/common/measurement_support_reconciliation.md": "PROPOSED",
+    "docs/intake/exploratory/measurement-support-reconciliation-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/common/measurement_support_reconciliation/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/common/measurement_support_reconciliation.schema.json": "PROPOSED",
+    "tests/validators/test_validate_measurement_support_reconciliation.py": "CONFIRMED",
+    "tools/validators/validate_measurement_support_reconciliation.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "python-syntax-compilation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "draft-2020-12-schema-meta-validation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "focused-unittest-suite",
+      "outcome": "PASS",
+      "reason": "9 deterministic tests and 13 subtests passed in the isolated authoring worktree."
+    },
+    {
+      "gate": "exact-fixture-replay",
+      "outcome": "PASS",
+      "reason": "13 exact cases passed across PASS, ABSTAIN, and DENY."
+    },
+    {
+      "gate": "adjacent-condition-relation-tests",
+      "outcome": "PASS",
+      "reason": "28 existing adjacent tests passed."
+    },
+    {
+      "gate": "documentation-metadata-validation",
+      "outcome": "PASS",
+      "reason": "Both new metadata blocks passed the repository required profile."
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "no-network-boundary",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "google-drive-full-atlas-corpus-location",
+      "validated": true,
+      "evidence_ref": "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho"
+    },
+    {
+      "id": "full-atlas-measurement-support-triad",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/1ab34018d7fb13ad41cfe8a79aed5d4763e58bf8/docs/kfm_full_atlas_seed_cards.md#kfm-triad-048"
+    },
+    {
+      "id": "new-ideas-measurement-support-gap",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/1ab34018d7fb13ad41cfe8a79aed5d4763e58bf8/docs/intake/exploratory/new-ideas-4-30-source-map.md"
+    },
+    {
+      "id": "existing-condition-relation-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/1ab34018d7fb13ad41cfe8a79aed5d4763e58bf8/contracts/common/condition_relation.md"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/1ab34018d7fb13ad41cfe8a79aed5d4763e58bf8/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-10T02:38:05Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only MeasurementSupportReconciliation packet derived from Full Atlas KFM-TRIAD-048 and KFM-CAND-0144 after current-main collision review. It preserves unit, vertical, temporal, spatial, uncertainty, quality, no-data, and knowledge-character support without contacting live sources, selecting scientific methods, resolving evidence, deciding policy, approving review, authorizing release, deploying, publishing, or authorizing public use."
+}

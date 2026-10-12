@@ -1,0 +1,138 @@
+{
+  "receipt_id": "genrec-pyproject-2de0a067",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "pyproject.toml"
+  ],
+  "artifact_hashes": {
+    "pyproject.toml": "sha256:2de0a06782407d84ca01db78fc4c630ad27fc6e11bc96b60b4cea201a216c5db"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-20"
+  },
+  "prompt_or_contract": "sha256:bdf2596b3809ba85156de4b6acab3628c428c8c81ed5d8f022f11b77ae3cd16f",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "repository evidence inspection",
+      "Python 3.12 tomllib",
+      "Hatchling 1.31.0",
+      "isolated wheel installation"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/07a2415da8596e105e2ac4e2af9868c6ac17ff3a",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/07a2415da8596e105e2ac4e2af9868c6ac17ff3a/pyproject.toml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/07a2415da8596e105e2ac4e2af9868c6ac17ff3a/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/07a2415da8596e105e2ac4e2af9868c6ac17ff3a/LICENSE",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/07a2415da8596e105e2ac4e2af9868c6ac17ff3a/src/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/07a2415da8596e105e2ac4e2af9868c6ac17ff3a/src/kfm/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/07a2415da8596e105e2ac4e2af9868c6ac17ff3a/tests/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/07a2415da8596e105e2ac4e2af9868c6ac17ff3a/Makefile",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/07a2415da8596e105e2ac4e2af9868c6ac17ff3a/.github/workflows/schema-validation.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/07a2415da8596e105e2ac4e2af9868c6ac17ff3a/.github/workflows/validator-suite.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/07a2415da8596e105e2ac4e2af9868c6ac17ff3a/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/07a2415da8596e105e2ac4e2af9868c6ac17ff3a/docs/doctrine/ai-build-operating-contract.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/07a2415da8596e105e2ac4e2af9868c6ac17ff3a/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    ]
+  },
+  "truth_labels": {
+    "pyproject.toml": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-authority-preflight",
+      "outcome": "PASS",
+      "reason": "Verified the repository, immutable main base, current pyproject blob, build consumers, package-boundary documentation, and absence of overlapping open pull requests or matching branches before mutation."
+    },
+    {
+      "gate": "toml-parse-and-whitespace",
+      "outcome": "PASS",
+      "reason": "Python 3.12 tomllib parsed the complete file; LF-only, final-newline, and trailing-whitespace checks passed."
+    },
+    {
+      "gate": "project-metadata-boundary",
+      "outcome": "PASS",
+      "reason": "The configuration now points to the existing root README and verified repository URLs while retaining the unresolved 0.0.0 version and TBD license instead of inventing release maturity."
+    },
+    {
+      "gate": "wheel-and-sdist-build",
+      "outcome": "PASS",
+      "reason": "Hatchling 1.31.0 built both wheel and sdist artifacts from a repository-shaped fixture."
+    },
+    {
+      "gate": "artifact-content-boundary",
+      "outcome": "PASS",
+      "reason": "The wheel contained only the kfm namespace plus distribution metadata; the sdist contained only LICENSE, README.md, pyproject.toml, src/kfm, and generated PKG-INFO."
+    },
+    {
+      "gate": "isolated-install-and-import",
+      "outcome": "PASS",
+      "reason": "The wheel installed into a clean virtual environment, import kfm succeeded under Python isolated mode, and pip check passed after installing the declared runtime dependency."
+    },
+    {
+      "gate": "sdist-rebuild",
+      "outcome": "PASS",
+      "reason": "The built sdist was extracted and rebuilt into a wheel successfully using Hatchling 1.31.0."
+    },
+    {
+      "gate": "repository-workflows",
+      "outcome": "SKIPPED",
+      "reason": "GitHub Actions evidence is unavailable until the draft pull request is created."
+    },
+    {
+      "gate": "branch-protection-and-independent-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review is pending; this receipt is provenance only and does not authorize merge, release, or publication."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "base-pyproject",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/07a2415da8596e105e2ac4e2af9868c6ac17ff3a/pyproject.toml"
+    },
+    {
+      "id": "root-package-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/07a2415da8596e105e2ac4e2af9868c6ac17ff3a/src/kfm/README.md"
+    },
+    {
+      "id": "schema-workflow-consumer",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/07a2415da8596e105e2ac4e2af9868c6ac17ff3a/.github/workflows/schema-validation.yml"
+    },
+    {
+      "id": "directory-rules",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/07a2415da8596e105e2ac4e2af9868c6ac17ff3a/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "generated-receipt-schema",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/07a2415da8596e105e2ac4e2af9868c6ac17ff3a/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-20T09:04:19.241Z",
+  "emitter": "openai/gpt-5.6-thinking",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored, scoped update of the root pyproject. It corrects the inaccurate package-local metadata comment, attaches the existing root README and verified repository URLs to project metadata, and constrains source-distribution contents to the existing package and metadata boundary. It does not resolve the TBD license, 0.0.0 scaffold version, root-src placement drift, package ownership, public API, release, publication, or full-suite test questions. Human review is pending."
+}

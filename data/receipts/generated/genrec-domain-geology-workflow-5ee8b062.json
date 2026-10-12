@@ -1,0 +1,70 @@
+{
+  "receipt_id": "genrec-domain-geology-workflow-5ee8b062",
+  "contract_version": "3.0.0",
+  "receipt_type": "GenerationReceipt",
+  "status": "PROPOSED",
+  "generated_at": "2026-07-18T00:00:00-05:00",
+  "repository": "bartytime4life/Kansas-Frontier-Matrix",
+  "base_commit": "ede1d1f2dc4dc7d8409fa5c1da0d98b469d973f9",
+  "branch": "agent/domain-geology-workflow-20260718",
+  "target_path": ".github/workflows/domain-geology.yml",
+  "previous_blob": "dd0342a39e165f32e0b8a3346ddc44c091423464",
+  "new_blob": "b66ea88f245e2c598a5bca21d24de4006bb8b26a",
+  "sha256": "5ee8b0620e8cbdf3ae1d6c7da727865812242d595510830a12819716a4332b95",
+  "truth_labels": {
+    "confirmed": [
+      "The prior validate-geology, build-proof-geology, and publish-dry-run-geology jobs only executed TODO echo commands.",
+      "Baseline workflow run 29651476200 completed successfully without Geology validation, proof construction, or release dry-run execution.",
+      "Sampled Geology test modules contain only PROPOSED placeholder docstrings.",
+      "The per-domain and broad Geology validator indexes record executable behavior as unverified and README-backed.",
+      "The Geology proof lane is draft and PROPOSED, with concrete proof inventory and enforcement unresolved.",
+      "The Geology release-candidate lane is pre-publication and states that a candidate is not a release.",
+      "Workflow name domain-geology and all three job ids are preserved."
+    ],
+    "proposed": [
+      "Explicit fail-closed readiness holds are the safest current CI behavior until accepted executable Geology lanes exist.",
+      "AST-based test detection and implementation-presence checks are appropriate graduation signals for the current scaffold maturity."
+    ],
+    "needs_verification": [
+      "Final-head GitHub Actions conclusions.",
+      "Accepted Geology validator ownership and deterministic no-network suite.",
+      "Concrete EvidenceBundle and proof producer contracts, schemas, synthetic fixtures, claim-class controls, access controls, manifests, and receipts.",
+      "Accepted Geology candidate, release dry-run, rights, sensitivity, public-safe geometry, correction, withdrawal, and rollback contracts.",
+      "Branch-protection dependencies, independent review ownership, and immutable action pinning."
+    ]
+  },
+  "changes": [
+    "Added workflow_dispatch, contents: read permission, concurrency cancellation, deterministic Python setup, and job timeouts.",
+    "Disabled persisted checkout credentials.",
+    "Converted all three TODO-only jobs into explicit WORKFLOW_SKIPPED_EXPLICIT and WORKFLOW_HOLD readiness checks.",
+    "Added required-boundary checks across Geology docs, contracts, schemas, fixtures, policy, tests, validators, source and sensitivity registries, proofs, release candidates, and published lanes.",
+    "Added AST-based detection for newly executable Geology tests.",
+    "Added fail-closed graduation checks for validators, proof artifacts or producers, candidate records, Make targets, and changed release posture.",
+    "Added bounded summaries preserving subsurface-location, private-well, resource-class, rights, evidence, policy, correction, withdrawal, and rollback boundaries."
+  ],
+  "authority_boundary": "A green held result is repository-readiness evidence only. It is not Geology validation, geologic or resource confirmation, reserve or estimate certification, rights determination, public-safe geometry approval, EvidenceBundle resolution, proof construction, lifecycle promotion, release approval, engineering or extraction guidance, or publication authority.",
+  "directory_rules_basis": [
+    ".github/workflows remains the existing CI orchestration location.",
+    "tests and fixtures remain the test and bounded test-data roots.",
+    "tools remains the validator and helper root.",
+    "data/registry remains the source and sensitivity registry root.",
+    "data/proofs remains the proof-support root.",
+    "release remains the release-decision root.",
+    "data/published remains the released-payload root.",
+    "data/receipts/generated remains the existing generated process-memory lane."
+  ],
+  "validation": {
+    "workflow_yaml_parse": "PASS",
+    "workflow_and_job_identities_preserved": "PASS",
+    "exact_changed_paths": [
+      ".github/workflows/domain-geology.yml",
+      "data/receipts/generated/genrec-domain-geology-workflow-5ee8b062.json"
+    ],
+    "final_head_ci": "PENDING",
+    "human_review": "PENDING"
+  },
+  "rollback": {
+    "strategy": "Close the pull request without merge or revert the receipt commit and workflow commit in reverse order.",
+    "restores_blob": "dd0342a39e165f32e0b8a3346ddc44c091423464"
+  }
+}

@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kfm.local/schemas/contracts/v1/domains/atmosphere/pm25_trigger_candidate_assessment.schema.json",
+  "title": "PM2.5 Trigger Candidate Assessment",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["profile", "assessment_id", "spec_hash", "subject", "integrity", "assessment", "governance"],
+  "properties": {
+    "profile": {"const": "PM25_TRIGGER_CANDIDATE_ASSESSMENT_V1"},
+    "assessment_id": {"type": "string", "pattern": "^kfm:pm25-trigger-candidate:[a-f0-9]{24}$"},
+    "spec_hash": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "subject": {"$ref": "#/$defs/subject"},
+    "integrity": {"$ref": "#/$defs/integrity"},
+    "assessment": {"$ref": "#/$defs/assessment"},
+    "governance": {"$ref": "#/$defs/governance"}
+  },
+  "$defs": {
+    "aware_datetime": {"type": "string", "format": "date-time", "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$"},
+    "kfm_ref": {"type": "string", "pattern": "^kfm:[a-z0-9][a-z0-9:._/-]{5,240}$"},
+    "evidence_refs": {"type": "array", "minItems": 1, "maxItems": 16, "uniqueItems": true, "items": {"type": "string", "pattern": "^evidence:[a-z0-9][a-z0-9:._-]{5,200}$"}},
+    "subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["observation_ref", "source_ref", "trailing_median_ref", "observed_at", "retrieved_at", "knowledge_character", "threshold_relation", "trailing_median_relation", "evidence_refs"],
+      "properties": {
+        "observation_ref": {"$ref": "#/$defs/kfm_ref"},
+        "source_ref": {"$ref": "#/$defs/kfm_ref"},
+        "trailing_median_ref": {"$ref": "#/$defs/kfm_ref"},
+        "observed_at": {"$ref": "#/$defs/aware_datetime"},
+        "retrieved_at": {"$ref": "#/$defs/aware_datetime"},
+        "knowledge_character": {"const": "OBSERVED_SENSOR"},
+        "threshold_relation": {"enum": ["ABOVE_MONITORED_THRESHOLD", "AT_OR_BELOW_MONITORED_THRESHOLD", "UNKNOWN"]},
+        "trailing_median_relation": {"enum": ["ABOVE_TRAILING_MEDIAN", "AT_OR_BELOW_TRAILING_MEDIAN", "UNKNOWN"]},
+        "evidence_refs": {"$ref": "#/$defs/evidence_refs"}
+      }
+    },
+    "integrity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["input_state", "freshness", "quality", "source_state"],
+      "properties": {
+        "input_state": {"enum": ["AVAILABLE", "ERROR"]},
+        "freshness": {"enum": ["FRESH", "STALE", "UNKNOWN"]},
+        "quality": {"enum": ["ACCEPTABLE", "QUESTIONED", "UNKNOWN"]},
+        "source_state": {"enum": ["MONITORED", "UNVERIFIED", "UNKNOWN"]}
+      }
+    },
+    "assessment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["outcome", "reason_codes"],
+      "properties": {
+        "outcome": {"enum": ["PROPOSED_TRIGGER_CANDIDATE", "NO_TRIGGER_CANDIDATE", "HOLD", "ERROR"]},
+        "reason_codes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 4,
+          "uniqueItems": true,
+          "items": {"enum": ["ABOVE_MONITORED_THRESHOLD", "ABOVE_TRAILING_MEDIAN", "AT_OR_BELOW_REFERENCE", "CONTEXT_INSUFFICIENT", "SOURCE_INTEGRITY_HOLD", "UPSTREAM_ERROR"]}
+        }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["execution_mode", "network_attempted", "numeric_threshold_computed", "detector_configuration_mutated", "air_quality_event_declared", "regulatory_compliance_decided", "health_advice_issued", "policy_evaluated", "review_approved", "promotion_authorized", "release_authorized", "publication_authorized", "public_use_allowed"],
+      "properties": {
+        "execution_mode": {"const": "FIXTURE_ONLY"},
+        "network_attempted": {"const": false},
+        "numeric_threshold_computed": {"const": false},
+        "detector_configuration_mutated": {"const": false},
+        "air_quality_event_declared": {"const": false},
+        "regulatory_compliance_decided": {"const": false},
+        "health_advice_issued": {"const": false},
+        "policy_evaluated": {"const": false},
+        "review_approved": {"const": false},
+        "promotion_authorized": {"const": false},
+        "release_authorized": {"const": false},
+        "publication_authorized": {"const": false},
+        "public_use_allowed": {"const": false}
+      }
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED_INACTIVE",
+    "source_ideas": ["KFM-P32-IDEA-0012", "KFM-P32-PROG-0009"],
+    "validator": "tools/validators/domains/atmosphere/validate_pm25_trigger_candidate_assessment.py",
+    "authority": "local synthetic fixture consistency only"
+  }
+}

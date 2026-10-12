@@ -1,0 +1,99 @@
+{
+  "cases": [
+    {
+      "name": "measurement_fit",
+      "expected": "FIT",
+      "candidate": {
+        "profile": "kfm.map.representation-fitness.v1",
+        "assessment_id": "kfm:representation-fitness:e4d85f931a500f01925c10391b1c660cd9a92921a4e3e86ddad8f626517068aa",
+        "representation_ref": "representation:fixture:1",
+        "evidence_refs": ["evidence:ks:a"],
+        "intended_use": "MEASUREMENT",
+        "source_role": "OBSERVATION",
+        "fidelity": "EXACT",
+        "geometry_character": "EXACT",
+        "scale": {"requested_denominator": 24000, "min_supported_denominator": 1000, "max_supported_denominator": 100000},
+        "temporal": {"requested_at": "2026-08-07T12:00:00Z", "support_start": "2026-08-07T00:00:00Z", "support_end": "2026-08-07T23:59:59Z"},
+        "reality_boundary_ref": null,
+        "outcome": "FIT",
+        "effects": {"policy_evaluated": false, "release_authorized": false, "published": false, "public_use_authorized": false}
+      }
+    },
+    {
+      "name": "measurement_generalized",
+      "expected": "HOLD",
+      "candidate": {
+        "profile": "kfm.map.representation-fitness.v1",
+        "assessment_id": "kfm:representation-fitness:d470b08f17b662168215a1d503bf6cec2a5abfe7d54315a0df79c615bdb36ae6",
+        "representation_ref": "representation:fixture:1",
+        "evidence_refs": ["evidence:ks:a"],
+        "intended_use": "MEASUREMENT",
+        "source_role": "OBSERVATION",
+        "fidelity": "GENERALIZED",
+        "geometry_character": "EXACT",
+        "scale": {"requested_denominator": 24000, "min_supported_denominator": 1000, "max_supported_denominator": 100000},
+        "temporal": {"requested_at": "2026-08-07T12:00:00Z", "support_start": "2026-08-07T00:00:00Z", "support_end": "2026-08-07T23:59:59Z"},
+        "reality_boundary_ref": null,
+        "outcome": "HOLD",
+        "effects": {"policy_evaluated": false, "release_authorized": false, "published": false, "public_use_authorized": false}
+      }
+    },
+    {
+      "name": "scale_outside",
+      "expected": "HOLD",
+      "candidate": {
+        "profile": "kfm.map.representation-fitness.v1",
+        "assessment_id": "kfm:representation-fitness:7d1ebf510bfce81c24e8a8bab375728a4918a1b297a4205a9ff07475cb63efe9",
+        "representation_ref": "representation:fixture:1",
+        "evidence_refs": ["evidence:ks:a"],
+        "intended_use": "MEASUREMENT",
+        "source_role": "OBSERVATION",
+        "fidelity": "EXACT",
+        "geometry_character": "EXACT",
+        "scale": {"requested_denominator": 250000, "min_supported_denominator": 1000, "max_supported_denominator": 100000},
+        "temporal": {"requested_at": "2026-08-07T12:00:00Z", "support_start": "2026-08-07T00:00:00Z", "support_end": "2026-08-07T23:59:59Z"},
+        "reality_boundary_ref": null,
+        "outcome": "HOLD",
+        "effects": {"policy_evaluated": false, "release_authorized": false, "published": false, "public_use_authorized": false}
+      }
+    },
+    {
+      "name": "context_synthetic",
+      "expected": "FIT",
+      "candidate": {
+        "profile": "kfm.map.representation-fitness.v1",
+        "assessment_id": "kfm:representation-fitness:e5d151b483ab824a461ffc1ee848564b2de13d362aaf86b96cd67fd057d6fe69",
+        "representation_ref": "representation:fixture:1",
+        "evidence_refs": ["evidence:ks:a"],
+        "intended_use": "CONTEXT",
+        "source_role": "SYNTHETIC",
+        "fidelity": "SYNTHETIC",
+        "geometry_character": "SYNTHETIC",
+        "scale": {"requested_denominator": 24000, "min_supported_denominator": 1000, "max_supported_denominator": 100000},
+        "temporal": {"requested_at": "2026-08-07T12:00:00Z", "support_start": "2026-08-07T00:00:00Z", "support_end": "2026-08-07T23:59:59Z"},
+        "reality_boundary_ref": "reality:fixture:1",
+        "outcome": "FIT",
+        "effects": {"policy_evaluated": false, "release_authorized": false, "published": false, "public_use_authorized": false}
+      }
+    },
+    {
+      "name": "decision_support_contextual",
+      "expected": "HOLD",
+      "candidate": {
+        "profile": "kfm.map.representation-fitness.v1",
+        "assessment_id": "kfm:representation-fitness:647481a6618cedc4cdad986890a8113d70fea96f303f6f601a82995b0b339786",
+        "representation_ref": "representation:fixture:1",
+        "evidence_refs": ["evidence:ks:a"],
+        "intended_use": "DECISION_SUPPORT",
+        "source_role": "CONTEXTUAL",
+        "fidelity": "EXACT",
+        "geometry_character": "EXACT",
+        "scale": {"requested_denominator": 24000, "min_supported_denominator": 1000, "max_supported_denominator": 100000},
+        "temporal": {"requested_at": "2026-08-07T12:00:00Z", "support_start": "2026-08-07T00:00:00Z", "support_end": "2026-08-07T23:59:59Z"},
+        "reality_boundary_ref": null,
+        "outcome": "HOLD",
+        "effects": {"policy_evaluated": false, "release_authorized": false, "published": false, "public_use_authorized": false}
+      }
+    }
+  ]
+}

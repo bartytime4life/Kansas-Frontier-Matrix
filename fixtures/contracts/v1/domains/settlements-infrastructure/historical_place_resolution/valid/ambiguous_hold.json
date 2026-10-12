@@ -1,0 +1,159 @@
+{
+  "fixture_id": "fixture://historical-place-resolution/ambiguous-hold",
+  "profile_id": "kfm-settlements-infrastructure-historical-place-resolution-v1",
+  "object_family": "HistoricalPlaceResolutionCandidate",
+  "schema_version": "1.0.0",
+  "query": {
+    "name": "Mill Creek",
+    "year": 1885,
+    "state_code": "KS",
+    "county_hint": null
+  },
+  "candidates": [
+    {
+      "candidate_ref": "fixture://place-candidate/mill-creek-west",
+      "canonical_name": "Mill Creek",
+      "variants": [],
+      "feature_type": "locale",
+      "authority_ids": {
+        "gnis": "fixture://authority/gnis/mill-creek-west",
+        "bgn_decision": null,
+        "kshs_po": null,
+        "ahcb_slice": "fixture://authority/ahcb/ks/synthetic-west/1880-1889"
+      },
+      "valid_time": {
+        "start_year": 1878,
+        "end_year": 1900
+      },
+      "county_at_query_time": "Synthetic West County",
+      "source_support": [
+        {
+          "source_role": "federal_name_authority",
+          "source_ref": "fixture://source/gnis-mill-creek-west",
+          "rights_spdx": "LicenseRef-KFM-Synthetic-Fixture",
+          "supports": [
+            "canonical_name",
+            "feature_type"
+          ],
+          "scan_ids": {
+            "fixture_record": "gnis-mill-creek-west"
+          }
+        },
+        {
+          "source_role": "historical_county_authority",
+          "source_ref": "fixture://source/ahcb-synthetic-west-1880-1889",
+          "rights_spdx": "LicenseRef-KFM-Synthetic-Fixture",
+          "supports": [
+            "county_at_query_time"
+          ],
+          "scan_ids": {
+            "fixture_record": "ahcb-synthetic-west-1880-1889"
+          }
+        },
+        {
+          "source_role": "local_history",
+          "source_ref": "fixture://source/history-mill-creek-west",
+          "rights_spdx": "LicenseRef-KFM-Synthetic-Fixture",
+          "supports": [
+            "feature_type"
+          ],
+          "scan_ids": {
+            "fixture_record": "history-mill-creek-west"
+          }
+        }
+      ]
+    },
+    {
+      "candidate_ref": "fixture://place-candidate/mill-creek-east",
+      "canonical_name": "Mill Creek",
+      "variants": [],
+      "feature_type": "populated_place",
+      "authority_ids": {
+        "gnis": "fixture://authority/gnis/mill-creek-east",
+        "bgn_decision": "fixture://authority/bgn/mill-creek-east-decision",
+        "kshs_po": null,
+        "ahcb_slice": "fixture://authority/ahcb/ks/synthetic-east/1880-1889"
+      },
+      "valid_time": {
+        "start_year": 1880,
+        "end_year": null
+      },
+      "county_at_query_time": "Synthetic East County",
+      "source_support": [
+        {
+          "source_role": "federal_name_authority",
+          "source_ref": "fixture://source/gnis-mill-creek-east",
+          "rights_spdx": "LicenseRef-KFM-Synthetic-Fixture",
+          "supports": [
+            "canonical_name",
+            "feature_type"
+          ],
+          "scan_ids": {
+            "fixture_record": "gnis-mill-creek-east"
+          }
+        },
+        {
+          "source_role": "historical_county_authority",
+          "source_ref": "fixture://source/ahcb-synthetic-east-1880-1889",
+          "rights_spdx": "LicenseRef-KFM-Synthetic-Fixture",
+          "supports": [
+            "county_at_query_time"
+          ],
+          "scan_ids": {
+            "fixture_record": "ahcb-synthetic-east-1880-1889"
+          }
+        },
+        {
+          "source_role": "contemporary_newspaper",
+          "source_ref": "fixture://source/newspaper-mill-creek-east",
+          "rights_spdx": "LicenseRef-KFM-Synthetic-Fixture",
+          "supports": [
+            "feature_type"
+          ],
+          "scan_ids": {
+            "fixture_record": "newspaper-mill-creek-east"
+          }
+        }
+      ]
+    }
+  ],
+  "evidence_refs": [
+    "fixture://evidence/ambiguous-hold/1",
+    "fixture://evidence/ambiguous-hold/2",
+    "fixture://evidence/ambiguous-hold/3",
+    "fixture://evidence/ambiguous-hold/4",
+    "fixture://evidence/ambiguous-hold/5",
+    "fixture://evidence/ambiguous-hold/6"
+  ],
+  "derived": {
+    "resolution_id": "sha256:a6e159611b1760ea9c2d59909a1c54718a2bf0c8f916c51ebc1bdf64cb40b823",
+    "resolved_candidate_ref": null,
+    "place_id": null,
+    "primary_authority": "none",
+    "confidence": "medium",
+    "disposition": "hold_for_review",
+    "reason_codes": [
+      "AMBIGUOUS_TIME_SCOPED_CANDIDATES"
+    ]
+  },
+  "governance": {
+    "fixture_only": true,
+    "historical_only": true,
+    "network_accessed": false,
+    "live_source_activation": false,
+    "review_state": "hold_for_review",
+    "release_state": "not_released",
+    "promotion_eligible": false,
+    "public_exposure": false
+  },
+  "limitations": [
+    "synthetic_fixture_only",
+    "no_live_source_access",
+    "no_current_legal_status_claim",
+    "no_boundary_or_title_claim",
+    "no_public_release",
+    "no_policy_approval",
+    "no_source_rights_determination"
+  ],
+  "spec_hash": "sha256:3e4ac5ce2319a7e0aaef6f827b7c83dc265a24616634e3f020919817e721765f"
+}

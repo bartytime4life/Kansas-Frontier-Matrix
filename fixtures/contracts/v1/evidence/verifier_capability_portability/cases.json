@@ -1,0 +1,112 @@
+{
+  "base": {
+    "object_type": "VerifierCapabilityPortabilityAssessmentCandidate",
+    "schema_version": "1.0.0",
+    "profile": "kfm.verifier-capability-portability.fixture.v1",
+    "assessment_id": "",
+    "spec_hash": "",
+    "subject_ref": "kfm:verification-subject:synthetic-envelope",
+    "assessed_at": "2026-08-09T23:00:00Z",
+    "verifier_profile": {
+      "profile_ref": "kfm:verifier-profile:synthetic-portability-v1",
+      "required_algorithm": "ECDSA_P256_SHA256",
+      "required_canonicalization": "RFC8785_JCS",
+      "trust_material_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "trust_valid_until": "2026-12-31T23:59:59Z",
+      "revocation_required": true,
+      "revocation_input_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "dependencies": [
+        {
+          "name": "cryptography",
+          "version": "46.0.0",
+          "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+        },
+        {
+          "name": "rfc8785",
+          "version": "0.1.4",
+          "digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+        }
+      ],
+      "network_requirement": "FORBIDDEN",
+      "time_source": "PINNED_UTC",
+      "required_capacity": {"memory_mb": 256, "cpu_seconds": 20, "input_bytes": 1048576}
+    },
+    "capability_claim": {
+      "verifier_id": "kfm:verifier:synthetic-ci",
+      "environment_class": "CI",
+      "supported_algorithms": ["ECDSA_P256_SHA256"],
+      "supported_canonicalization_profiles": ["RFC8785_JCS"],
+      "trust_material_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "trust_valid_until": "2026-12-31T23:59:59Z",
+      "revocation_input_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "dependency_versions": [
+        {
+          "name": "cryptography",
+          "version": "46.0.0",
+          "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+        },
+        {
+          "name": "rfc8785",
+          "version": "0.1.4",
+          "digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+        }
+      ],
+      "network_available": false,
+      "time_source": "PINNED_UTC",
+      "resource_limits": {"memory_mb": 512, "cpu_seconds": 30, "input_bytes": 2097152}
+    },
+    "verification_attempt": {
+      "attempt_ref": "kfm:verification-attempt:synthetic-portability",
+      "profile_ref": "kfm:verifier-profile:synthetic-portability-v1",
+      "algorithm": "ECDSA_P256_SHA256",
+      "canonicalization_profile": "RFC8785_JCS",
+      "observed_at": "2026-08-09T23:00:00Z",
+      "attempted_checks": ["CANONICALIZE", "CHECK_REVOCATION_INPUT", "CHECK_TRUST_INPUT", "VERIFY_SIGNATURE"],
+      "resource_usage": {"memory_mb": 128, "cpu_seconds": 10, "input_bytes": 524288},
+      "execution_mode": "SYNTHETIC",
+      "artifact_input_resolved": false,
+      "cryptographic_verification_performed": false
+    },
+    "portability_assessment": {
+      "portability_status": "PORTABLE",
+      "finding_codes": [],
+      "equivalent_verification_claimed": false,
+      "trusted_result_allowed": false,
+      "separate_security_review_required": true
+    },
+    "governance": {
+      "execution_mode": "FIXTURE_ONLY",
+      "network_attempted": false,
+      "artifact_resolved": false,
+      "cryptography_performed": false,
+      "trust_material_loaded": false,
+      "revocation_checked": false,
+      "evidence_resolved": false,
+      "policy_evaluated": false,
+      "review_approved": false,
+      "release_authorized": false,
+      "publication_authorized": false,
+      "public_use_allowed": false
+    }
+  },
+  "cases": [
+    {"case_id": "portable-ci", "mutations": [], "recompute_assessment": true, "expected_status": "PASS", "expected_portability_status": "PORTABLE", "expected_findings": []},
+    {"case_id": "portable-browser", "mutations": [{"path": "/capability_claim/environment_class", "value": "BROWSER"}, {"path": "/capability_claim/verifier_id", "value": "kfm:verifier:synthetic-browser"}], "recompute_assessment": true, "expected_status": "PASS", "expected_portability_status": "PORTABLE", "expected_findings": []},
+    {"case_id": "portable-offline", "mutations": [{"path": "/capability_claim/environment_class", "value": "OFFLINE"}, {"path": "/capability_claim/verifier_id", "value": "kfm:verifier:synthetic-offline"}], "recompute_assessment": true, "expected_status": "PASS", "expected_portability_status": "PORTABLE", "expected_findings": []},
+    {"case_id": "qualified-stale-trust", "mutations": [{"path": "/capability_claim/trust_valid_until", "value": "2026-07-01T00:00:00Z"}], "recompute_assessment": true, "expected_status": "PASS", "expected_portability_status": "QUALIFIED", "expected_findings": []},
+    {"case_id": "unsupported-algorithm", "mutations": [{"path": "/capability_claim/supported_algorithms", "value": ["ED25519"]}], "recompute_assessment": true, "expected_status": "PASS", "expected_portability_status": "UNSUPPORTED", "expected_findings": []},
+    {"case_id": "incomparable-canonicalization", "mutations": [{"path": "/capability_claim/supported_canonicalization_profiles", "value": ["JSON_SORT_KEYS_V1"]}], "recompute_assessment": true, "expected_status": "PASS", "expected_portability_status": "INCOMPARABLE", "expected_findings": []},
+    {"case_id": "unsupported-missing-revocation", "mutations": [{"path": "/capability_claim/revocation_input_digest", "value": null}], "recompute_assessment": true, "expected_status": "PASS", "expected_portability_status": "UNSUPPORTED", "expected_findings": []},
+    {"case_id": "incomparable-dependency-drift", "mutations": [{"path": "/capability_claim/dependency_versions/1/version", "value": "0.1.5"}], "recompute_assessment": true, "expected_status": "PASS", "expected_portability_status": "INCOMPARABLE", "expected_findings": []},
+    {"case_id": "unsupported-clock", "mutations": [{"path": "/capability_claim/time_source", "value": "UNAVAILABLE"}], "recompute_assessment": true, "expected_status": "PASS", "expected_portability_status": "UNSUPPORTED", "expected_findings": []},
+    {"case_id": "unsupported-network", "mutations": [{"path": "/verifier_profile/network_requirement", "value": "REQUIRED"}], "recompute_assessment": true, "expected_status": "PASS", "expected_portability_status": "UNSUPPORTED", "expected_findings": []},
+    {"case_id": "unsupported-capacity", "mutations": [{"path": "/capability_claim/resource_limits/memory_mb", "value": 128}], "recompute_assessment": true, "expected_status": "PASS", "expected_portability_status": "UNSUPPORTED", "expected_findings": []},
+    {"case_id": "unsupported-resource-exhausted", "mutations": [{"path": "/verification_attempt/resource_usage/cpu_seconds", "value": 31}], "recompute_assessment": true, "expected_status": "PASS", "expected_portability_status": "UNSUPPORTED", "expected_findings": []},
+    {"case_id": "deny-report-mismatch", "mutations": [{"path": "/capability_claim/supported_algorithms", "value": ["ED25519"]}], "expected_status": "DENY", "expected_portability_status": "UNSUPPORTED", "expected_findings": [{"code": "VERIFIER_PORTABILITY_REPORT_MISMATCH", "path": "/portability_assessment"}]},
+    {"case_id": "deny-spec-hash", "mutations": [], "recompute_assessment": true, "spec_hash_override": "sha256:0000000000000000000000000000000000000000000000000000000000000000", "expected_status": "DENY", "expected_portability_status": null, "expected_findings": [{"code": "VERIFIER_PORTABILITY_SPEC_HASH_MISMATCH", "path": "/spec_hash"}]},
+    {"case_id": "deny-assessment-id", "mutations": [], "recompute_assessment": true, "assessment_id_override": "kfm:verifier-portability:000000000000000000000000", "expected_status": "DENY", "expected_portability_status": null, "expected_findings": [{"code": "VERIFIER_PORTABILITY_ID_MISMATCH", "path": "/assessment_id"}]},
+    {"case_id": "deny-profile-binding", "mutations": [{"path": "/verification_attempt/profile_ref", "value": "kfm:verifier-profile:other"}], "recompute_assessment": true, "expected_status": "DENY", "expected_portability_status": null, "expected_findings": [{"code": "VERIFIER_PORTABILITY_PROFILE_BINDING_MISMATCH", "path": "/verification_attempt/profile_ref"}]},
+    {"case_id": "deny-noncanonical-dependencies", "mutations": [{"path": "/capability_claim/dependency_versions", "value": [{"name": "rfc8785", "version": "0.1.4", "digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"}, {"name": "cryptography", "version": "46.0.0", "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"}]}], "recompute_assessment": true, "expected_status": "DENY", "expected_portability_status": null, "expected_findings": [{"code": "VERIFIER_PORTABILITY_CLAIM_NOT_CANONICAL", "path": "/capability_claim/dependency_versions"}]},
+    {"case_id": "deny-governance-effect", "mutations": [{"path": "/governance/release_authorized", "value": true}], "recompute_assessment": true, "expected_status": "DENY", "expected_portability_status": null, "expected_findings": [{"code": "VERIFIER_PORTABILITY_SCHEMA_INVALID", "path": "/governance/release_authorized"}]}
+  ]
+}

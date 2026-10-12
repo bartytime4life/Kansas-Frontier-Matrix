@@ -1,0 +1,99 @@
+{
+  "receipt_id": "genrec-citation-validation-workflow-e902e979",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/citation-validation.yml"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/citation-validation.yml": "sha256:e902e979a678031a766faa45c20819c6fd93e8fada62509b9c5045a42c0a3b13"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-17"
+  },
+  "prompt_or_contract": "sha256:18416dfe735b17747188a0ae92106d35e0e15cb8a2f0cbcba83cd0f0487bd99e",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "repository evidence inspection",
+      "workflow structure validation",
+      "generated receipt validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/3df95928811b37451b478ce2ea330313088989d2",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/3df95928811b37451b478ce2ea330313088989d2/.github/workflows/citation-validation.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/3df95928811b37451b478ce2ea330313088989d2/data/proofs/citation_validation/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/3df95928811b37451b478ce2ea330313088989d2/contracts/evidence/citation_validation_report.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/citation-validation.yml": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Verified current stub, citation proof-family documentation, and no executable repository-owned citation validator surfaced in bounded search."
+    },
+    {
+      "gate": "workflow-authority-and-identity",
+      "outcome": "PASS",
+      "reason": "Preserved workflow name, job ids, pull_request trigger, and push-to-main trigger while keeping the workflow explicitly non-enforcing."
+    },
+    {
+      "gate": "least-privilege-and-untrusted-code",
+      "outcome": "PASS",
+      "reason": "Disabled all token permissions and removed checkout, actions, dependency installation, secrets, network access, artifact upload, and PR-code execution."
+    },
+    {
+      "gate": "honest-citation-maturity",
+      "outcome": "PASS",
+      "reason": "Jobs emit WORKFLOW_SKIPPED_EXPLICIT and WORKFLOW_HOLD and explicitly deny any claim of citation, evidence, proof, release, or publication validation."
+    },
+    {
+      "gate": "artifact-hash-and-remote-write",
+      "outcome": "PASS",
+      "reason": "Computed SHA-256 e902e979a678031a766faa45c20819c6fd93e8fada62509b9c5045a42c0a3b13; GitHub returned blob 9bdb75ba5e576292387fe1e152a547ac78c2862c."
+    },
+    {
+      "gate": "github-actions-run",
+      "outcome": "SKIPPED",
+      "reason": "Proposed-head workflow run not yet observed at receipt creation."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "current-citation-workflow",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/3df95928811b37451b478ce2ea330313088989d2/.github/workflows/citation-validation.yml"
+    },
+    {
+      "id": "citation-proof-family-readme",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/3df95928811b37451b478ce2ea330313088989d2/data/proofs/citation_validation/README.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-17T18:50:00Z",
+  "emitter": "openai/gpt-5.6-thinking",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored hardening of the citation-validation workflow scaffold. No executable citation validator, fixture suite, EvidenceRef resolver test, or missing-evidence negative-path command was established by bounded repository inspection, so the workflow remains deliberately non-enforcing. Human review remains pending."
+}

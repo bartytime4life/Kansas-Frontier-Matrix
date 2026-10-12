@@ -1,0 +1,75 @@
+{
+  "receipt_id": "genrec-nrcs-scan-integer-tokens-20260927",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "connectors/nrcs/src/nrcs/scan_awdb.py",
+    "connectors/nrcs/tests/test_scan_awdb.py"
+  ],
+  "artifact_hashes": {
+    "connectors/nrcs/src/nrcs/scan_awdb.py": "sha256:88a951f28419a601bcd195a1a9d1195c2aa9865a853448adfb8779fe5bf240f4",
+    "connectors/nrcs/tests/test_scan_awdb.py": "sha256:60ea91ced2d0a1210b3489e6abe32bda9f8b9d949d4c20fbf3448cf8e3870aa2"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:a4887445e225012a941940305af97a9feb71108b618b1a99588c761ac835cc77",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/2bed11205ac229be4009fd6b2c817ae06a89794d",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4764"
+    ]
+  },
+  "truth_labels": {
+    "connectors/nrcs/src/nrcs/scan_awdb.py": "CONFIRMED",
+    "connectors/nrcs/tests/test_scan_awdb.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "NRCS connector suite",
+      "outcome": "PASS",
+      "reason": "24 NRCS tests pass, including -0 as value and depth and out-of-range exponents / over-long integers rejected as INVALID_JSON."
+    },
+    {
+      "gate": "Targeted mutation testing",
+      "outcome": "PASS",
+      "reason": "Reverting integer-token decoding, the InvalidOperation catch, verbatim -0 rendering, or ordinal normalization each makes a regression fail; files restored. A number-token fuzz raised only ScanInputError."
+    },
+    {
+      "gate": "Hosted CI and independent review",
+      "outcome": "SKIPPED",
+      "reason": "Read after PR creation."
+    },
+    {
+      "gate": "Source activation, admission, release",
+      "outcome": "SKIPPED",
+      "reason": "No network library, descriptor or contract change, lifecycle write, admission, or publication; routes stay HOLD."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/2bed11205ac229be4009fd6b2c817ae06a89794d"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-09-27T14:57:41Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Follow-up to #4764, which merged before these Codex review fixes were pushed."
+}

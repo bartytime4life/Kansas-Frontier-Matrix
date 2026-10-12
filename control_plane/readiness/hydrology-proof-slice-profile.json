@@ -1,0 +1,120 @@
+{
+  "schema_version": "kfm.hydrology-proof-slice-profile/v1",
+  "profile_id": "hydrology-proof-slice-synthetic-v1",
+  "posture": "SYNTHETIC_FIXTURE_ONLY",
+  "evaluated_at": "2026-09-29T00:00:00Z",
+  "license_allowlist": [
+    "CC-BY-4.0",
+    "CC0-1.0"
+  ],
+  "public_artifact_prefix": "data/published/",
+  "packet": {
+    "path": "fixtures/contracts/v1/domains/hydrology/living_waters_fixture_packet/valid/first_proof.json",
+    "sha256": "sha256:7d8d31973dccc6eaaa2470ab046e3feb7518c74f0b05cd1281a37c04c095f08c"
+  },
+  "base_request": {
+    "path": "fixtures/domains/hydrology/proof_slice/base_request.json",
+    "sha256": "sha256:2542bb53b4ad28ddc2b47970bf2e409b426cb37b6bbe2278607840a0defadff5"
+  },
+  "evidence_bundles": [
+    {
+      "path": "fixtures/domains/hydrology/proof_slice/evidence_bundle.json",
+      "sha256": "sha256:0cf4f128c3bd3c3656cb12af3cb1be22dcf6ee53c13cec046b72a2e3f8588c5c"
+    },
+    {
+      "path": "fixtures/domains/hydrology/proof_slice/evidence_bundle_tampered.json",
+      "sha256": "sha256:8877da578586ca2caab2e125d3cc788c2eef5b410294c7394d301ea98e7fed20"
+    },
+    {
+      "path": "fixtures/domains/hydrology/proof_slice/evidence_bundle_unknown_rights.json",
+      "sha256": "sha256:cc81afa8209cd0ebb9b45cebab50133443f4377e9f39ca18ae97ea3b7b4e8226"
+    }
+  ],
+  "cases": [
+    {
+      "path": "fixtures/domains/hydrology/proof_slice/cases/01-answer-current.json",
+      "sha256": "sha256:10dcf965d3bc79d8c68412828dfd7e1e22c4061813b7f4fe28865588740d29ff",
+      "expected_outcome": "ANSWER",
+      "expected_reason_code": "FIXTURE_EVIDENCE_RESOLVED"
+    },
+    {
+      "path": "fixtures/domains/hydrology/proof_slice/cases/02-abstain-missing-evidence.json",
+      "sha256": "sha256:69e8d5e895b3ee69866deacfa9cb8af4451159b6ee70585cf8072ba1a7fb84c6",
+      "expected_outcome": "ABSTAIN",
+      "expected_reason_code": "MISSING_EVIDENCE_BUNDLE"
+    },
+    {
+      "path": "fixtures/domains/hydrology/proof_slice/cases/03-deny-sensitive-exact-geometry.json",
+      "sha256": "sha256:312779fca270d9279ca9a316ce233725bfb5b2313abb5b09b5128bc9268b9d1e",
+      "expected_outcome": "DENY",
+      "expected_reason_code": "SENSITIVE_EXACT_GEOMETRY"
+    },
+    {
+      "path": "fixtures/domains/hydrology/proof_slice/cases/04-deny-unknown-rights.json",
+      "sha256": "sha256:f2e9994572bb92072b53e365c251ada0f61e66be47209cf0e836ec054b67992d",
+      "expected_outcome": "DENY",
+      "expected_reason_code": "RIGHTS_UNKNOWN"
+    },
+    {
+      "path": "fixtures/domains/hydrology/proof_slice/cases/05-error-policy-evaluator-unavailable.json",
+      "sha256": "sha256:1a914a21fce28d7ff0192265d5108ba6bf4812482237d87e1e64a899a9c9984f",
+      "expected_outcome": "ERROR",
+      "expected_reason_code": "POLICY_EVALUATOR_UNAVAILABLE"
+    },
+    {
+      "path": "fixtures/domains/hydrology/proof_slice/cases/06-deny-release-missing-rollback.json",
+      "sha256": "sha256:2f250d8b0d78e6e5078bd7199980400885f39249ac517cd79e6fc4f2126802f5",
+      "expected_outcome": "DENY",
+      "expected_reason_code": "RELEASE_ROLLBACK_MISSING"
+    },
+    {
+      "path": "fixtures/domains/hydrology/proof_slice/cases/07-deny-ui-direct-model-call.json",
+      "sha256": "sha256:59d493a3af653a6148aeca2b23f3d79f81f98ec0330167d22341581ef43ba548",
+      "expected_outcome": "DENY",
+      "expected_reason_code": "UI_DIRECT_MODEL_CALL_DENIED"
+    },
+    {
+      "path": "fixtures/domains/hydrology/proof_slice/cases/08-deny-public-raw-path.json",
+      "sha256": "sha256:eeb49adb5d22cf87295a99b1e04647c8a9ff08503ab6676cf82d7a817da1a223",
+      "expected_outcome": "DENY",
+      "expected_reason_code": "PUBLIC_RAW_PATH_DENIED"
+    },
+    {
+      "path": "fixtures/domains/hydrology/proof_slice/cases/09-abstain-ambiguous-reach.json",
+      "sha256": "sha256:3ce375cecd2c839ccd48555208823f25a2f69c1f18433f7db1bfc27fc74ff48a",
+      "expected_outcome": "ABSTAIN",
+      "expected_reason_code": "MULTIPLE_REACH_CANDIDATES"
+    },
+    {
+      "path": "fixtures/domains/hydrology/proof_slice/cases/10-deny-nfhl-as-observed-event.json",
+      "sha256": "sha256:257dbf669480b981098961ecb12545c32eeba0148a893ae1cb2f46952f640560",
+      "expected_outcome": "DENY",
+      "expected_reason_code": "SOURCE_ROLE_COLLAPSE"
+    },
+    {
+      "path": "fixtures/domains/hydrology/proof_slice/cases/11-answer-stale.json",
+      "sha256": "sha256:a04bbabcaf937afcd28a36831990a6c1e299777ff89f37a710de96a7fab0edb5",
+      "expected_outcome": "ANSWER",
+      "expected_reason_code": "FRESHNESS_THRESHOLD_EXCEEDED"
+    },
+    {
+      "path": "fixtures/domains/hydrology/proof_slice/cases/12-abstain-no-results.json",
+      "sha256": "sha256:5973298bd811ee39f4ac4b7473aeb079029ba1538735a8c74523affb42434985",
+      "expected_outcome": "ABSTAIN",
+      "expected_reason_code": "BOUNDED_QUERY_EMPTY"
+    },
+    {
+      "path": "fixtures/domains/hydrology/proof_slice/cases/13-error-artifact-unavailable.json",
+      "sha256": "sha256:04eda5f8794150a9d2df9f634cd039c9f6b1bc71e941197f39e7d4b7b89fbf98",
+      "expected_outcome": "ERROR",
+      "expected_reason_code": "ARTIFACT_UNAVAILABLE"
+    },
+    {
+      "path": "fixtures/domains/hydrology/proof_slice/cases/14-abstain-evidence-tampered.json",
+      "sha256": "sha256:6a8bb33939bae01b7da38bc4a2756ed5a3c65f60c14c7035c6c5a0b8dea61324",
+      "expected_outcome": "ABSTAIN",
+      "expected_reason_code": "EVIDENCE_CLOSURE_FAILED"
+    }
+  ],
+  "authority_boundary": "Synthetic fixtures only. A PASS proves these pinned cases reach their expected finite outcomes without network access; it admits no source, emits no PolicyDecision, writes no lifecycle state, and approves no release or publication."
+}

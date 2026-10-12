@@ -1,0 +1,292 @@
+{
+  "receipt_id": "genrec-ui-trust-badges-95161624c35c",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/architecture/ui/TRUST_BADGES.md"
+  ],
+  "artifact_hashes": {
+    "docs/architecture/ui/TRUST_BADGES.md": "sha256:95161624c35cbd133a306404d2ac413d4ec51db9a61d2ba2c4ffef01626deefe"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-19"
+  },
+  "prompt_or_contract": "sha256:22fb4b1dbeef146a5fa8de6f3a978a24f31f1c2902f7d55e45fbcb40da4aafaa",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Python static validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [],
+    "attached_docs": [
+      "KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0",
+      "KFM Directory Governance Standard v2.0.0-draft.1 (lineage only; adopted repo authority rechecked separately)"
+    ],
+    "evidence_refs": [
+      "repo:docs/architecture/ui/TRUST_BADGES.md@452835c2cf8258ed920c69c917ce5a8814c9a9b0",
+      "repo:docs/architecture/ui/README.md@452835c2cf8258ed920c69c917ce5a8814c9a9b0",
+      "repo:docs/architecture/ui/BOUNDARIES.md@452835c2cf8258ed920c69c917ce5a8814c9a9b0",
+      "repo:docs/architecture/ui/GOVERNED_SHELL.md@452835c2cf8258ed920c69c917ce5a8814c9a9b0",
+      "repo:docs/architecture/ui/ACCESSIBILITY.md@452835c2cf8258ed920c69c917ce5a8814c9a9b0",
+      "repo:docs/architecture/document-convergence-plan.md@452835c2cf8258ed920c69c917ce5a8814c9a9b0",
+      "repo:docs/standards/MAP_TRUST_STATES.md@452835c2cf8258ed920c69c917ce5a8814c9a9b0",
+      "repo:docs/architecture/evidence-drawer.md@452835c2cf8258ed920c69c917ce5a8814c9a9b0",
+      "repo:docs/architecture/contract-schema-policy-split.md@452835c2cf8258ed920c69c917ce5a8814c9a9b0",
+      "repo:docs/architecture/sovereignty-care.md@452835c2cf8258ed920c69c917ce5a8814c9a9b0",
+      "repo:contracts/ui/trust_badge_state.md@452835c2cf8258ed920c69c917ce5a8814c9a9b0",
+      "repo:schemas/contracts/v1/ui/trust_badge_state.schema.json@452835c2cf8258ed920c69c917ce5a8814c9a9b0",
+      "repo:schemas/contracts/v1/ui/evidence_drawer_payload.schema.json@452835c2cf8258ed920c69c917ce5a8814c9a9b0",
+      "repo:apps/explorer-web/src/features/trust_header/index.tsx@452835c2cf8258ed920c69c917ce5a8814c9a9b0",
+      "repo:apps/explorer-web/tests/trust-header.test.ts@452835c2cf8258ed920c69c917ce5a8814c9a9b0",
+      "repo:apps/explorer-web/src/adapters/AttestationBadgeProjection.ts@452835c2cf8258ed920c69c917ce5a8814c9a9b0",
+      "repo:apps/explorer-web/src/features/attestation_badge/index.ts@452835c2cf8258ed920c69c917ce5a8814c9a9b0",
+      "repo:apps/explorer-web/src/features/attestation_badge/README.md@452835c2cf8258ed920c69c917ce5a8814c9a9b0",
+      "repo:apps/explorer-web/tests/browser/attestation-badge.spec.ts@452835c2cf8258ed920c69c917ce5a8814c9a9b0",
+      "repo:apps/explorer-web/src/site/catalog.ts@452835c2cf8258ed920c69c917ce5a8814c9a9b0",
+      "repo:apps/explorer-web/src/main.ts@452835c2cf8258ed920c69c917ce5a8814c9a9b0",
+      "repo:apps/explorer-web/src/site/mountExplorerSite.ts@452835c2cf8258ed920c69c917ce5a8814c9a9b0",
+      "repo:apps/explorer-web/package.json@452835c2cf8258ed920c69c917ce5a8814c9a9b0",
+      "repo:.github/CODEOWNERS@452835c2cf8258ed920c69c917ce5a8814c9a9b0",
+      "repo:CONTRIBUTING.md@452835c2cf8258ed920c69c917ce5a8814c9a9b0",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@452835c2cf8258ed920c69c917ce5a8814c9a9b0",
+      "repo:docs/doctrine/directory-rules.md@452835c2cf8258ed920c69c917ce5a8814c9a9b0",
+      "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@452835c2cf8258ed920c69c917ce5a8814c9a9b0"
+    ]
+  },
+  "truth_labels": {
+    "docs/architecture/ui/TRUST_BADGES.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "target-authority-and-overlap-inspection",
+      "outcome": "PASS",
+      "reason": "Existing same-path target, accepted ADR-0029 placement, convergence PLACE row, and no open direct-overlap pull request verified."
+    },
+    {
+      "gate": "metadata-yaml-parse",
+      "outcome": "PASS",
+      "reason": "KFM metadata block parsed as YAML."
+    },
+    {
+      "gate": "markdown-commonmark-parse",
+      "outcome": "PASS",
+      "reason": "Complete source parsed with Markdown-it."
+    },
+    {
+      "gate": "heading-and-anchor-compatibility",
+      "outcome": "PASS",
+      "reason": "Exactly one H1; former seventeen major sections and two prior appendices retained; explicit legacy top anchor retained."
+    },
+    {
+      "gate": "fence-and-html-balance",
+      "outcome": "PASS",
+      "reason": "Nine fenced blocks parsed; delimiters balanced; metadata comment and explicit anchors closed."
+    },
+    {
+      "gate": "relative-link-target-inspection",
+      "outcome": "PASS",
+      "reason": "Introduced repository-relative targets inspected at the pinned tree; stale STATE_OWNERSHIP reference was removed before write."
+    },
+    {
+      "gate": "sensitive-content-and-secret-review",
+      "outcome": "PASS",
+      "reason": "No credential, private record, exact protected location, raw attestation, internal canary value, or restricted payload introduced."
+    },
+    {
+      "gate": "exact-content-blob",
+      "outcome": "PASS",
+      "reason": "Locally computed Git blob 18489f6d51da787dbaf6c292469997b2ca88e4e2 matched the GitHub content response."
+    },
+    {
+      "gate": "repository-native-doc-link-meta-graph-suite",
+      "outcome": "SKIPPED",
+      "reason": "No mounted repository checkout was available; hosted exact-head checks remain required."
+    },
+    {
+      "gate": "explorer-unit-browser-build",
+      "outcome": "SKIPPED",
+      "reason": "Documentation-only change; component behavior was inspected but not modified or locally executed."
+    },
+    {
+      "gate": "generated-receipt-schema",
+      "outcome": "SKIPPED",
+      "reason": "Receipt JSON syntax was generated deterministically; full repository schema validation is delegated to hosted exact-head checks."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "KFM-docs-architecture-ui-TRUST-BADGES-md",
+      "validated": true,
+      "evidence_ref": "repo:docs/architecture/ui/TRUST_BADGES.md@452835c2cf8258ed920c69c917ce5a8814c9a9b0"
+    },
+    {
+      "id": "KFM-docs-architecture-ui-README-md",
+      "validated": true,
+      "evidence_ref": "repo:docs/architecture/ui/README.md@452835c2cf8258ed920c69c917ce5a8814c9a9b0"
+    },
+    {
+      "id": "KFM-docs-architecture-ui-BOUNDARIES-md",
+      "validated": true,
+      "evidence_ref": "repo:docs/architecture/ui/BOUNDARIES.md@452835c2cf8258ed920c69c917ce5a8814c9a9b0"
+    },
+    {
+      "id": "KFM-docs-architecture-ui-GOVERNED-SHELL-md",
+      "validated": true,
+      "evidence_ref": "repo:docs/architecture/ui/GOVERNED_SHELL.md@452835c2cf8258ed920c69c917ce5a8814c9a9b0"
+    },
+    {
+      "id": "KFM-docs-architecture-ui-ACCESSIBILITY-md",
+      "validated": true,
+      "evidence_ref": "repo:docs/architecture/ui/ACCESSIBILITY.md@452835c2cf8258ed920c69c917ce5a8814c9a9b0"
+    },
+    {
+      "id": "KFM-docs-architecture-document-convergence-plan-md",
+      "validated": true,
+      "evidence_ref": "repo:docs/architecture/document-convergence-plan.md@452835c2cf8258ed920c69c917ce5a8814c9a9b0"
+    },
+    {
+      "id": "KFM-docs-standards-MAP-TRUST-STATES-md",
+      "validated": true,
+      "evidence_ref": "repo:docs/standards/MAP_TRUST_STATES.md@452835c2cf8258ed920c69c917ce5a8814c9a9b0"
+    },
+    {
+      "id": "KFM-docs-architecture-evidence-drawer-md",
+      "validated": true,
+      "evidence_ref": "repo:docs/architecture/evidence-drawer.md@452835c2cf8258ed920c69c917ce5a8814c9a9b0"
+    },
+    {
+      "id": "KFM-docs-architecture-contract-schema-policy-split-md",
+      "validated": true,
+      "evidence_ref": "repo:docs/architecture/contract-schema-policy-split.md@452835c2cf8258ed920c69c917ce5a8814c9a9b0"
+    },
+    {
+      "id": "KFM-docs-architecture-sovereignty-care-md",
+      "validated": true,
+      "evidence_ref": "repo:docs/architecture/sovereignty-care.md@452835c2cf8258ed920c69c917ce5a8814c9a9b0"
+    },
+    {
+      "id": "KFM-contracts-ui-trust-badge-state-md",
+      "validated": true,
+      "evidence_ref": "repo:contracts/ui/trust_badge_state.md@452835c2cf8258ed920c69c917ce5a8814c9a9b0"
+    },
+    {
+      "id": "KFM-schemas-contracts-v1-ui-trust-badge-state-schema-json",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/ui/trust_badge_state.schema.json@452835c2cf8258ed920c69c917ce5a8814c9a9b0"
+    },
+    {
+      "id": "KFM-schemas-contracts-v1-ui-evidence-drawer-payload-schema-json",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/ui/evidence_drawer_payload.schema.json@452835c2cf8258ed920c69c917ce5a8814c9a9b0"
+    },
+    {
+      "id": "KFM-apps-explorer-web-src-features-trust-header-index-tsx",
+      "validated": true,
+      "evidence_ref": "repo:apps/explorer-web/src/features/trust_header/index.tsx@452835c2cf8258ed920c69c917ce5a8814c9a9b0"
+    },
+    {
+      "id": "KFM-apps-explorer-web-tests-trust-header-test-ts",
+      "validated": true,
+      "evidence_ref": "repo:apps/explorer-web/tests/trust-header.test.ts@452835c2cf8258ed920c69c917ce5a8814c9a9b0"
+    },
+    {
+      "id": "KFM-apps-explorer-web-src-adapters-AttestationBadgeProjection-ts",
+      "validated": true,
+      "evidence_ref": "repo:apps/explorer-web/src/adapters/AttestationBadgeProjection.ts@452835c2cf8258ed920c69c917ce5a8814c9a9b0"
+    },
+    {
+      "id": "KFM-apps-explorer-web-src-features-attestation-badge-index-ts",
+      "validated": true,
+      "evidence_ref": "repo:apps/explorer-web/src/features/attestation_badge/index.ts@452835c2cf8258ed920c69c917ce5a8814c9a9b0"
+    },
+    {
+      "id": "KFM-apps-explorer-web-src-features-attestation-badge-README-md",
+      "validated": true,
+      "evidence_ref": "repo:apps/explorer-web/src/features/attestation_badge/README.md@452835c2cf8258ed920c69c917ce5a8814c9a9b0"
+    },
+    {
+      "id": "KFM-apps-explorer-web-tests-browser-attestation-badge-spec-ts",
+      "validated": true,
+      "evidence_ref": "repo:apps/explorer-web/tests/browser/attestation-badge.spec.ts@452835c2cf8258ed920c69c917ce5a8814c9a9b0"
+    },
+    {
+      "id": "KFM-apps-explorer-web-src-site-catalog-ts",
+      "validated": true,
+      "evidence_ref": "repo:apps/explorer-web/src/site/catalog.ts@452835c2cf8258ed920c69c917ce5a8814c9a9b0"
+    },
+    {
+      "id": "KFM-apps-explorer-web-src-main-ts",
+      "validated": true,
+      "evidence_ref": "repo:apps/explorer-web/src/main.ts@452835c2cf8258ed920c69c917ce5a8814c9a9b0"
+    },
+    {
+      "id": "KFM-apps-explorer-web-src-site-mountExplorerSite-ts",
+      "validated": true,
+      "evidence_ref": "repo:apps/explorer-web/src/site/mountExplorerSite.ts@452835c2cf8258ed920c69c917ce5a8814c9a9b0"
+    },
+    {
+      "id": "KFM-apps-explorer-web-package-json",
+      "validated": true,
+      "evidence_ref": "repo:apps/explorer-web/package.json@452835c2cf8258ed920c69c917ce5a8814c9a9b0"
+    },
+    {
+      "id": "KFM-github-CODEOWNERS",
+      "validated": true,
+      "evidence_ref": "repo:.github/CODEOWNERS@452835c2cf8258ed920c69c917ce5a8814c9a9b0"
+    },
+    {
+      "id": "KFM-CONTRIBUTING-md",
+      "validated": true,
+      "evidence_ref": "repo:CONTRIBUTING.md@452835c2cf8258ed920c69c917ce5a8814c9a9b0"
+    },
+    {
+      "id": "KFM-docs-adr-ADR-0029-adopt-directory-governance-standard-v2-md",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@452835c2cf8258ed920c69c917ce5a8814c9a9b0"
+    },
+    {
+      "id": "KFM-docs-doctrine-directory-rules-md",
+      "validated": true,
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md@452835c2cf8258ed920c69c917ce5a8814c9a9b0"
+    },
+    {
+      "id": "KFM-schemas-contracts-v1-receipts-generated-receipt-schema-json",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@452835c2cf8258ed920c69c917ce5a8814c9a9b0"
+    },
+    {
+      "id": "KFM-repository-build-agent-v6",
+      "validated": true,
+      "evidence_ref": "attachment:KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0"
+    },
+    {
+      "id": "KFM-directory-governance-standard-v2-draft1",
+      "validated": true,
+      "evidence_ref": "attachment:KFM Directory Governance Standard v2.0.0-draft.1"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-19T20:10:21Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Documentation-only generated-work receipt. The artifact distinguishes current repository evidence from proposal lineage, does not modify contracts, schemas, policy, runtime, release, or publication, and remains pending human review. No hidden reasoning, prompt text, secrets, source payloads, or protected detail is stored."
+}

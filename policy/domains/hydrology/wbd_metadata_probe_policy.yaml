@@ -1,3 +1,0 @@
-source_id: SRC-HYD-WBD-CANDIDATE
-probe_kind: METADATA_ONLY
-allow_query_params: [f=json, f=pjson]

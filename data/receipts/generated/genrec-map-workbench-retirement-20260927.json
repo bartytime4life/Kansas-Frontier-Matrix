@@ -1,0 +1,81 @@
+{
+  "artifact_hashes": {
+    "apps/site/source/app/function-registry.ts": "sha256:8b03493aa00467a094b6a82c8c6e5f63057b409a7989c3e0ed6b85076cb6f6e9",
+    "apps/site/source/app/globals.css": "sha256:5d4820ef7387f2129df91bc10e8c751f472f7a3ded5701c052eac433730113c9",
+    "apps/site/source/app/map-interface.ts": "sha256:df6631cf55f08936bc4149267d1b1e9eda2f38b528afef600bc0fb4ea43b418d",
+    "apps/site/source/app/page.tsx": "sha256:42db30e77b33118260b65bcb1452eadc98982ca9a6ebe9865d85d98b91644f0c",
+    "apps/site/source/app/site-architecture.ts": "sha256:bb551a0bcf5d0c68b1a50d0623229bb6cea933966d83236704a7102c8cf07049",
+    "apps/site/source/tests/mobile-compatibility.test.mjs": "sha256:6e8e91e9d45b2f1cac8dd26104be52016667021d59480d2ae63bf9a7d719cdc1",
+    "apps/site/source/tests/rendered-html.test.mjs": "sha256:7d1b8ae5b20e3573b91203398927eb89352bc7ed4e67e56e7951ad090880a477"
+  },
+  "artifact_paths": [
+    "apps/site/source/app/function-registry.ts",
+    "apps/site/source/app/globals.css",
+    "apps/site/source/app/map-interface.ts",
+    "apps/site/source/app/page.tsx",
+    "apps/site/source/app/site-architecture.ts",
+    "apps/site/source/tests/mobile-compatibility.test.mjs",
+    "apps/site/source/tests/rendered-html.test.mjs"
+  ],
+  "citations": [],
+  "contract_version": "3.0.0",
+  "created_at": "2026-09-27T14:28:36.099174+00:00",
+  "emitter": "Codex assistant",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending"
+  },
+  "inputs": {
+    "attached_docs": [
+      "user-supplied Map Workbench screenshots in task conversation"
+    ],
+    "evidence_refs": [
+      "bartytime4life/Kansas-Frontier-Matrix main@033c71c3a80ee09b547a7ed4ce5c3a2683cd7221",
+      "apps/site/source/AGENTS.md",
+      "docs/doctrine/ai-build-operating-contract.md",
+      ".github/PULL_REQUEST_TEMPLATE.md"
+    ]
+  },
+  "links": {
+    "pr_number": 4759
+  },
+  "model_identity": {
+    "model": "GPT-6",
+    "provider": "OpenAI",
+    "version": "unspecified"
+  },
+  "notes": "Records UI source and test edits only. Human review and exact-head hosted checks are separate. The preserved Sites deployment is a distinct source lineage and is not established by this repository receipt.",
+  "parameters": {
+    "tools_enabled": [
+      "repository editing",
+      "local validation",
+      "GitHub PR"
+    ]
+  },
+  "policy_decisions": [],
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "receipt_id": "genrec-map-workbench-retirement-20260927",
+  "truth_labels": {
+    "apps/site/source/app/function-registry.ts": "CONFIRMED",
+    "apps/site/source/app/globals.css": "CONFIRMED",
+    "apps/site/source/app/map-interface.ts": "CONFIRMED",
+    "apps/site/source/app/page.tsx": "CONFIRMED",
+    "apps/site/source/app/site-architecture.ts": "CONFIRMED",
+    "apps/site/source/tests/mobile-compatibility.test.mjs": "CONFIRMED",
+    "apps/site/source/tests/rendered-html.test.mjs": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "apps/site/source npm test (166 tests)",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "apps/site/source TypeScript noEmit",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "git diff --check",
+      "outcome": "PASS"
+    }
+  ]
+}

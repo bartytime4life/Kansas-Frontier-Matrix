@@ -1,0 +1,191 @@
+{
+  "$defs": {
+    "location": {
+      "additionalProperties": false,
+      "properties": {
+        "content_addressed": {
+          "type": "boolean"
+        },
+        "role": {
+          "enum": [
+            "MIRROR",
+            "PRIMARY"
+          ]
+        },
+        "url": {
+          "format": "uri",
+          "maxLength": 2048,
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "url",
+        "role",
+        "content_addressed"
+      ],
+      "type": "object"
+    },
+    "ref": {
+      "maxLength": 512,
+      "minLength": 1,
+      "type": "string"
+    },
+    "sha256": {
+      "pattern": "^sha256:[a-f0-9]{64}$",
+      "type": "string"
+    }
+  },
+  "$id": "https://schemas.kfm.local/contracts/v1/evidence/detached_payload_binding.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "binding_id": {
+      "pattern": "^kfm://evidence/detached-payload-binding/[a-f0-9]{24}$",
+      "type": "string"
+    },
+    "bundle_binding": {
+      "additionalProperties": false,
+      "properties": {
+        "bundle_signature_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "evidence_bundle_ref": {
+          "$ref": "#/$defs/ref"
+        },
+        "evidence_bundle_spec_hash": {
+          "$ref": "#/$defs/sha256"
+        }
+      },
+      "required": [
+        "evidence_bundle_ref",
+        "evidence_bundle_spec_hash",
+        "bundle_signature_ref"
+      ],
+      "type": "object"
+    },
+    "canonicalization_profile": {
+      "const": "RFC8785-JCS"
+    },
+    "governance": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_bundle_resolved": {
+          "type": "boolean"
+        },
+        "payload_verified": {
+          "type": "boolean"
+        },
+        "policy_evaluated": {
+          "type": "boolean"
+        },
+        "promotion_authorized": {
+          "type": "boolean"
+        },
+        "publication_authorized": {
+          "type": "boolean"
+        },
+        "release_authorized": {
+          "type": "boolean"
+        },
+        "rights_evaluated": {
+          "type": "boolean"
+        },
+        "signature_verified": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "evidence_bundle_resolved",
+        "signature_verified",
+        "payload_verified",
+        "rights_evaluated",
+        "policy_evaluated",
+        "promotion_authorized",
+        "release_authorized",
+        "publication_authorized"
+      ],
+      "type": "object"
+    },
+    "locations": {
+      "items": {
+        "$ref": "#/$defs/location"
+      },
+      "maxItems": 8,
+      "minItems": 1,
+      "type": "array"
+    },
+    "object_type": {
+      "const": "DetachedPayloadBinding"
+    },
+    "payload": {
+      "additionalProperties": false,
+      "properties": {
+        "byte_size": {
+          "maximum": 1099511627776,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "media_type": {
+          "maxLength": 127,
+          "pattern": "^[a-z0-9!#$&^_.+-]+/[a-z0-9!#$&^_.+-]+$",
+          "type": "string"
+        },
+        "name": {
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$",
+          "type": "string"
+        },
+        "payload_id": {
+          "pattern": "^kfm://evidence/detached-payload/[a-f0-9]{24}$",
+          "type": "string"
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      },
+      "required": [
+        "payload_id",
+        "name",
+        "media_type",
+        "byte_size",
+        "sha256"
+      ],
+      "type": "object"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "spec_hash": {
+      "$ref": "#/$defs/sha256"
+    },
+    "status": {
+      "const": "PROPOSED_INACTIVE"
+    }
+  },
+  "required": [
+    "object_type",
+    "schema_version",
+    "binding_id",
+    "status",
+    "bundle_binding",
+    "payload",
+    "locations",
+    "canonicalization_profile",
+    "spec_hash",
+    "governance"
+  ],
+  "title": "DetachedPayloadBinding",
+  "type": "object",
+  "x-kfm": {
+    "authority": "detached_payload_candidate_binding_only",
+    "contract_doc": "contracts/evidence/detached_payload_binding.md",
+    "non_effects": [
+      "does_not_fetch_remote_payloads",
+      "does_not_resolve_evidence_bundle",
+      "does_not_verify_bundle_signature",
+      "does_not_establish_rights_or_policy",
+      "does_not_authorize_promotion_release_or_publication"
+    ],
+    "validator": "tools/validators/evidence/validate_detached_payload_binding.py"
+  }
+}

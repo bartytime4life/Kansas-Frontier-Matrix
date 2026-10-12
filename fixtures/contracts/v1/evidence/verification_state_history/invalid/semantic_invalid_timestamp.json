@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0.0",
+  "history_id": "kfm:verification-history:synthetic:invalid-timestamp",
+  "subject_ref": "kfm://synthetic/evidence/item-801",
+  "profile_id": "kfm://profile/verification-state-replay/v1",
+  "spec_hash": "sha256:56be9dd7c498be8f897b03deb9cea6799005f8fc148d5afbd9b028bb11ebb6f2",
+  "events": [
+    {
+      "event_id": "evt:801",
+      "event_type": "VERIFIED",
+      "state": "ACTIVE",
+      "effective_at": "2026-02-30T00:00:00Z",
+      "recorded_at": "2026-03-01T00:00:00Z",
+      "reason_code": "INITIAL_VERIFICATION",
+      "basis_refs": [
+        "kfm://synthetic/receipt/verify-801"
+      ]
+    }
+  ]
+}

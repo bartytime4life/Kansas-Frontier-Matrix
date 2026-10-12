@@ -1,0 +1,338 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/governance/control_plane_registry.schema.json",
+  "title": "KFM Normalized Control-Plane Registry",
+  "description": "Common machine shape for the seven legacy control-plane registry projections. The schema does not create authority for a registry or its entries.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "meta",
+    "schema_version",
+    "registry_id",
+    "status",
+    "authority_mode",
+    "implementation_status",
+    "completeness",
+    "base_ref",
+    "owner_role",
+    "non_effects",
+    "entries"
+  ],
+  "properties": {
+    "meta": {
+      "$ref": "#/$defs/meta"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "registry_id": {
+      "type": "string",
+      "enum": [
+        "contradiction_register",
+        "deprecation_register",
+        "document_registry",
+        "policy_gate_register",
+        "release_state_register",
+        "source_authority_register",
+        "verification_backlog"
+      ]
+    },
+    "status": {
+      "const": "PROPOSED"
+    },
+    "authority_mode": {
+      "const": "projection_only"
+    },
+    "implementation_status": {
+      "$ref": "#/$defs/implementationStatus"
+    },
+    "completeness": {
+      "type": "string",
+      "enum": [
+        "empty",
+        "partial",
+        "complete"
+      ]
+    },
+    "base_ref": {
+      "$ref": "#/$defs/sha"
+    },
+    "owner_role": {
+      "$ref": "#/$defs/ownerRole"
+    },
+    "non_effects": {
+      "type": "array",
+      "minItems": 6,
+      "maxItems": 32,
+      "items": {
+        "$ref": "#/$defs/token"
+      },
+      "uniqueItems": true
+    },
+    "entries": {
+      "type": "array",
+      "maxItems": 10000,
+      "items": {
+        "$ref": "#/$defs/entry"
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "completeness": {
+            "const": "empty"
+          }
+        },
+        "required": [
+          "completeness"
+        ]
+      },
+      "then": {
+        "properties": {
+          "implementation_status": {
+            "const": "ABSENT"
+          },
+          "entries": {
+            "maxItems": 0
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "completeness": {
+            "const": "partial"
+          }
+        },
+        "required": [
+          "completeness"
+        ]
+      },
+      "then": {
+        "properties": {
+          "implementation_status": {
+            "enum": [
+              "PARTIAL",
+              "CONFLICTED",
+              "DEPRECATED"
+            ]
+          },
+          "entries": {
+            "minItems": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "completeness": {
+            "const": "complete"
+          }
+        },
+        "required": [
+          "completeness"
+        ]
+      },
+      "then": {
+        "properties": {
+          "implementation_status": {
+            "const": "IMPLEMENTED"
+          },
+          "entries": {
+            "minItems": 1
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "sha": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{40}$"
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "path": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512,
+      "pattern": "^[^\\\\/][^\\\\]*$"
+    },
+    "token": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]{2,160}$"
+    },
+    "ownerRole": {
+      "anyOf": [
+        {
+          "const": "UNKNOWN"
+        },
+        {
+          "$ref": "#/$defs/token"
+        }
+      ]
+    },
+    "implementationStatus": {
+      "type": "string",
+      "enum": [
+        "IMPLEMENTED",
+        "PARTIAL",
+        "ABSENT",
+        "SUPERSEDED",
+        "CONFLICTED",
+        "DEPRECATED",
+        "NOT_INSPECTED"
+      ]
+    },
+    "meta": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "owner",
+        "description",
+        "last_reviewed",
+        "related_doctrine"
+      ],
+      "properties": {
+        "status": {
+          "const": "PROPOSED"
+        },
+        "owner": {
+          "$ref": "#/$defs/ownerRole"
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1024
+        },
+        "last_reviewed": {
+          "type": "string",
+          "format": "date"
+        },
+        "related_doctrine": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 32,
+          "items": {
+            "$ref": "#/$defs/path"
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "entry_id",
+        "subject_id",
+        "kind",
+        "path",
+        "path_sha256",
+        "authority_status",
+        "implementation_status",
+        "owner_role",
+        "governing_refs",
+        "source_digests",
+        "reason_codes",
+        "notes"
+      ],
+      "properties": {
+        "entry_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9._-]{2,160}$"
+        },
+        "subject_id": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 512
+        },
+        "kind": {
+          "$ref": "#/$defs/token"
+        },
+        "path": {
+          "$ref": "#/$defs/path"
+        },
+        "path_sha256": {
+          "$ref": "#/$defs/digest"
+        },
+        "authority_status": {
+          "type": "string",
+          "enum": [
+            "CONFIRMED",
+            "PROPOSED",
+            "UNKNOWN",
+            "CONFLICTED",
+            "DEPRECATED",
+            "SUPERSEDED"
+          ]
+        },
+        "implementation_status": {
+          "$ref": "#/$defs/implementationStatus"
+        },
+        "owner_role": {
+          "$ref": "#/$defs/ownerRole"
+        },
+        "governing_refs": {
+          "type": "array",
+          "maxItems": 128,
+          "items": {
+            "$ref": "#/$defs/path"
+          },
+          "uniqueItems": true
+        },
+        "source_digests": {
+          "type": "array",
+          "maxItems": 128,
+          "items": {
+            "$ref": "#/$defs/digest"
+          },
+          "uniqueItems": true
+        },
+        "reason_codes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 64,
+          "items": {
+            "$ref": "#/$defs/token"
+          },
+          "uniqueItems": true
+        },
+        "notes": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2048
+        }
+      }
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED",
+    "authority": "registry_projection_shape_only",
+    "contract_doc": "contracts/governance/control_plane_registry_packet.md",
+    "instances": [
+      "control_plane/contradiction_register.yaml",
+      "control_plane/deprecation_register.yaml",
+      "control_plane/document_registry.yaml",
+      "control_plane/policy_gate_register.yaml",
+      "control_plane/release_state_register.yaml",
+      "control_plane/source_authority_register.yaml",
+      "control_plane/verification_backlog.yaml"
+    ],
+    "validator": "tools/validators/control_plane/validate_control_plane_registry_packet.py",
+    "fixtures_root": "fixtures/contracts/v1/governance/control_plane_registry/",
+    "tests": "tests/validators/test_validate_control_plane_registry_packet.py",
+    "non_effects": [
+      "does_not_create_registry_authority",
+      "does_not_activate_sources_or_policy",
+      "does_not_release_deploy_or_publish"
+    ]
+  }
+}

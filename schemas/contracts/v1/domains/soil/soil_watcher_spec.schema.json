@@ -1,0 +1,403 @@
+{
+  "$defs": {
+    "materiality": {
+      "additionalProperties": false,
+      "properties": {
+        "material_change_outcome": {
+          "const": "WORK"
+        },
+        "no_change_outcome": {
+          "const": "NO_ACTION"
+        },
+        "profile_id": {
+          "enum": [
+            "NRCS_GNATSGO_GRID_V1",
+            "NRCS_SSURGO_TABULAR_V1"
+          ]
+        },
+        "rule_kind": {
+          "enum": [
+            "DIGEST_OR_GRID_SCHEMA_CHANGE",
+            "DIGEST_OR_KEYED_ROW_CHANGE"
+          ]
+        },
+        "source_family": {
+          "enum": [
+            "GNATSGO",
+            "SSURGO"
+          ]
+        },
+        "unknown_outcome": {
+          "const": "QUARANTINE"
+        }
+      },
+      "required": [
+        "profile_id",
+        "source_family",
+        "rule_kind",
+        "unknown_outcome",
+        "no_change_outcome",
+        "material_change_outcome"
+      ],
+      "type": "object"
+    },
+    "output": {
+      "additionalProperties": false,
+      "properties": {
+        "contract_ref": {
+          "$ref": "#/$defs/repoPath"
+        },
+        "output_type": {
+          "enum": [
+            "SOIL_CHANGE_CANDIDATE",
+            "SOIL_WATCHER_HOLD"
+          ]
+        },
+        "schema_ref": {
+          "$ref": "#/$defs/repoPath"
+        },
+        "target_zone": {
+          "enum": [
+            "WORK",
+            "QUARANTINE"
+          ]
+        }
+      },
+      "required": [
+        "output_type",
+        "target_zone",
+        "contract_ref",
+        "schema_ref"
+      ],
+      "type": "object"
+    },
+    "phase": {
+      "additionalProperties": false,
+      "properties": {
+        "input_zone": {
+          "enum": [
+            "FIXTURE",
+            "WORK",
+            "QUARANTINE"
+          ]
+        },
+        "output_zone": {
+          "enum": [
+            "WORK",
+            "QUARANTINE"
+          ]
+        },
+        "phase": {
+          "enum": [
+            "SNAPSHOT",
+            "NORMALIZE",
+            "HARD_QA",
+            "MATERIALITY",
+            "PACKAGE",
+            "RECEIPT"
+          ]
+        },
+        "required_receipt": {
+          "enum": [
+            "SOURCE_SNAPSHOT_RECEIPT",
+            "TRANSFORM_RECEIPT",
+            "QA_RECEIPT",
+            "MATERIALITY_RECEIPT",
+            "PACKAGE_RECEIPT",
+            "RUN_RECEIPT"
+          ]
+        }
+      },
+      "required": [
+        "phase",
+        "input_zone",
+        "output_zone",
+        "required_receipt"
+      ],
+      "type": "object"
+    },
+    "qaRule": {
+      "additionalProperties": false,
+      "properties": {
+        "applies_to": {
+          "items": {
+            "enum": [
+              "GNATSGO",
+              "SSURGO"
+            ]
+          },
+          "maxItems": 2,
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "failure_zone": {
+          "const": "QUARANTINE"
+        },
+        "rule_id": {
+          "enum": [
+            "SOIL_GEOMETRY_VALIDITY",
+            "SOIL_REFERENTIAL_INTEGRITY",
+            "SOIL_REQUIRED_KEYS",
+            "SOIL_SCHEMA_CONFORMANCE"
+          ]
+        }
+      },
+      "required": [
+        "rule_id",
+        "applies_to",
+        "failure_zone"
+      ],
+      "type": "object"
+    },
+    "reasonCode": {
+      "pattern": "^[A-Z][A-Z0-9_]{2,63}$",
+      "type": "string"
+    },
+    "repoPath": {
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\)[A-Za-z0-9._/-]+$",
+      "type": "string"
+    },
+    "sha256": {
+      "pattern": "^sha256:[a-f0-9]{64}$",
+      "type": "string"
+    },
+    "source": {
+      "additionalProperties": false,
+      "properties": {
+        "acquisition_modes": {
+          "items": {
+            "enum": [
+              "LOCAL_FIXTURE",
+              "SDA_DECLARATION_ONLY"
+            ]
+          },
+          "maxItems": 2,
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "authority_state": {
+          "const": "PLACEHOLDER_ONLY"
+        },
+        "materiality_profile": {
+          "enum": [
+            "NRCS_GNATSGO_GRID_V1",
+            "NRCS_SSURGO_TABULAR_V1"
+          ]
+        },
+        "rights_state": {
+          "const": "NEEDS_VERIFICATION"
+        },
+        "sensitivity_state": {
+          "const": "NEEDS_VERIFICATION"
+        },
+        "source_family": {
+          "enum": [
+            "GNATSGO",
+            "SSURGO"
+          ]
+        },
+        "source_id": {
+          "enum": [
+            "nrcs-gnatsgo",
+            "nrcs-ssurgo"
+          ]
+        },
+        "source_registry_ref": {
+          "$ref": "#/$defs/repoPath"
+        },
+        "support_type": {
+          "enum": [
+            "AUTHORITATIVE_STATIC_SOIL_SURVEY",
+            "GRIDDED_DERIVATIVE_SOIL"
+          ]
+        }
+      },
+      "required": [
+        "source_id",
+        "source_family",
+        "support_type",
+        "source_registry_ref",
+        "authority_state",
+        "rights_state",
+        "sensitivity_state",
+        "acquisition_modes",
+        "materiality_profile"
+      ],
+      "type": "object"
+    }
+  },
+  "$id": "https://schemas.kfm.local/contracts/v1/domains/soil/soil_watcher_spec.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "canonicalization_profile": {
+      "const": "RFC8785-JCS"
+    },
+    "execution_mode": {
+      "const": "FIXTURE_ONLY"
+    },
+    "governance": {
+      "additionalProperties": false,
+      "properties": {
+        "execution_authorized": {
+          "const": false
+        },
+        "network_authorized": {
+          "const": false
+        },
+        "promotion_authorized": {
+          "const": false
+        },
+        "publication_authorized": {
+          "const": false
+        },
+        "raw_admission_authorized": {
+          "const": false
+        },
+        "release_authorized": {
+          "const": false
+        },
+        "source_activation_authorized": {
+          "const": false
+        }
+      },
+      "required": [
+        "source_activation_authorized",
+        "network_authorized",
+        "execution_authorized",
+        "raw_admission_authorized",
+        "promotion_authorized",
+        "release_authorized",
+        "publication_authorized"
+      ],
+      "type": "object"
+    },
+    "materiality_rules": {
+      "items": {
+        "$ref": "#/$defs/materiality"
+      },
+      "maxItems": 2,
+      "minItems": 2,
+      "type": "array"
+    },
+    "network_mode": {
+      "const": "DENY"
+    },
+    "object_type": {
+      "const": "SoilWatcherSpec"
+    },
+    "outputs": {
+      "items": {
+        "$ref": "#/$defs/output"
+      },
+      "maxItems": 2,
+      "minItems": 2,
+      "type": "array"
+    },
+    "pipeline_phases": {
+      "items": {
+        "$ref": "#/$defs/phase"
+      },
+      "maxItems": 6,
+      "minItems": 6,
+      "type": "array"
+    },
+    "policy_ref": {
+      "$ref": "#/$defs/repoPath"
+    },
+    "qa_rules": {
+      "items": {
+        "$ref": "#/$defs/qaRule"
+      },
+      "maxItems": 4,
+      "minItems": 4,
+      "type": "array"
+    },
+    "reason_codes": {
+      "items": {
+        "$ref": "#/$defs/reasonCode"
+      },
+      "maxItems": 16,
+      "minItems": 3,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "receipt_expectations": {
+      "items": {
+        "enum": [
+          "MATERIALITY_RECEIPT",
+          "PACKAGE_RECEIPT",
+          "QA_RECEIPT",
+          "RUN_RECEIPT",
+          "SOURCE_SNAPSHOT_RECEIPT",
+          "TRANSFORM_RECEIPT"
+        ]
+      },
+      "maxItems": 6,
+      "minItems": 6,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "source_scope": {
+      "items": {
+        "$ref": "#/$defs/source"
+      },
+      "maxItems": 2,
+      "minItems": 2,
+      "type": "array"
+    },
+    "spec_hash": {
+      "$ref": "#/$defs/sha256"
+    },
+    "status": {
+      "const": "PROPOSED_INACTIVE"
+    },
+    "version": {
+      "const": "0.1.0"
+    },
+    "watcher_id": {
+      "const": "kfm.watcher.soil.ssurgo_gnatsgo.candidate"
+    }
+  },
+  "required": [
+    "object_type",
+    "schema_version",
+    "watcher_id",
+    "version",
+    "status",
+    "canonicalization_profile",
+    "execution_mode",
+    "network_mode",
+    "source_scope",
+    "pipeline_phases",
+    "qa_rules",
+    "materiality_rules",
+    "policy_ref",
+    "outputs",
+    "receipt_expectations",
+    "reason_codes",
+    "spec_hash",
+    "governance"
+  ],
+  "title": "SoilWatcherSpec",
+  "type": "object",
+  "x-kfm": {
+    "authority": "inactive_declarative_watcher_candidate_only",
+    "contract_doc": "contracts/domains/soil/soil_watcher_spec.md",
+    "instance": "pipeline_specs/watchers/soil_ssurgo_gnatsgo.json",
+    "non_effects": [
+      "does_not_activate_source",
+      "does_not_allow_network",
+      "does_not_execute",
+      "does_not_admit_raw",
+      "does_not_promote",
+      "does_not_release_or_publish"
+    ],
+    "validator": "tools/validators/domains/soil/watcher_spec/validate_soil_watcher_spec.py"
+  }
+}

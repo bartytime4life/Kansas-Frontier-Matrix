@@ -1,0 +1,239 @@
+{
+  "profile": "kfm.governance.program-outcome-chain.fixture-suite.v1",
+  "bases": {
+    "application_chain": {
+      "stage_types": [
+        "PROGRAM_VERSION",
+        "ELIGIBILITY_AREA",
+        "APPLICATION_WINDOW",
+        "APPLICATION"
+      ]
+    },
+    "full_chain": {
+      "stage_types": [
+        "PROGRAM_VERSION",
+        "ELIGIBILITY_AREA",
+        "APPLICATION_WINDOW",
+        "APPLICATION",
+        "ADMINISTRATIVE_REVIEW",
+        "TECHNICAL_REVIEW",
+        "RECOMMENDATION",
+        "AWARD",
+        "AGREEMENT",
+        "PROJECT",
+        "PROJECT_FOOTPRINT",
+        "PAYMENT",
+        "MILESTONE",
+        "COMPLETION",
+        "OUTCOME_OBSERVATION",
+        "EVALUATION"
+      ]
+    },
+    "payment_before_project": {
+      "stage_types": [
+        "PROGRAM_VERSION",
+        "PAYMENT"
+      ]
+    },
+    "outcome_without_completion": {
+      "stage_types": [
+        "PROGRAM_VERSION",
+        "OUTCOME_OBSERVATION"
+      ]
+    },
+    "duplicate_program": {
+      "stage_types": [
+        "PROGRAM_VERSION",
+        "PROGRAM_VERSION"
+      ]
+    }
+  },
+  "cases": [
+    {
+      "case_id": "valid-application-chain",
+      "base": "application_chain",
+      "mutations": [],
+      "expected": {
+        "outcome": "PASS",
+        "finding_codes": []
+      }
+    },
+    {
+      "case_id": "valid-full-chain",
+      "base": "full_chain",
+      "mutations": [],
+      "expected": {
+        "outcome": "PASS",
+        "finding_codes": []
+      }
+    },
+    {
+      "case_id": "eligibility-claim-overreach",
+      "base": "application_chain",
+      "mutations": [
+        {
+          "path": "/stages/1/public_claim_code",
+          "value": "AWARD_NOT_IMPLEMENTATION_OR_PAYMENT"
+        }
+      ],
+      "expected": {
+        "outcome": "DENY",
+        "finding_codes": [
+          "PUBLIC_CLAIM_CODE_MISMATCH"
+        ]
+      }
+    },
+    {
+      "case_id": "payment-before-project",
+      "base": "payment_before_project",
+      "mutations": [],
+      "expected": {
+        "outcome": "DENY",
+        "finding_codes": [
+          "REQUIRED_PREDECESSOR_MISSING"
+        ]
+      }
+    },
+    {
+      "case_id": "outcome-without-completion",
+      "base": "outcome_without_completion",
+      "mutations": [],
+      "expected": {
+        "outcome": "DENY",
+        "finding_codes": [
+          "REQUIRED_PREDECESSOR_MISSING"
+        ]
+      }
+    },
+    {
+      "case_id": "evaluation-without-uncertainty",
+      "base": "full_chain",
+      "mutations": [
+        {
+          "path": "/stages/15/uncertainty_ref",
+          "value": null
+        }
+      ],
+      "expected": {
+        "outcome": "DENY",
+        "finding_codes": [
+          "UNCERTAINTY_REFERENCE_REQUIRED"
+        ]
+      }
+    },
+    {
+      "case_id": "amount-on-application",
+      "base": "application_chain",
+      "mutations": [
+        {
+          "path": "/stages/3/amount",
+          "value": {
+            "value": 500,
+            "currency": "USD"
+          }
+        }
+      ],
+      "expected": {
+        "outcome": "DENY",
+        "finding_codes": [
+          "AMOUNT_STAGE_MISMATCH"
+        ]
+      }
+    },
+    {
+      "case_id": "public-use-overclaim",
+      "base": "application_chain",
+      "mutations": [
+        {
+          "path": "/public_use_allowed",
+          "value": true
+        }
+      ],
+      "expected": {
+        "outcome": "DENY",
+        "finding_codes": [
+          "SCHEMA_INVALID"
+        ]
+      }
+    },
+    {
+      "case_id": "publication-effect-overclaim",
+      "base": "application_chain",
+      "mutations": [
+        {
+          "path": "/effects/published",
+          "value": true
+        }
+      ],
+      "expected": {
+        "outcome": "DENY",
+        "finding_codes": [
+          "SCHEMA_INVALID"
+        ]
+      }
+    },
+    {
+      "case_id": "tampered-spec-hash",
+      "base": "application_chain",
+      "mutations": [
+        {
+          "path": "/spec_hash",
+          "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+        }
+      ],
+      "reassign_identity": false,
+      "expected": {
+        "outcome": "ERROR",
+        "finding_codes": [
+          "SPEC_HASH_MISMATCH"
+        ]
+      }
+    },
+    {
+      "case_id": "noncanonical-evidence",
+      "base": "application_chain",
+      "mutations": [
+        {
+          "path": "/evidence_refs",
+          "value": [
+            "kfm:evidence-ref:24a85beeee807a7f9a4ea817be78d12cc048ab304d9b9284b086c74d2fd8338d",
+            "kfm:evidence-ref:134c20ac499a84d31d778694555cea35457d4b89dadbeb388056d0a175fdda58"
+          ]
+        }
+      ],
+      "expected": {
+        "outcome": "DENY",
+        "finding_codes": [
+          "NONCANONICAL_REFERENCE_ARRAY"
+        ]
+      }
+    },
+    {
+      "case_id": "duplicate-nonrepeatable-stage",
+      "base": "duplicate_program",
+      "mutations": [],
+      "expected": {
+        "outcome": "DENY",
+        "finding_codes": [
+          "NONREPEATABLE_STAGE_DUPLICATE"
+        ]
+      }
+    },
+    {
+      "case_id": "invalid-stage-status",
+      "base": "application_chain",
+      "mutations": [
+        {
+          "path": "/stages/3/stage_status",
+          "value": "AWARDED"
+        }
+      ],
+      "expected": {
+        "outcome": "DENY",
+        "finding_codes": [
+          "STAGE_STATUS_INVALID"
+        ]
+      }
+    }
+  ]
+}

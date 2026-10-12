@@ -1,0 +1,30 @@
+# Pointer-only migration crosswalk for the archaeology domain-first compatibility view.
+# Not a SourceDescriptor, registry writer, admission, or activation record.
+# Human-readable record: README.md (Migration record, 2026-10-11).
+kind: registry_migration_crosswalk
+status: COMPLETED
+date: "2026-10-11"
+decision: owner-directed move of compatibility-view descriptor templates into the canonical lane
+authority:
+  - docs/doctrine/directory-rules.md#12.3 (DIR-SOURCE-003, DIR-SOURCE-004)
+  - docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md
+from_root: data/registry/archaeology/sources/
+to_root: data/registry/sources/archaeology/
+base_commit: 43b0a6e632fe477f018aeb85aaf7b965403871c2
+field_values_changed: false
+admission_effect: none
+entries:
+  - source_id: ahgp
+    from: data/registry/archaeology/sources/ahgp.yaml
+    to: data/registry/sources/archaeology/ahgp.source.yaml
+    prior_blob: 9e9ef24b14a610738b044e35e301ce1fc93676a6
+    note: archaeology domain assignment retained on owner direction; flagged for source-admission review as a genealogy transcription source
+  - source_id: khri_archaeology
+    from: data/registry/archaeology/sources/khri_archaeology.yaml
+    to: data/registry/sources/archaeology/khri_archaeology.source.yaml
+    prior_blob: d7ae610ca37cd76f24b7453190309cd435f45c9d
+  - source_id: tribal_consultation_register
+    from: data/registry/archaeology/sources/tribal_consultation_register.yaml
+    to: data/registry/sources/archaeology/tribal_consultation_register.source.yaml
+    prior_blob: dc6e499e61e99c3355feb51cb477d64afee2cca6
+rollback: revert the migration commit, or move each `to` file back to its `from` path and drop the added comment lines

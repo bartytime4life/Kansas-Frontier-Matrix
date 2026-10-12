@@ -1,0 +1,1 @@
+# ksgs fetcher — greenfield placeholder

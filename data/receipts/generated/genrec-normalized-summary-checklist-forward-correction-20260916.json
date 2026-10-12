@@ -1,0 +1,139 @@
+{
+  "receipt_id": "genrec-normalized-summary-checklist-forward-correction-20260916",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/adr/NORMALIZED_SUMMARY_CONSUMER_READINESS_CHECKLIST.md"
+  ],
+  "artifact_hashes": {
+    "docs/adr/NORMALIZED_SUMMARY_CONSUMER_READINESS_CHECKLIST.md": "sha256:d5e31ed74a09673254e0655fb48b48f96483d32ddac1410a9c5a80174292a44a"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "unknown"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local-shell",
+      "GitHub-read-only"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:c8c56ec14b8745dbf8a706b8d0cb8f94c259f36d61d0cfe65525bc88cae3fb26",
+      "sha256:a0b360bc3e104e5d8e8468686ec8747354f5f6eab4ace66aa1193893072ccfcc",
+      "sha256:6d85a86ba79203e84d7b572d4033c0dab740321f605c430c765c81911f243dc3",
+      "sha256:c778036b62bf8e619fea4466b22d24ef67ee869cab06d3d80d8a4f1c223bda9f"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/fd03c91c88a06fc7d4e097775ec62ede6d3b498c",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4605",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4605#discussion_r4030227149",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/35141449897",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4596#issuecomment-5704111784",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024#issuecomment-5704111943",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/fd03c91c88a06fc7d4e097775ec62ede6d3b498c/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/fd03c91c88a06fc7d4e097775ec62ede6d3b498c/data/receipts/generated/README.md"
+    ]
+  },
+  "truth_labels": {
+    "docs/adr/NORMALIZED_SUMMARY_CONSUMER_READINESS_CHECKLIST.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "normalized-summary focused regression",
+      "outcome": "PASS",
+      "reason": "Python 3.12.14 and pytest 9.1.1: five focused modules reported 62 passed in 3.54 seconds with strict configuration and markers."
+    },
+    {
+      "gate": "documentation local-link integrity",
+      "outcome": "PASS",
+      "reason": "The bounded no-network link checker passed for the changed document with 53 local targets and zero external targets."
+    },
+    {
+      "gate": "documentation metadata shape",
+      "outcome": "PASS",
+      "reason": "The bounded present-profile metadata checker reported one valid metadata block and zero findings for the changed document."
+    },
+    {
+      "gate": "documentation freshness",
+      "outcome": "PASS",
+      "reason": "The advisory stale-document scan at 2026-09-16 reported zero findings for the changed document."
+    },
+    {
+      "gate": "document-registry-coupled metadata validation",
+      "outcome": "FAIL",
+      "reason": "Inherited control-plane registry failures remain: duplicate sha256 keys and malformed or incomplete entries. The changed document's metadata block is valid; its pre-existing absence from the registry is reported as REGISTRY_ENTRY_MISSING. This branch does not mutate the registry."
+    },
+    {
+      "gate": "patch whitespace integrity",
+      "outcome": "PASS",
+      "reason": "git diff --check completed with no findings before receipt emission."
+    },
+    {
+      "gate": "generated receipt integrity",
+      "outcome": "PASS",
+      "reason": "validate_generated_receipt.py reported GENERATED_RECEIPT_VALID with one bound artifact and pending human review."
+    },
+    {
+      "gate": "base hosted repository topology",
+      "outcome": "FAIL",
+      "reason": "The validator-suite run on merged PR #4605 failed only the repository-topology ratchet. That run is base evidence, not exact-head validation for this forward-correction branch; this branch changes no catalog, topology baseline, topology validator, or topology-governance bytes."
+    },
+    {
+      "gate": "full local repository validation",
+      "outcome": "SKIPPED",
+      "reason": "NOT_RUN in the bounded sparse checkout. Focused tests, link checking, receipt validation, and diff checks are run separately; a full local pass is not inferred."
+    },
+    {
+      "gate": "exact-head hosted evidence",
+      "outcome": "SKIPPED",
+      "reason": "NOT_RUN: no pull request is created while issue #4024 leaves the same delivery path uncontained."
+    },
+    {
+      "gate": "independent review and integration",
+      "outcome": "SKIPPED",
+      "reason": "BLOCKED: no independent acceptance or eligible integration has occurred; human review remains pending and the branch must remain VALIDATED_BRANCH_ONLY."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "accepted-placement-doctrine",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/fd03c91c88a06fc7d4e097775ec62ede6d3b498c/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "merged-review-finding",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4605#discussion_r4030227149"
+    },
+    {
+      "id": "post-merge-issue-disposition",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4596#issuecomment-5704111784"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-16T20:39:49Z",
+  "emitter": "OpenAI Codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Documentation-only forward correction against main@fd03c91c88a06fc7d4e097775ec62ede6d3b498c after PR #4605 merged with one obsolete checklist statement. The revised item preserves consumer-owned fail-closed tests while accurately recording the strict validator's structural guarantees. This receipt excludes its own bytes to avoid a recursive hash; the future Git commit/tree binds it. No emitter, validator, schema, test, fixture, registry, policy, source, catalog, topology baseline, Site, settings, scheduler, release, deployment, promotion, publication, or access state changes. Abandon the branch before integration or revert its exact commit afterward."
+}

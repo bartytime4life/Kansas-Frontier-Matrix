@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/runtime/backfill_window_request.schema.json",
+  "title": "backfill_window_request",
+  "description": "Planning-only request for one bounded deterministic backfill window.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["dataset_id", "source_uri", "window", "manifest", "current_published_spec_hash"],
+  "properties": {
+    "dataset_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9._-]{0,127}$"
+    },
+    "source_uri": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2048,
+      "pattern": "^(https://|kfm://)\\S+$"
+    },
+    "window": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["start", "end"],
+      "properties": {
+        "start": {"type": "string", "format": "date-time"},
+        "end": {"type": "string", "format": "date-time"}
+      }
+    },
+    "manifest": {
+      "type": "object",
+      "minProperties": 1
+    },
+    "current_published_spec_hash": {
+      "oneOf": [
+        {"type": "null"},
+        {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"}
+      ]
+    }
+  },
+  "x-kfm": {
+    "contract_doc": "contracts/runtime/backfill_window_plan.md",
+    "planner": "packages/pipelines-core/src/pipelines_core/backfill_window.py",
+    "cli": "scripts/plan_backfill_window.py",
+    "fixtures_root": "fixtures/contracts/v1/runtime/backfill_window_plan/",
+    "status": "PROPOSED"
+  }
+}

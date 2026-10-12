@@ -1,0 +1,79 @@
+{
+  "object_type": "ValidatorAssuranceReport",
+  "schema_version": "1.0.0",
+  "assurance_id": "validator-assurance:hold-0001",
+  "hash_profile": "kfm-fixture-json-v1",
+  "spec_hash": "sha256:7958edeaba2d91dd857134ab595053e71ff90535a84b681a81f68ce47298c6e0",
+  "target": {
+    "validator_ref": "repo://tools/validators/synthetic.py",
+    "target_digest": "sha256:5206da2721ef4af45a41488d09a901dc71cd4d9f753c8419a9374a7bef8ef62f",
+    "test_command_ref": "repo://tests/validators/test_synthetic.py",
+    "profile_id": "assurance-profile:synthetic-validator-v1",
+    "profile_version": "1.0.0",
+    "profile_digest": "sha256:38c5e49babdd19038f81b65d4e6bce3bf0a9c00a57dca6dcde39ea8019acb210"
+  },
+  "campaign": {
+    "campaign_id": "mutation-campaign:synthetic-0001",
+    "seed": 42526,
+    "generated_at": "2026-04-25T09:00:00Z",
+    "mutation_operators": [
+      "BOOLEAN_FLIP",
+      "REFERENCE_CHECK_REMOVAL",
+      "SORTING_REMOVAL",
+      "TIME_COMPARISON_FLIP"
+    ],
+    "mutant_manifest_digest": "sha256:e0d999e0437d4afff4eedec5d1be1b58285453be5435c01c3179a268d61750d4",
+    "network_used": false
+  },
+  "results": {
+    "total": 3,
+    "killed": 3,
+    "survived": 0,
+    "invalid": 0,
+    "timed_out": 0,
+    "kill_rate_numerator": 3,
+    "kill_rate_denominator": 3
+  },
+  "survivors": [
+    {
+      "mutant_id": "mutant:sorting-removal-0001",
+      "operator": "SORTING_REMOVAL",
+      "target_location_ref": "repo://tools/validators/synthetic.py#canonical-array-check",
+      "semantic_gap_class": "CANONICALIZATION",
+      "risk_class": "MEDIUM",
+      "disposition": "REVIEW_REQUIRED",
+      "reason_codes": [
+        "SURVIVED_CANONICALIZATION_CHECK"
+      ],
+      "issue_ref": null
+    }
+  ],
+  "adequacy": {
+    "outcome": "HOLD",
+    "reason_codes": [
+      "MEDIUM_SURVIVOR_REQUIRES_REVIEW"
+    ],
+    "review_required": true,
+    "universal_threshold_applied": false,
+    "surviving_high_risk_count": 0,
+    "surviving_unreviewed_count": 1
+  },
+  "provenance": {
+    "recorded_at": "2026-04-25T10:00:00Z",
+    "run_receipt_ref": "kfm://run/validator-assurance-synthetic-0001",
+    "input_refs": [
+      "repo://tests/validators/test_synthetic.py",
+      "repo://tools/validators/synthetic.py"
+    ]
+  },
+  "governance": {
+    "policy_evaluated": false,
+    "validator_approved": false,
+    "merge_authorized": false,
+    "promotion_authorized": false,
+    "release_authorized": false,
+    "publication_authorized": false,
+    "public_use_allowed": false,
+    "release_ref": null
+  }
+}

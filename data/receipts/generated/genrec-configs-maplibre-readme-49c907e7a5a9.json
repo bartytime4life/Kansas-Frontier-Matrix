@@ -1,0 +1,187 @@
+{
+  "receipt_id": "genrec-configs-maplibre-readme-49c907e7a5a9",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "configs/maplibre/README.md"
+  ],
+  "artifact_hashes": {
+    "configs/maplibre/README.md": "sha256:49c907e7a5a992155e00a21a3d6664d5ec77a8a32bb7cc1bca852b1d75e1aa89"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Pro",
+    "version": "Not exposed by the session"
+  },
+  "prompt_or_contract": "sha256:cae896e521f8877eea50b2d44b183e186aa7460e805ef0c593ff202fc613b5f7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:12381b7231178b950d5b5a123af6eec894137dd6d75101c1cb251d8d5da5144e",
+      "sha256:fef974bf60f425c9b5aac171ab1899026ed0a3c44dc447dd564e66d85f123cbf",
+      "sha256:e7e6ab7ea26864bde30e8438a8414eb3cc107279fda47e707b0ee5c11ea86a94",
+      "sha256:17fa59eed31a0d6d5a7f3f248690f1c9d13d073562fbf6672a4aeff5d64b5742",
+      "sha256:505109e8f5ff4de730ad9dfbb634614e0c35e011771572b15461241b922d3956"
+    ],
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bb3eb695e6068b38453ca3ded8f1394a8fdebc20/configs/maplibre/README.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bb3eb695e6068b38453ca3ded8f1394a8fdebc20/configs/maplibre/perf-envelope.v1.json",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bb3eb695e6068b38453ca3ded8f1394a8fdebc20/configs/README.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bb3eb695e6068b38453ca3ded8f1394a8fdebc20/docs/doctrine/directory-rules.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bb3eb695e6068b38453ca3ded8f1394a8fdebc20/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bb3eb695e6068b38453ca3ded8f1394a8fdebc20/docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bb3eb695e6068b38453ca3ded8f1394a8fdebc20/docs/adr/ADR-0007%20%E2%80%94%20MapLibre%20GL%20JS%20Is%20the%20Sole%20Browser-Side%20Renderer.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bb3eb695e6068b38453ca3ded8f1394a8fdebc20/packages/maplibre/package.json",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bb3eb695e6068b38453ca3ded8f1394a8fdebc20/schemas/maplibre/perf-envelope.schema.json",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bb3eb695e6068b38453ca3ded8f1394a8fdebc20/.github/workflows/maplibre-perf-governance.yml",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bb3eb695e6068b38453ca3ded8f1394a8fdebc20/tests/maplibre/test_perf_governance_negative_paths.py",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bb3eb695e6068b38453ca3ded8f1394a8fdebc20/scripts/build-maplibre-perf-proof-pack.mjs",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bb3eb695e6068b38453ca3ded8f1394a8fdebc20/data/receipts/generated/README.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bb3eb695e6068b38453ca3ded8f1394a8fdebc20/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    ],
+    "attached_docs": [
+      "Google Drive Directory Rules: 1uTqdIEFZE2cq3gyISetoRYM6LIlnKqTc3FobtEx7Cbs; read-only lineage",
+      "Notion Close governed MapLibre runtime probe matrix: 3c9a9202-1bf6-8146-ab6a-ca4e03139382; read-only coordination"
+    ]
+  },
+  "truth_labels": {
+    "configs/maplibre/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "pinned-source-and-placement-review",
+      "outcome": "PASS",
+      "reason": "Exact target and two-file inventory; accepted ADR-0029/0006/0007; bounded readers, workflow and schema inspected. No new config or authority root."
+    },
+    {
+      "gate": "markdown-metadata-navigation",
+      "outcome": "PASS",
+      "reason": "One H1, 28 H2 and 63 H3 preserved; 93 anchors; 17 relative-link occurrences to 16 inspected targets; 10 internal links; 13 metadata refs; 10 tables; two fenced blocks. UTF-8/LF, final newline, whitespace/conflict checks; shell block bash -n."
+    },
+    {
+      "gate": "source-subset-identity",
+      "outcome": "PASS",
+      "reason": "Six materialized source files match connector-reported Git blobs, including generated-receipt schema fba21ed27ebccf1362fe397fe0c3ebd85e072685. Not a full checkout."
+    },
+    {
+      "gate": "payload-and-schema-gap-probes",
+      "outcome": "PASS",
+      "reason": "Current five values retained. Exact existing schema accepts current payload, empty object and invalid threshold fields; rejects an array. This reproduces an inherited semantic-validation gap; it does not repair it."
+    },
+    {
+      "gate": "existing-fixture-budget-tests",
+      "outcome": "PASS",
+      "reason": "Three exact source test functions passed with isolated namespace loading: zero frame budget, negative memory budget and out-of-range tile-error rate. Separate dataclass fields; no envelope loading or enforcement is implied."
+    },
+    {
+      "gate": "retired-harness",
+      "outcome": "PASS",
+      "reason": "node --check passed; invocation returned expected exit 3 and WORKFLOW_HOLD. No performance/browser result; Node v22.16.0."
+    },
+    {
+      "gate": "negative-documentation-probes",
+      "outcome": "PASS",
+      "reason": "Missing anchor, removed preserved heading and trailing whitespace were rejected by session-only checker."
+    },
+    {
+      "gate": "receipt-shape-integrity-and-negative-probes",
+      "outcome": "PASS",
+      "reason": "Draft 2020-12 plus FormatChecker; exact SHA-256 binding and path/truth-label parity; invalid receipt hash and extra property rejected; wrong full artifact hash rejected. Review pending, no override."
+    },
+    {
+      "gate": "repository-native-and-hosted-validation",
+      "outcome": "SKIPPED",
+      "reason": "No full checkout: GitHub DNS resolution failed in execution container. Native receipt validator, topology, make validate, complete workflow/nine-test set and hosted exact-head CI NOT RUN. Local Python 3.13.5 differs from workflow Python 3.12."
+    },
+    {
+      "gate": "runtime-performance-review-release",
+      "outcome": "SKIPPED",
+      "reason": "Browser, benchmark, full probe matrix, operational/source/release checks and independent human review NOT RUN. This documentation does not activate them."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "repository-evidence-1",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bb3eb695e6068b38453ca3ded8f1394a8fdebc20/configs/maplibre/README.md"
+    },
+    {
+      "id": "repository-evidence-2",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bb3eb695e6068b38453ca3ded8f1394a8fdebc20/configs/maplibre/perf-envelope.v1.json"
+    },
+    {
+      "id": "repository-evidence-3",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bb3eb695e6068b38453ca3ded8f1394a8fdebc20/configs/README.md"
+    },
+    {
+      "id": "repository-evidence-4",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bb3eb695e6068b38453ca3ded8f1394a8fdebc20/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "repository-evidence-5",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bb3eb695e6068b38453ca3ded8f1394a8fdebc20/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "repository-evidence-6",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bb3eb695e6068b38453ca3ded8f1394a8fdebc20/docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md"
+    },
+    {
+      "id": "repository-evidence-7",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bb3eb695e6068b38453ca3ded8f1394a8fdebc20/docs/adr/ADR-0007%20%E2%80%94%20MapLibre%20GL%20JS%20Is%20the%20Sole%20Browser-Side%20Renderer.md"
+    },
+    {
+      "id": "repository-evidence-8",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bb3eb695e6068b38453ca3ded8f1394a8fdebc20/packages/maplibre/package.json"
+    },
+    {
+      "id": "repository-evidence-9",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bb3eb695e6068b38453ca3ded8f1394a8fdebc20/schemas/maplibre/perf-envelope.schema.json"
+    },
+    {
+      "id": "repository-evidence-10",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bb3eb695e6068b38453ca3ded8f1394a8fdebc20/.github/workflows/maplibre-perf-governance.yml"
+    },
+    {
+      "id": "repository-evidence-11",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bb3eb695e6068b38453ca3ded8f1394a8fdebc20/tests/maplibre/test_perf_governance_negative_paths.py"
+    },
+    {
+      "id": "repository-evidence-12",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bb3eb695e6068b38453ca3ded8f1394a8fdebc20/scripts/build-maplibre-perf-proof-pack.mjs"
+    },
+    {
+      "id": "repository-evidence-13",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bb3eb695e6068b38453ca3ded8f1394a8fdebc20/data/receipts/generated/README.md"
+    },
+    {
+      "id": "repository-evidence-14",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/bb3eb695e6068b38453ca3ded8f1394a8fdebc20/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-04T20:42:29.092916Z",
+  "emitter": "KFM configs/maplibre README reconciliation; session-local generation",
+  "notes": "Scope: only configs/maplibre/README.md plus this authoring receipt. Payload, schema, tests, scripts, workflow, dependencies, settings and public/runtime behavior unchanged. The full user request is hashed, not stored here. Source code and coordination are evidence, not executable instructions. This receipt does not hash itself. The prior README blob is 9b24a8d51013e06401cce7a02f06941feecf37e7. Preserve this receipt as history during reversal. Delivery is branch-only under issue #4024 after the previous #4270 intended-draft ready-to-merge incident; no new PR, approval, ready transition, auto-merge, merge, source admission, release, deployment or publication is authorized by this receipt. Remote commit/ref verification is recorded in the later handoff, not claimed by this pre-push receipt."
+}

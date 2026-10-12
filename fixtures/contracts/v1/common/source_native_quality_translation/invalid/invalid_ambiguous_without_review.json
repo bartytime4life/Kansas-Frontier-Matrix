@@ -1,0 +1,87 @@
+{
+  "object_type": "SourceNativeQualityTranslation",
+  "schema_version": "1.0.0",
+  "translation_id": "quality-translation:fixture:ambiguous-degraded-suspect",
+  "hash_profile": "kfm-fixture-json-v1",
+  "spec_hash": "sha256:ef076d5c2690f30bd76fa1fe9a22003a35fe65f34a2b22263e11c79c24720742",
+  "source": {
+    "source_descriptor_ref": "kfm://source/fixture-station-network",
+    "source_role": "SENSOR_NETWORK",
+    "vocabulary_id": "quality-vocabulary:fixture-soil-network",
+    "vocabulary_version": "2026.1",
+    "vocabulary_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "native_code": "Q?",
+    "native_label": "ambiguous fixture quality",
+    "native_detail": "fixture quality code",
+    "native_value_preserved": true
+  },
+  "mapping": {
+    "profile_id": "quality-mapping-profile:fixture-soil-network",
+    "profile_version": "1.0.0",
+    "profile_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+    "mapping_decision_ref": "kfm://quality-mapping-decision/fixture-soil-network-v1",
+    "outcome": "AMBIGUOUS",
+    "normalized_quality": "SUSPECT",
+    "semantic_loss": "PARTIAL",
+    "unmapped_state": "AMBIGUOUS_PRESERVED",
+    "reason_codes": [
+      "MULTIPLE_NATIVE_MEANINGS"
+    ],
+    "review_required": false
+  },
+  "operational_health": {
+    "assessment_id": "health-assessment:fixture:ambiguous-degraded-suspect",
+    "state": "DEGRADED",
+    "observed_at": "2026-04-15T14:04:00Z",
+    "reason_codes": [
+      "CLOCK_DRIFT_DETECTED"
+    ],
+    "evidence_refs": [
+      "kfm://evidence/fixture-clock-drift"
+    ],
+    "affects_current_observation_availability": true,
+    "observation_validity_decided": false,
+    "environmental_condition_claimed": false
+  },
+  "observation_validity": {
+    "assessment_id": "observation-validity:fixture:ambiguous-degraded-suspect",
+    "observation_ref": "kfm://observation/fixture-soil-reading-003",
+    "state": "SUSPECT",
+    "assessed_at": "2026-04-15T14:04:30Z",
+    "reason_codes": [
+      "QUALITY_MEANING_AMBIGUOUS"
+    ],
+    "evidence_refs": [
+      "kfm://evidence/fixture-observation-suspect"
+    ],
+    "derived_from_operational_health": false
+  },
+  "separation": {
+    "health_and_validity_independent": true,
+    "offline_does_not_invalidate_prior_observations": true,
+    "no_data_is_not_environmental_condition": true,
+    "source_quality_is_not_source_authority": true
+  },
+  "provenance": {
+    "recorded_at": "2026-04-15T14:05:00Z",
+    "run_receipt_ref": "kfm://receipt/quality-translation/fixture-ambiguous",
+    "translator_id": "kfm://tool/fixture-quality-translator",
+    "translator_version": "1.0.0",
+    "input_refs": [
+      "kfm://input/fixture-ambiguous-code",
+      "kfm://input/fixture-clock-drift"
+    ]
+  },
+  "governance": {
+    "authority_created": false,
+    "source_admitted": false,
+    "evidence_closure_claimed": false,
+    "policy_evaluated": false,
+    "promotion_authorized": false,
+    "release_authorized": false,
+    "publication_authorized": false,
+    "public_use_allowed": false,
+    "release_ref": null
+  },
+  "schema_negative_canary": true
+}

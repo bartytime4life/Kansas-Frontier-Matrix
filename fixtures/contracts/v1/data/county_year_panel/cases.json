@@ -1,0 +1,218 @@
+{
+  "profile": "kfm.county-year-panel.fixture-suite.v1",
+  "base": {
+    "object_type": "CountyYearPanel",
+    "schema_version": "1.0.0",
+    "profile": "kfm.county-year-panel.fixture.v1",
+    "panel_id": "kfm:county-year-panel:000000000000000000000000",
+    "panel_scope": {
+      "panel_key": "synthetic_county_2020",
+      "county_identifier_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+      "calendar_year": 2020,
+      "geography_version_ref": "kfm://geography-version/synthetic-county-v1@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "frontier_definition_ref": "kfm://frontier-definition/synthetic-v1@sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+    },
+    "observations": [
+      {
+        "observation_kind": "ACCESS",
+        "indicator_definition_ref": "kfm://indicator-definition/access-v1@sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "source_role_ref": "kfm://source-role/synthetic-access@sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+        "observation_geography_version_ref": "kfm://geography-version/synthetic-county-v1@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "geography_alignment": "SAME_VERSION",
+        "geography_crosswalk_ref": null,
+        "availability": "AVAILABLE",
+        "observation_ref": "kfm://observation/access/synthetic-2020@sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "uncertainty_ref": "kfm://uncertainty/access/synthetic-2020@sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "evidence_refs": [
+          "kfm://evidence-ref/access/synthetic-2020@sha256:0000000000000000000000000000000000000000000000000000000000000000"
+        ],
+        "reason_code": "NONE"
+      },
+      {
+        "observation_kind": "AGRICULTURE",
+        "indicator_definition_ref": "kfm://indicator-definition/agriculture-v1@sha256:1212121212121212121212121212121212121212121212121212121212121212",
+        "source_role_ref": "kfm://source-role/synthetic-agriculture@sha256:2323232323232323232323232323232323232323232323232323232323232323",
+        "observation_geography_version_ref": "kfm://geography-version/synthetic-county-v1@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "geography_alignment": "SAME_VERSION",
+        "geography_crosswalk_ref": null,
+        "availability": "AVAILABLE",
+        "observation_ref": "kfm://observation/agriculture/synthetic-2020@sha256:3434343434343434343434343434343434343434343434343434343434343434",
+        "uncertainty_ref": "kfm://uncertainty/agriculture/synthetic-2020@sha256:4545454545454545454545454545454545454545454545454545454545454545",
+        "evidence_refs": [
+          "kfm://evidence-ref/agriculture/synthetic-2020@sha256:5656565656565656565656565656565656565656565656565656565656565656"
+        ],
+        "reason_code": "NONE"
+      },
+      {
+        "observation_kind": "ECONOMIC",
+        "indicator_definition_ref": "kfm://indicator-definition/economic-v1@sha256:6767676767676767676767676767676767676767676767676767676767676767",
+        "source_role_ref": "kfm://source-role/synthetic-economic@sha256:7878787878787878787878787878787878787878787878787878787878787878",
+        "observation_geography_version_ref": "kfm://geography-version/synthetic-county-v1@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "geography_alignment": "SAME_VERSION",
+        "geography_crosswalk_ref": null,
+        "availability": "AVAILABLE",
+        "observation_ref": "kfm://observation/economic/synthetic-2020@sha256:8989898989898989898989898989898989898989898989898989898989898989",
+        "uncertainty_ref": "kfm://uncertainty/economic/synthetic-2020@sha256:9090909090909090909090909090909090909090909090909090909090909090",
+        "evidence_refs": [
+          "kfm://evidence-ref/economic/synthetic-2020@sha256:abababababababababababababababababababababababababababababababab"
+        ],
+        "reason_code": "NONE"
+      },
+      {
+        "observation_kind": "POPULATION",
+        "indicator_definition_ref": "kfm://indicator-definition/population-v1@sha256:bcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbc",
+        "source_role_ref": "kfm://source-role/synthetic-population@sha256:cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+        "observation_geography_version_ref": "kfm://geography-version/synthetic-county-v1@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "geography_alignment": "SAME_VERSION",
+        "geography_crosswalk_ref": null,
+        "availability": "AVAILABLE",
+        "observation_ref": "kfm://observation/population/synthetic-2020@sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "uncertainty_ref": "kfm://uncertainty/population/synthetic-2020@sha256:efefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefef",
+        "evidence_refs": [
+          "kfm://evidence-ref/population/synthetic-2020@sha256:f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0"
+        ],
+        "reason_code": "NONE"
+      }
+    ],
+    "summary": {
+      "panel_state": "COMPLETE",
+      "decision": "REVIEW_CANDIDATE",
+      "reason_codes": ["ALL_REQUIRED_OBSERVATIONS_AVAILABLE"]
+    },
+    "support": {
+      "source_roles_preserved": true,
+      "evidence_state": "REFERENCED_NOT_RESOLVED",
+      "panel_evidence_refs": [
+        "kfm://evidence-ref/county-year-panel/definitions@sha256:0101010101010101010101010101010101010101010101010101010101010101",
+        "kfm://evidence-ref/county-year-panel/scope@sha256:0202020202020202020202020202020202020202020202020202020202020202"
+      ],
+      "assumption_refs": [
+        "kfm://assumption/county-year-panel/aggregate-only@sha256:0303030303030303030303030303030303030303030303030303030303030303",
+        "kfm://assumption/county-year-panel/synthetic-only@sha256:0404040404040404040404040404040404040404040404040404040404040404"
+      ],
+      "rights_state": "REFERENCED_NOT_EVALUATED",
+      "sensitivity_state": "REFERENCED_NOT_EVALUATED"
+    },
+    "disclosure": {
+      "interpretation_limits": [
+        "AGGREGATE_ONLY",
+        "NO_CROSSWALK_INFERENCE",
+        "NO_FRONTIER_CLASSIFICATION",
+        "NO_PUBLICATION_AUTHORITY",
+        "OBSERVATIONS_REFERENCED_NOT_RESOLVED",
+        "SOURCE_ROLES_PRESERVED"
+      ]
+    },
+    "governance": {
+      "execution_mode": "FIXTURE_ONLY",
+      "network_attempted": false,
+      "observations_loaded": false,
+      "values_computed": false,
+      "geography_resolved": false,
+      "crosswalk_executed": false,
+      "evidence_resolved": false,
+      "policy_evaluated": false,
+      "frontier_classified": false,
+      "review_approved": false,
+      "promotion_authorized": false,
+      "release_authorized": false,
+      "public_use_allowed": false,
+      "publication_authorized": false
+    },
+    "spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  "variants": {
+    "complete": [],
+    "crosswalk_complete": [
+      {"path": "/observations/0/observation_geography_version_ref", "value": "kfm://geography-version/synthetic-county-v0@sha256:9999999999999999999999999999999999999999999999999999999999999999"},
+      {"path": "/observations/0/geography_alignment", "value": "CROSSWALK_REFERENCED"},
+      {"path": "/observations/0/geography_crosswalk_ref", "value": "kfm://geography-crosswalk/synthetic-v0-v1@sha256:9898989898989898989898989898989898989898989898989898989898989898"}
+    ],
+    "partial_missing": [
+      {"path": "/observations/0/availability", "value": "MISSING"},
+      {"path": "/observations/0/observation_ref", "value": null},
+      {"path": "/observations/0/uncertainty_ref", "value": null},
+      {"path": "/observations/0/evidence_refs", "value": []},
+      {"path": "/observations/0/reason_code", "value": "SOURCE_MISSING"},
+      {"path": "/summary/panel_state", "value": "PARTIAL"},
+      {"path": "/summary/decision", "value": "HOLD"},
+      {"path": "/summary/reason_codes", "value": ["OBSERVATION_GAPS_PRESENT"]}
+    ],
+    "partial_unresolved": [
+      {"path": "/observations/0/observation_geography_version_ref", "value": "kfm://geography-version/synthetic-county-v0@sha256:9999999999999999999999999999999999999999999999999999999999999999"},
+      {"path": "/observations/0/geography_alignment", "value": "UNRESOLVED"},
+      {"path": "/observations/0/availability", "value": "MISSING"},
+      {"path": "/observations/0/observation_ref", "value": null},
+      {"path": "/observations/0/uncertainty_ref", "value": null},
+      {"path": "/observations/0/evidence_refs", "value": []},
+      {"path": "/observations/0/reason_code", "value": "GEOGRAPHY_ALIGNMENT_UNRESOLVED"},
+      {"path": "/summary/panel_state", "value": "PARTIAL"},
+      {"path": "/summary/decision", "value": "HOLD"},
+      {"path": "/summary/reason_codes", "value": ["OBSERVATION_GAPS_PRESENT", "UNRESOLVED_GEOGRAPHY_ALIGNMENT"]}
+    ],
+    "partial_suppressed": [
+      {"path": "/observations/0/availability", "value": "SUPPRESSED"},
+      {"path": "/observations/0/observation_ref", "value": null},
+      {"path": "/observations/0/uncertainty_ref", "value": null},
+      {"path": "/observations/0/reason_code", "value": "POLICY_SUPPRESSED"},
+      {"path": "/summary/panel_state", "value": "PARTIAL"},
+      {"path": "/summary/decision", "value": "HOLD"},
+      {"path": "/summary/reason_codes", "value": ["OBSERVATION_GAPS_PRESENT", "SUPPRESSED_OBSERVATION_PRESENT"]}
+    ],
+    "partial_not_applicable": [
+      {"path": "/observations/0/availability", "value": "NOT_APPLICABLE"},
+      {"path": "/observations/0/observation_ref", "value": null},
+      {"path": "/observations/0/uncertainty_ref", "value": null},
+      {"path": "/observations/0/evidence_refs", "value": []},
+      {"path": "/observations/0/reason_code", "value": "OUT_OF_SCOPE"},
+      {"path": "/summary/panel_state", "value": "PARTIAL"},
+      {"path": "/summary/decision", "value": "HOLD"},
+      {"path": "/summary/reason_codes", "value": ["OBSERVATION_GAPS_PRESENT"]}
+    ],
+    "insufficient": [
+      {"path": "/observations", "value": [
+        {"observation_kind": "ACCESS", "indicator_definition_ref": "kfm://indicator-definition/access-v1@sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc", "source_role_ref": "kfm://source-role/synthetic-access@sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd", "observation_geography_version_ref": "kfm://geography-version/synthetic-county-v1@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "geography_alignment": "SAME_VERSION", "geography_crosswalk_ref": null, "availability": "MISSING", "observation_ref": null, "uncertainty_ref": null, "evidence_refs": [], "reason_code": "SOURCE_MISSING"},
+        {"observation_kind": "AGRICULTURE", "indicator_definition_ref": "kfm://indicator-definition/agriculture-v1@sha256:1212121212121212121212121212121212121212121212121212121212121212", "source_role_ref": "kfm://source-role/synthetic-agriculture@sha256:2323232323232323232323232323232323232323232323232323232323232323", "observation_geography_version_ref": "kfm://geography-version/synthetic-county-v1@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "geography_alignment": "SAME_VERSION", "geography_crosswalk_ref": null, "availability": "MISSING", "observation_ref": null, "uncertainty_ref": null, "evidence_refs": [], "reason_code": "SOURCE_MISSING"},
+        {"observation_kind": "ECONOMIC", "indicator_definition_ref": "kfm://indicator-definition/economic-v1@sha256:6767676767676767676767676767676767676767676767676767676767676767", "source_role_ref": "kfm://source-role/synthetic-economic@sha256:7878787878787878787878787878787878787878787878787878787878787878", "observation_geography_version_ref": "kfm://geography-version/synthetic-county-v1@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "geography_alignment": "SAME_VERSION", "geography_crosswalk_ref": null, "availability": "MISSING", "observation_ref": null, "uncertainty_ref": null, "evidence_refs": [], "reason_code": "SOURCE_MISSING"},
+        {"observation_kind": "POPULATION", "indicator_definition_ref": "kfm://indicator-definition/population-v1@sha256:bcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbc", "source_role_ref": "kfm://source-role/synthetic-population@sha256:cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd", "observation_geography_version_ref": "kfm://geography-version/synthetic-county-v1@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "geography_alignment": "SAME_VERSION", "geography_crosswalk_ref": null, "availability": "MISSING", "observation_ref": null, "uncertainty_ref": null, "evidence_refs": [], "reason_code": "SOURCE_MISSING"}
+      ]},
+      {"path": "/summary/panel_state", "value": "INSUFFICIENT"},
+      {"path": "/summary/decision", "value": "HOLD"},
+      {"path": "/summary/reason_codes", "value": ["NO_OBSERVATIONS_AVAILABLE"]}
+    ]
+  },
+  "cases": [
+    {"case_id": "complete_valid", "base": "complete", "expected_outcome": "PASS", "expected_findings": []},
+    {"case_id": "crosswalk_complete_valid", "base": "crosswalk_complete", "expected_outcome": "PASS", "expected_findings": []},
+    {"case_id": "partial_missing_valid", "base": "partial_missing", "expected_outcome": "PASS", "expected_findings": []},
+    {"case_id": "partial_unresolved_valid", "base": "partial_unresolved", "expected_outcome": "PASS", "expected_findings": []},
+    {"case_id": "partial_suppressed_valid", "base": "partial_suppressed", "expected_outcome": "PASS", "expected_findings": []},
+    {"case_id": "partial_not_applicable_valid", "base": "partial_not_applicable", "expected_outcome": "PASS", "expected_findings": []},
+    {"case_id": "insufficient_valid", "base": "insufficient", "expected_outcome": "PASS", "expected_findings": []},
+
+    {"case_id": "observation_order_invalid", "base": "complete", "mutations": [{"path": "/observations", "value": [{"observation_kind": "AGRICULTURE", "indicator_definition_ref": "kfm://indicator-definition/agriculture-v1@sha256:1212121212121212121212121212121212121212121212121212121212121212", "source_role_ref": "kfm://source-role/synthetic-agriculture@sha256:2323232323232323232323232323232323232323232323232323232323232323", "observation_geography_version_ref": "kfm://geography-version/synthetic-county-v1@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "geography_alignment": "SAME_VERSION", "geography_crosswalk_ref": null, "availability": "AVAILABLE", "observation_ref": "kfm://observation/agriculture/synthetic-2020@sha256:3434343434343434343434343434343434343434343434343434343434343434", "uncertainty_ref": "kfm://uncertainty/agriculture/synthetic-2020@sha256:4545454545454545454545454545454545454545454545454545454545454545", "evidence_refs": ["kfm://evidence-ref/agriculture/synthetic-2020@sha256:5656565656565656565656565656565656565656565656565656565656565656"], "reason_code": "NONE"}, {"observation_kind": "ACCESS", "indicator_definition_ref": "kfm://indicator-definition/access-v1@sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc", "source_role_ref": "kfm://source-role/synthetic-access@sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd", "observation_geography_version_ref": "kfm://geography-version/synthetic-county-v1@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "geography_alignment": "SAME_VERSION", "geography_crosswalk_ref": null, "availability": "AVAILABLE", "observation_ref": "kfm://observation/access/synthetic-2020@sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", "uncertainty_ref": "kfm://uncertainty/access/synthetic-2020@sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", "evidence_refs": ["kfm://evidence-ref/access/synthetic-2020@sha256:0000000000000000000000000000000000000000000000000000000000000000"], "reason_code": "NONE"}, {"observation_kind": "ECONOMIC", "indicator_definition_ref": "kfm://indicator-definition/economic-v1@sha256:6767676767676767676767676767676767676767676767676767676767676767", "source_role_ref": "kfm://source-role/synthetic-economic@sha256:7878787878787878787878787878787878787878787878787878787878787878", "observation_geography_version_ref": "kfm://geography-version/synthetic-county-v1@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "geography_alignment": "SAME_VERSION", "geography_crosswalk_ref": null, "availability": "AVAILABLE", "observation_ref": "kfm://observation/economic/synthetic-2020@sha256:8989898989898989898989898989898989898989898989898989898989898989", "uncertainty_ref": "kfm://uncertainty/economic/synthetic-2020@sha256:9090909090909090909090909090909090909090909090909090909090909090", "evidence_refs": ["kfm://evidence-ref/economic/synthetic-2020@sha256:abababababababababababababababababababababababababababababababab"], "reason_code": "NONE"}, {"observation_kind": "POPULATION", "indicator_definition_ref": "kfm://indicator-definition/population-v1@sha256:bcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbcbc", "source_role_ref": "kfm://source-role/synthetic-population@sha256:cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd", "observation_geography_version_ref": "kfm://geography-version/synthetic-county-v1@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "geography_alignment": "SAME_VERSION", "geography_crosswalk_ref": null, "availability": "AVAILABLE", "observation_ref": "kfm://observation/population/synthetic-2020@sha256:1111111111111111111111111111111111111111111111111111111111111111", "uncertainty_ref": "kfm://uncertainty/population/synthetic-2020@sha256:efefefefefefefefefefefefefefefefefefefefefefefefefefefefefefefef", "evidence_refs": ["kfm://evidence-ref/population/synthetic-2020@sha256:f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0"], "reason_code": "NONE"}]}], "expected_outcome": "DENY", "expected_findings": [{"code": "COUNTY_YEAR_PANEL_OBSERVATION_ORDER_INVALID", "path": "/observations"}]},
+    {"case_id": "observation_kind_set_invalid", "base": "complete", "mutations": [{"path": "/observations/0/observation_kind", "value": "AGRICULTURE"}], "expected_outcome": "DENY", "expected_findings": [{"code": "COUNTY_YEAR_PANEL_OBSERVATION_KIND_SET_INVALID", "path": "/observations"}]},
+    {"case_id": "indicator_duplicate", "base": "complete", "mutations": [{"path": "/observations/0/indicator_definition_ref", "value": "kfm://indicator-definition/agriculture-v1@sha256:1212121212121212121212121212121212121212121212121212121212121212"}], "expected_outcome": "DENY", "expected_findings": [{"code": "COUNTY_YEAR_PANEL_INDICATOR_DUPLICATE", "path": "/observations"}]},
+    {"case_id": "available_observation_missing", "base": "complete", "mutations": [{"path": "/observations/0/observation_ref", "value": null}], "expected_outcome": "DENY", "expected_findings": [{"code": "COUNTY_YEAR_PANEL_AVAILABLE_SHAPE_INVALID", "path": "/observations/0"}]},
+    {"case_id": "available_uncertainty_missing", "base": "complete", "mutations": [{"path": "/observations/0/uncertainty_ref", "value": null}], "expected_outcome": "DENY", "expected_findings": [{"code": "COUNTY_YEAR_PANEL_AVAILABLE_SHAPE_INVALID", "path": "/observations/0"}]},
+    {"case_id": "available_evidence_missing", "base": "complete", "mutations": [{"path": "/observations/0/evidence_refs", "value": []}], "expected_outcome": "DENY", "expected_findings": [{"code": "COUNTY_YEAR_PANEL_AVAILABLE_SHAPE_INVALID", "path": "/observations/0"}]},
+    {"case_id": "missing_reference_unexpected", "base": "partial_missing", "mutations": [{"path": "/observations/0/observation_ref", "value": "kfm://observation/access/unexpected@sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"}], "expected_outcome": "DENY", "expected_findings": [{"code": "COUNTY_YEAR_PANEL_MISSING_SHAPE_INVALID", "path": "/observations/0"}]},
+    {"case_id": "missing_reason_invalid", "base": "partial_missing", "mutations": [{"path": "/observations/0/reason_code", "value": "NONE"}], "expected_outcome": "DENY", "expected_findings": [{"code": "COUNTY_YEAR_PANEL_MISSING_SHAPE_INVALID", "path": "/observations/0"}]},
+    {"case_id": "suppressed_evidence_missing", "base": "partial_suppressed", "mutations": [{"path": "/observations/0/evidence_refs", "value": []}], "expected_outcome": "DENY", "expected_findings": [{"code": "COUNTY_YEAR_PANEL_SUPPRESSED_SHAPE_INVALID", "path": "/observations/0"}]},
+    {"case_id": "same_version_alignment_invalid", "base": "complete", "mutations": [{"path": "/observations/0/observation_geography_version_ref", "value": "kfm://geography-version/synthetic-county-v0@sha256:9999999999999999999999999999999999999999999999999999999999999999"}], "expected_outcome": "DENY", "expected_findings": [{"code": "COUNTY_YEAR_PANEL_SAME_VERSION_ALIGNMENT_INVALID", "path": "/observations/0"}]},
+    {"case_id": "same_version_crosswalk_unexpected", "base": "complete", "mutations": [{"path": "/observations/0/geography_crosswalk_ref", "value": "kfm://geography-crosswalk/unexpected@sha256:9898989898989898989898989898989898989898989898989898989898989898"}], "expected_outcome": "DENY", "expected_findings": [{"code": "COUNTY_YEAR_PANEL_SAME_VERSION_ALIGNMENT_INVALID", "path": "/observations/0"}]},
+    {"case_id": "crosswalk_alignment_invalid", "base": "crosswalk_complete", "mutations": [{"path": "/observations/0/observation_geography_version_ref", "value": "kfm://geography-version/synthetic-county-v1@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}], "expected_outcome": "DENY", "expected_findings": [{"code": "COUNTY_YEAR_PANEL_CROSSWALK_ALIGNMENT_INVALID", "path": "/observations/0"}]},
+    {"case_id": "crosswalk_reference_missing", "base": "crosswalk_complete", "mutations": [{"path": "/observations/0/geography_crosswalk_ref", "value": null}], "expected_outcome": "DENY", "expected_findings": [{"code": "COUNTY_YEAR_PANEL_CROSSWALK_ALIGNMENT_INVALID", "path": "/observations/0"}]},
+    {"case_id": "unresolved_available_invalid", "base": "complete", "mutations": [{"path": "/observations/0/observation_geography_version_ref", "value": "kfm://geography-version/synthetic-county-v0@sha256:9999999999999999999999999999999999999999999999999999999999999999"}, {"path": "/observations/0/geography_alignment", "value": "UNRESOLVED"}], "expected_outcome": "DENY", "expected_findings": [{"code": "COUNTY_YEAR_PANEL_SUMMARY_DECISION_MISMATCH", "path": "/summary/decision"}, {"code": "COUNTY_YEAR_PANEL_SUMMARY_REASON_MISMATCH", "path": "/summary/reason_codes"}, {"code": "COUNTY_YEAR_PANEL_SUMMARY_STATE_MISMATCH", "path": "/summary/panel_state"}, {"code": "COUNTY_YEAR_PANEL_UNRESOLVED_AVAILABLE_INVALID", "path": "/observations/0"}]},
+    {"case_id": "unresolved_crosswalk_unexpected", "base": "partial_unresolved", "mutations": [{"path": "/observations/0/geography_crosswalk_ref", "value": "kfm://geography-crosswalk/unexpected@sha256:9898989898989898989898989898989898989898989898989898989898989898"}], "expected_outcome": "DENY", "expected_findings": [{"code": "COUNTY_YEAR_PANEL_UNRESOLVED_ALIGNMENT_INVALID", "path": "/observations/0"}]},
+    {"case_id": "summary_state_mismatch", "base": "partial_missing", "mutations": [{"path": "/summary/panel_state", "value": "COMPLETE"}], "expected_outcome": "DENY", "expected_findings": [{"code": "COUNTY_YEAR_PANEL_SUMMARY_STATE_MISMATCH", "path": "/summary/panel_state"}]},
+    {"case_id": "summary_decision_mismatch", "base": "partial_missing", "mutations": [{"path": "/summary/decision", "value": "REVIEW_CANDIDATE"}], "expected_outcome": "DENY", "expected_findings": [{"code": "COUNTY_YEAR_PANEL_SUMMARY_DECISION_MISMATCH", "path": "/summary/decision"}]},
+    {"case_id": "summary_reason_mismatch", "base": "partial_missing", "mutations": [{"path": "/summary/reason_codes", "value": ["NO_OBSERVATIONS_AVAILABLE"]}], "expected_outcome": "DENY", "expected_findings": [{"code": "COUNTY_YEAR_PANEL_SUMMARY_REASON_MISMATCH", "path": "/summary/reason_codes"}]},
+    {"case_id": "panel_evidence_order_invalid", "base": "complete", "mutations": [{"path": "/support/panel_evidence_refs", "value": ["kfm://evidence-ref/county-year-panel/scope@sha256:0202020202020202020202020202020202020202020202020202020202020202", "kfm://evidence-ref/county-year-panel/definitions@sha256:0101010101010101010101010101010101010101010101010101010101010101"]}], "expected_outcome": "DENY", "expected_findings": [{"code": "COUNTY_YEAR_PANEL_EVIDENCE_ORDER_INVALID", "path": "/support/panel_evidence_refs"}]},
+    {"case_id": "assumption_order_invalid", "base": "complete", "mutations": [{"path": "/support/assumption_refs", "value": ["kfm://assumption/county-year-panel/synthetic-only@sha256:0404040404040404040404040404040404040404040404040404040404040404", "kfm://assumption/county-year-panel/aggregate-only@sha256:0303030303030303030303030303030303030303030303030303030303030303"]}], "expected_outcome": "DENY", "expected_findings": [{"code": "COUNTY_YEAR_PANEL_ASSUMPTION_ORDER_INVALID", "path": "/support/assumption_refs"}]},
+    {"case_id": "required_limit_missing", "base": "complete", "mutations": [{"path": "/disclosure/interpretation_limits", "value": ["AGGREGATE_ONLY", "NO_CROSSWALK_INFERENCE", "NO_FRONTIER_CLASSIFICATION", "NO_PUBLICATION_AUTHORITY", "SOURCE_ROLES_PRESERVED"]}], "expected_outcome": "DENY", "expected_findings": [{"code": "COUNTY_YEAR_PANEL_REQUIRED_LIMIT_MISSING", "path": "/disclosure/interpretation_limits"}]},
+    {"case_id": "spec_hash_mismatch", "base": "complete", "spec_hash_override": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", "expected_outcome": "DENY", "expected_findings": [{"code": "COUNTY_YEAR_PANEL_SPEC_HASH_MISMATCH", "path": "/spec_hash"}]},
+    {"case_id": "panel_id_mismatch", "base": "complete", "panel_id_override": "kfm:county-year-panel:ffffffffffffffffffffffff", "expected_outcome": "DENY", "expected_findings": [{"code": "COUNTY_YEAR_PANEL_ID_MISMATCH", "path": "/panel_id"}]},
+    {"case_id": "release_authority_denied", "base": "complete", "mutations": [{"path": "/governance/release_authorized", "value": true}], "expected_outcome": "DENY", "expected_findings": [{"code": "COUNTY_YEAR_PANEL_SCHEMA_INVALID", "path": "/governance/release_authorized"}]}
+  ]
+}

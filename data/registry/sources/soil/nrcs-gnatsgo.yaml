@@ -1,0 +1,6 @@
+status: PROPOSED
+path: "data/registry/sources/soil/nrcs-gnatsgo.yaml"
+source_docs:
+  - "docs/domains/soil/CANONICAL_PATHS.md"
+notes:
+  - "Placeholder created from the current docs/domains markdown inventory."

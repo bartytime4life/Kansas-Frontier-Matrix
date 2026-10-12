@@ -1,0 +1,175 @@
+{
+  "receipt_id": "genrec-pipelines-specs-readme-f7269c31",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "pipelines/specs/README.md"
+  ],
+  "artifact_hashes": {
+    "pipelines/specs/README.md": "sha256:f7269c3158d4a02ce7f8c736f383a0ebb1f87e412af959b16e1e636c0be8dc5a"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-5)",
+    "version": "2026-07-22"
+  },
+  "prompt_or_contract": "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "repository evidence inspection",
+      "PDF extraction and visual inspection",
+      "Directory Rules, ADR, drift, and authority preflight",
+      "Markdown, link, hash, and JSON Schema validation",
+      "remote branch, read-back, comparison, and pull-request verification"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "Pasted text(74).txt",
+      "Directory Rules.pdf",
+      "Kansas Frontier Matrix Pipeline Living Implementation Manual v0.3.pdf",
+      "Unified Implementation Architecture Build Manual.md"
+    ],
+    "evidence_hashes": [
+      "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+      "sha256:759de4fcb51cf0f55896089e397d9c47481d60d9fb80ac9a44d47b2f60a0a335",
+      "sha256:43d0c6fea4cc64edb87238a13ac49b639934a82dcef0fab2ef49217add0ba8cf",
+      "sha256:e92500f9b40007e8b69d183ecaa6247c542ffec25857875ecd2dbd00709785b1"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/459b41d7ec91240742d8b2d3e5d9eb4dbd248df7/pipelines/specs/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/459b41d7ec91240742d8b2d3e5d9eb4dbd248df7/pipelines/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/459b41d7ec91240742d8b2d3e5d9eb4dbd248df7/pipeline_specs/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/459b41d7ec91240742d8b2d3e5d9eb4dbd248df7/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/459b41d7ec91240742d8b2d3e5d9eb4dbd248df7/docs/architecture/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/459b41d7ec91240742d8b2d3e5d9eb4dbd248df7/docs/registers/DRIFT_REGISTER.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/459b41d7ec91240742d8b2d3e5d9eb4dbd248df7/tests/pipelines/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/459b41d7ec91240742d8b2d3e5d9eb4dbd248df7/data/receipts/pipeline/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/459b41d7ec91240742d8b2d3e5d9eb4dbd248df7/data/receipts/generated/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/459b41d7ec91240742d8b2d3e5d9eb4dbd248df7/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/459b41d7ec91240742d8b2d3e5d9eb4dbd248df7/.github/workflows/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/459b41d7ec91240742d8b2d3e5d9eb4dbd248df7/.github/PULL_REQUEST_TEMPLATE.md"
+    ]
+  },
+  "truth_labels": {
+    "pipelines/specs/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "task-contract-and-change-budget",
+      "outcome": "PASS",
+      "reason": "Bounded the task to the requested existing README and its required generated provenance receipt on one review branch; no executable pipeline, specification payload, schema, contract, policy, fixture, test, workflow, lifecycle record, release object, runtime, or public artifact is changed."
+    },
+    {
+      "gate": "repository-and-authority-preflight",
+      "outcome": "PASS",
+      "reason": "Verified the public repository, authenticated admin/push capability, main base commit 459b41d7ec91240742d8b2d3e5d9eb4dbd248df7, prior target blob, branch-name availability, and absence of a matching open pull request before mutation."
+    },
+    {
+      "gate": "directory-rules-adr-and-drift-preflight",
+      "outcome": "PASS",
+      "reason": "Directory Rules assign executable logic to pipelines/ and declarative configuration to pipeline_specs/. The revision preserves that split, creates no new authority, discloses the conflicting Directory Rules copies, and does not invent a drift entry where no concrete misplaced file was established."
+    },
+    {
+      "gate": "repository-evidence-grounding",
+      "outcome": "PASS",
+      "reason": "Inspected the target, both companion root READMEs, both Directory Rules copies, drift register, pipeline test boundary, pipeline and generated receipt lanes, generated-receipt schema, AI operating contract, contribution guidance, CODEOWNERS, PR template, and workflow inventory at the pinned base."
+    },
+    {
+      "gate": "no-loss-and-truth-posture",
+      "outcome": "PASS",
+      "reason": "Preserved the prior document ID, creation date, compatibility role, canonical routing, anti-collapse rules, migration posture, open questions, and no-publication boundary while narrowing unsupported inventory, parser, consumer, enforcement, and runtime implications."
+    },
+    {
+      "gate": "markdown-structure-and-links",
+      "outcome": "PASS",
+      "reason": "Prepared README has 429 lines, one H1, one closed KFM Meta Block, six balanced code-fence lines, no unintended trailing whitespace, a final newline, and nine unique repository-relative link targets fetched successfully at the pinned base."
+    },
+    {
+      "gate": "workflow-trigger-threat-preflight",
+      "outcome": "PASS",
+      "reason": "The bounded workflow inventory reports broad pull-request workflows may run for documentation changes, no indexed pull_request_target or workflow_run trigger, and an OIDC-bearing MapLibre workflow outside this README path. Actual check conclusions and branch-protection coupling remain pending or unknown and are not promoted to success."
+    },
+    {
+      "gate": "security-rights-and-sensitivity",
+      "outcome": "PASS",
+      "reason": "The change contains no credentials, restricted payloads, living-person records, genomic data, or exact sensitive locations and explicitly keeps such content, lifecycle records, receipts, and release decisions out of the public guardrail lane."
+    },
+    {
+      "gate": "generated-receipt-json-and-schema",
+      "outcome": "PASS",
+      "reason": "Receipt JSON parsed and validated against the pinned Draft 2020-12 generated-receipt schema; the artifact path and SHA-256 match the prepared README bytes."
+    },
+    {
+      "gate": "remote-readback-and-diff-scope",
+      "outcome": "SKIPPED",
+      "reason": "Recorded in the operation journal and pull-request handoff after branch mutation; this pre-commit receipt does not claim a future remote result."
+    },
+    {
+      "gate": "repository-native-pipeline-tests",
+      "outcome": "SKIPPED",
+      "reason": "API-only documentation task with no mounted repository checkout and no executable pipeline or spec behavior changed. Remote pull-request checks remain separate evidence."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Independent human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "target-compatibility-guardrail",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/459b41d7ec91240742d8b2d3e5d9eb4dbd248df7/pipelines/specs/README.md"
+    },
+    {
+      "id": "pipelines-executable-root",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/459b41d7ec91240742d8b2d3e5d9eb4dbd248df7/pipelines/README.md"
+    },
+    {
+      "id": "pipeline-specs-declarative-root",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/459b41d7ec91240742d8b2d3e5d9eb4dbd248df7/pipeline_specs/README.md"
+    },
+    {
+      "id": "directory-placement-and-adr-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/459b41d7ec91240742d8b2d3e5d9eb4dbd248df7/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "pipeline-test-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/459b41d7ec91240742d8b2d3e5d9eb4dbd248df7/tests/pipelines/README.md"
+    },
+    {
+      "id": "generated-receipt-requirement",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/459b41d7ec91240742d8b2d3e5d9eb4dbd248df7/data/receipts/generated/README.md"
+    },
+    {
+      "id": "workflow-threat-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/459b41d7ec91240742d8b2d3e5d9eb4dbd248df7/.github/workflows/README.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-22T20:23:37Z",
+  "emitter": "openai/codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored repository-grounded revision of pipelines/specs/README.md for a scoped review branch. This receipt records provenance and validation boundaries, not approval, evidence truth, pipeline-spec activation, execution, policy permission, lifecycle promotion, release authority, or publication. The README SHA-256 was computed from prepared bytes. Remote branch, diff, and pull-request verification are recorded separately after mutation. Human review remains pending."
+}

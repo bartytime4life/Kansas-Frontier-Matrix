@@ -1,0 +1,4 @@
+{
+  "note": "Structural-only fixture proving the optional model_card_ref linkage check. The referenced file independently passes ModelCardEnvelope validation.",
+  "model_card_ref": "fixtures/domains/habitat/suitability_model/support/model_card_pass.json"
+}

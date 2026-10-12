@@ -1,0 +1,52 @@
+{
+  "receipt_id": "genrec-release-candidates-hazards-readme-7485057d",
+  "contract_version": "3.0.0",
+  "receipt_type": "GenerationReceipt",
+  "status": "PROPOSED",
+  "generated_at": "2026-07-18T13:47:23-05:00",
+  "repository": "bartytime4life/Kansas-Frontier-Matrix",
+  "base_commit": "24665041c26b914d0916ec60f56a48771484bd75",
+  "branch": "agent/release-candidates-hazards-readme-20260718",
+  "target_path": "release/candidates/hazards/README.md",
+  "previous_blob": "598728cb3e8ea49ca87e12e1320b83ebb73b7536",
+  "new_blob": "36f40b042d69b7d67a8421f358748c241a9654d8",
+  "sha256": "7485057d5963a951e63a61af30af519cbf42c2b6f4349a8600e9a029c8984849",
+  "truth_labels": {
+    "confirmed": [
+      "The Hazards candidate-lane README existed at the pinned base and was updated in place.",
+      "Bounded indexed search surfaced the parent README but no child Hazards candidate dossier or non-README candidate record.",
+      "The Hazards release index contains proposed or illustrative release and candidate rows and says no live Hazards releases were confirmed in its evidence session.",
+      "The Hazards proof lane states implementation depth remains UNKNOWN and the domain workflow expects no non-README proof artifact.",
+      "The Hazards policy README remains a greenfield scaffold rather than proof of executable policy enforcement.",
+      "The Hazards test index documents expected trust families, while sampled direct test modules contain only PROPOSED placeholder docstrings.",
+      "Concrete Hazards schema files exist as PROPOSED stubs; the sampled release-manifest schema is field-incomplete and permits additional properties.",
+      "The per-domain Hazards validator README explicitly does not confirm executable validators.",
+      "The domain-hazards workflow is an explicit readiness workflow with validation, proof, and release-dry-run holds and no alerting or publication authority.",
+      "The shared release-dry-run workflow remains TODO-only in recent observed runs.",
+      "Hazards public and proof guidance establish a not-for-life-safety boundary, official-source referral expectations, and explicit freshness/expiry requirements."
+    ],
+    "proposed": [
+      "release/candidates/hazards/ should operate as a repository-grounded, time-aware, not-for-life-safety candidate index and pre-publication review contract without becoming current-conditions, warning, regulatory, evidence, policy, release, or publication authority."
+    ],
+    "needs_verification": [
+      "Exhaustive recursive candidate inventory and deterministic candidate-index generation.",
+      "Accepted candidate identity, dossier, artifact-manifest, object-family, source-role, issuer, rights, time, freshness, expiry, official-referral, public-representation, correction, and rollback contracts.",
+      "Admitted source descriptors, executable policy, deterministic fixtures, accepted tests and validators, EvidenceBundle resolution, proof production, no-leak enforcement, and catalog closure.",
+      "Candidate-to-review, PromotionDecision, ReleaseManifest, correction, withdrawal, supersession, rollback, derivative invalidation, branch-protection, and independent-review topology."
+    ]
+  },
+  "changes": [
+    "Replaced generic Hazards candidate guidance with a repository-grounded, time-aware, not-for-life-safety candidate index and pre-publication review contract.",
+    "Recorded the README-only bounded candidate inventory and no-active-candidate posture.",
+    "Preserved the exact A candidate is not a release workflow sentence and publication-not_yet posture.",
+    "Added candidate-family routing, finite states and holds, admission fields, hazard object/product/source-role anti-collapse, official-referral and life-safety boundaries, time-validity-freshness-expiry discipline, spatial and sensitivity controls, ten release gates, a public-safe dossier structure, validation and automation posture, review handoff, correction and rollback discipline, public API-map-export-search-graph-AI boundaries, evidence ledger, definition of done, open verification, and documentation rollback."
+  ],
+  "authority_boundary": "This receipt records an AI-authored documentation revision. It is not a live hazard feed, current-conditions determination, warning, alert, evacuation instruction, regulatory decision, SourceDescriptor, semantic contract, schema, EvidenceBundle, PolicyDecision, ReviewRecord, ValidationReport, PromotionDecision, ReleaseManifest, public artifact, CorrectionNotice, WithdrawalNotice, RollbackCard, steward approval, release approval, publication authority, or proof of runtime behavior.",
+  "rollback": {
+    "strategy": "Close the draft pull request before merge, or revert the generated-receipt commit and README commit in reverse order after merge.",
+    "restores_blob": "598728cb3e8ea49ca87e12e1320b83ebb73b7536"
+  },
+  "human_review": {
+    "state": "pending"
+  }
+}

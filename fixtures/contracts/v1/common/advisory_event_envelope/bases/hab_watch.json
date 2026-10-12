@@ -1,0 +1,103 @@
+{
+  "schema_version": "1.0.0",
+  "temporal_authority": {
+    "schema_version": "1.0.0",
+    "identity": {
+      "object_id": "kfm:advisory-object:marion-reservoir",
+      "object_type": "AdvisoryEventEnvelope",
+      "native_id": "kdhe-hab:5ecd73ec67726db4e64a61e8b23d50fea089e2bc0d207f11b0f5af7ac831c201",
+      "revision_id": "kfm:revision:advisory:5ecd73ec67726db4e64a61e8b23d50fea089e2bc0d207f11b0f5af7ac831c201"
+    },
+    "source": {
+      "source_descriptor_ref": "src:ks-kdhe-hab",
+      "source_role_ref": "src:ks-kdhe-hab#/source_role",
+      "issuing_authority_ref": "authority:ks:kdhe",
+      "authority_scope": "KDHE harmful-algal-bloom advisory snapshot fixture"
+    },
+    "time": {
+      "issued_at": "2026-07-24T15:00:00Z",
+      "effective_at": "2026-07-24T15:00:00Z",
+      "valid_from": null,
+      "valid_to": null,
+      "observed_at": "2026-07-24T16:00:00Z",
+      "retrieved_at": "2026-07-24T16:00:00Z",
+      "corrected_at": null,
+      "superseded_at": null
+    },
+    "space": {
+      "native_geography_text": "Marion Reservoir",
+      "geography_ref": "kfm://geometry/water-body/ks/marion-reservoir",
+      "geometry_role": "authoritative",
+      "geometry_confidence": "confirmed"
+    },
+    "state": {
+      "native_state": "WATCH",
+      "normalized_state": "active_confirmed",
+      "certainty": "confirmed"
+    },
+    "lineage": {
+      "supersedes": [],
+      "superseded_by": [],
+      "correction_refs": [],
+      "withdrawal_refs": []
+    },
+    "governance": {
+      "evidence_refs": [
+        "kfm://evidence/hazards/kdhe/2026-07-24/table-1"
+      ],
+      "policy_refs": [],
+      "review_refs": [],
+      "release_ref": null,
+      "public_use_allowed": false
+    }
+  },
+  "event": {
+    "event_id": "kfm:advisory:ff8ce5279f167291429a02653b51bad793e4bf3041f9fe312f8d71ec0aa3cc44",
+    "profile_id": "kfm.advisory-event.hab.v1",
+    "event_family": "harmful_algal_bloom",
+    "native_event_type": "KdheHabAdvisorySnapshot",
+    "native_event_id": "kdhe-hab:5ecd73ec67726db4e64a61e8b23d50fea089e2bc0d207f11b0f5af7ac831c201"
+  },
+  "source_surface": {
+    "semantics": "complete_snapshot",
+    "snapshot_complete": true,
+    "retrieval_status": "success",
+    "parse_status": "success",
+    "freshness_status": "current",
+    "checked_at": "2026-07-24T16:00:00Z",
+    "freshness_budget_hours": 24
+  },
+  "advisory": {
+    "native_status": "Watch",
+    "normalized_status": "ACTIVE_CONFIRMED",
+    "last_confirmed_status": "ACTIVE_CONFIRMED",
+    "severity": "Watch",
+    "certainty": "confirmed",
+    "urgency": "normal",
+    "basis": "regulatory_advisory",
+    "onset_at": "2026-07-24T15:00:00Z",
+    "expires_at": null,
+    "cancelled_at": null,
+    "rescinded_at": null
+  },
+  "scope": {
+    "affected_area_ref": "kfm://geometry/water-body/ks/marion-reservoir",
+    "geometry_role": "advisory_area",
+    "geometry_confidence": "confirmed",
+    "zone_scope": "whole_water_body"
+  },
+  "domain_payload": {
+    "payload_type": "KdheHabAdvisorySnapshot",
+    "payload_ref": "fixtures/domains/hazards/kdhe_hab_advisory_snapshot/valid/valid_watch.json",
+    "payload_schema_id": "https://schemas.kfm.local/contracts/v1/domains/hazards/kdhe_hab_advisory_snapshot.schema.json",
+    "payload_record_digest": "sha256:f6a332ffc445a0f5ffce478d13af4d3be1a5d1e82abc06ad32b886516b5b7216",
+    "payload_source_content_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+  },
+  "controls": {
+    "rescission_ref": null,
+    "public_guidance_ref": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+    "release_neutral": true,
+    "public_use_allowed": false,
+    "alerts_allowed": false
+  }
+}

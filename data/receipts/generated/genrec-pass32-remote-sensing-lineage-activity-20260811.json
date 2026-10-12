@@ -1,0 +1,128 @@
+{
+  "receipt_id": "genrec-pass32-remote-sensing-lineage-activity-20260811",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/remote-sensing-lineage-activity.yml",
+    "contracts/telemetry/remote_sensing_lineage_activity.md",
+    "docs/intake/exploratory/pass-32-remote-sensing-lineage-activity-source-map.md",
+    "fixtures/contracts/v1/telemetry/remote_sensing_lineage_activity/README.md",
+    "fixtures/contracts/v1/telemetry/remote_sensing_lineage_activity/cases.json",
+    "schemas/contracts/v1/telemetry/remote_sensing_lineage_activity.schema.json",
+    "tests/validators/telemetry/test_remote_sensing_lineage_activity.py",
+    "tools/generators/telemetry/build_remote_sensing_lineage_activity.py",
+    "tools/validators/telemetry/validate_remote_sensing_lineage_activity.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/remote-sensing-lineage-activity.yml": "sha256:5d013d5de873ab8de010beeba92158fa472ed368a742a10881e52532f0db7cf2",
+    "contracts/telemetry/remote_sensing_lineage_activity.md": "sha256:fa5ced3c8e201ea3767211560df4cae13c0c62b8e40f5eed43b2a3b0632e4ad5",
+    "docs/intake/exploratory/pass-32-remote-sensing-lineage-activity-source-map.md": "sha256:f5ee957459ed821c252a199462e421ba726cd3e24e6c32be99af046e417f09b3",
+    "fixtures/contracts/v1/telemetry/remote_sensing_lineage_activity/README.md": "sha256:a54f5424102ac52f7034c94d480c816d23dcc26f7def8f6fd4028177925156ea",
+    "fixtures/contracts/v1/telemetry/remote_sensing_lineage_activity/cases.json": "sha256:c9e183c578c5242e235d9cc3b2f71bc75ca5c590deda3605b834df12cd0f73d8",
+    "schemas/contracts/v1/telemetry/remote_sensing_lineage_activity.schema.json": "sha256:1a74d0c4181f4bb2a3c2bfa34db19061ca03c6535184ba9106d095af675cd4a3",
+    "tests/validators/telemetry/test_remote_sensing_lineage_activity.py": "sha256:8d9c56c401422ee2fc109c71ee4e0ea4bea539a52708861ebc10878c9c1ac4d5",
+    "tools/generators/telemetry/build_remote_sensing_lineage_activity.py": "sha256:47287a41f22d9c3db30df0fc330d97e8f5835e7d193c13f23068145aa3ddcc8e",
+    "tools/validators/telemetry/validate_remote_sensing_lineage_activity.py": "sha256:b5d9b8631259aa6b15a51b283aee83552c4b91b0fb2f17ba66aa1d5a9c41cd2f"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5 Codex",
+    "version": "2026-08-11"
+  },
+  "prompt_or_contract": "sha256:f3f1179c6a2d6baebed40bf2dbac9ef0fd9e7284b4f0c1598e34d08fc2e3d9c7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [],
+    "attached_docs": [],
+    "evidence_refs": [
+      "repo:data/receipts/generated/genrec-pass32-remote-sensing-lineage-activity-20260810.json",
+      "github:bartytime4life/Kansas-Frontier-Matrix:actions/run/31514916841",
+      "github:bartytime4life/Kansas-Frontier-Matrix#2548@7f7b2810d066adf87d6c25b24011ab8fd823c7db"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/remote-sensing-lineage-activity.yml": "PROPOSED",
+    "contracts/telemetry/remote_sensing_lineage_activity.md": "PROPOSED",
+    "docs/intake/exploratory/pass-32-remote-sensing-lineage-activity-source-map.md": "PROPOSED",
+    "fixtures/contracts/v1/telemetry/remote_sensing_lineage_activity/README.md": "PROPOSED",
+    "fixtures/contracts/v1/telemetry/remote_sensing_lineage_activity/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/telemetry/remote_sensing_lineage_activity.schema.json": "PROPOSED",
+    "tests/validators/telemetry/test_remote_sensing_lineage_activity.py": "CONFIRMED",
+    "tools/generators/telemetry/build_remote_sensing_lineage_activity.py": "CONFIRMED",
+    "tools/validators/telemetry/validate_remote_sensing_lineage_activity.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "receipt-rollover-assay",
+      "outcome": "PASS",
+      "reason": "Exact-head GitHub Actions run 31514916841 passed all remote-sensing lineage tests and fixture replay, then failed only because the historical 20260810 receipt bound three shared telemetry lane indexes changed by PR #2548."
+    },
+    {
+      "gate": "stable-artifact-scope",
+      "outcome": "PASS",
+      "reason": "This superseding current-byte receipt binds the profile-owned workflow, contract, source map, fixtures, schema, test, generator, and validator while excluding independently changing shared telemetry indexes governed by their change-specific receipt."
+    },
+    {
+      "gate": "focused-hosted-tests",
+      "outcome": "PASS",
+      "reason": "GitHub Actions run 31514916841 completed all eleven deterministic remote-sensing lineage tests and exact eleven-case fixture polarity before reporting the stale historical receipt bindings."
+    },
+    {
+      "gate": "current-byte-local-validation",
+      "outcome": "PASS",
+      "reason": "The remote-sensing lineage test suite and exact fixture replay passed locally against the final stable packet."
+    },
+    {
+      "gate": "generated-receipt-integrity",
+      "outcome": "PASS",
+      "reason": "Nine non-self stable-packet artifacts were rebound to their final SHA-256 digests."
+    },
+    {
+      "gate": "hosted-exact-head-checks",
+      "outcome": "SKIPPED",
+      "reason": "The corrected pull-request head did not yet exist when this receipt was emitted; GitHub Actions remains authoritative for that head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on draft pull request #2548."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "repository:historical-remote-sensing-lineage-receipt",
+      "validated": true,
+      "evidence_ref": "repo:data/receipts/generated/genrec-pass32-remote-sensing-lineage-activity-20260810.json"
+    },
+    {
+      "id": "github:first-head-remote-sensing-lineage-run",
+      "validated": true,
+      "evidence_ref": "github:bartytime4life/Kansas-Frontier-Matrix:actions/run/31514916841"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-11T16:58:04Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "links": {
+    "pr_number": 2548,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Supersedes genrec-pass32-remote-sensing-lineage-activity-20260810 for current-byte validation while preserving the older receipt as historical process memory. The stable packet excludes independently changing shared telemetry indexes; those index edits are bound by the map-build sustainability change receipt. This rollover changes no remote-sensing semantics, source access, telemetry export, evidence, policy, review, promotion, release, deployment, publication, or public-use authority."
+}

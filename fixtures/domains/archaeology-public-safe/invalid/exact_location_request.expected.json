@@ -1,0 +1,9 @@
+{
+  "fixture_id": "arc-public-safe-invalid-001-expected",
+  "fixture_posture": "synthetic; public-safe; invalid; no-leak-expected",
+  "outcome": "DENY",
+  "reason_code": "EXACT_PRECISION_NOT_PUBLIC_SAFE",
+  "reason_summary": "Requested precision class EXACT is not permitted for a public-safe response.",
+  "returned_fields": [],
+  "notes": "Expected response contains no coordinates, boundary geometry, or other protected detail."
+}

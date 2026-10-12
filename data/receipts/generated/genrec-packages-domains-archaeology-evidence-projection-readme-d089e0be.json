@@ -1,0 +1,197 @@
+{
+  "receipt_id": "genrec-packages-domains-archaeology-evidence-projection-readme-d089e0be",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "packages/domains/archaeology/evidence-projection/README.md"
+  ],
+  "artifact_hashes": {
+    "packages/domains/archaeology/evidence-projection/README.md": "sha256:d089e0be5c2b57014984dafdf3f39c560e5154d82397384bb487e2fb44a99eb9"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "2026-07-20-work-mode"
+  },
+  "prompt_or_contract": "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "container validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM GitHub Repository Documentation Implementation Agent - Full Operating Prompt v3.1",
+      "Directory Rules.pdf",
+      "Kansas Frontier Matrix - AI Build Operating Contract.md"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/031f7ac86c4d9801bd35267fb7cca0fd79ed4711",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/8469987a42bf45cbab14d51adc1cc322fa2fc575",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/031f7ac86c4d9801bd35267fb7cca0fd79ed4711/packages/domains/archaeology/evidence-projection/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/031f7ac86c4d9801bd35267fb7cca0fd79ed4711/packages/domains/archaeology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/031f7ac86c4d9801bd35267fb7cca0fd79ed4711/packages/domains/archaeology/candidate-classifier/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/031f7ac86c4d9801bd35267fb7cca0fd79ed4711/packages/citation/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/031f7ac86c4d9801bd35267fb7cca0fd79ed4711/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/031f7ac86c4d9801bd35267fb7cca0fd79ed4711/docs/domains/archaeology/SENSITIVITY.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/031f7ac86c4d9801bd35267fb7cca0fd79ed4711/docs/domains/archaeology/PUBLICATION_AND_POLICY.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/031f7ac86c4d9801bd35267fb7cca0fd79ed4711/contracts/evidence/evidence_ref.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/031f7ac86c4d9801bd35267fb7cca0fd79ed4711/contracts/evidence/evidence_bundle.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/031f7ac86c4d9801bd35267fb7cca0fd79ed4711/contracts/evidence/evidence_drawer_payload.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/031f7ac86c4d9801bd35267fb7cca0fd79ed4711/contracts/ui/evidence_drawer_payload.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/031f7ac86c4d9801bd35267fb7cca0fd79ed4711/schemas/contracts/v1/evidence/evidence_ref.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/031f7ac86c4d9801bd35267fb7cca0fd79ed4711/schemas/contracts/v1/evidence/evidence_bundle.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/031f7ac86c4d9801bd35267fb7cca0fd79ed4711/schemas/contracts/v1/evidence/evidence_drawer_payload.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/031f7ac86c4d9801bd35267fb7cca0fd79ed4711/schemas/contracts/v1/ui/evidence_drawer_payload.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/031f7ac86c4d9801bd35267fb7cca0fd79ed4711/data/proofs/evidence_bundle/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/031f7ac86c4d9801bd35267fb7cca0fd79ed4711/policy/domains/archaeology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/031f7ac86c4d9801bd35267fb7cca0fd79ed4711/tests/domains/archaeology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/031f7ac86c4d9801bd35267fb7cca0fd79ed4711/fixtures/domains/archaeology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/031f7ac86c4d9801bd35267fb7cca0fd79ed4711/.github/workflows/domain-archaeology.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/031f7ac86c4d9801bd35267fb7cca0fd79ed4711/.github/PULL_REQUEST_TEMPLATE.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/031f7ac86c4d9801bd35267fb7cca0fd79ed4711/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "attached://Pasted text(61).txt"
+    ]
+  },
+  "truth_labels": {
+    "packages/domains/archaeology/evidence-projection/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-preflight",
+      "outcome": "PASS",
+      "reason": "Repository identity, writable permissions, immutable main snapshot, target blob, duplicate pull-request search, Directory Rules, pull-request contract, generated-receipt schema, and relevant Archaeology/evidence surfaces were inspected."
+    },
+    {
+      "gate": "base-drift-and-target-concurrency",
+      "outcome": "PASS",
+      "reason": "Main advanced after authoring from 031f7ac86c4d9801bd35267fb7cca0fd79ed4711 to 8469987a42bf45cbab14d51adc1cc322fa2fc575. The intervening compare changed only release/candidates/people/README.md and its generated receipt; the evidence-projection target remained at blob cf4fcaee956bc393f953bea9c5778b06a5d3651a."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "The target remains reusable package documentation while contracts, schemas, policy, proof storage, tests, fixtures, lifecycle records, review, release, public API, UI, and AI remain in their owning roots."
+    },
+    {
+      "gate": "bounded-package-inventory",
+      "outcome": "PASS",
+      "reason": "The target was read directly and common manifest, initializer, source, selected module, and stale package-specific test/fixture README paths were checked explicitly; absence claims remain bounded."
+    },
+    {
+      "gate": "evidence-contract-schema-grounding",
+      "outcome": "PASS",
+      "reason": "EvidenceRef and EvidenceBundle contracts and fielded PROPOSED schemas were inspected. The README preserves pointer, resolution, closure, policy, review, transform, release, and projection separation."
+    },
+    {
+      "gate": "payload-authority-conflict",
+      "outcome": "PASS",
+      "reason": "The evidence-family and UI-family Evidence Drawer contracts/schemas were inspected. Their provisional, permissive, and differing shapes are recorded as a conflict; no canonical DTO is invented."
+    },
+    {
+      "gate": "proof-test-fixture-workflow-grounding",
+      "outcome": "PASS",
+      "reason": "The EvidenceBundle proof README, Archaeology test/fixture roots, sampled placeholder maturity, and read-only readiness-hold workflow were inspected; no proof inventory, projector test pass, resolver, or runtime claim is made."
+    },
+    {
+      "gate": "sensitive-content-review",
+      "outcome": "PASS",
+      "reason": "No real coordinate, identifier, source locator, cultural detail, protected payload, policy secret, credential, private endpoint, or reconstructive example is introduced; exact and inferable Archaeology detail remains fail-closed."
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "One H1, balanced fences, KFM meta block, internal anchors, final newline, no trailing whitespace or tabs, and repository-relative links were checked."
+    },
+    {
+      "gate": "secret-pattern-review",
+      "outcome": "PASS",
+      "reason": "The README and receipt were checked for common private-key and token prefixes; no credential material was introduced."
+    },
+    {
+      "gate": "generated-receipt-structure",
+      "outcome": "PASS",
+      "reason": "Required fields, allowed properties, artifact hash closure, truth labels, validation outcomes, citations, timestamp, and pending human-review state were checked against the generated-receipt schema."
+    },
+    {
+      "gate": "runtime-and-executable-tests",
+      "outcome": "SKIPPED",
+      "reason": "Documentation and provenance only; no projector, resolver, dependency, schema, contract, policy, proof, test, fixture payload, workflow, lifecycle record, release behavior, API route, UI component, or runtime is changed."
+    },
+    {
+      "gate": "remote-readback",
+      "outcome": "SKIPPED",
+      "reason": "Remote branch, commit, changed-path, and pull-request verification occurs after branch publication and is reported in pull-request metadata."
+    },
+    {
+      "gate": "repository-native-ci",
+      "outcome": "SKIPPED",
+      "reason": "GitHub Actions checks are observed after draft pull-request creation and were unavailable at receipt emission time."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "KFM-DOCUMENTATION-PROMPT-V3.1",
+      "validated": true,
+      "evidence_ref": "attached://Pasted text(61).txt"
+    },
+    {
+      "id": "KFM-DIRECTORY-RULES",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/031f7ac86c4d9801bd35267fb7cca0fd79ed4711/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "EVIDENCE-REF-CONTRACT-SCHEMA",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/031f7ac86c4d9801bd35267fb7cca0fd79ed4711/contracts/evidence/evidence_ref.md"
+    },
+    {
+      "id": "EVIDENCE-BUNDLE-CONTRACT-SCHEMA",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/031f7ac86c4d9801bd35267fb7cca0fd79ed4711/contracts/evidence/evidence_bundle.md"
+    },
+    {
+      "id": "EVIDENCE-DRAWER-PAYLOAD-CONFLICT",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/031f7ac86c4d9801bd35267fb7cca0fd79ed4711/contracts/evidence/evidence_drawer_payload.md"
+    },
+    {
+      "id": "ARCHAEOLOGY-SENSITIVITY-BOUNDARY",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/031f7ac86c4d9801bd35267fb7cca0fd79ed4711/docs/domains/archaeology/SENSITIVITY.md"
+    },
+    {
+      "id": "ARCHAEOLOGY-TEST-BOUNDARY",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/031f7ac86c4d9801bd35267fb7cca0fd79ed4711/tests/domains/archaeology/README.md"
+    },
+    {
+      "id": "ARCHAEOLOGY-READINESS-WORKFLOW",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/031f7ac86c4d9801bd35267fb7cca0fd79ed4711/.github/workflows/domain-archaeology.yml"
+    },
+    {
+      "id": "GENERATED-RECEIPT-SCHEMA",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/031f7ac86c4d9801bd35267fb7cca0fd79ed4711/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-20T15:58:04Z",
+  "emitter": "ai-builder/openai-codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored documentation-only revision on a scoped review branch. It records bounded package absence, fielded draft EvidenceRef/EvidenceBundle inputs, the unresolved Evidence Drawer payload authority conflict, proof/test/fixture/workflow maturity, and sensitive-domain non-disclosure rules. It introduces no projector, resolver, canonical DTO, schema, contract, policy, proof, fixture payload, executable test, workflow, sensitive data, lifecycle artifact, release record, deployment, public route, UI component, or runtime behavior. Human review remains pending; this receipt records provenance and does not authorize merge, release, or publication."
+}

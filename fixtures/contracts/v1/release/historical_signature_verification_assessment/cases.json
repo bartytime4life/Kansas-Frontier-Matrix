@@ -1,0 +1,228 @@
+{
+  "bases": {
+    "current": {
+      "object_type": "HistoricalSignatureVerificationAssessment",
+      "schema_version": "1.0.0",
+      "profile": "kfm.historical-signature-verification.fixture.v1",
+      "assessment_id": "",
+      "assessment_state": "COMPLETE",
+      "artifact_ref": "kfm:artifact:synthetic-release-001",
+      "artifact_sha256": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "signature_ref": "kfm:signature:synthetic-signature-001",
+      "signer_identity": "kfm:signer:synthetic-release-automation",
+      "signer_key_id": "kfm:key:synthetic-key-001",
+      "signed_at": "2026-02-01T00:00:00Z",
+      "verified_at": "2026-03-01T00:00:00Z",
+      "signing_trust_profile_version": "trust-v1",
+      "verification_trust_profile_version": "trust-v1",
+      "signer_authorized_at_signing": true,
+      "key_status_events": [
+        {
+          "sequence": 1,
+          "effective_at": "2026-01-01T00:00:00Z",
+          "status": "ACTIVE",
+          "reason": "PROVISIONED",
+          "superseded_by_key_id": null
+        }
+      ],
+      "status_at_signing": "ACTIVE",
+      "status_at_verification": "ACTIVE",
+      "verification": {
+        "mode": "ONLINE",
+        "cryptographic_result": "VERIFIED",
+        "evidence_complete": true,
+        "offline_material_ref": null
+      },
+      "decision": {
+        "state": "VERIFIED_CURRENT",
+        "reason_codes": ["CURRENT_TRUST_COHERENT"],
+        "review_required": true,
+        "release_authorized": false,
+        "historical_evidence_rewritten": false
+      },
+      "governance": {
+        "execution_mode": "FIXTURE_ONLY",
+        "cryptography_performed": false,
+        "network_attempted": false,
+        "trust_store_mutated": false,
+        "signing_authorized": false,
+        "resigning_authorized": false,
+        "correction_authorized": false,
+        "withdrawal_authorized": false,
+        "release_authorized": false,
+        "publication_authorized": false,
+        "public_use_allowed": false
+      },
+      "spec_hash": ""
+    }
+  },
+  "cases": [
+    {
+      "case_id": "verified-current",
+      "base": "current",
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "verified-historical-verify-only",
+      "base": "current",
+      "mutations": [
+        { "path": "/key_status_events", "value": [{ "sequence": 1, "effective_at": "2026-01-01T00:00:00Z", "status": "ACTIVE", "reason": "PROVISIONED", "superseded_by_key_id": null }, { "sequence": 2, "effective_at": "2026-02-15T00:00:00Z", "status": "VERIFY_ONLY", "reason": "ROTATION", "superseded_by_key_id": null }] },
+        { "path": "/status_at_verification", "value": "VERIFY_ONLY" }
+      ],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "verified-historical-expired",
+      "base": "current",
+      "mutations": [
+        { "path": "/key_status_events", "value": [{ "sequence": 1, "effective_at": "2026-01-01T00:00:00Z", "status": "ACTIVE", "reason": "PROVISIONED", "superseded_by_key_id": null }, { "sequence": 2, "effective_at": "2026-02-15T00:00:00Z", "status": "EXPIRED", "reason": "EXPIRY", "superseded_by_key_id": null }] },
+        { "path": "/status_at_verification", "value": "EXPIRED" }
+      ],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "revoked-after-signing",
+      "base": "current",
+      "mutations": [
+        { "path": "/key_status_events", "value": [{ "sequence": 1, "effective_at": "2026-01-01T00:00:00Z", "status": "ACTIVE", "reason": "PROVISIONED", "superseded_by_key_id": null }, { "sequence": 2, "effective_at": "2026-02-15T00:00:00Z", "status": "REVOKED", "reason": "ADMINISTRATIVE_REVOCATION", "superseded_by_key_id": null }] },
+        { "path": "/status_at_verification", "value": "REVOKED" }
+      ],
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": [{ "code": "KEY_REVOKED_AFTER_SIGNING", "path": "/decision/state" }]
+    },
+    {
+      "case_id": "compromised-after-signing",
+      "base": "current",
+      "mutations": [
+        { "path": "/key_status_events", "value": [{ "sequence": 1, "effective_at": "2026-01-01T00:00:00Z", "status": "ACTIVE", "reason": "PROVISIONED", "superseded_by_key_id": null }, { "sequence": 2, "effective_at": "2026-02-15T00:00:00Z", "status": "COMPROMISED", "reason": "KEY_COMPROMISE", "superseded_by_key_id": null }] },
+        { "path": "/status_at_verification", "value": "COMPROMISED" }
+      ],
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": [{ "code": "KEY_COMPROMISE_REVIEW_REQUIRED", "path": "/decision/state" }]
+    },
+    {
+      "case_id": "offline-evidence-incomplete",
+      "base": "current",
+      "mutations": [
+        { "path": "/verification/mode", "value": "OFFLINE" },
+        { "path": "/verification/cryptographic_result", "value": "NOT_RUN" },
+        { "path": "/verification/evidence_complete", "value": false },
+        { "path": "/verification/offline_material_ref", "value": "kfm:offline-trust-material:synthetic-bundle-001" }
+      ],
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": [{ "code": "VERIFICATION_EVIDENCE_INCOMPLETE", "path": "/decision/state" }]
+    },
+    {
+      "case_id": "trust-profile-version-changed",
+      "base": "current",
+      "mutations": [{ "path": "/verification_trust_profile_version", "value": "trust-v2" }],
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": [{ "code": "TRUST_PROFILE_VERSION_CHANGED", "path": "/decision/state" }]
+    },
+    {
+      "case_id": "declared-cryptographic-verification-failed",
+      "base": "current",
+      "mutations": [{ "path": "/verification/cryptographic_result", "value": "FAILED" }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "DECLARED_SIGNATURE_VERIFICATION_FAILED", "path": "/decision/state" }]
+    },
+    {
+      "case_id": "signer-unauthorized-at-signing",
+      "base": "current",
+      "mutations": [{ "path": "/signer_authorized_at_signing", "value": false }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "SIGNER_OR_KEY_UNAUTHORIZED_AT_SIGNING", "path": "/decision/state" }]
+    },
+    {
+      "case_id": "assessment-error",
+      "base": "current",
+      "mutations": [{ "path": "/assessment_state", "value": "ERROR" }],
+      "expected_outcome": "ERROR",
+      "expected_findings": [{ "code": "ASSESSMENT_ERROR", "path": "/decision/state" }]
+    },
+    {
+      "case_id": "decision-mismatch",
+      "base": "current",
+      "decision_override": {
+        "state": "VERIFIED_HISTORICAL",
+        "reason_codes": ["HISTORICAL_TRUST_COHERENT"],
+        "review_required": true,
+        "release_authorized": false,
+        "historical_evidence_rewritten": false
+      },
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "HISTORICAL_SIGNATURE_DECISION_MISMATCH", "path": "/decision" }]
+    },
+    {
+      "case_id": "event-sequence-gap",
+      "base": "current",
+      "mutations": [{ "path": "/key_status_events/0/sequence", "value": 2 }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "HISTORICAL_SIGNATURE_EVENT_SEQUENCE_INVALID", "path": "/key_status_events/0/sequence" }]
+    },
+    {
+      "case_id": "event-after-verification-clock",
+      "base": "current",
+      "mutations": [
+        { "path": "/key_status_events", "value": [{ "sequence": 1, "effective_at": "2026-01-01T00:00:00Z", "status": "ACTIVE", "reason": "PROVISIONED", "superseded_by_key_id": null }, { "sequence": 2, "effective_at": "2026-04-01T00:00:00Z", "status": "VERIFY_ONLY", "reason": "ROTATION", "superseded_by_key_id": null }] }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "HISTORICAL_SIGNATURE_EVENT_AFTER_VERIFICATION", "path": "/key_status_events" }]
+    },
+    {
+      "case_id": "stored-signing-status-mismatch",
+      "base": "current",
+      "mutations": [{ "path": "/status_at_signing", "value": "VERIFY_ONLY" }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "HISTORICAL_SIGNATURE_SIGNING_STATUS_MISMATCH", "path": "/status_at_signing" }]
+    },
+    {
+      "case_id": "stored-verification-status-mismatch",
+      "base": "current",
+      "mutations": [{ "path": "/status_at_verification", "value": "VERIFY_ONLY" }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "HISTORICAL_SIGNATURE_VERIFICATION_STATUS_MISMATCH", "path": "/status_at_verification" }]
+    },
+    {
+      "case_id": "offline-mode-without-material",
+      "base": "current",
+      "mutations": [{ "path": "/verification/mode", "value": "OFFLINE" }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "HISTORICAL_SIGNATURE_OFFLINE_MATERIAL_REQUIRED", "path": "/verification/offline_material_ref" }]
+    },
+    {
+      "case_id": "supersession-self-reference",
+      "base": "current",
+      "mutations": [
+        { "path": "/key_status_events", "value": [{ "sequence": 1, "effective_at": "2026-01-01T00:00:00Z", "status": "ACTIVE", "reason": "PROVISIONED", "superseded_by_key_id": null }, { "sequence": 2, "effective_at": "2026-02-15T00:00:00Z", "status": "SUPERSEDED", "reason": "SUPERSESSION", "superseded_by_key_id": "kfm:key:synthetic-key-001" }] },
+        { "path": "/status_at_verification", "value": "SUPERSEDED" }
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "HISTORICAL_SIGNATURE_EVENT_STATE_INVALID", "path": "/key_status_events/1" }]
+    },
+    {
+      "case_id": "spec-hash-mismatch",
+      "base": "current",
+      "spec_hash_override": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "HISTORICAL_SIGNATURE_SPEC_HASH_MISMATCH", "path": "/spec_hash" }]
+    },
+    {
+      "case_id": "assessment-id-mismatch",
+      "base": "current",
+      "assessment_id_override": "kfm:historical-signature:ffffffffffffffffffffffff",
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "HISTORICAL_SIGNATURE_ID_MISMATCH", "path": "/assessment_id" }]
+    },
+    {
+      "case_id": "authority-overreach",
+      "base": "current",
+      "mutations": [{ "path": "/governance/signing_authorized", "value": true }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "HISTORICAL_SIGNATURE_SCHEMA_INVALID", "path": "/governance/signing_authorized" }]
+    }
+  ]
+}

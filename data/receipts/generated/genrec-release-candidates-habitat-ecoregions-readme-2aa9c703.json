@@ -1,0 +1,55 @@
+{
+  "receipt_id": "genrec-release-candidates-habitat-ecoregions-readme-2aa9c703",
+  "contract_version": "3.0.0",
+  "receipt_type": "GenerationReceipt",
+  "status": "PROPOSED",
+  "generated_at": "2026-07-18T12:41:44-05:00",
+  "repository": "bartytime4life/Kansas-Frontier-Matrix",
+  "base_commit": "d68cc7344d50e3d739dee555ca3dbe28960369fc",
+  "branch": "agent/release-candidates-habitat-ecoregions-readme-20260718",
+  "target_path": "release/candidates/habitat/ecoregions/README.md",
+  "previous_blob": "b233c15f31ea235a0c578fc8b415af56ac654d01",
+  "new_blob": "d8946a7181fe0f141a1ae43c28755baf54d28a1c",
+  "sha256": "2aa9c703661795700c72817585e4c3151a3ac93e9583f99dd2c420c5b1f18a4b",
+  "truth_labels": {
+    "confirmed": [
+      "The Habitat ecoregions candidate-lane README existed at the pinned base and was updated in place.",
+      "Bounded indexed search surfaced the parent README but no child Habitat ecoregions candidate dossier.",
+      "The Habitat ecoregions pipeline-spec lane is README-only and states that no active ecoregion specification is established.",
+      "The Habitat ecoregions contract lane is README-only and lists proposed semantic contracts rather than accepted contract instances.",
+      "The Habitat ecoregions schema lane is an index and reports no confirmed concrete schema inventory.",
+      "The Habitat ecoregions source-registry README defines admission, rights, cadence, framework, hierarchy, and role controls while concrete admitted descriptors and canonical topology remain unresolved.",
+      "The Habitat ecoregions test lane is documentation-only in bounded search; no direct executable test module surfaced.",
+      "The Habitat ecoregions fixture README reports that no fixture payload files were verified.",
+      "The Habitat proof lane states implementation depth remains UNKNOWN and no ecoregion proof inventory was established.",
+      "The published Habitat ecoregions lane is guidance only; no emitted release-linked artifact surfaced in bounded search.",
+      "The Habitat policy README remains a greenfield scaffold rather than proof of executable policy enforcement.",
+      "The domain-habitat workflow is an explicit maturity-hold workflow and the general release-dry-run remains TODO-only."
+    ],
+    "proposed": [
+      "release/candidates/habitat/ecoregions/ should operate as a repository-grounded, framework-version-hierarchy-aware candidate index and pre-publication review contract without becoming source, occurrence, habitat-quality, regulatory, hydrologic, land-title, evidence, policy, release, or publication authority."
+    ],
+    "needs_verification": [
+      "Exhaustive child inventory and deterministic public-safe candidate-index generation.",
+      "Candidate identity, artifact-manifest, ecoregion framework, hierarchy, boundary-version, crosswalk, source-role, source-admission, rights, time, CRS, topology, public-field, and EvidenceBundle contracts.",
+      "Concrete schemas, synthetic fixtures, executable validators and tests, no-network and no-leak enforcement, proof production, and catalog closure.",
+      "Accepted source-role mapping for authority/context terminology and canonical source-registry topology.",
+      "Candidate-to-review, PromotionDecision, ReleaseManifest, correction, withdrawal, supersession, rollback, cache-invalidation, branch-protection, and independent-review topology."
+    ]
+  },
+  "changes": [
+    "Replaced minimal Habitat ecoregions candidate notes with a repository-grounded candidate index and pre-publication review contract.",
+    "Recorded that no child candidate dossier or active ecoregion candidate is established by bounded inspection.",
+    "Preserved the exact A candidate is not a release sentence and added the publication_not_yet posture.",
+    "Separated ecoregion regionalization context from species and plant occurrence, HabitatPatch quality, suitability, critical-habitat, hydrologic, soil, hazard, agricultural, parcel, land-title, evidence, and release truth.",
+    "Added finite states and holds, admission and identity rules, framework/hierarchy/source-role controls, crosswalk-loss and regionalization anti-collapse, time-vintage-stale-state discipline, sensitive-join and public-field controls, release gates, a public-safe dossier structure, validation and automation posture, review handoff, correction and rollback discipline, public API-map-export-AI boundaries, evidence ledger, definition of done, open verification, and documentation rollback."
+  ],
+  "authority_boundary": "This receipt records an AI-authored documentation revision. It is not a Habitat ecoregions candidate, SourceDescriptor, framework equivalence decision, semantic contract, schema, pipeline activation, ecoregion record, occurrence record, HabitatPatch or suitability claim, critical-habitat designation, EvidenceBundle, PolicyDecision, ReviewRecord, ValidationReport, PromotionDecision, ReleaseManifest, public layer, CorrectionNotice, WithdrawalNotice, RollbackCard, steward approval, release approval, publication authority, or proof of runtime behavior.",
+  "rollback": {
+    "strategy": "Close the draft pull request before merge, or revert the generated-receipt commit and README commit in reverse order after merge.",
+    "restores_blob": "b233c15f31ea235a0c578fc8b415af56ac654d01"
+  },
+  "human_review": {
+    "state": "pending"
+  }
+}

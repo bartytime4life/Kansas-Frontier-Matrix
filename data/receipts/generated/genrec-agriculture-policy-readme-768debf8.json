@@ -1,0 +1,205 @@
+{
+  "receipt_id": "genrec-agriculture-policy-readme-768debf8",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "policy/domains/agriculture/README.md"
+  ],
+  "artifact_hashes": {
+    "policy/domains/agriculture/README.md": "sha256:768debf831816780c7372a6819c6ed1e88751da9474043d689d7427ed2d372e3"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5 Codex",
+    "version": "2026-08-13"
+  },
+  "prompt_or_contract": "sha256:32432933665c9f0011969ad541cb695deae68801012d667986ecbdc911d2dbc6",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "complete recursive repository-tree inspection",
+      "current policy-profile and Agriculture-slice reconciliation",
+      "local Markdown structure, link, fact, and SHA-256 validation",
+      "attached architecture-evidence inspection"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Pass_20_Part_2_Idea_Index_Category_Atlas_and_Expansion_Dossier.md",
+      "Unified Implementation Architecture Build Manual.md",
+      "Repository Structure Guiding Document.md"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/a893b30f4dd1edfed151620c529734f4fd789a89/policy/domains/agriculture/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/tree/a893b30f4dd1edfed151620c529734f4fd789a89/policy/domains/agriculture",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/a893b30f4dd1edfed151620c529734f4fd789a89/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/a893b30f4dd1edfed151620c529734f4fd789a89/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/a893b30f4dd1edfed151620c529734f4fd789a89/.github/CODEOWNERS",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/a893b30f4dd1edfed151620c529734f4fd789a89/policy/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/a893b30f4dd1edfed151620c529734f4fd789a89/policy/domains/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/a893b30f4dd1edfed151620c529734f4fd789a89/policy/sensitivity/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/a893b30f4dd1edfed151620c529734f4fd789a89/policy/decision/vocabulary.v1.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/a893b30f4dd1edfed151620c529734f4fd789a89/policy/decision/reviewer_roles.v1.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/a893b30f4dd1edfed151620c529734f4fd789a89/contracts/policy/policy_input_bundle_profile_v1.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/a893b30f4dd1edfed151620c529734f4fd789a89/contracts/policy/policy_decision_semantics_profile_v1.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/a893b30f4dd1edfed151620c529734f4fd789a89/.github/workflows/policy-test.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/a893b30f4dd1edfed151620c529734f4fd789a89/.github/workflows/domain-agriculture.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/a893b30f4dd1edfed151620c529734f4fd789a89/.github/workflows/agriculture-observation.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/a893b30f4dd1edfed151620c529734f4fd789a89/.github/workflows/agriculture-hls-ndvi-zonal-materiality.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/a893b30f4dd1edfed151620c529734f4fd789a89/.github/workflows/agriculture-ndvi-delta-computation.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/a893b30f4dd1edfed151620c529734f4fd789a89/.github/workflows/agriculture-ndvi-readiness.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/a893b30f4dd1edfed151620c529734f4fd789a89/.github/workflows/agriculture-vegetation-connectivity-gate.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/a893b30f4dd1edfed151620c529734f4fd789a89/packages/policy-runtime/src/policy_runtime/core.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/a893b30f4dd1edfed151620c529734f4fd789a89/data/receipts/generated/genrec-agriculture-policy-readme-f90f3e11.json"
+    ]
+  },
+  "truth_labels": {
+    "policy/domains/agriculture/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Pinned current main and target bytes, reviewed target history, found no open exact-target PR, and confirmed the planned branch was unused."
+    },
+    {
+      "gate": "accepted-directory-placement",
+      "outcome": "PASS",
+      "reason": "ADR-0029 and canonical Directory Rules retain policy source under singular policy/; no path, root, authority, or migration change is introduced."
+    },
+    {
+      "gate": "complete-tree-inventory",
+      "outcome": "PASS",
+      "reason": "Parsed the untruncated 16,984-entry recursive tree and confirmed seven direct Agriculture policy blobs, three direct Rego sources, and no Agriculture native Rego test."
+    },
+    {
+      "gate": "direct-policy-maturity",
+      "outcome": "PASS",
+      "reason": "Preserved the direct Rego/YAML artifacts as PROPOSED stubs or placeholders and explicitly denied activation claims."
+    },
+    {
+      "gate": "shared-policy-profile-boundary",
+      "outcome": "PASS",
+      "reason": "Reconciled the inactive input, vocabulary, decision-semantics, and reviewer-role profiles without treating validator success as evaluation or authority."
+    },
+    {
+      "gate": "adjacent-agriculture-profile-boundary",
+      "outcome": "PASS",
+      "reason": "Separated executable observation, materiality, NDVI, readiness, connectivity, and watcher slices from policy, evidence, promotion, release, and publication effects."
+    },
+    {
+      "gate": "no-loss-document-reconciliation",
+      "outcome": "PASS",
+      "reason": "Preserved v0.2 scope, fail-closed defaults, trust membrane, composition, public-surface, review, correction, rollback, and activation guidance while repairing stale implementation claims."
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "One rendered H1, 54 ordered headings, one closed KFM meta block, five balanced language-tagged code-fence pairs, no tabs, no trailing whitespace, and a final newline."
+    },
+    {
+      "gate": "internal-link-and-fragment-resolution",
+      "outcome": "PASS",
+      "reason": "All 84 internal link references resolve against the complete pinned tree or local generated anchors."
+    },
+    {
+      "gate": "repository-fact-assertions",
+      "outcome": "PASS",
+      "reason": "Twenty-two programmatic assertions passed for inventories, counts, statuses, authority flags, workflows, registry sizes, bundle posture, runtime placeholder, and prior target blob."
+    },
+    {
+      "gate": "artifact-content-integrity",
+      "outcome": "PASS",
+      "reason": "The README SHA-256 was recomputed from final local bytes and bound into this receipt."
+    },
+    {
+      "gate": "sensitive-content-review",
+      "outcome": "PASS",
+      "reason": "No credential, private payload, exact protected location, person-level Agriculture record, hidden reasoning, or exploit detail is present."
+    },
+    {
+      "gate": "repository-native-test-suite",
+      "outcome": "SKIPPED",
+      "reason": "No local repository checkout or gh CLI is available; no local evaluator, validator-suite, or workflow result is claimed."
+    },
+    {
+      "gate": "hosted-exact-head-checks",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks occur only after draft PR creation and are observed and reported separately from this immutable authoring receipt."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending; this receipt is provenance, not approval."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "policy/README.md",
+    "policy/domains/README.md"
+  ],
+  "citations": [
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/a893b30f4dd1edfed151620c529734f4fd789a89/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "direct-agriculture-policy-inventory",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/tree/a893b30f4dd1edfed151620c529734f4fd789a89/policy/domains/agriculture"
+    },
+    {
+      "id": "parent-domain-policy-maturity",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/a893b30f4dd1edfed151620c529734f4fd789a89/policy/domains/README.md"
+    },
+    {
+      "id": "shared-decision-vocabulary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/a893b30f4dd1edfed151620c529734f4fd789a89/policy/decision/vocabulary.v1.json"
+    },
+    {
+      "id": "shared-reviewer-role-vocabulary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/a893b30f4dd1edfed151620c529734f4fd789a89/policy/decision/reviewer_roles.v1.json"
+    },
+    {
+      "id": "agriculture-domain-workflow-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/a893b30f4dd1edfed151620c529734f4fd789a89/.github/workflows/domain-agriculture.yml"
+    },
+    {
+      "id": "broad-policy-readiness-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/a893b30f4dd1edfed151620c529734f4fd789a89/.github/workflows/policy-test.yml"
+    },
+    {
+      "id": "policy-runtime-placeholder",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/a893b30f4dd1edfed151620c529734f4fd789a89/packages/policy-runtime/src/policy_runtime/core.py"
+    },
+    {
+      "id": "prior-agriculture-policy-readme-receipt",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/a893b30f4dd1edfed151620c529734f4fd789a89/data/receipts/generated/genrec-agriculture-policy-readme-f90f3e11.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-13T17:59:16Z",
+  "emitter": "openai/gpt-5-codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored repository-grounded v0.3 reconciliation on a focused draft-review branch. The target README remained unchanged since v0.2 while surrounding governance, inactive shared policy profiles, and bounded Agriculture fixture slices evolved. This change activates no rule, threshold, bundle, evaluator, validator, workflow, source, lifecycle transition, release, deployment, or publication. Human review remains pending."
+}

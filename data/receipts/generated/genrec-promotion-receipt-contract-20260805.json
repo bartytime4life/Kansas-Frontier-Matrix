@@ -1,0 +1,144 @@
+{
+  "receipt_id": "genrec-promotion-receipt-contract-20260805",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/promotion-receipt.yml",
+    "contracts/release/promotion_receipt.md",
+    "fixtures/release/promotion_receipt/README.md",
+    "fixtures/release/promotion_receipt/invalid/applied_support_incomplete.expected_code.txt",
+    "fixtures/release/promotion_receipt/invalid/applied_support_incomplete.json",
+    "fixtures/release/promotion_receipt/invalid/applied_while_blocked.expected_code.txt",
+    "fixtures/release/promotion_receipt/invalid/applied_while_blocked.json",
+    "fixtures/release/promotion_receipt/invalid/applied_without_decision.expected_code.txt",
+    "fixtures/release/promotion_receipt/invalid/applied_without_decision.json",
+    "fixtures/release/promotion_receipt/invalid/digest_mismatch.expected_code.txt",
+    "fixtures/release/promotion_receipt/invalid/digest_mismatch.json",
+    "fixtures/release/promotion_receipt/invalid/overall_status_mismatch.expected_code.txt",
+    "fixtures/release/promotion_receipt/invalid/overall_status_mismatch.json",
+    "fixtures/release/promotion_receipt/valid/abstained_attempt.json",
+    "fixtures/release/promotion_receipt/valid/applied_synthetic_transition.json",
+    "fixtures/release/promotion_receipt/valid/denied_attempt.json",
+    "fixtures/release/promotion_receipt/valid/ready_not_applied.json",
+    "schemas/contracts/v1/release/promotion_receipt.schema.json",
+    "tests/release/test_promotion_receipt.py",
+    "tools/validators/release/validate_promotion_receipt.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/promotion-receipt.yml": "sha256:ee546c61a81bf335b380342c6b79187550874e6a7eee35600f3d289b40415401",
+    "contracts/release/promotion_receipt.md": "sha256:6a4924e7f163951eefcf77e64ab2cc09820da5ed72ae5739f1aba6777a8cc2c5",
+    "fixtures/release/promotion_receipt/README.md": "sha256:245b908d6f8466fa7622a57d860bddafaf09c77e2345e67248d7ab0c29552835",
+    "fixtures/release/promotion_receipt/invalid/applied_support_incomplete.expected_code.txt": "sha256:f32154951e7b434669b7c2193430cd2a9d2c18851e6a6cee4ed0cb3fc50ff041",
+    "fixtures/release/promotion_receipt/invalid/applied_support_incomplete.json": "sha256:8784a82f3ba06847ec65ac04b9df0281b129e5f1e40f0bfbb912b0785e975556",
+    "fixtures/release/promotion_receipt/invalid/applied_while_blocked.expected_code.txt": "sha256:65df8637e693d2ae1f9ba93c93895637da22f24e9c607db5daf1c1f8a43a89c6",
+    "fixtures/release/promotion_receipt/invalid/applied_while_blocked.json": "sha256:575823f89168fe1d5f69ad2f9a8e61260be81fe0a0428c7d59eab4df3635f536",
+    "fixtures/release/promotion_receipt/invalid/applied_without_decision.expected_code.txt": "sha256:ad396dc5ec0d651508b9b489460e3e6c6fb1e35bce314574249bd122a10bce76",
+    "fixtures/release/promotion_receipt/invalid/applied_without_decision.json": "sha256:be38387d698b5d313b6827ecf3e4a419309c8bad2efb75aaca30fd385d03080d",
+    "fixtures/release/promotion_receipt/invalid/digest_mismatch.expected_code.txt": "sha256:89e96a02aa07d1e3dfc2f606cf22a36e31162fe46646786dad6e94b7ab829bb3",
+    "fixtures/release/promotion_receipt/invalid/digest_mismatch.json": "sha256:913869cac88d413d77faa8639657002178eae665bf5792bef0a4a6654947471a",
+    "fixtures/release/promotion_receipt/invalid/overall_status_mismatch.expected_code.txt": "sha256:8289dc8cafec2259255900b39af291f787e827dd517f218ffdbab1d4007d6746",
+    "fixtures/release/promotion_receipt/invalid/overall_status_mismatch.json": "sha256:08024e09213c41394ae6a7b0702991585afcace8d42fe5fdb5befb80f074808b",
+    "fixtures/release/promotion_receipt/valid/abstained_attempt.json": "sha256:52dcf510227683275f48aaa8923e1be70105936b0f7b06d999c2cc15aa0eaeda",
+    "fixtures/release/promotion_receipt/valid/applied_synthetic_transition.json": "sha256:1448fa45954071d18105d374adfc636f75095da9fcd3aff1d9f41dbf996c5396",
+    "fixtures/release/promotion_receipt/valid/denied_attempt.json": "sha256:f664e659ab8d4086a687ffcd2c1971dccc526ac104fc17a4fa987677a75754b0",
+    "fixtures/release/promotion_receipt/valid/ready_not_applied.json": "sha256:9baf9b1691fa087d67b16e0aedd376286e2843de9843d90642cf83a45b7c58fb",
+    "schemas/contracts/v1/release/promotion_receipt.schema.json": "sha256:7435f69d095eeeb47fb7d15849c69166a6fadf788804a609afb49fbe4cc74eb0",
+    "tests/release/test_promotion_receipt.py": "sha256:7e9b98d7191b92baf743d277051b694c664473e08309978c8d289f5aa9d1507c",
+    "tools/validators/release/validate_promotion_receipt.py": "sha256:2a53ef42a07217fcf6c2db3c876ab4ff3171de623c2105106734c1968a861127"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-05"
+  },
+  "prompt_or_contract": "sha256:ab67cf8aa162ffbe655e6c618c50263b80c3ec297f0704dfcc90662e0b339dd8",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:76ace3bc49dbfa92aa8d48bd3bcac0871b1b1da8c91006d7ac6a318f0cacfc2d"
+    ],
+    "attached_docs": [
+      "New Ideas 4-23-26(2).pdf"
+    ],
+    "evidence_refs": [
+      "attachment:New Ideas 4-23-26(2).pdf#promotion-receipt-and-a-g-gate-contract"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/promotion-receipt.yml": "PROPOSED",
+    "contracts/release/promotion_receipt.md": "PROPOSED",
+    "fixtures/release/promotion_receipt/README.md": "PROPOSED",
+    "fixtures/release/promotion_receipt/invalid/applied_support_incomplete.expected_code.txt": "PROPOSED",
+    "fixtures/release/promotion_receipt/invalid/applied_support_incomplete.json": "PROPOSED",
+    "fixtures/release/promotion_receipt/invalid/applied_while_blocked.expected_code.txt": "PROPOSED",
+    "fixtures/release/promotion_receipt/invalid/applied_while_blocked.json": "PROPOSED",
+    "fixtures/release/promotion_receipt/invalid/applied_without_decision.expected_code.txt": "PROPOSED",
+    "fixtures/release/promotion_receipt/invalid/applied_without_decision.json": "PROPOSED",
+    "fixtures/release/promotion_receipt/invalid/digest_mismatch.expected_code.txt": "PROPOSED",
+    "fixtures/release/promotion_receipt/invalid/digest_mismatch.json": "PROPOSED",
+    "fixtures/release/promotion_receipt/invalid/overall_status_mismatch.expected_code.txt": "PROPOSED",
+    "fixtures/release/promotion_receipt/invalid/overall_status_mismatch.json": "PROPOSED",
+    "fixtures/release/promotion_receipt/valid/abstained_attempt.json": "PROPOSED",
+    "fixtures/release/promotion_receipt/valid/applied_synthetic_transition.json": "PROPOSED",
+    "fixtures/release/promotion_receipt/valid/denied_attempt.json": "PROPOSED",
+    "fixtures/release/promotion_receipt/valid/ready_not_applied.json": "PROPOSED",
+    "schemas/contracts/v1/release/promotion_receipt.schema.json": "PROPOSED",
+    "tests/release/test_promotion_receipt.py": "PROPOSED",
+    "tools/validators/release/validate_promotion_receipt.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "promotion-receipt-fixtures",
+      "outcome": "PASS",
+      "reason": "Four valid and five invalid synthetic fixtures passed deterministic local validation."
+    },
+    {
+      "gate": "promotion-receipt-unit-tests",
+      "outcome": "PASS",
+      "reason": "Six focused unit tests passed locally without network access."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "The new read-only workflow must run against the draft pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:promotion-receipt-a-g",
+      "validated": true,
+      "evidence_ref": "attachment:New Ideas 4-23-26(2).pdf#promotion-receipt-and-a-g-gate-contract"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-05T20:24:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-first PromotionReceipt contract. It validates declarations only and grants no evidence, policy, review, transition, release, deployment, publication, or public-use authority."
+}

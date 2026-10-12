@@ -1,0 +1,146 @@
+{
+  "receipt_id": "genrec-wiki-path-topology-20261009",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/wiki/Architecture.md",
+    "docs/wiki/Contributing.md",
+    "docs/wiki/Data-Lifecycle.md",
+    "docs/wiki/Development-and-Validation.md",
+    "docs/wiki/Domains.md",
+    "docs/wiki/Getting-Started.md",
+    "docs/wiki/Glossary.md",
+    "docs/wiki/Governance-and-Evidence.md",
+    "docs/wiki/Home.md",
+    "docs/wiki/Map-UI-and-AI.md",
+    "docs/wiki/Project-Status.md",
+    "docs/wiki/README.md",
+    "docs/wiki/Repository-Map.md",
+    "docs/wiki/Security-and-Sensitivity.md",
+    "docs/wiki/Wiki-Maintenance.md",
+    "docs/wiki/_Footer.md",
+    "docs/wiki/_Sidebar.md",
+    "docs/wiki/builder-profile.md",
+    "docs/wiki/engineering-case-studies.md",
+    "docs/wiki/visual-tour.md",
+    "tests/ci/test_sync_kfm_github_wiki_contract.py",
+    "tools/docs/wiki/README.md",
+    "tools/docs/wiki/sync_kfm_github_wiki.ps1"
+  ],
+  "artifact_hashes": {
+    "docs/wiki/Architecture.md": "sha256:51ef504d998bffe6bf8165a2b72f96e0f2e2dab645cfd0361be4130c71b914a0",
+    "docs/wiki/Contributing.md": "sha256:e11b6fe79f618ffdfb6e350a2cbf84dfa87dff37e6b466d39691661e786e9742",
+    "docs/wiki/Data-Lifecycle.md": "sha256:07b11412c2de44dd4d9e600120eb2e80d3cb33337d417fe112504027174a2c07",
+    "docs/wiki/Development-and-Validation.md": "sha256:12ec12c22dbf91e49e522e6e0ded2dc82501615067d8ee2bbb651e4bf88ce9e5",
+    "docs/wiki/Domains.md": "sha256:9d9f8cac5cfed569e8f0f9dba9090b9e5d903bf876ec543a1503621909c0a1bb",
+    "docs/wiki/Getting-Started.md": "sha256:94d988e7fb03cb88653ff061e5e6d0e5f6b47f24b72b850ff02b70c1e7d2f286",
+    "docs/wiki/Glossary.md": "sha256:0abec0103065c02cb3ccc085de963b64b78f7fea53d0689e22ab38e1c26142d0",
+    "docs/wiki/Governance-and-Evidence.md": "sha256:d8fe44e0cd8af7d9e1dc30a5bc7939f2458cc8c08958274417a012a089747dee",
+    "docs/wiki/Home.md": "sha256:b355f51e82a71979415e0c230e4e6072afcfc7135121f371ddf42ffb572ffce6",
+    "docs/wiki/Map-UI-and-AI.md": "sha256:002d086f9a6ff95bf38020fd9ddbc7ace1017eaea2898f245a0dfeb0d6e621ba",
+    "docs/wiki/Project-Status.md": "sha256:61dfa9a83492226ddefca4acf440369dec97bfd89581a578be324e64156b5b5a",
+    "docs/wiki/README.md": "sha256:2d10d57a2e2dd6e20509e3aac7cfb2e61d296cd3bbd5f22c84fc497036f4d118",
+    "docs/wiki/Repository-Map.md": "sha256:db7b81979383cd0c8ed2f2e36f3bfaa8ad77f68d74c782f00988cda8e760ae57",
+    "docs/wiki/Security-and-Sensitivity.md": "sha256:938686e60b86faaa45de548476bd4111f51a4353d89d34ae8189f8e8dc4d510a",
+    "docs/wiki/Wiki-Maintenance.md": "sha256:46256ebed9b112f73c19e0e4d84305a4adc2ef85331ecf1d3d727a25bd46eaa6",
+    "docs/wiki/_Footer.md": "sha256:ada20d4684a19e34f431abd6cbdfc556cae32a3f6d3b0d1cada47b817af51444",
+    "docs/wiki/_Sidebar.md": "sha256:8fe06de628d96d1b847612666fb14b7d30b64f263d42207e97242fd67949eb8b",
+    "docs/wiki/builder-profile.md": "sha256:443c7bff1a99acfc725acd51a2da05eb0ee459d508efa47ba07cbbe42c3e99f9",
+    "docs/wiki/engineering-case-studies.md": "sha256:a570ca84d0a5e7b09341a86af25da468a2155b060def642f453cd8464ec8d197",
+    "docs/wiki/visual-tour.md": "sha256:68c9706f8d59909389ec3c94deecfd9de6f7fdb86ab36c064a182efa2b6ced98",
+    "tests/ci/test_sync_kfm_github_wiki_contract.py": "sha256:3ffa65431edf03df46957ceab559e3feedf196f9c515d7f257de6228b4955c1a",
+    "tools/docs/wiki/README.md": "sha256:85df4a90524035ffceffcd68a497ea9017df5ffb17d9de13bc36f1dc15f9c4a1",
+    "tools/docs/wiki/sync_kfm_github_wiki.ps1": "sha256:be950c6ff4114ba32182b3ed5c7dff0fca98c7482a9d2eecd7bc0ca485d8549e"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6",
+    "version": "session-reported; exact build unavailable"
+  },
+  "prompt_or_contract": "sha256:2e8dcf33440de0c5e45e3f3797677ae84dab9ebbbc71c5cf0e6428601fb25689",
+  "parameters": {
+    "temperature": null,
+    "seed": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "git:8d6cbcd279372b240b8e7ab326635bf60d8884ab",
+      "git:8d6cbcd279372b240b8e7ab326635bf60d8884ab:docs/doctrine/directory-rules.md",
+      "git:8d6cbcd279372b240b8e7ab326635bf60d8884ab:tools/docs/wiki/sync_kfm_github_wiki.ps1"
+    ]
+  },
+  "truth_labels": {
+    "docs/wiki/Architecture.md": "CONFIRMED",
+    "docs/wiki/Contributing.md": "CONFIRMED",
+    "docs/wiki/Data-Lifecycle.md": "CONFIRMED",
+    "docs/wiki/Development-and-Validation.md": "CONFIRMED",
+    "docs/wiki/Domains.md": "CONFIRMED",
+    "docs/wiki/Getting-Started.md": "CONFIRMED",
+    "docs/wiki/Glossary.md": "CONFIRMED",
+    "docs/wiki/Governance-and-Evidence.md": "CONFIRMED",
+    "docs/wiki/Home.md": "CONFIRMED",
+    "docs/wiki/Map-UI-and-AI.md": "CONFIRMED",
+    "docs/wiki/Project-Status.md": "CONFIRMED",
+    "docs/wiki/README.md": "CONFIRMED",
+    "docs/wiki/Repository-Map.md": "CONFIRMED",
+    "docs/wiki/Security-and-Sensitivity.md": "CONFIRMED",
+    "docs/wiki/Wiki-Maintenance.md": "CONFIRMED",
+    "docs/wiki/_Footer.md": "CONFIRMED",
+    "docs/wiki/_Sidebar.md": "CONFIRMED",
+    "docs/wiki/builder-profile.md": "CONFIRMED",
+    "docs/wiki/engineering-case-studies.md": "CONFIRMED",
+    "docs/wiki/visual-tour.md": "CONFIRMED",
+    "tests/ci/test_sync_kfm_github_wiki_contract.py": "CONFIRMED",
+    "tools/docs/wiki/README.md": "CONFIRMED",
+    "tools/docs/wiki/sync_kfm_github_wiki.ps1": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-topology-and-wiki-tests",
+      "outcome": "PASS",
+      "reason": "32 tests passed, including executable PowerShell link projection and historical source replay."
+    },
+    {
+      "gate": "repository-topology-trusted-base",
+      "outcome": "PASS",
+      "reason": "0 invariant failures, 0 new drift, 113 unchanged baselined warnings, 0 stale entries. Baseline and validator bytes unchanged."
+    },
+    {
+      "gate": "git-diff-check",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "native-wiki-publication",
+      "outcome": "SKIPPED",
+      "reason": "Source and transport correction only; no public wiki synchronization performed."
+    },
+    {
+      "gate": "active-site-mirror",
+      "outcome": "FAIL",
+      "reason": "Inherited MIRROR_REVIEW_REQUIRED; active v153 selector and receipt remain unchanged."
+    },
+    {
+      "gate": "hosted-checks",
+      "outcome": "SKIPPED",
+      "reason": "Pending PR creation."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "directory-safe-path-grammar",
+      "validated": true,
+      "evidence_ref": "git:8d6cbcd279372b240b8e7ab326635bf60d8884ab:docs/doctrine/directory-rules.md#132-safe-path-grammar"
+    },
+    {
+      "id": "wiki-source-transport-contract",
+      "validated": true,
+      "evidence_ref": "git:8d6cbcd279372b240b8e7ab326635bf60d8884ab:tools/docs/wiki/README.md"
+    }
+  ],
+  "human_review": {
+    "state": "pending"
+  },
+  "created_at": "2026-10-09T23:13:35Z",
+  "emitter": "Codex",
+  "notes": "Renames only the three new uppercase wiki source paths and updates their local references. Native page identities and URLs are retained by an explicit source-name mapping. Historical immutable source selections remain replayable. Generated receipt history is preserved. No Site files, baseline waivers, validator rules, active mirror selector, data, or publication settings changed. Revert this patch for rollback; prior topology drift will recur."
+}

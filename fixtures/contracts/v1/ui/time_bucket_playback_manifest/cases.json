@@ -1,0 +1,393 @@
+{
+  "base": {
+    "profile_version": "kfm.time-bucket-playback-manifest.fixture.v1",
+    "manifest_id": "kfm:time-bucket-playback:000000000000000000000000",
+    "spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "scene_manifest_ref": "kfm:scene-manifest:kansas-environmental-events-v1",
+    "resource_envelope_ref": "kfm:verified-rendering-resource-envelope:kansas-environmental-events-v1",
+    "time_semantics": {
+      "filter_time_kind": "VALID_TIME",
+      "filter_field": "valid_time",
+      "cadence": "MONTHLY",
+      "precision": "DAY",
+      "freshness_state": "CURRENT",
+      "window_start": "2026-01-01T00:00:00Z",
+      "window_end": "2026-04-01T00:00:00Z",
+      "correction_cutoff": "2026-04-02T00:00:00Z"
+    },
+    "buckets": [
+      {
+        "bucket_id": "kfm:time-bucket:000000000000000000000000",
+        "bucket_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "ordinal": 0,
+        "interval": {
+          "start_inclusive": "2026-01-01T00:00:00Z",
+          "end_exclusive": "2026-02-01T00:00:00Z"
+        },
+        "time_field": "valid_time",
+        "artifact_ref": "kfm:released-artifact:events-2026-01",
+        "artifact_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "release_ref": "kfm:release-manifest:events-2026-q1",
+        "evidence_refs": [
+          "kfm:evidence-bundle:events-2026-01",
+          "kfm:evidence-bundle:temporal-method-v1"
+        ],
+        "transport_hint": "SOURCE_SWAP",
+        "gap_after": false
+      },
+      {
+        "bucket_id": "kfm:time-bucket:000000000000000000000000",
+        "bucket_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "ordinal": 1,
+        "interval": {
+          "start_inclusive": "2026-02-01T00:00:00Z",
+          "end_exclusive": "2026-03-01T00:00:00Z"
+        },
+        "time_field": "valid_time",
+        "artifact_ref": "kfm:released-artifact:events-2026-02",
+        "artifact_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+        "release_ref": "kfm:release-manifest:events-2026-q1",
+        "evidence_refs": [
+          "kfm:evidence-bundle:events-2026-02",
+          "kfm:evidence-bundle:temporal-method-v1"
+        ],
+        "transport_hint": "SOURCE_SWAP",
+        "gap_after": false
+      },
+      {
+        "bucket_id": "kfm:time-bucket:000000000000000000000000",
+        "bucket_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "ordinal": 2,
+        "interval": {
+          "start_inclusive": "2026-03-01T00:00:00Z",
+          "end_exclusive": "2026-04-01T00:00:00Z"
+        },
+        "time_field": "valid_time",
+        "artifact_ref": "kfm:released-artifact:events-2026-03",
+        "artifact_digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+        "release_ref": "kfm:release-manifest:events-2026-q1",
+        "evidence_refs": [
+          "kfm:evidence-bundle:events-2026-03",
+          "kfm:evidence-bundle:temporal-method-v1"
+        ],
+        "transport_hint": "SOURCE_SWAP",
+        "gap_after": false
+      }
+    ],
+    "transition": {
+      "selection_mode": "SWAP",
+      "gap_policy": "SHOW_GAP",
+      "swap_failure": "RETAIN_LAST_VERIFIED",
+      "autoplay": false,
+      "loop": false,
+      "reduced_motion_mode": "DISCRETE_STEPS",
+      "outcome_requires_playback": false
+    },
+    "worker_boundary": {
+      "message_profile": "kfm.time-bucket-worker-message.v1",
+      "digest_required": true,
+      "released_refs_only": true,
+      "raw_payload_allowed": false,
+      "unverified_uri_allowed": false
+    },
+    "display_requirements": {
+      "show_active_window": true,
+      "show_cadence": true,
+      "show_time_kind": true,
+      "show_precision": true,
+      "show_freshness": true,
+      "show_bucket_identity": true,
+      "show_transition_gaps": true,
+      "show_reduced_motion_state": true,
+      "show_evidence_links": true
+    },
+    "boundary": {
+      "fixture_only": true,
+      "renderer_neutral": true,
+      "runtime_execution_performed": false,
+      "worker_execution_performed": false,
+      "artifact_fetch_performed": false,
+      "artifact_integrity_verified": false,
+      "evidence_resolution_performed": false,
+      "policy_evaluation_performed": false,
+      "release_authorized": false,
+      "deployment_authorized": false,
+      "publication_authorized": false,
+      "public_use_authorized": false
+    }
+  },
+  "cases": [
+    {
+      "case_id": "valid_source_swap_manifest",
+      "mutations": [],
+      "expected_outcome": "PASS",
+      "expected_state": "REVIEW_REQUIRED",
+      "expected_findings": []
+    },
+    {
+      "case_id": "valid_same_source_filter_manifest",
+      "mutations": [
+        {"path": "/buckets/0/transport_hint", "value": "SAME_SOURCE_FILTER"},
+        {"path": "/buckets/1/transport_hint", "value": "SAME_SOURCE_FILTER"},
+        {"path": "/buckets/2/transport_hint", "value": "SAME_SOURCE_FILTER"},
+        {"path": "/transition/selection_mode", "value": "FILTER"}
+      ],
+      "expected_outcome": "PASS",
+      "expected_state": "REVIEW_REQUIRED",
+      "expected_findings": []
+    },
+    {
+      "case_id": "valid_hybrid_manifest",
+      "mutations": [
+        {"path": "/buckets/0/transport_hint", "value": "SAME_SOURCE_FILTER"},
+        {"path": "/transition/selection_mode", "value": "HYBRID"}
+      ],
+      "expected_outcome": "PASS",
+      "expected_state": "REVIEW_REQUIRED",
+      "expected_findings": []
+    },
+    {
+      "case_id": "valid_explicit_transition_gap",
+      "mutations": [
+        {"path": "/buckets/0/interval/end_exclusive", "value": "2026-01-15T00:00:00Z"},
+        {"path": "/buckets/0/gap_after", "value": true}
+      ],
+      "expected_outcome": "PASS",
+      "expected_state": "REVIEW_REQUIRED",
+      "expected_findings": []
+    },
+    {
+      "case_id": "valid_observed_time_manifest",
+      "mutations": [
+        {"path": "/time_semantics/filter_time_kind", "value": "OBSERVED_TIME"},
+        {"path": "/time_semantics/filter_field", "value": "observed_time"},
+        {"path": "/buckets/0/time_field", "value": "observed_time"},
+        {"path": "/buckets/1/time_field", "value": "observed_time"},
+        {"path": "/buckets/2/time_field", "value": "observed_time"}
+      ],
+      "expected_outcome": "PASS",
+      "expected_state": "REVIEW_REQUIRED",
+      "expected_findings": []
+    },
+    {
+      "case_id": "filter_time_kind_mismatch",
+      "mutations": [
+        {"path": "/time_semantics/filter_field", "value": "observed_time"},
+        {"path": "/buckets/0/time_field", "value": "observed_time"},
+        {"path": "/buckets/1/time_field", "value": "observed_time"},
+        {"path": "/buckets/2/time_field", "value": "observed_time"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_state": null,
+      "expected_findings": [
+        {"code": "TIME_BUCKET_FILTER_TIME_KIND_MISMATCH", "path": "/time_semantics/filter_field"}
+      ]
+    },
+    {
+      "case_id": "mixed_bucket_time_field",
+      "mutations": [
+        {"path": "/buckets/1/time_field", "value": "source_time"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_state": null,
+      "expected_findings": [
+        {"code": "TIME_BUCKET_FIELD_MIXED", "path": "/buckets/1/time_field"}
+      ]
+    },
+    {
+      "case_id": "window_start_mismatch",
+      "mutations": [
+        {"path": "/time_semantics/window_start", "value": "2025-12-31T00:00:00Z"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_state": null,
+      "expected_findings": [
+        {"code": "TIME_BUCKET_WINDOW_START_MISMATCH", "path": "/time_semantics/window_start"}
+      ]
+    },
+    {
+      "case_id": "window_end_mismatch",
+      "mutations": [
+        {"path": "/time_semantics/window_end", "value": "2026-05-01T00:00:00Z"},
+        {"path": "/time_semantics/correction_cutoff", "value": "2026-05-02T00:00:00Z"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_state": null,
+      "expected_findings": [
+        {"code": "TIME_BUCKET_WINDOW_END_MISMATCH", "path": "/time_semantics/window_end"}
+      ]
+    },
+    {
+      "case_id": "interval_reversed",
+      "mutations": [
+        {"path": "/buckets/1/interval/end_exclusive", "value": "2026-04-02T00:00:00Z"},
+        {"path": "/buckets/2/interval/start_inclusive", "value": "2026-04-02T00:00:00Z"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_state": null,
+      "expected_findings": [
+        {"code": "TIME_BUCKET_INTERVAL_INVALID", "path": "/buckets/2/interval"}
+      ]
+    },
+    {
+      "case_id": "interval_overlap",
+      "mutations": [
+        {"path": "/buckets/1/interval/start_inclusive", "value": "2026-01-15T00:00:00Z"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_state": null,
+      "expected_findings": [
+        {"code": "TIME_BUCKET_INTERVAL_OVERLAP", "path": "/buckets/1/interval/start_inclusive"}
+      ]
+    },
+    {
+      "case_id": "gap_not_declared",
+      "mutations": [
+        {"path": "/buckets/0/interval/end_exclusive", "value": "2026-01-15T00:00:00Z"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_state": null,
+      "expected_findings": [
+        {"code": "TIME_BUCKET_GAP_UNDECLARED", "path": "/buckets/0/gap_after"}
+      ]
+    },
+    {
+      "case_id": "contiguous_bucket_marked_as_gap",
+      "mutations": [
+        {"path": "/buckets/0/gap_after", "value": true}
+      ],
+      "expected_outcome": "DENY",
+      "expected_state": null,
+      "expected_findings": [
+        {"code": "TIME_BUCKET_GAP_FLAG_INVALID", "path": "/buckets/0/gap_after"}
+      ]
+    },
+    {
+      "case_id": "ordinal_mismatch",
+      "mutations": [
+        {"path": "/buckets/1/ordinal", "value": 2}
+      ],
+      "expected_outcome": "DENY",
+      "expected_state": null,
+      "expected_findings": [
+        {"code": "TIME_BUCKET_ORDINAL_MISMATCH", "path": "/buckets/1/ordinal"}
+      ]
+    },
+    {
+      "case_id": "selection_mode_mismatch",
+      "mutations": [
+        {"path": "/transition/selection_mode", "value": "FILTER"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_state": null,
+      "expected_findings": [
+        {"code": "TIME_BUCKET_SELECTION_MODE_MISMATCH", "path": "/transition/selection_mode"}
+      ]
+    },
+    {
+      "case_id": "evidence_refs_unsorted",
+      "mutations": [
+        {
+          "path": "/buckets/0/evidence_refs",
+          "value": [
+            "kfm:evidence-bundle:temporal-method-v1",
+            "kfm:evidence-bundle:events-2026-01"
+          ]
+        }
+      ],
+      "expected_outcome": "DENY",
+      "expected_state": null,
+      "expected_findings": [
+        {"code": "TIME_BUCKET_EVIDENCE_ORDER_INVALID", "path": "/buckets/0/evidence_refs"}
+      ]
+    },
+    {
+      "case_id": "artifact_ref_reused",
+      "mutations": [
+        {"path": "/buckets/1/artifact_ref", "value": "kfm:released-artifact:events-2026-01"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_state": null,
+      "expected_findings": [
+        {"code": "TIME_BUCKET_ARTIFACT_REF_DUPLICATE", "path": "/buckets"}
+      ]
+    },
+    {
+      "case_id": "bucket_hash_tampered",
+      "mutations": [],
+      "bucket_0_hash_override": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "expected_outcome": "DENY",
+      "expected_state": null,
+      "expected_findings": [
+        {"code": "TIME_BUCKET_BUCKET_HASH_MISMATCH", "path": "/buckets/0/bucket_hash"},
+        {"code": "TIME_BUCKET_MANIFEST_ID_MISMATCH", "path": "/manifest_id"},
+        {"code": "TIME_BUCKET_SPEC_HASH_MISMATCH", "path": "/spec_hash"}
+      ]
+    },
+    {
+      "case_id": "manifest_hash_tampered",
+      "mutations": [],
+      "spec_hash_override": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "expected_outcome": "DENY",
+      "expected_state": null,
+      "expected_findings": [
+        {"code": "TIME_BUCKET_SPEC_HASH_MISMATCH", "path": "/spec_hash"}
+      ]
+    },
+    {
+      "case_id": "correction_cutoff_before_window_end",
+      "mutations": [
+        {"path": "/time_semantics/correction_cutoff", "value": "2026-03-31T00:00:00Z"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_state": null,
+      "expected_findings": [
+        {"code": "TIME_BUCKET_CORRECTION_CUTOFF_INVALID", "path": "/time_semantics/correction_cutoff"}
+      ]
+    },
+    {
+      "case_id": "trailing_gap_invalid",
+      "mutations": [
+        {"path": "/buckets/2/gap_after", "value": true}
+      ],
+      "expected_outcome": "DENY",
+      "expected_state": null,
+      "expected_findings": [
+        {"code": "TIME_BUCKET_TRAILING_GAP_INVALID", "path": "/buckets/2/gap_after"}
+      ]
+    },
+    {
+      "case_id": "autoplay_overreach",
+      "mutations": [
+        {"path": "/transition/autoplay", "value": true}
+      ],
+      "expected_outcome": "DENY",
+      "expected_state": null,
+      "expected_findings": [
+        {"code": "TIME_BUCKET_SCHEMA_INVALID", "path": "/transition/autoplay"}
+      ]
+    },
+    {
+      "case_id": "raw_worker_payload_overreach",
+      "mutations": [
+        {"path": "/worker_boundary/raw_payload_allowed", "value": true}
+      ],
+      "expected_outcome": "DENY",
+      "expected_state": null,
+      "expected_findings": [
+        {"code": "TIME_BUCKET_SCHEMA_INVALID", "path": "/worker_boundary/raw_payload_allowed"}
+      ]
+    },
+    {
+      "case_id": "public_use_overreach",
+      "mutations": [
+        {"path": "/boundary/public_use_authorized", "value": true}
+      ],
+      "expected_outcome": "DENY",
+      "expected_state": null,
+      "expected_findings": [
+        {"code": "TIME_BUCKET_SCHEMA_INVALID", "path": "/boundary/public_use_authorized"}
+      ]
+    }
+  ]
+}

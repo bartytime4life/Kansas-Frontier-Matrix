@@ -1,0 +1,186 @@
+{
+  "profile": "kfm.evidence.binding-chain-assessment.v1",
+  "status": "PROPOSED_INACTIVE",
+  "version": "1.0.0",
+  "assessment_id": "evidence-binding-chain:d824f0cd1620bfc66f370973",
+  "spec_hash": "sha256:d824f0cd1620bfc66f370973511f13aeb9fbac6a01b3fe21a86dda6e991ad53e",
+  "source_artifact": {
+    "object_type": "SourceArtifact",
+    "schema_version": "1.0.0",
+    "artifact_id": "source-artifact:sha256:6ff8d7ab948a03b4b69c1fcdb76bbab71007edfd0b0d03f09737ce99fc79dc09",
+    "source_descriptor_ref": "source-descriptor:src:synthetic:source-artifact-fixture:1.0.0",
+    "ingest_receipt_ref": "ingest-receipt:synthetic:source-artifact-fixture:20260804T080000Z",
+    "source_locator": {
+      "kind": "api_record",
+      "value": "https://example.invalid/official/records/synthetic-001",
+      "first_party_authority": true,
+      "locator_digest": "sha256:62f6d68ea6324ce61fa525019f68f8eeb60572154a609ce6bce317975053f9ab"
+    },
+    "retrieved_at": "2026-08-04T08:00:00Z",
+    "source_reported_at": "2026-08-04T07:45:00Z",
+    "retrieval_outcome": "FETCHED",
+    "status_code": 200,
+    "media_type": "application/json",
+    "byte_length": 47,
+    "content_digest": "sha256:6ff8d7ab948a03b4b69c1fcdb76bbab71007edfd0b0d03f09737ce99fc79dc09",
+    "immutable_storage_ref": "cas:sha256:6ff8d7ab948a03b4b69c1fcdb76bbab71007edfd0b0d03f09737ce99fc79dc09",
+    "request_context": {
+      "method": "GET",
+      "profile_id": "request-profile:synthetic-source-artifact-v1",
+      "parameter_names": [],
+      "header_names": [
+        "accept"
+      ],
+      "body_digest": null,
+      "secrets_embedded": false
+    },
+    "rights_snapshot": {
+      "captured_at": "2026-08-04T07:59:00Z",
+      "license_id": "CC0-1.0",
+      "terms_ref": "terms:synthetic-fixture-only",
+      "access_class": "public",
+      "redistribution_status": "allowed",
+      "review_state": "reviewed"
+    },
+    "parser": {
+      "parser_id": "parser:synthetic-source-artifact",
+      "version": "1.0.0",
+      "spec_digest": "sha256:cee38cfb93bddaaa60b09b8dd369abd9001a2671c9703998380eb81881a34959"
+    },
+    "source_surface_type": "api_record",
+    "lineage": {
+      "supersedes_artifact_ref": null,
+      "correction_refs": [],
+      "conflict_group_ref": null
+    },
+    "governance": {
+      "public_use_allowed": false,
+      "authority_created": false,
+      "release_ref": null,
+      "spec_hash": "sha256:83346b3bb0d6452bafe9b270e608daae6ab47afde406cc3edd24e802f2eec160"
+    }
+  },
+  "parse_result": {
+    "parse_result_ref": "parse-result:sha256:2b7fe0de09db9c621c97118601618c6e43a42301054e3eb5e04ddffc31139bde",
+    "spec_hash": "sha256:2b7fe0de09db9c621c97118601618c6e43a42301054e3eb5e04ddffc31139bde",
+    "source_artifact_ref": "source-artifact:sha256:6ff8d7ab948a03b4b69c1fcdb76bbab71007edfd0b0d03f09737ce99fc79dc09",
+    "parser_id": "parser:synthetic-source-artifact",
+    "parser_version": "1.0.0",
+    "parser_spec_digest": "sha256:cee38cfb93bddaaa60b09b8dd369abd9001a2671c9703998380eb81881a34959",
+    "outcome": "PARSED",
+    "records": [
+      {
+        "record_ref": "parsed-record:synthetic-001",
+        "record_digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+        "native_locator": {
+          "kind": "JSON_POINTER",
+          "value": "/records/0/value"
+        }
+      }
+    ],
+    "findings": [],
+    "unsupported_flags": [],
+    "source_conflict_ref": null,
+    "authority_created": false,
+    "evidence_created": false,
+    "lifecycle_write_allowed": false,
+    "receipt_created": false,
+    "release_authorized": false,
+    "publication_authorized": false,
+    "public_use_allowed": false,
+    "repository_mutation_allowed": false
+  },
+  "evidence_ref": {
+    "ref": "evidence-ref:sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    "kind": "record"
+  },
+  "evidence_resolution": {
+    "evidence_ref": "evidence-ref:sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    "source_artifact_ref": "source-artifact:sha256:6ff8d7ab948a03b4b69c1fcdb76bbab71007edfd0b0d03f09737ce99fc79dc09",
+    "parse_result_ref": "parse-result:sha256:2b7fe0de09db9c621c97118601618c6e43a42301054e3eb5e04ddffc31139bde",
+    "parsed_record_ref": "parsed-record:synthetic-001",
+    "parsed_record_digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+    "cited_native_locator": {
+      "kind": "JSON_POINTER",
+      "value": "/records/0/value"
+    },
+    "supported_observation_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "limitations": [
+      "EvidenceRef resolution is synthetic and local to this assessment.",
+      "Parsed values are represented only by digests."
+    ]
+  },
+  "claim_field_binding": {
+    "profile": "kfm.evidence.claim-field-binding.v1",
+    "status": "PROPOSED_INACTIVE",
+    "claim_field_binding_id": "claim-field-binding:790a19f137c44232577b6749",
+    "version": "1.0.0",
+    "spec_hash": "sha256:790a19f137c44232577b67490814f6c670a2f6dfb49ab81e06c967fb0545ebd0",
+    "object_ref": "kfm://object/synthetic-condition-record/alpha",
+    "field_pointer": "/properties/value",
+    "source_artifact_ref": "source-artifact:sha256:6ff8d7ab948a03b4b69c1fcdb76bbab71007edfd0b0d03f09737ce99fc79dc09",
+    "source_snapshot_ref": "kfm:source-snapshot:6ff8d7ab948a03b4b69c1fcdb76bbab71007edfd0b0d03f09737ce99fc79dc09",
+    "native_locator": {
+      "kind": "JSON_POINTER",
+      "value": "/records/0/value"
+    },
+    "native_statement_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "native_value_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "normalized_value_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "transform": {
+      "kind": "NONE",
+      "transform_ref": null,
+      "transform_receipt_ref": null,
+      "deterministic": true
+    },
+    "evidence_ref": "evidence-ref:sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    "support_scope": "EXACT_FIELD",
+    "quality": {
+      "state": "ACCEPTED",
+      "confidence": "HIGH",
+      "reason_codes": [
+        "SOURCE_FIELD_EXACT"
+      ]
+    },
+    "lineage": {
+      "state": "CURRENT",
+      "corrects": [],
+      "superseded_by": [],
+      "conflict_refs": []
+    },
+    "release_state": "UNRELEASED",
+    "release_ref": null,
+    "limitations": [
+      "Fixture-only field binding.",
+      "Referenced evidence is not resolved outside this assessment."
+    ],
+    "public_use_allowed": false,
+    "effects": {
+      "source_activated": false,
+      "evidence_resolved": false,
+      "policy_evaluated": false,
+      "promoted": false,
+      "released": false,
+      "published": false
+    }
+  },
+  "closure_state": "REFERENCE_CLOSED_SYNTHETIC",
+  "evidence_bundle_ref": null,
+  "release_ref": null,
+  "public_use_allowed": false,
+  "limitations": [
+    "EvidenceBundle closure is intentionally absent.",
+    "Fixture-only reference-closure assessment.",
+    "Policy, release, and publication remain unresolved."
+  ],
+  "effects": {
+    "source_activated": false,
+    "evidence_created": false,
+    "evidence_resolved": false,
+    "evidence_bundle_created": false,
+    "policy_evaluated": false,
+    "review_approved": false,
+    "released": false,
+    "published": false
+  }
+}

@@ -1,0 +1,71 @@
+{
+  "assessment": {
+    "evidence_refs": [
+      "kfm://evidence/soil/synthetic-source",
+      "kfm://evidence/soil/synthetic-reading"
+    ],
+    "limitations": [
+      "fixture_only_no_live_source_claim",
+      "observation_scope_only_not_countywide_truth"
+    ],
+    "outcome": "ANSWER",
+    "reason_codes": [
+      "OBSERVATION_SUPPORTED"
+    ],
+    "time_caveat_ref": "kfm://soil-time-caveat/synthetic-hourly"
+  },
+  "domain": "soil",
+  "governance": {
+    "evidence_resolved": false,
+    "policy_evaluated": false,
+    "promotion_authorized": false,
+    "public_use_allowed": false,
+    "release_authorized": false,
+    "release_manifest_ref": null,
+    "source_activated": false
+  },
+  "measurement": {
+    "depth_support": {
+      "depth_cm": 10,
+      "kind": "SENSOR_DEPTH"
+    },
+    "measurement_type": "VOLUMETRIC_WATER_CONTENT",
+    "normalized_unit": "m3_m3",
+    "normalized_value": 0.24,
+    "qc_flags": [
+      "SYNTHETIC",
+      "VALID"
+    ],
+    "source_value": {
+      "unit": "m3/m3",
+      "value": 0.24
+    }
+  },
+  "observation_id": "soil-moisture:9e20f96e620a61f0d7bc8d75",
+  "profile_status": "PROPOSED_INACTIVE",
+  "schema_version": "v1",
+  "source": {
+    "source_native_id": "KS-SYN-001",
+    "source_native_key_family": "STATION",
+    "source_ref": "kfm://source/soil/synthetic/station_soil_moisture",
+    "source_role": "IN_SITU_OBSERVATION"
+  },
+  "spec_hash": "sha256:9e20f96e620a61f0d7bc8d7502c0b1468263cd65f8c1826513b49d318ce21fe2",
+  "subject": {
+    "location_ref": "kfm://location/public-station/KS-SYN-001",
+    "public_geometry_rule": "EXACT_PUBLIC_STATION",
+    "resolution_m": null,
+    "spatial_support": "POINT_STATION",
+    "subject_ref": "kfm://subject/soil/station/KS-SYN-001"
+  },
+  "support_type": "station_soil_moisture",
+  "time": {
+    "cadence_seconds": 3600,
+    "observed_at": "2026-08-07T12:00:00Z",
+    "retrieved_at": "2026-08-07T12:10:00Z",
+    "source_published_at": "2026-08-07T12:05:00Z",
+    "source_timezone": "America/Chicago",
+    "valid_end": "2026-08-07T13:00:00Z",
+    "valid_start": "2026-08-07T12:00:00Z"
+  }
+}

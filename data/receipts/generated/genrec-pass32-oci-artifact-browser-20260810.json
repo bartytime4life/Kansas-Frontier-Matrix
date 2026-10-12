@@ -1,0 +1,203 @@
+{
+  "receipt_id": "genrec-pass32-oci-artifact-browser-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/explorer-web/src/adapters/OciArtifactBrowserProjection.ts",
+    "apps/explorer-web/src/features/oci_artifact_browser/README.md",
+    "apps/explorer-web/src/features/oci_artifact_browser/index.ts",
+    "apps/explorer-web/tests/browser/oci-artifact-browser.fixture.ts",
+    "apps/explorer-web/tests/browser/oci-artifact-browser.html",
+    "apps/explorer-web/tests/browser/oci-artifact-browser.spec.ts",
+    "apps/explorer-web/tests/oci-artifact-browser.test.ts",
+    "docs/intake/exploratory/pass-32-oci-artifact-browser-source-map.md",
+    "fixtures/ui/oci_artifact_browser_projection/README.md",
+    "fixtures/ui/oci_artifact_browser_projection/invalid/extra-field.json",
+    "fixtures/ui/oci_artifact_browser_projection/invalid/referrer-subject-mismatch.json",
+    "fixtures/ui/oci_artifact_browser_projection/invalid/tag-binding-drift.json",
+    "fixtures/ui/oci_artifact_browser_projection/valid/available.json",
+    "fixtures/ui/oci_artifact_browser_projection/valid/denied.json",
+    "fixtures/ui/oci_artifact_browser_projection/valid/error.json",
+    "fixtures/ui/oci_artifact_browser_projection/valid/missing.json"
+  ],
+  "artifact_hashes": {
+    "apps/explorer-web/src/adapters/OciArtifactBrowserProjection.ts": "sha256:91b01f6bcbb5d67ba9c523801c1e7c11f76187e72afd309972a29c7fcce00fc7",
+    "apps/explorer-web/src/features/oci_artifact_browser/README.md": "sha256:93944031f171999d50ce7d2c1a784a6cb195997ca60a8ac6b6a3a7681899cafc",
+    "apps/explorer-web/src/features/oci_artifact_browser/index.ts": "sha256:bce748c8a5cae2f15539f2e1dfccf0bc3e127c538d5b231269bc6e5f5a533377",
+    "apps/explorer-web/tests/browser/oci-artifact-browser.fixture.ts": "sha256:25ffe690d549d64b0eb7bf3cda1fcf6501e7a31d117bf4905260ed316a0206ec",
+    "apps/explorer-web/tests/browser/oci-artifact-browser.html": "sha256:65316028f7baf6f96391a24098e993c15f12b47355fd3e0a834b5090e7898292",
+    "apps/explorer-web/tests/browser/oci-artifact-browser.spec.ts": "sha256:d1c9b640d51a82b8669e023df0c7668e16f8fd336c794c98f40e017731cca15b",
+    "apps/explorer-web/tests/oci-artifact-browser.test.ts": "sha256:d4885efacf9b22392d8d8ef56513613be44bb4469a316ceacda6882ac92bbd44",
+    "docs/intake/exploratory/pass-32-oci-artifact-browser-source-map.md": "sha256:92233aec2e238e081b57f3cfa8f1eaa6ab60830b05cebb2986b483f1ec9bb790",
+    "fixtures/ui/oci_artifact_browser_projection/README.md": "sha256:1646c301f7c7904f0f237aa17e0f3cff686cfd74cf5275743b732c932360803c",
+    "fixtures/ui/oci_artifact_browser_projection/invalid/extra-field.json": "sha256:6d902b7e0f8c74a9a7c17d6713570232cccf83172ee3bbff1135b336ef920e33",
+    "fixtures/ui/oci_artifact_browser_projection/invalid/referrer-subject-mismatch.json": "sha256:74b3dca78d90a76d06560ceab95f8928aa7439a5be7ffc451b0e86471bcec190",
+    "fixtures/ui/oci_artifact_browser_projection/invalid/tag-binding-drift.json": "sha256:9f7e2e09c97582887040a89f41bc4e814571a95e0681b78743552d74e0e845f7",
+    "fixtures/ui/oci_artifact_browser_projection/valid/available.json": "sha256:faa68aba7c446ba1dbdd51a8248ffa8dea0008d91f83b7d8614e70368fcd2251",
+    "fixtures/ui/oci_artifact_browser_projection/valid/denied.json": "sha256:ade47b4a4cc25894db15ce7fc539958d377c80333d6f4a45edc3604ba7f7e7a7",
+    "fixtures/ui/oci_artifact_browser_projection/valid/error.json": "sha256:d2ca3143cc0fd88679fd4915e94d86bc285569352cbc3c0139a783e5066eedfc",
+    "fixtures/ui/oci_artifact_browser_projection/valid/missing.json": "sha256:fda45988975970af71982c72b0b0bc4fb909b82666bd10e230d75a43a9a53c68"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "2026-08-10"
+  },
+  "prompt_or_contract": "sha256:65a75ca1f6b979145ae9eff4a30e4a732525e79283e37117be548fbf76048f6c",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector",
+      "GitHub connector",
+      "Poppler PDF renderer",
+      "TypeScript 7.0.2",
+      "Vitest 4.1.10",
+      "Playwright 1.62.1"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:65a75ca1f6b979145ae9eff4a30e4a732525e79283e37117be548fbf76048f6c"
+    ],
+    "attached_docs": [
+      "KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf",
+      "New Ideas",
+      "KFM_Full_Atlas_seed_cards",
+      "Directory Rules"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#KFM-P32-FEAT-0002",
+      "gdrive:1w7Qrf5Na7PSvwdTuplZnFbyueToPtQaa",
+      "gdrive:142-qzQIydi1Erd3FJherlxxQ9BZqkbCjV06IuuQ-THc",
+      "gdrive:1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho",
+      "repo:bartytime4life/Kansas-Frontier-Matrix@463381703bcd6eada8eea05e95c4a88912ed4b02",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "truth_labels": {
+    "apps/explorer-web/src/adapters/OciArtifactBrowserProjection.ts": "PROPOSED",
+    "apps/explorer-web/src/features/oci_artifact_browser/README.md": "PROPOSED",
+    "apps/explorer-web/src/features/oci_artifact_browser/index.ts": "PROPOSED",
+    "apps/explorer-web/tests/browser/oci-artifact-browser.fixture.ts": "PROPOSED",
+    "apps/explorer-web/tests/browser/oci-artifact-browser.html": "PROPOSED",
+    "apps/explorer-web/tests/browser/oci-artifact-browser.spec.ts": "PROPOSED",
+    "apps/explorer-web/tests/oci-artifact-browser.test.ts": "PROPOSED",
+    "docs/intake/exploratory/pass-32-oci-artifact-browser-source-map.md": "PROPOSED",
+    "fixtures/ui/oci_artifact_browser_projection/README.md": "PROPOSED",
+    "fixtures/ui/oci_artifact_browser_projection/invalid/extra-field.json": "PROPOSED",
+    "fixtures/ui/oci_artifact_browser_projection/invalid/referrer-subject-mismatch.json": "PROPOSED",
+    "fixtures/ui/oci_artifact_browser_projection/invalid/tag-binding-drift.json": "PROPOSED",
+    "fixtures/ui/oci_artifact_browser_projection/valid/available.json": "PROPOSED",
+    "fixtures/ui/oci_artifact_browser_projection/valid/denied.json": "PROPOSED",
+    "fixtures/ui/oci_artifact_browser_projection/valid/error.json": "PROPOSED",
+    "fixtures/ui/oci_artifact_browser_projection/valid/missing.json": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-pr-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Current main, repository history, branches, issues, and pull requests were searched for the exact card ID and OCI artifact browser terms; no implementation overlap was found."
+    },
+    {
+      "gate": "source-pdf-visual-inspection",
+      "outcome": "PASS",
+      "reason": "The consolidated-atlas page carrying KFM-P32-FEAT-0002 was rendered and visually inspected before implementation."
+    },
+    {
+      "gate": "closed-projection-and-non-effects",
+      "outcome": "PASS",
+      "reason": "Exact-field, finite-negative-state, tag/digest, subject-digest, referrer-order, false-governance, no-transport, no-persistence, no-cryptography, and no-release-action guards passed."
+    },
+    {
+      "gate": "oci-artifact-browser-targeted-unit-suite",
+      "outcome": "PASS",
+      "reason": "The targeted OCI artifact browser unit file passed all 9 tests."
+    },
+    {
+      "gate": "explorer-full-unit-suite",
+      "outcome": "PASS",
+      "reason": "All 251 Explorer unit tests passed in the local working tree."
+    },
+    {
+      "gate": "explorer-production-build",
+      "outcome": "PASS",
+      "reason": "Strict TypeScript checking and the Vite production build completed locally. Node 24 emitted the expected engine warning; hosted CI uses the repository-pinned Node 22 line."
+    },
+    {
+      "gate": "browser-fixture-typecheck",
+      "outcome": "PASS",
+      "reason": "The browser fixture and Playwright spec passed an isolated strict TypeScript no-emit check."
+    },
+    {
+      "gate": "playwright-spec-discovery",
+      "outcome": "PASS",
+      "reason": "Playwright discovered both OCI artifact browser scenarios."
+    },
+    {
+      "gate": "local-playwright-browser",
+      "outcome": "SKIPPED",
+      "reason": "No Chromium executable is installed in this workspace; hosted CI must validate the pushed exact head."
+    },
+    {
+      "gate": "explorer-policy-boundary-guards",
+      "outcome": "PASS",
+      "reason": "Both repository Explorer adapter-boundary tests passed against the local working tree."
+    },
+    {
+      "gate": "generated-receipt-integrity",
+      "outcome": "PASS",
+      "reason": "The v3 generated-receipt validator bound all 16 declared artifacts to their final local SHA-256 digests."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:pass32-oci-artifact-browser",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#KFM-P32-FEAT-0002"
+    },
+    {
+      "id": "gdrive:consolidated-atlas",
+      "validated": true,
+      "evidence_ref": "gdrive:1w7Qrf5Na7PSvwdTuplZnFbyueToPtQaa"
+    },
+    {
+      "id": "gdrive:new-ideas",
+      "validated": true,
+      "evidence_ref": "gdrive:142-qzQIydi1Erd3FJherlxxQ9BZqkbCjV06IuuQ-THc"
+    },
+    {
+      "id": "gdrive:kfm-full-atlas-seed-cards",
+      "validated": true,
+      "evidence_ref": "gdrive:1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho"
+    },
+    {
+      "id": "repository:adr-0029-directory-rules-v2",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-11T01:53:44Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-first implementation derived from Pass 32 card KFM-P32-FEAT-0002. It is an unmounted read-only synthetic review projection and grants no registry, artifact, signature, lifecycle, rollback, policy, promotion, release, deployment, publication, or public-use authority."
+}

@@ -1,0 +1,42 @@
+{
+  "binding_id": "kfm://evidence/detached-payload-binding/52a103acbb136c11953d5faf",
+  "bundle_binding": {
+    "bundle_signature_ref": "kfm://attestation/signature/synthetic-detached-payload",
+    "evidence_bundle_ref": "kfm://evidence/bundle/synthetic-detached-payload",
+    "evidence_bundle_spec_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+  },
+  "canonicalization_profile": "RFC8785-JCS",
+  "governance": {
+    "evidence_bundle_resolved": false,
+    "payload_verified": false,
+    "policy_evaluated": false,
+    "promotion_authorized": false,
+    "publication_authorized": false,
+    "release_authorized": false,
+    "rights_evaluated": false,
+    "signature_verified": false
+  },
+  "locations": [
+    {
+      "content_addressed": false,
+      "role": "PRIMARY",
+      "url": "https://127.0.0.1/payload.bin"
+    },
+    {
+      "content_addressed": false,
+      "role": "MIRROR",
+      "url": "https://mirror.example.net/kfm/synthetic/payload.bin"
+    }
+  ],
+  "object_type": "DetachedPayloadBinding",
+  "payload": {
+    "byte_size": 33,
+    "media_type": "application/octet-stream",
+    "name": "synthetic_payload.bin",
+    "payload_id": "kfm://evidence/detached-payload/6b07e1dbe824a4acbdf4877d",
+    "sha256": "sha256:6b07e1dbe824a4acbdf4877d389689059784beb58c4bf7a2234617e6f46bfefc"
+  },
+  "schema_version": "1.0.0",
+  "spec_hash": "sha256:52a103acbb136c11953d5faf429c1953b6608c35e0a7cec3a954242956114c26",
+  "status": "PROPOSED_INACTIVE"
+}

@@ -1,0 +1,152 @@
+{
+  "receipt_id": "genrec-archaeology-sensitivity-policy-readme-abc6ae81",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "policy/domains/archaeology/sensitivity/README.md"
+  ],
+  "artifact_hashes": {
+    "policy/domains/archaeology/sensitivity/README.md": "sha256:abc6ae810580cd6a87194ee321059ae203895122d311526374a3a139bd164ea9"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-19"
+  },
+  "prompt_or_contract": "sha256:962fc26f8f91ff12f7e407fc88f5aaf885850f6a1f40b791becf7c3616a98d94",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "repository evidence inspection",
+      "Directory Rules",
+      "KFM AI Build Operating Contract",
+      "Markdown and JSON validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "Directory Rules.pdf",
+      "Kansas Frontier Matrix — AI Build Operating Contract.md",
+      "KFM Unified Doctrine Synthesis.md"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/1e192dcb99682cc6637e90b80a659f1a0a1797e3/policy/domains/archaeology/sensitivity/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/1e192dcb99682cc6637e90b80a659f1a0a1797e3/docs/domains/archaeology/SENSITIVITY.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/1e192dcb99682cc6637e90b80a659f1a0a1797e3/docs/standards/REDACTION_PROFILES.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/1e192dcb99682cc6637e90b80a659f1a0a1797e3/policy/redaction/profiles.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/1e192dcb99682cc6637e90b80a659f1a0a1797e3/contracts/domains/archaeology/sensitivity_transform.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/1e192dcb99682cc6637e90b80a659f1a0a1797e3/contracts/domains/archaeology/publication_transform_receipt.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/1e192dcb99682cc6637e90b80a659f1a0a1797e3/schemas/contracts/v1/receipts/redaction_receipt.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/1e192dcb99682cc6637e90b80a659f1a0a1797e3/tests/fixtures/domains/archaeology/sensitive_geometry/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/1e192dcb99682cc6637e90b80a659f1a0a1797e3/tools/validators/sensitive_geometry/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/1e192dcb99682cc6637e90b80a659f1a0a1797e3/data/registry/sensitivity/archaeology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/1e192dcb99682cc6637e90b80a659f1a0a1797e3/data/receipts/archaeology/sensitivity/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/1e192dcb99682cc6637e90b80a659f1a0a1797e3/.github/workflows/domain-archaeology.yml"
+    ]
+  },
+  "truth_labels": {
+    "policy/domains/archaeology/sensitivity/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-authority-preflight",
+      "outcome": "PASS",
+      "reason": "Verified repository identity, target path, prior blob, scoped branch, draft pull request, and write permission."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "The target remains under the canonical singular policy responsibility root; no parallel contract, schema, profile, registry, receipt, proof, release, or public authority was created."
+    },
+    {
+      "gate": "repository-evidence-grounding",
+      "outcome": "PASS",
+      "reason": "Inspected parent/sibling policy lanes, doctrine, ten domain Rego scaffolds, profile catalog, transform and receipt contracts/schemas, registry and receipt boundaries, tests, validator guidance, PolicyDecision shape, and domain workflow holds."
+    },
+    {
+      "gate": "domain-rego-scaffold-inventory",
+      "outcome": "PASS",
+      "reason": "Directly verified ten Archaeology Rego files are six-line PROPOSED scaffolds using default allow false and containing no substantive rule bodies."
+    },
+    {
+      "gate": "sensitive-domain-and-non-invention",
+      "outcome": "PASS",
+      "reason": "The README preserves exact-detail and reverse-inference denial, defers cultural authority, and does not accept or invent numeric thresholds, active profiles, consent state, review approval, or release permission."
+    },
+    {
+      "gate": "conflict-disclosure",
+      "outcome": "PASS",
+      "reason": "The README surfaces policy-lane topology, profile-catalog, transform/receipt schema, RedactionReceipt, decision-vocabulary, fixture/test/validator, registry/receipt, and runtime-parity conflicts without selecting an unsupported winner."
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "Verified remote GitHub readback, a single H1 in the authored document, complete KFM Meta Block markers, authority boundaries, correction and rollback sections, changelog, and final rule statement."
+    },
+    {
+      "gate": "remote-git-blob-identity",
+      "outcome": "PASS",
+      "reason": "GitHub returned blob SHA b0845600f2c2220df12387170f40cbea0b9ac71f; receipt artifact digest is SHA-256 over the canonical string git-blob-sha1:b0845600f2c2220df12387170f40cbea0b9ac71f because connector output did not expose raw bytes as a downloadable file for direct SHA-256 recomputation."
+    },
+    {
+      "gate": "executable-archaeology-sensitivity-policy",
+      "outcome": "SKIPPED",
+      "reason": "No accepted sensitivity bundle, profile registry, immutable input schema, substantive transform/receipt schemas, transform implementation, receipt emitter, domain policy tests, reconstruction validator, runtime parity proof, or public obligation integration was established."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on draft pull request 1457."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "prior-target-and-parent-policy",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/1e192dcb99682cc6637e90b80a659f1a0a1797e3/policy/domains/archaeology/sensitivity/README.md"
+    },
+    {
+      "id": "archaeology-sensitivity-doctrine",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/1e192dcb99682cc6637e90b80a659f1a0a1797e3/docs/domains/archaeology/SENSITIVITY.md"
+    },
+    {
+      "id": "redaction-profile-standard-and-catalog",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/1e192dcb99682cc6637e90b80a659f1a0a1797e3/docs/standards/REDACTION_PROFILES.md"
+    },
+    {
+      "id": "transform-and-receipt-contracts",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/1e192dcb99682cc6637e90b80a659f1a0a1797e3/contracts/domains/archaeology/sensitivity_transform.md"
+    },
+    {
+      "id": "sensitive-geometry-test-validator-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/1e192dcb99682cc6637e90b80a659f1a0a1797e3/tests/fixtures/domains/archaeology/sensitive_geometry/README.md"
+    },
+    {
+      "id": "archaeology-readiness-workflow",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/1e192dcb99682cc6637e90b80a659f1a0a1797e3/.github/workflows/domain-archaeology.yml"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-19T18:34:23Z",
+  "emitter": "openai/gpt-5.6-thinking",
+  "links": {
+    "pr_number": 1457,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored repository-grounded README revision on a scoped review branch. This receipt records provenance, not approval. GitHub blob identity was verified as b0845600f2c2220df12387170f40cbea0b9ac71f. The artifact_hashes value is SHA-256 of the canonical Git blob identifier 'git-blob-sha1:b0845600f2c2220df12387170f40cbea0b9ac71f', not a direct SHA-256 of downloaded raw bytes, because the connector did not provide a local raw-byte file. No policy source, profile, threshold, schema, contract, fixture payload, test, validator, workflow, protected record, evidence object, registry record, receipt instance, release artifact, deployment, public route, map layer, search index, cache, embedding, or AI behavior was changed. Human review remains pending."
+}

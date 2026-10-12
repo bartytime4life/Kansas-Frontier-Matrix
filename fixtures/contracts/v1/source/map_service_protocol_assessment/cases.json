@@ -1,0 +1,429 @@
+{
+  "profile": "kfm.source.map-service-protocol.fixture.v1",
+  "bases": {
+    "pmtiles": {
+      "object_type": "MapServiceProtocolAssessment",
+      "schema_version": "1.0.0",
+      "profile": "kfm.source.map-service-protocol.fixture.v1",
+      "assessment_id": "kfm:map-service-protocol:000000000000000000000000",
+      "assessment_state": "COMPLETE",
+      "source_id": "synthetic-pmtiles",
+      "source_descriptor_ref": "kfm://source/synthetic-pmtiles",
+      "descriptor_spec_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "layer_manifest_ref": "kfm://layer-manifest/synthetic-pmtiles-v1",
+      "declaration": {
+        "protocol_class": "PMTILES",
+        "access_surface": "LOCAL_IMMUTABLE_ARTIFACT",
+        "locator_ref": "kfm://artifact/synthetic-pmtiles-v1",
+        "artifact_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "protocol_evidence_kind": "PMTILES_HEADER_ASSESSMENT",
+        "protocol_evidence_ref": "kfm://assessment/synthetic-pmtiles-header-v1",
+        "source_use_role": "VERSIONED_ARTIFACT",
+        "immutable": true
+      },
+      "controls": {
+        "rights_assessment_ref": "kfm://source-rights/synthetic-pmtiles-v1",
+        "rights_assessment_state": "CURRENT",
+        "attribution_required": true,
+        "attribution_text": "Synthetic PMTiles fixture; not source evidence.",
+        "cache_policy": "IMMUTABLE_VERSIONED",
+        "freshness_policy_ref": null,
+        "source_health_ref": null,
+        "source_health_state": "NOT_APPLICABLE"
+      },
+      "decision": {
+        "outcome": "PASS",
+        "recommendation": "READY_FOR_REVIEW",
+        "reason_codes": ["PROTOCOL_CONTROLS_COHERENT"],
+        "review_required": true,
+        "execution_authorized": false
+      },
+      "authority": {
+        "network_attempted": false,
+        "source_activation_authority": false,
+        "fetch_authority": false,
+        "reference_resolution_authority": false,
+        "remote_bytes_verified": false,
+        "rights_authority": false,
+        "cache_mutation_authority": false,
+        "layer_registration_authority": false,
+        "release_authority": false,
+        "publication_authority": false,
+        "public_use_authority": false
+      },
+      "limitations": [
+        "fixture_only",
+        "no_network_or_remote_verification",
+        "no_source_or_rights_authority",
+        "no_cache_or_layer_mutation",
+        "no_release_publication_or_public_use"
+      ],
+      "spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "xyz": {
+      "object_type": "MapServiceProtocolAssessment",
+      "schema_version": "1.0.0",
+      "profile": "kfm.source.map-service-protocol.fixture.v1",
+      "assessment_id": "kfm:map-service-protocol:000000000000000000000000",
+      "assessment_state": "COMPLETE",
+      "source_id": "synthetic-xyz",
+      "source_descriptor_ref": "kfm://source/synthetic-xyz",
+      "descriptor_spec_hash": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "layer_manifest_ref": "kfm://layer-manifest/synthetic-xyz-v1",
+      "declaration": {
+        "protocol_class": "XYZ",
+        "access_surface": "REMOTE_TILE_TEMPLATE",
+        "locator_ref": "kfm://endpoint/synthetic-xyz-template-v1",
+        "artifact_digest": null,
+        "protocol_evidence_kind": "XYZ_TEMPLATE_ASSESSMENT",
+        "protocol_evidence_ref": "kfm://assessment/synthetic-xyz-template-v1",
+        "source_use_role": "CONTEXT_ONLY",
+        "immutable": false
+      },
+      "controls": {
+        "rights_assessment_ref": "kfm://source-rights/synthetic-xyz-v1",
+        "rights_assessment_state": "CURRENT",
+        "attribution_required": true,
+        "attribution_text": "Synthetic XYZ fixture; not source evidence.",
+        "cache_policy": "REVALIDATE",
+        "freshness_policy_ref": "kfm://freshness-policy/synthetic-xyz-v1",
+        "source_health_ref": "kfm://source-health/synthetic-xyz-v1",
+        "source_health_state": "HEALTHY"
+      },
+      "decision": {
+        "outcome": "PASS",
+        "recommendation": "READY_FOR_REVIEW",
+        "reason_codes": ["PROTOCOL_CONTROLS_COHERENT"],
+        "review_required": true,
+        "execution_authorized": false
+      },
+      "authority": {
+        "network_attempted": false,
+        "source_activation_authority": false,
+        "fetch_authority": false,
+        "reference_resolution_authority": false,
+        "remote_bytes_verified": false,
+        "rights_authority": false,
+        "cache_mutation_authority": false,
+        "layer_registration_authority": false,
+        "release_authority": false,
+        "publication_authority": false,
+        "public_use_authority": false
+      },
+      "limitations": [
+        "fixture_only",
+        "no_network_or_remote_verification",
+        "no_source_or_rights_authority",
+        "no_cache_or_layer_mutation",
+        "no_release_publication_or_public_use"
+      ],
+      "spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "wmts": {
+      "object_type": "MapServiceProtocolAssessment",
+      "schema_version": "1.0.0",
+      "profile": "kfm.source.map-service-protocol.fixture.v1",
+      "assessment_id": "kfm:map-service-protocol:000000000000000000000000",
+      "assessment_state": "COMPLETE",
+      "source_id": "synthetic-wmts",
+      "source_descriptor_ref": "kfm://source/synthetic-wmts",
+      "descriptor_spec_hash": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "layer_manifest_ref": "kfm://layer-manifest/synthetic-wmts-v1",
+      "declaration": {
+        "protocol_class": "WMTS",
+        "access_surface": "REMOTE_CAPABILITIES_SERVICE",
+        "locator_ref": "kfm://endpoint/synthetic-wmts-capabilities-v1",
+        "artifact_digest": null,
+        "protocol_evidence_kind": "WMTS_CAPABILITIES_ASSESSMENT",
+        "protocol_evidence_ref": "kfm://assessment/synthetic-wmts-capabilities-v1",
+        "source_use_role": "CONTEXT_ONLY",
+        "immutable": false
+      },
+      "controls": {
+        "rights_assessment_ref": "kfm://source-rights/synthetic-wmts-v1",
+        "rights_assessment_state": "CURRENT",
+        "attribution_required": true,
+        "attribution_text": "Synthetic WMTS fixture; not source evidence.",
+        "cache_policy": "REVALIDATE",
+        "freshness_policy_ref": "kfm://freshness-policy/synthetic-wmts-v1",
+        "source_health_ref": "kfm://source-health/synthetic-wmts-v1",
+        "source_health_state": "HEALTHY"
+      },
+      "decision": {
+        "outcome": "PASS",
+        "recommendation": "READY_FOR_REVIEW",
+        "reason_codes": ["PROTOCOL_CONTROLS_COHERENT"],
+        "review_required": true,
+        "execution_authorized": false
+      },
+      "authority": {
+        "network_attempted": false,
+        "source_activation_authority": false,
+        "fetch_authority": false,
+        "reference_resolution_authority": false,
+        "remote_bytes_verified": false,
+        "rights_authority": false,
+        "cache_mutation_authority": false,
+        "layer_registration_authority": false,
+        "release_authority": false,
+        "publication_authority": false,
+        "public_use_authority": false
+      },
+      "limitations": [
+        "fixture_only",
+        "no_network_or_remote_verification",
+        "no_source_or_rights_authority",
+        "no_cache_or_layer_mutation",
+        "no_release_publication_or_public_use"
+      ],
+      "spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "wms": {
+      "object_type": "MapServiceProtocolAssessment",
+      "schema_version": "1.0.0",
+      "profile": "kfm.source.map-service-protocol.fixture.v1",
+      "assessment_id": "kfm:map-service-protocol:000000000000000000000000",
+      "assessment_state": "COMPLETE",
+      "source_id": "synthetic-wms",
+      "source_descriptor_ref": "kfm://source/synthetic-wms",
+      "descriptor_spec_hash": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+      "layer_manifest_ref": "kfm://layer-manifest/synthetic-wms-v1",
+      "declaration": {
+        "protocol_class": "WMS",
+        "access_surface": "REMOTE_CAPABILITIES_SERVICE",
+        "locator_ref": "kfm://endpoint/synthetic-wms-capabilities-v1",
+        "artifact_digest": null,
+        "protocol_evidence_kind": "WMS_CAPABILITIES_ASSESSMENT",
+        "protocol_evidence_ref": "kfm://assessment/synthetic-wms-capabilities-v1",
+        "source_use_role": "CONTEXT_ONLY",
+        "immutable": false
+      },
+      "controls": {
+        "rights_assessment_ref": "kfm://source-rights/synthetic-wms-v1",
+        "rights_assessment_state": "CURRENT",
+        "attribution_required": true,
+        "attribution_text": "Synthetic WMS fixture; not source evidence.",
+        "cache_policy": "NO_STORE",
+        "freshness_policy_ref": "kfm://freshness-policy/synthetic-wms-v1",
+        "source_health_ref": "kfm://source-health/synthetic-wms-v1",
+        "source_health_state": "HEALTHY"
+      },
+      "decision": {
+        "outcome": "PASS",
+        "recommendation": "READY_FOR_REVIEW",
+        "reason_codes": ["PROTOCOL_CONTROLS_COHERENT"],
+        "review_required": true,
+        "execution_authorized": false
+      },
+      "authority": {
+        "network_attempted": false,
+        "source_activation_authority": false,
+        "fetch_authority": false,
+        "reference_resolution_authority": false,
+        "remote_bytes_verified": false,
+        "rights_authority": false,
+        "cache_mutation_authority": false,
+        "layer_registration_authority": false,
+        "release_authority": false,
+        "publication_authority": false,
+        "public_use_authority": false
+      },
+      "limitations": [
+        "fixture_only",
+        "no_network_or_remote_verification",
+        "no_source_or_rights_authority",
+        "no_cache_or_layer_mutation",
+        "no_release_publication_or_public_use"
+      ],
+      "spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+    }
+  },
+  "cases": [
+    {
+      "case_id": "pass_pmtiles_versioned_artifact",
+      "base": "pmtiles",
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "pass_xyz_context_service",
+      "base": "xyz",
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "pass_wmts_capabilities_service",
+      "base": "wmts",
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "pass_wms_capabilities_service",
+      "base": "wms",
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "abstain_rights_review_due",
+      "base": "xyz",
+      "mutations": [{"path": "/controls/rights_assessment_state", "value": "REVIEW_DUE"}],
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": [{"code": "RIGHTS_REVIEW_DUE", "path": "/decision/reason_codes"}]
+    },
+    {
+      "case_id": "abstain_rights_unresolved",
+      "base": "xyz",
+      "mutations": [{"path": "/controls/rights_assessment_state", "value": "UNRESOLVED"}],
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": [{"code": "RIGHTS_UNRESOLVED", "path": "/decision/reason_codes"}]
+    },
+    {
+      "case_id": "abstain_cache_policy_unknown",
+      "base": "pmtiles",
+      "mutations": [{"path": "/controls/cache_policy", "value": "UNKNOWN"}],
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": [{"code": "CACHE_POLICY_UNRESOLVED", "path": "/decision/reason_codes"}]
+    },
+    {
+      "case_id": "abstain_source_health_unknown",
+      "base": "xyz",
+      "mutations": [{"path": "/controls/source_health_state", "value": "UNKNOWN"}],
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": [{"code": "SOURCE_HEALTH_UNRESOLVED", "path": "/decision/reason_codes"}]
+    },
+    {
+      "case_id": "abstain_source_health_degraded",
+      "base": "wmts",
+      "mutations": [{"path": "/controls/source_health_state", "value": "DEGRADED"}],
+      "expected_outcome": "ABSTAIN",
+      "expected_findings": [{"code": "SOURCE_HEALTH_DEGRADED", "path": "/decision/reason_codes"}]
+    },
+    {
+      "case_id": "deny_rights_blocked",
+      "base": "xyz",
+      "mutations": [{"path": "/controls/rights_assessment_state", "value": "BLOCKED"}],
+      "expected_outcome": "DENY",
+      "expected_findings": [{"code": "RIGHTS_BLOCKED", "path": "/decision/reason_codes"}]
+    },
+    {
+      "case_id": "deny_attribution_missing",
+      "base": "xyz",
+      "mutations": [{"path": "/controls/attribution_text", "value": null}],
+      "expected_outcome": "DENY",
+      "expected_findings": [{"code": "ATTRIBUTION_INCOMPLETE", "path": "/decision/reason_codes"}]
+    },
+    {
+      "case_id": "deny_protocol_transport_mismatch",
+      "base": "xyz",
+      "mutations": [{"path": "/declaration/access_surface", "value": "LOCAL_IMMUTABLE_ARTIFACT"}],
+      "expected_outcome": "DENY",
+      "expected_findings": [{"code": "PROTOCOL_TRANSPORT_MISMATCH", "path": "/decision/reason_codes"}]
+    },
+    {
+      "case_id": "deny_protocol_evidence_mismatch",
+      "base": "wmts",
+      "mutations": [{"path": "/declaration/protocol_evidence_kind", "value": "WMS_CAPABILITIES_ASSESSMENT"}],
+      "expected_outcome": "DENY",
+      "expected_findings": [{"code": "PROTOCOL_EVIDENCE_MISMATCH", "path": "/decision/reason_codes"}]
+    },
+    {
+      "case_id": "deny_pmtiles_missing_artifact_digest",
+      "base": "pmtiles",
+      "mutations": [{"path": "/declaration/artifact_digest", "value": null}],
+      "expected_outcome": "DENY",
+      "expected_findings": [{"code": "DECLARATION_INCOHERENT", "path": "/decision/reason_codes"}]
+    },
+    {
+      "case_id": "deny_remote_service_with_artifact_digest",
+      "base": "xyz",
+      "mutations": [{"path": "/declaration/artifact_digest", "value": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"}],
+      "expected_outcome": "DENY",
+      "expected_findings": [{"code": "DECLARATION_INCOHERENT", "path": "/decision/reason_codes"}]
+    },
+    {
+      "case_id": "deny_remote_service_claims_versioned_artifact_role",
+      "base": "wms",
+      "mutations": [{"path": "/declaration/source_use_role", "value": "VERSIONED_ARTIFACT"}],
+      "expected_outcome": "DENY",
+      "expected_findings": [{"code": "DECLARATION_INCOHERENT", "path": "/decision/reason_codes"}]
+    },
+    {
+      "case_id": "deny_source_stale",
+      "base": "wms",
+      "mutations": [{"path": "/controls/source_health_state", "value": "STALE"}],
+      "expected_outcome": "DENY",
+      "expected_findings": [{"code": "SOURCE_STALE_OR_UNAVAILABLE", "path": "/decision/reason_codes"}]
+    },
+    {
+      "case_id": "deny_source_unavailable",
+      "base": "wmts",
+      "mutations": [{"path": "/controls/source_health_state", "value": "UNAVAILABLE"}],
+      "expected_outcome": "DENY",
+      "expected_findings": [{"code": "SOURCE_STALE_OR_UNAVAILABLE", "path": "/decision/reason_codes"}]
+    },
+    {
+      "case_id": "deny_spec_hash_tamper",
+      "base": "pmtiles",
+      "spec_hash_override": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+      "expected_outcome": "DENY",
+      "expected_findings": [{"code": "MAP_PROTOCOL_SPEC_HASH_MISMATCH", "path": "/spec_hash"}]
+    },
+    {
+      "case_id": "deny_assessment_id_mismatch",
+      "base": "pmtiles",
+      "assessment_id_override": "kfm:map-service-protocol:ffffffffffffffffffffffff",
+      "expected_outcome": "DENY",
+      "expected_findings": [{"code": "MAP_PROTOCOL_ID_MISMATCH", "path": "/assessment_id"}]
+    },
+    {
+      "case_id": "deny_source_descriptor_ref_mismatch",
+      "base": "pmtiles",
+      "mutations": [{"path": "/source_descriptor_ref", "value": "kfm://source/different-source"}],
+      "expected_outcome": "DENY",
+      "expected_findings": [{"code": "MAP_PROTOCOL_SOURCE_REF_MISMATCH", "path": "/source_descriptor_ref"}]
+    },
+    {
+      "case_id": "deny_limitations_noncanonical",
+      "base": "pmtiles",
+      "mutations": [{
+        "path": "/limitations",
+        "value": [
+          "no_network_or_remote_verification",
+          "fixture_only",
+          "no_source_or_rights_authority",
+          "no_cache_or_layer_mutation",
+          "no_release_publication_or_public_use"
+        ]
+      }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{"code": "MAP_PROTOCOL_LIMITATIONS_INVALID", "path": "/limitations"}]
+    },
+    {
+      "case_id": "deny_declared_decision_mismatch",
+      "base": "xyz",
+      "decision_override": {
+        "outcome": "DENY",
+        "recommendation": "REJECT",
+        "reason_codes": ["RIGHTS_BLOCKED"],
+        "review_required": true,
+        "execution_authorized": false
+      },
+      "expected_outcome": "DENY",
+      "expected_findings": [{"code": "MAP_PROTOCOL_DECISION_MISMATCH", "path": "/decision"}]
+    },
+    {
+      "case_id": "deny_unknown_field",
+      "base": "pmtiles",
+      "mutations": [{"path": "/undeclared", "value": true}],
+      "expected_outcome": "DENY",
+      "expected_findings": [{"code": "MAP_PROTOCOL_SCHEMA_INVALID", "path": "/"}]
+    },
+    {
+      "case_id": "error_bounded_assessment_failure",
+      "base": "pmtiles",
+      "mutations": [{"path": "/assessment_state", "value": "ERROR"}],
+      "expected_outcome": "ERROR",
+      "expected_findings": [{"code": "VALIDATOR_ERROR", "path": "/decision/reason_codes"}]
+    }
+  ]
+}

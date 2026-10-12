@@ -1,0 +1,117 @@
+{
+  "receipt_id": "genrec-topology-independent-collection-20260912",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "Makefile",
+    "tests/ci/test_repository_topology_make_target.py"
+  ],
+  "artifact_hashes": {
+    "Makefile": "sha256:af8a786cc5804df6fc2db810e0b68d93cd90df59920ae57f6d54eaab4b407e7e",
+    "tests/ci/test_repository_topology_make_target.py": "sha256:d3e94c5788d37e3de0a8417a36e5ee65eb5f552d3a328a99e39897a12da0d71b"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Astra Pro",
+    "version": "UNKNOWN; runtime build identifier unavailable"
+  },
+  "prompt_or_contract": "sha256:45c3433c5b7cf5f527b3d86a01ea7e938c8b616abbfcab9a6430c888cb629f66",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub",
+      "container",
+      "Plugin_Management",
+      "web"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:6dcd92cbe365a4266ed3c6b45c23200ebe63d2018250884e0734b5a22fb4fb2c",
+      "sha256:425e998e5584a7e400e99c963aba019b33ff685f9fa26b5b474d8758a3160b2a"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/00cfc7716c1d858aab107d2e9d8a83c974dc06de/Makefile",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/00cfc7716c1d858aab107d2e9d8a83c974dc06de/CONTRIBUTING.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/00cfc7716c1d858aab107d2e9d8a83c974dc06de/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/00cfc7716c1d858aab107d2e9d8a83c974dc06de/docs/doctrine/directory-rules.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/00cfc7716c1d858aab107d2e9d8a83c974dc06de/docs/doctrine/ai-build-operating-contract.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/00cfc7716c1d858aab107d2e9d8a83c974dc06de/tests/ci/README.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/00cfc7716c1d858aab107d2e9d8a83c974dc06de/data/receipts/generated/README.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/00cfc7716c1d858aab107d2e9d8a83c974dc06de/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/00cfc7716c1d858aab107d2e9d8a83c974dc06de/.github/workflows/validator-suite.yml",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/00cfc7716c1d858aab107d2e9d8a83c974dc06de/tests/validators/directory_governance/test_validate_repository_topology.py",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/34660221637/job/103460987187",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4487",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4488"
+    ]
+  },
+  "truth_labels": {
+    "Makefile": "CONFIRMED",
+    "tests/ci/test_repository_topology_make_target.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "exact-source-identity",
+      "outcome": "PASS",
+      "reason": "The complete 15360-byte Makefile projection matches Git blob 591070104e3ddaa72dfd4036a6768151e48af8bc. The receipt schema projection matches Git blob fba21ed27ebccf1362fe397fe0c3ebd85e072685. This is an exact-file projection, not a full KFM checkout."
+    },
+    {
+      "gate": "make-orchestration-contract",
+      "outcome": "PASS",
+      "reason": "Six unittest methods passed in two complete final-source batches (five plus one). They exercise 35 Make invocations: eight pass/failure combinations; eighteen single-lane exits 2/7/126/127/130/143; three errexit combinations; four Bash combinations; a missing-contract case; and a discriminated fail-fast reproduction. Thirty-four invocations use the candidate Makefile; one uses a synthetic original-target fixture. Real GNU Make and shell processes use an explicit argv-recording Python substitute. No native topology or receipt validation is implied."
+    },
+    {
+      "gate": "receipt-shape-and-artifact-integrity",
+      "outcome": "PASS",
+      "reason": "Draft 2020-12 plus FormatChecker validates this receipt against the exact fetched schema. Artifact/hash/truth-label inventories agree and both full SHA-256 values match local output bytes; review is pending with no override."
+    },
+    {
+      "gate": "python-grammar",
+      "outcome": "PASS",
+      "reason": "The test module parses using Python 3.11 grammar under Python 3.13.5. Shell and Make behavior are exercised by the recorded local contract tests."
+    },
+    {
+      "gate": "native-repository-and-hosted-execution",
+      "outcome": "SKIPPED",
+      "reason": "No complete local Git history/checkout or native topology run is available. Terminal GitHub DNS fails. No new branch was pushed and no new PR was created: the discovered GitHub tools provide reads but no mutation actions, and gh is absent. Hosted results for this candidate do not exist at emission."
+    },
+    {
+      "gate": "independent-review",
+      "outcome": "SKIPPED",
+      "reason": "No independent approval or readiness is claimed. Existing PRs 4487 and 4488 are separate externally created candidates; neither is modified, approved or adopted here."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "adopted-directory-authority",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/00cfc7716c1d858aab107d2e9d8a83c974dc06de/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "exact-target-source",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/00cfc7716c1d858aab107d2e9d8a83c974dc06de/Makefile"
+    },
+    {
+      "id": "receipt-responsibility",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/00cfc7716c1d858aab107d2e9d8a83c974dc06de/data/receipts/generated/README.md"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-12T01:16:29Z",
+  "emitter": "ChatGPT KFM topology independent-collection continuation",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "LOCAL_PATCH / PR_NOT_CREATED. Base 00cfc7716c1d858aab107d2e9d8a83c974dc06de. Only the existing root Makefile target and a new tests/ci contract module are substantive changes. The target records all three command exits and fails if any fails; the extra contract suite cannot pass vacuously when its file is missing. Original topology tests, renderer, validator rules, baselines, registries, AliasCards, workflows and historical receipts remain unchanged. The new test is collected by the existing Make target; no new workflow or trigger is introduced. Comments and docstrings document changed behavior without changing a receipt-bound shared README. Receipt truth labels establish authored/inspected bytes and bounded local tests, not factual authority, approval or native repository conformance. The first combined test run exceeded the execution limit; an original-fixture test then failed because its synthetic command omitted required environment settings. That fixture was repaired, and final-source batches passed; neither earlier run is counted as passing. Closing or discarding this local patch leaves main unchanged. After separately authorized integration, revert the paired Make/test change while preserving receipt lineage; this restores fail-fast diagnostic suppression, not topology correctness. No source admission, activation, release, deployment, publication, Site edit, setting change, approval or merge. Missing write tooling is a delivery limitation, not missing user authorization."
+}

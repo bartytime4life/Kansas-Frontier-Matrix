@@ -1,0 +1,107 @@
+{
+  "receipt_id": "kfm-terrain-depth-20261010",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "apps/site/source/app/map-toolbar.tsx",
+    "apps/site/source/app/page.tsx",
+    "apps/site/source/app/scene-effects-controls.tsx",
+    "apps/site/source/app/scene-effects.css",
+    "apps/site/source/app/scene-effects.ts",
+    "apps/site/source/app/scene-studio.ts",
+    "apps/site/source/app/workspace-storage.ts",
+    "apps/site/source/tests/area-underlay.test.mjs",
+    "apps/site/source/tests/cinematic-scene-effects.test.mjs",
+    "apps/site/source/tests/rendered-html.test.mjs",
+    "apps/site/source/tests/scene-studio.test.mjs",
+    "apps/site/source/tests/snapshot-workflows.test.mjs"
+  ],
+  "artifact_hashes": {
+    "apps/site/source/app/map-toolbar.tsx": "sha256:d8565736fee6d6fba8486a8d93537538f79323f4696150e9f68f64c31e134cbf",
+    "apps/site/source/app/page.tsx": "sha256:7da8d47a5b0e95be07667a1da9ec23d98d0ccf4895c976cbe3286ad9cfa64eda",
+    "apps/site/source/app/scene-effects-controls.tsx": "sha256:c2d77a8090f8cdc4049b75afb1c7ffab39debc8b83eba1990c1121ffe924e783",
+    "apps/site/source/app/scene-effects.css": "sha256:5f44d5f2f4d8178f819edfcdcc49252d538493a97216213281e44f732bfac8f1",
+    "apps/site/source/app/scene-effects.ts": "sha256:5a2afc26745d7e9a3c75ae72c048df93a220f95af1ddcfb6753a8c7fbd5ef6b5",
+    "apps/site/source/app/scene-studio.ts": "sha256:b17cf344e2f6c9e62a4f5abe2c6aa0018da48af0dbd41b1b8d3fd3ef7ebef56a",
+    "apps/site/source/app/workspace-storage.ts": "sha256:019db52b4de0e7ec9e2c62b5f07e6f6a7ba81c292423d61274a23661a47156b8",
+    "apps/site/source/tests/area-underlay.test.mjs": "sha256:77e2fc82f57141ace733225903570044292e261580bdea9c28914cf9632503fd",
+    "apps/site/source/tests/cinematic-scene-effects.test.mjs": "sha256:436c608f618924dfb8f0f69b28687cf9e11e5ae5161fb5719d9bf6fd2d18e466",
+    "apps/site/source/tests/rendered-html.test.mjs": "sha256:28d2379f59b5d3539d32162402b986a12aced2ee3e294a76fc5c90c6adeab621",
+    "apps/site/source/tests/scene-studio.test.mjs": "sha256:02f7681224cf85c880edf2d565bb37039f485f3757e8f97ffd77de77ae782859",
+    "apps/site/source/tests/snapshot-workflows.test.mjs": "sha256:abe39a5e10a6983efd850c70a0f5f25abbf84cb78e507a0b142e82faea68bd0f"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Codex",
+    "version": "active session; exact backend build unavailable"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "Sites",
+      "GitHub",
+      "CUA"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "repository main@d68772ab6f2034147933850e59b03ebbe17f1dcf",
+      "Site v210@fec4c05bf3385a9cca4dd749e0d30e74b06e8169",
+      "User requested more perceptible, realistic Terrain 3D ground relief; supplied screenshot used as visual context"
+    ]
+  },
+  "truth_labels": {
+    "apps/site/source/app/map-toolbar.tsx": "PROPOSED",
+    "apps/site/source/app/page.tsx": "PROPOSED",
+    "apps/site/source/app/scene-effects-controls.tsx": "PROPOSED",
+    "apps/site/source/app/scene-effects.css": "PROPOSED",
+    "apps/site/source/app/scene-effects.ts": "PROPOSED",
+    "apps/site/source/app/scene-studio.ts": "PROPOSED",
+    "apps/site/source/app/workspace-storage.ts": "PROPOSED",
+    "apps/site/source/tests/area-underlay.test.mjs": "PROPOSED",
+    "apps/site/source/tests/cinematic-scene-effects.test.mjs": "PROPOSED",
+    "apps/site/source/tests/rendered-html.test.mjs": "PROPOSED",
+    "apps/site/source/tests/scene-studio.test.mjs": "PROPOSED",
+    "apps/site/source/tests/snapshot-workflows.test.mjs": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Repository typecheck, build and Node suite",
+      "outcome": "PASS",
+      "reason": "tsc --noEmit; production build; 940 passing tests."
+    },
+    {
+      "gate": "Same-Site typecheck, build and Node suite",
+      "outcome": "PASS",
+      "reason": "tsc --noEmit; build-site.mjs; 903 passing tests. Changes applied independently to each source tree."
+    },
+    {
+      "gate": "Terrain depth browser checks",
+      "outcome": "PASS",
+      "reason": "CUA compared 1x and 2.5x Flint Hills relief, exercised 3x and closer ground view, and checked the 390px mobile panel. Published Site exposes 2.5x with 62-degree pitch and 50-degree field of view."
+    },
+    {
+      "gate": "Independent human review and merge",
+      "outcome": "SKIPPED",
+      "reason": "Review pending; no merge performed."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "ADR-0029",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": [],
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-10-10T15:28:20.481877Z",
+  "emitter": "Codex",
+  "notes": "Terrain defaults now emphasize relief at a disclosed 2.5x display scale, with 1x/2.5x/3x controls, grazing hillshade and a closer center-preserving ground view. Source elevation readouts, DEM resolution limits, removed point columns, data and access remain unchanged. Published same private Site from 4a19c123806417d51fbbc804786cbcf1c8a78fa3; deployment appgdep_6aca595da1288191b2986277d7f40690 succeeded. Existing generated and mirror-review receipts are unchanged."
+}

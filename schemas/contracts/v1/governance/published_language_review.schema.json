@@ -1,0 +1,265 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/governance/published_language_review.schema.json",
+  "title": "PublishedLanguageReview candidate profile",
+  "description": "Closed, fixture-only candidate for reviewing public vocabulary across KFM bounded contexts. Validation creates no adoption, API, schema, policy, release, or publication authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "profile",
+    "status",
+    "review_id",
+    "version",
+    "spec_hash",
+    "term_id",
+    "public_term",
+    "definition",
+    "owning_context",
+    "related_contexts",
+    "context_map_ref",
+    "object_family_refs",
+    "public_api_resource_refs",
+    "internal_aliases",
+    "stability",
+    "change_kind",
+    "migration_ref",
+    "compatibility_window",
+    "evidence_refs",
+    "source_refs",
+    "limitations",
+    "decision",
+    "adoption_ref",
+    "public_use_allowed",
+    "effects"
+  ],
+  "$defs": {
+    "ref": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1024,
+      "pattern": "^\\S+$"
+    },
+    "text": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2000,
+      "pattern": "^\\S(?:[\\s\\S]*\\S)?$"
+    },
+    "context_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+      "maxLength": 96
+    },
+    "aware_datetime": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "ref_array": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/ref"
+      }
+    },
+    "optional_ref_array": {
+      "type": "array",
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/ref"
+      }
+    },
+    "context_array": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/context_id"
+      }
+    },
+    "nullable_ref": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/ref"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "compatibility_window": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "starts_at",
+            "ends_at"
+          ],
+          "properties": {
+            "starts_at": {
+              "$ref": "#/$defs/aware_datetime"
+            },
+            "ends_at": {
+              "$ref": "#/$defs/aware_datetime"
+            }
+          }
+        }
+      ]
+    }
+  },
+  "properties": {
+    "profile": {
+      "const": "kfm.governance.published-language-review.v1"
+    },
+    "status": {
+      "const": "PROPOSED_INACTIVE"
+    },
+    "review_id": {
+      "type": "string",
+      "pattern": "^published-language-review:[a-f0-9]{24}$"
+    },
+    "version": {
+      "const": "1.0.0"
+    },
+    "spec_hash": {
+      "$ref": "#/$defs/sha256"
+    },
+    "term_id": {
+      "$ref": "#/$defs/ref"
+    },
+    "public_term": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 160,
+      "pattern": "^\\S(?:.*\\S)?$"
+    },
+    "definition": {
+      "$ref": "#/$defs/text"
+    },
+    "owning_context": {
+      "$ref": "#/$defs/context_id"
+    },
+    "related_contexts": {
+      "$ref": "#/$defs/context_array"
+    },
+    "context_map_ref": {
+      "$ref": "#/$defs/ref"
+    },
+    "object_family_refs": {
+      "$ref": "#/$defs/ref_array"
+    },
+    "public_api_resource_refs": {
+      "$ref": "#/$defs/ref_array"
+    },
+    "internal_aliases": {
+      "$ref": "#/$defs/optional_ref_array"
+    },
+    "stability": {
+      "enum": [
+        "PROVISIONAL",
+        "STABLE",
+        "DEPRECATED"
+      ]
+    },
+    "change_kind": {
+      "enum": [
+        "ADDITIVE",
+        "CLARIFICATION",
+        "BREAKING",
+        "DEPRECATION"
+      ]
+    },
+    "migration_ref": {
+      "$ref": "#/$defs/nullable_ref"
+    },
+    "compatibility_window": {
+      "$ref": "#/$defs/compatibility_window"
+    },
+    "evidence_refs": {
+      "$ref": "#/$defs/ref_array"
+    },
+    "source_refs": {
+      "$ref": "#/$defs/ref_array"
+    },
+    "limitations": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 280,
+        "pattern": "\\S"
+      }
+    },
+    "decision": {
+      "enum": [
+        "HOLD",
+        "ADOPTED"
+      ]
+    },
+    "adoption_ref": {
+      "$ref": "#/$defs/nullable_ref"
+    },
+    "public_use_allowed": {
+      "type": "boolean"
+    },
+    "effects": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_changed",
+        "api_changed",
+        "context_map_changed",
+        "adopted",
+        "released",
+        "published"
+      ],
+      "properties": {
+        "schema_changed": {
+          "type": "boolean"
+        },
+        "api_changed": {
+          "type": "boolean"
+        },
+        "context_map_changed": {
+          "type": "boolean"
+        },
+        "adopted": {
+          "type": "boolean"
+        },
+        "released": {
+          "type": "boolean"
+        },
+        "published": {
+          "type": "boolean"
+        }
+      }
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED_INACTIVE",
+    "contract_doc": "contracts/governance/published_language_review.md",
+    "fixtures_root": "fixtures/contracts/v1/governance/published_language_review/",
+    "validator": "tools/validators/governance/validate_published_language_review.py",
+    "tests": [
+      "tests/validators/governance/test_validate_published_language_review.py"
+    ],
+    "authority": "fixture_candidate_only",
+    "adoption_authority": false,
+    "public_release_authority": false
+  }
+}

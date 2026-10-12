@@ -1,0 +1,564 @@
+{
+  "schema_version": "kfm.drinking-water-advisory-fixtures.v1",
+  "profile": "kfm.drinking-water-advisory.fixtures.v1",
+  "description": "Synthetic issue, active, authoritative rescission, source-failure, identity-conflict, false-clear, service-area, authority, time, release, effect, and identity cases.",
+  "bases": {
+    "issued": {
+      "profile": "kfm.hazards.drinking-water-advisory.v1",
+      "status": "PROPOSED_INACTIVE",
+      "object_type": "DrinkingWaterAdvisory",
+      "schema_version": "1.0.0",
+      "shared_mechanics": {
+        "contract_ref": "contracts/common/advisory_event_envelope.md",
+        "projected_profile_id": "kfm.advisory-event.drinking-water.v1",
+        "event_family": "DRINKING_WATER",
+        "basis": "REGULATORY_ADVISORY"
+      },
+      "source_surface": {
+        "source_descriptor_ref": "fixture://source/synthetic-drinking-water-advisory",
+        "source_mode": "COMPLETE_SNAPSHOT",
+        "source_check_outcome": "FETCHED",
+        "checked_at": "2026-08-10T14:00:00Z",
+        "snapshot_complete": true,
+        "previous_record_present": false,
+        "current_record_present": true
+      },
+      "identity": {
+        "native_public_water_system_id": "KS-SYNTHETIC-PWS-001",
+        "public_water_system_ref": "kfm://public-water-system/synthetic-001",
+        "resolution_status": "RESOLVED"
+      },
+      "authority": {
+        "issue_notice_ref": "fixture://notice/issue-001",
+        "issuance_authority_ref": "kfm://authority/synthetic-issuer",
+        "issuance_authority_status": "CONFIRMED",
+        "rescission_notice_ref": null,
+        "rescission_authority_ref": null,
+        "rescission_authority_status": "NOT_APPLICABLE"
+      },
+      "advisory": {
+        "cause_code": "LOSS_OF_PRESSURE",
+        "native_status": "ISSUED",
+        "normalized_status": "ISSUED",
+        "last_confirmed_status": null,
+        "issued_at": "2026-08-10T12:00:00Z",
+        "effective_at": "2026-08-10T13:00:00Z",
+        "expires_at": "2026-08-12T13:00:00Z",
+        "rescinded_at": null,
+        "clears_prior_advisory": false
+      },
+      "scope": {
+        "scope_role": "SERVICE_AREA",
+        "service_area_ref": "kfm://service-area/synthetic-001",
+        "administrative_area_ref": "kfm://administrative-area/synthetic-city-001",
+        "geometry_ref": "fixture://geometry/service-area-001",
+        "geometry_confidence": "CONFIRMED"
+      },
+      "controls": {
+        "prior_advisory_ref": null,
+        "evidence_refs": [
+          "fixture://notice/issue-001",
+          "fixture://snapshot/issued-001"
+        ],
+        "release_state": "UNRELEASED",
+        "release_ref": null,
+        "public_use_allowed": false,
+        "alerts_allowed": false,
+        "not_for_life_safety": true
+      },
+      "limitations": [
+        "Fixture-only status does not establish a current advisory.",
+        "No current health or safety determination is made.",
+        "Not for life-safety, alerting, release, or public use."
+      ],
+      "effects": {
+        "source_activated": false,
+        "evidence_resolved": false,
+        "policy_evaluated": false,
+        "health_determined": false,
+        "lifecycle_written": false,
+        "alert_issued": false,
+        "released": false,
+        "deployed": false,
+        "published": false
+      }
+    },
+    "active": {
+      "profile": "kfm.hazards.drinking-water-advisory.v1",
+      "status": "PROPOSED_INACTIVE",
+      "object_type": "DrinkingWaterAdvisory",
+      "schema_version": "1.0.0",
+      "shared_mechanics": {
+        "contract_ref": "contracts/common/advisory_event_envelope.md",
+        "projected_profile_id": "kfm.advisory-event.drinking-water.v1",
+        "event_family": "DRINKING_WATER",
+        "basis": "REGULATORY_ADVISORY"
+      },
+      "source_surface": {
+        "source_descriptor_ref": "fixture://source/synthetic-drinking-water-advisory",
+        "source_mode": "COMPLETE_SNAPSHOT",
+        "source_check_outcome": "NOT_MODIFIED",
+        "checked_at": "2026-08-11T13:00:00Z",
+        "snapshot_complete": true,
+        "previous_record_present": true,
+        "current_record_present": true
+      },
+      "identity": {
+        "native_public_water_system_id": "KS-SYNTHETIC-PWS-001",
+        "public_water_system_ref": "kfm://public-water-system/synthetic-001",
+        "resolution_status": "RESOLVED"
+      },
+      "authority": {
+        "issue_notice_ref": "fixture://notice/issue-001",
+        "issuance_authority_ref": "kfm://authority/synthetic-issuer",
+        "issuance_authority_status": "CONFIRMED",
+        "rescission_notice_ref": null,
+        "rescission_authority_ref": null,
+        "rescission_authority_status": "NOT_APPLICABLE"
+      },
+      "advisory": {
+        "cause_code": "LOSS_OF_PRESSURE",
+        "native_status": "ACTIVE",
+        "normalized_status": "ACTIVE_CONFIRMED",
+        "last_confirmed_status": "ISSUED",
+        "issued_at": "2026-08-10T12:00:00Z",
+        "effective_at": "2026-08-10T13:00:00Z",
+        "expires_at": "2026-08-12T13:00:00Z",
+        "rescinded_at": null,
+        "clears_prior_advisory": false
+      },
+      "scope": {
+        "scope_role": "SERVICE_AREA",
+        "service_area_ref": "kfm://service-area/synthetic-001",
+        "administrative_area_ref": "kfm://administrative-area/synthetic-city-001",
+        "geometry_ref": "fixture://geometry/service-area-001",
+        "geometry_confidence": "CONFIRMED"
+      },
+      "controls": {
+        "prior_advisory_ref": "fixture://advisory/issued-001",
+        "evidence_refs": [
+          "fixture://check/not-modified-001",
+          "fixture://notice/issue-001"
+        ],
+        "release_state": "UNRELEASED",
+        "release_ref": null,
+        "public_use_allowed": false,
+        "alerts_allowed": false,
+        "not_for_life_safety": true
+      },
+      "limitations": [
+        "Fixture-only status does not establish a current advisory.",
+        "No current health or safety determination is made.",
+        "Not for life-safety, alerting, release, or public use."
+      ],
+      "effects": {
+        "source_activated": false,
+        "evidence_resolved": false,
+        "policy_evaluated": false,
+        "health_determined": false,
+        "lifecycle_written": false,
+        "alert_issued": false,
+        "released": false,
+        "deployed": false,
+        "published": false
+      }
+    },
+    "rescinded": {
+      "profile": "kfm.hazards.drinking-water-advisory.v1",
+      "status": "PROPOSED_INACTIVE",
+      "object_type": "DrinkingWaterAdvisory",
+      "schema_version": "1.0.0",
+      "shared_mechanics": {
+        "contract_ref": "contracts/common/advisory_event_envelope.md",
+        "projected_profile_id": "kfm.advisory-event.drinking-water.v1",
+        "event_family": "DRINKING_WATER",
+        "basis": "REGULATORY_ADVISORY"
+      },
+      "source_surface": {
+        "source_descriptor_ref": "fixture://source/synthetic-drinking-water-advisory",
+        "source_mode": "COMPLETE_SNAPSHOT",
+        "source_check_outcome": "FETCHED",
+        "checked_at": "2026-08-11T15:00:00Z",
+        "snapshot_complete": true,
+        "previous_record_present": true,
+        "current_record_present": false
+      },
+      "identity": {
+        "native_public_water_system_id": "KS-SYNTHETIC-PWS-001",
+        "public_water_system_ref": "kfm://public-water-system/synthetic-001",
+        "resolution_status": "RESOLVED"
+      },
+      "authority": {
+        "issue_notice_ref": "fixture://notice/issue-001",
+        "issuance_authority_ref": "kfm://authority/synthetic-issuer",
+        "issuance_authority_status": "CONFIRMED",
+        "rescission_notice_ref": "fixture://notice/rescission-001",
+        "rescission_authority_ref": "kfm://authority/synthetic-rescinder",
+        "rescission_authority_status": "CONFIRMED"
+      },
+      "advisory": {
+        "cause_code": "LOSS_OF_PRESSURE",
+        "native_status": "RESCINDED",
+        "normalized_status": "RESCINDED",
+        "last_confirmed_status": "ACTIVE_CONFIRMED",
+        "issued_at": "2026-08-10T12:00:00Z",
+        "effective_at": "2026-08-10T13:00:00Z",
+        "expires_at": "2026-08-12T13:00:00Z",
+        "rescinded_at": "2026-08-11T14:00:00Z",
+        "clears_prior_advisory": true
+      },
+      "scope": {
+        "scope_role": "SERVICE_AREA",
+        "service_area_ref": "kfm://service-area/synthetic-001",
+        "administrative_area_ref": "kfm://administrative-area/synthetic-city-001",
+        "geometry_ref": "fixture://geometry/service-area-001",
+        "geometry_confidence": "CONFIRMED"
+      },
+      "controls": {
+        "prior_advisory_ref": "fixture://advisory/active-001",
+        "evidence_refs": [
+          "fixture://notice/rescission-001",
+          "fixture://snapshot/rescission-001"
+        ],
+        "release_state": "UNRELEASED",
+        "release_ref": null,
+        "public_use_allowed": false,
+        "alerts_allowed": false,
+        "not_for_life_safety": true
+      },
+      "limitations": [
+        "Fixture-only status does not establish a current advisory.",
+        "No current health or safety determination is made.",
+        "Not for life-safety, alerting, release, or public use."
+      ],
+      "effects": {
+        "source_activated": false,
+        "evidence_resolved": false,
+        "policy_evaluated": false,
+        "health_determined": false,
+        "lifecycle_written": false,
+        "alert_issued": false,
+        "released": false,
+        "deployed": false,
+        "published": false
+      }
+    },
+    "unconfirmed": {
+      "profile": "kfm.hazards.drinking-water-advisory.v1",
+      "status": "PROPOSED_INACTIVE",
+      "object_type": "DrinkingWaterAdvisory",
+      "schema_version": "1.0.0",
+      "shared_mechanics": {
+        "contract_ref": "contracts/common/advisory_event_envelope.md",
+        "projected_profile_id": "kfm.advisory-event.drinking-water.v1",
+        "event_family": "DRINKING_WATER",
+        "basis": "REGULATORY_ADVISORY"
+      },
+      "source_surface": {
+        "source_descriptor_ref": "fixture://source/synthetic-drinking-water-advisory",
+        "source_mode": "COMPLETE_SNAPSHOT",
+        "source_check_outcome": "STATUS_CHECK_FAILED",
+        "checked_at": "2026-08-11T15:00:00Z",
+        "snapshot_complete": false,
+        "previous_record_present": true,
+        "current_record_present": false
+      },
+      "identity": {
+        "native_public_water_system_id": "KS-SYNTHETIC-PWS-001",
+        "public_water_system_ref": "kfm://public-water-system/synthetic-001",
+        "resolution_status": "RESOLVED"
+      },
+      "authority": {
+        "issue_notice_ref": "fixture://notice/issue-001",
+        "issuance_authority_ref": "kfm://authority/synthetic-issuer",
+        "issuance_authority_status": "CONFIRMED",
+        "rescission_notice_ref": null,
+        "rescission_authority_ref": null,
+        "rescission_authority_status": "NOT_APPLICABLE"
+      },
+      "advisory": {
+        "cause_code": "LOSS_OF_PRESSURE",
+        "native_status": null,
+        "normalized_status": "STATUS_UNCONFIRMED",
+        "last_confirmed_status": "ACTIVE_CONFIRMED",
+        "issued_at": "2026-08-10T12:00:00Z",
+        "effective_at": "2026-08-10T13:00:00Z",
+        "expires_at": "2026-08-12T13:00:00Z",
+        "rescinded_at": null,
+        "clears_prior_advisory": false
+      },
+      "scope": {
+        "scope_role": "ADMINISTRATIVE_CONTEXT",
+        "service_area_ref": null,
+        "administrative_area_ref": "kfm://administrative-area/synthetic-city-001",
+        "geometry_ref": "fixture://geometry/administrative-context-001",
+        "geometry_confidence": "APPROXIMATE"
+      },
+      "controls": {
+        "prior_advisory_ref": "fixture://advisory/active-001",
+        "evidence_refs": [
+          "fixture://check/status-failed-001",
+          "fixture://notice/issue-001"
+        ],
+        "release_state": "UNRELEASED",
+        "release_ref": null,
+        "public_use_allowed": false,
+        "alerts_allowed": false,
+        "not_for_life_safety": true
+      },
+      "limitations": [
+        "Fixture-only status does not establish a current advisory.",
+        "No current health or safety determination is made.",
+        "Not for life-safety, alerting, release, or public use."
+      ],
+      "effects": {
+        "source_activated": false,
+        "evidence_resolved": false,
+        "policy_evaluated": false,
+        "health_determined": false,
+        "lifecycle_written": false,
+        "alert_issued": false,
+        "released": false,
+        "deployed": false,
+        "published": false
+      }
+    },
+    "identity_conflict": {
+      "profile": "kfm.hazards.drinking-water-advisory.v1",
+      "status": "PROPOSED_INACTIVE",
+      "object_type": "DrinkingWaterAdvisory",
+      "schema_version": "1.0.0",
+      "shared_mechanics": {
+        "contract_ref": "contracts/common/advisory_event_envelope.md",
+        "projected_profile_id": "kfm.advisory-event.drinking-water.v1",
+        "event_family": "DRINKING_WATER",
+        "basis": "REGULATORY_ADVISORY"
+      },
+      "source_surface": {
+        "source_descriptor_ref": "fixture://source/synthetic-drinking-water-advisory",
+        "source_mode": "SINGLE_EVENT",
+        "source_check_outcome": "FETCHED",
+        "checked_at": "2026-08-10T14:00:00Z",
+        "snapshot_complete": false,
+        "previous_record_present": false,
+        "current_record_present": true
+      },
+      "identity": {
+        "native_public_water_system_id": "KS-SYNTHETIC-PWS-CONFLICT",
+        "public_water_system_ref": null,
+        "resolution_status": "CONFLICT"
+      },
+      "authority": {
+        "issue_notice_ref": "fixture://notice/identity-conflict-001",
+        "issuance_authority_ref": "kfm://authority/synthetic-issuer",
+        "issuance_authority_status": "CONFIRMED",
+        "rescission_notice_ref": null,
+        "rescission_authority_ref": null,
+        "rescission_authority_status": "NOT_APPLICABLE"
+      },
+      "advisory": {
+        "cause_code": "UNKNOWN",
+        "native_status": "ISSUED",
+        "normalized_status": "IDENTITY_CONFLICT",
+        "last_confirmed_status": null,
+        "issued_at": "2026-08-10T12:00:00Z",
+        "effective_at": "2026-08-10T13:00:00Z",
+        "expires_at": null,
+        "rescinded_at": null,
+        "clears_prior_advisory": false
+      },
+      "scope": {
+        "scope_role": "UNRESOLVED",
+        "service_area_ref": null,
+        "administrative_area_ref": null,
+        "geometry_ref": null,
+        "geometry_confidence": "UNRESOLVED"
+      },
+      "controls": {
+        "prior_advisory_ref": null,
+        "evidence_refs": [
+          "fixture://notice/identity-conflict-001",
+          "fixture://snapshot/identity-conflict-001"
+        ],
+        "release_state": "UNRELEASED",
+        "release_ref": null,
+        "public_use_allowed": false,
+        "alerts_allowed": false,
+        "not_for_life_safety": true
+      },
+      "limitations": [
+        "Fixture-only status does not establish a current advisory.",
+        "No current health or safety determination is made.",
+        "Not for life-safety, alerting, release, or public use."
+      ],
+      "effects": {
+        "source_activated": false,
+        "evidence_resolved": false,
+        "policy_evaluated": false,
+        "health_determined": false,
+        "lifecycle_written": false,
+        "alert_issued": false,
+        "released": false,
+        "deployed": false,
+        "published": false
+      }
+    }
+  },
+  "cases": [
+    {
+      "name": "valid_issued",
+      "base": "issued",
+      "mutations": [],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "valid_active_not_modified",
+      "base": "active",
+      "mutations": [],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "valid_authoritative_rescission",
+      "base": "rescinded",
+      "mutations": [],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "valid_source_failure_unconfirmed",
+      "base": "unconfirmed",
+      "mutations": [],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "valid_identity_conflict",
+      "base": "identity_conflict",
+      "mutations": [],
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "name": "missing_rescission_notice",
+      "base": "rescinded",
+      "mutations": [
+        {"path": "/authority/rescission_notice_ref", "value": null}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["RESCISSION_REQUIRED", "SCHEMA_INVALID"]
+    },
+    {
+      "name": "source_failure_false_clear",
+      "base": "rescinded",
+      "mutations": [
+        {"path": "/source_surface/source_check_outcome", "value": "STATUS_CHECK_FAILED"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["RESCISSION_REQUIRED", "SOURCE_FAILURE_FALSE_CLEAR"]
+    },
+    {
+      "name": "expiry_as_rescission",
+      "base": "active",
+      "mutations": [
+        {"path": "/advisory/expires_at", "value": "2026-08-11T12:00:00Z"},
+        {"path": "/advisory/normalized_status", "value": "RESCINDED"},
+        {"path": "/advisory/clears_prior_advisory", "value": true}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["RESCISSION_REQUIRED", "SCHEMA_INVALID"]
+    },
+    {
+      "name": "missing_public_water_system",
+      "base": "issued",
+      "mutations": [
+        {"path": "/identity/public_water_system_ref", "value": null}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["SCHEMA_INVALID", "SYSTEM_IDENTITY_REQUIRED"]
+    },
+    {
+      "name": "city_boundary_as_service_area",
+      "base": "issued",
+      "mutations": [
+        {"path": "/scope/service_area_ref", "value": "kfm://administrative-area/synthetic-city-001"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["ADMINISTRATIVE_SCOPE_COLLAPSE"]
+    },
+    {
+      "name": "complete_snapshot_absence_false_clear",
+      "base": "active",
+      "mutations": [
+        {"path": "/source_surface/current_record_present", "value": false}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["CURRENT_RECORD_REQUIRED", "SOURCE_ABSENCE_FALSE_CLEAR"]
+    },
+    {
+      "name": "rescission_authority_unconfirmed",
+      "base": "rescinded",
+      "mutations": [
+        {"path": "/authority/rescission_authority_status", "value": "UNRESOLVED"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["RESCISSION_REQUIRED", "SCHEMA_INVALID"]
+    },
+    {
+      "name": "temporal_order_invalid",
+      "base": "issued",
+      "mutations": [
+        {"path": "/advisory/issued_at", "value": "2026-08-10T13:30:00Z"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["TEMPORAL_ORDER_INVALID"]
+    },
+    {
+      "name": "issuance_authority_missing",
+      "base": "issued",
+      "mutations": [
+        {"path": "/authority/issuance_authority_ref", "value": null},
+        {"path": "/authority/issuance_authority_status", "value": "UNRESOLVED"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["ISSUANCE_AUTHORITY_REQUIRED"]
+    },
+    {
+      "name": "public_authority_overclaim",
+      "base": "issued",
+      "mutations": [
+        {"path": "/controls/public_use_allowed", "value": true}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["PUBLIC_AUTHORITY_OVERCLAIM", "SCHEMA_INVALID"]
+    },
+    {
+      "name": "effect_overclaim",
+      "base": "issued",
+      "mutations": [
+        {"path": "/effects/alert_issued", "value": true}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["EFFECT_OVERCLAIM", "SCHEMA_INVALID"]
+    },
+    {
+      "name": "release_overclaim",
+      "base": "issued",
+      "mutations": [
+        {"path": "/controls/release_state", "value": "RELEASED"},
+        {"path": "/controls/release_ref", "value": "kfm://release/synthetic-overclaim"}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["RELEASE_OVERCLAIM", "SCHEMA_INVALID"]
+    },
+    {
+      "name": "spec_hash_mismatch",
+      "base": "issued",
+      "mutations": [],
+      "identity_mode": "MISMATCH_SPEC_HASH",
+      "expected_outcome": "ERROR",
+      "expected_findings": ["SPEC_HASH_MISMATCH"]
+    }
+  ]
+}

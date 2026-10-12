@@ -1,0 +1,69 @@
+{
+  "receipt_id": "genrec-pass18-interaction-state-receipt-20260810",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/interaction-state-receipt.yml",
+    "contracts/source/interaction_state_receipt.md",
+    "docs/intake/exploratory/pass-18-interaction-state-receipt-source-map.md",
+    "fixtures/contracts/v1/source/interaction_state_receipt/cases.json",
+    "schemas/contracts/v1/source/interaction_state_receipt.schema.json",
+    "tests/validators/test_validate_interaction_state_receipt.py",
+    "tools/validators/source/validate_interaction_state_receipt.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/interaction-state-receipt.yml": "sha256:ecba9acac2166e36b0644b09dc7cb88fd6167a73ebfc273014ee2c9aec4f5163",
+    "contracts/source/interaction_state_receipt.md": "sha256:473b8337a4fdc9583aa8366a0732987aedf48fe87126479c82d54668b3d7c830",
+    "docs/intake/exploratory/pass-18-interaction-state-receipt-source-map.md": "sha256:31b3dde88b21fe57677ac46085ad94b69ec27ea24f0190a2f250267af010d8e0",
+    "fixtures/contracts/v1/source/interaction_state_receipt/cases.json": "sha256:2e52ccce792cdf946600010df54914d35a03e3bf493036f0ae7be8054fc6d942",
+    "schemas/contracts/v1/source/interaction_state_receipt.schema.json": "sha256:cded2739bed244ab69ac143f40b99f5e4b75fa4c2e1353c7abd12c36b8c6c0fa",
+    "tests/validators/test_validate_interaction_state_receipt.py": "sha256:691db0f2656893f26504c2bee761b62daa2e30dceb7e8992990668b5d6718b82",
+    "tools/validators/source/validate_interaction_state_receipt.py": "sha256:e5c0f9b2ce681759aa19d037109f0fe7ab1784ebe4ff05200a24fa1a417fd894"
+  },
+  "model_identity": {"provider": "OpenAI", "model": "GPT-5", "version": "2026-08-10"},
+  "prompt_or_contract": "sha256:473b8337a4fdc9583aa8366a0732987aedf48fe87126479c82d54668b3d7c830",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": ["Google Drive private-corpus discovery", "GitHub repository inspection and connector publication", "local PDF rendering and deterministic validation"]
+  },
+  "inputs": {
+    "evidence_hashes": ["sha256:afe08af316d1f89779bab0d39888cdc65ee989907806a4126c331c50e4a0aa3a", "sha256:efc0d159761581b5ae043c607dfa28bbc58b3ca5423c9d18a659e650271d73b9"],
+    "attached_docs": ["Supplied Pass 18 atlas; private discovery identifier withheld", "Supplied repository placement guide; private discovery identifier withheld"],
+    "evidence_refs": ["attachment://supplied-pass18-atlas#card=KFM-P18-INV-373", "github://bartytime4life/Kansas-Frontier-Matrix/blob/ef1ba46a19e4de7c176e9d093c1285e73a0af75a/docs/doctrine/directory-rules.md", "github://bartytime4life/Kansas-Frontier-Matrix/blob/ef1ba46a19e4de7c176e9d093c1285e73a0af75a/contracts/source/source_artifact.md"]
+  },
+  "truth_labels": {
+    ".github/workflows/interaction-state-receipt.yml": "CONFIRMED",
+    "contracts/source/interaction_state_receipt.md": "PROPOSED",
+    "docs/intake/exploratory/pass-18-interaction-state-receipt-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/source/interaction_state_receipt/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/source/interaction_state_receipt.schema.json": "PROPOSED",
+    "tests/validators/test_validate_interaction_state_receipt.py": "CONFIRMED",
+    "tools/validators/source/validate_interaction_state_receipt.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {"gate": "python-syntax-compilation", "outcome": "PASS"},
+    {"gate": "draft-2020-12-schema-meta-validation", "outcome": "PASS"},
+    {"gate": "workflow-yaml-parse", "outcome": "PASS"},
+    {"gate": "focused-unittest-suite", "outcome": "PASS", "reason": "Six deterministic interaction-state receipt tests passed."},
+    {"gate": "exact-fixture-replay", "outcome": "PASS", "reason": "Sixteen exact PASS, ABSTAIN, DENY, and ERROR cases matched reviewed outcomes and codes."},
+    {"gate": "sensitive-value-field-denial", "outcome": "PASS", "reason": "Closed schema rejects raw cookie or other unmodeled value fields; focused tests confirm retained-sensitive-values is fixed false."},
+    {"gate": "no-network-boundary", "outcome": "PASS"},
+    {"gate": "generated-receipt-artifact-hash-replay", "outcome": "PASS"},
+    {"gate": "hosted-exact-head-ci", "outcome": "SKIPPED", "reason": "Requires the pushed pull-request head."},
+    {"gate": "human-review", "outcome": "SKIPPED", "reason": "Pending on the draft pull request."}
+  ],
+  "policy_decisions": ["docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"],
+  "citations": [
+    {"id": "pass18-interaction-state-card", "validated": true, "evidence_ref": "attachment://supplied-pass18-atlas#card=KFM-P18-INV-373"},
+    {"id": "source-artifact-adjacent-contract", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ef1ba46a19e4de7c176e9d093c1285e73a0af75a/contracts/source/source_artifact.md"},
+    {"id": "accepted-directory-rules", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/ef1ba46a19e4de7c176e9d093c1285e73a0af75a/docs/doctrine/directory-rules.md"}
+  ],
+  "human_review": {"reviewer_ids": [], "state": "pending", "timestamp": null},
+  "override_record": null,
+  "created_at": "2026-08-10T19:03:30Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT GitHub and Google Drive connectors",
+  "links": {"pr_number": null, "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md", "drift_register_entry": null},
+  "notes": "Additive, inactive, fixture-only interaction-state receipt. Private connected-source identifiers and content are excluded. The profile retains no sensitive values, performs no live interaction, and carries no source-admission, evidence, policy, review, lifecycle, release, or publication authority."
+}

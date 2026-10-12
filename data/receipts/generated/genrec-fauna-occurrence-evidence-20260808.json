@@ -1,0 +1,169 @@
+{
+  "artifact_hashes": {
+    ".github/workflows/fauna-occurrence-evidence.yml": "sha256:95bcae206afe4e9671bed4e04ce0037b904df89df883a6854aa10fcefa953e6b",
+    "contracts/domains/fauna/occurrence_evidence.md": "sha256:25c0c9ee1f3f072ae92401b20d8bc174bfccc717754f9bee9364964943cf0abb",
+    "fixtures/domains/fauna/occurrence_evidence/README.md": "sha256:5ecc3f4350b41487426933e305a8024a84dc9e341f9d90fc754189e63c2f7837",
+    "fixtures/domains/fauna/occurrence_evidence/expected_findings_manifest.json": "sha256:361e6a7ac168ba967c7f859f0af379b97929c5f4236f72860cb15e55bb902295",
+    "fixtures/domains/fauna/occurrence_evidence/semantic_invalid/modeled_as_observed.json": "sha256:b9bc1cf4657061a6819ee1b23d2987359b2f7a8b16c396c5e422963e0f625ac8",
+    "fixtures/domains/fauna/occurrence_evidence/semantic_invalid/observed_without_raw_artifact.json": "sha256:34be0fc8c765cbfc37b609a3b665188194beaa362aa9950e74d17d8ba2de266e",
+    "fixtures/domains/fauna/occurrence_evidence/semantic_invalid/rights_unresolved_pass.json": "sha256:71ab8ccd9aefb36a425235626445084e5d625c6c2ffe84878e1efd5d3d7cb30d",
+    "fixtures/domains/fauna/occurrence_evidence/semantic_invalid/sensitive_exact_without_generalization.json": "sha256:444a9b38062a417002694712f9de75703630ba2deb302175ea391f17bfd317e8",
+    "fixtures/domains/fauna/occurrence_evidence/semantic_invalid/spec_hash_mismatch.json": "sha256:34b9264641bd3372cd014420b1da227a88f6480b4d8f0c00d859b5b7d1f2689b",
+    "fixtures/domains/fauna/occurrence_evidence/valid/valid_modeled_context.json": "sha256:652a2946361bffbb988fd2c6dbbd6728a6a0300b8374c3d242e1bd4b72c1889c",
+    "fixtures/domains/fauna/occurrence_evidence/valid/valid_observed_open.json": "sha256:1df9ab57f9a7e0601a15c04e0a0511a2cf2a8881b031dd4eacd73c9d991b9513",
+    "fixtures/domains/fauna/occurrence_evidence/valid/valid_sensitive_withheld_quarantine.json": "sha256:a1b8ff1b6b858a633a0c979401720167977331b0a69b6473da0c735d603a532a",
+    "schemas/contracts/v1/domains/fauna/occurrence_evidence.schema.json": "sha256:6f6acf3551014842dd15b0e89d0e2d1a82692809ee8f13be4988c358524829c5",
+    "tests/domains/fauna/test_occurrence_evidence.py": "sha256:aa9c3cbad6042e793079418ee0cdfab7588d3b1fbb79642821708b49cc0e07ac",
+    "tools/validators/domains/fauna/occurrence/README.md": "sha256:92db54717737d8832acf80d82acc823b49880fff471d5bcf98bbad7522ae90c0",
+    "tools/validators/domains/fauna/occurrence/validate_occurrence_evidence.py": "sha256:cc443e75b6bf4c6bb6b0b059a854ba0d5ed66a90a9cba404bf7e47c153490e2e"
+  },
+  "artifact_paths": [
+    ".github/workflows/fauna-occurrence-evidence.yml",
+    "contracts/domains/fauna/occurrence_evidence.md",
+    "fixtures/domains/fauna/occurrence_evidence/README.md",
+    "fixtures/domains/fauna/occurrence_evidence/expected_findings_manifest.json",
+    "fixtures/domains/fauna/occurrence_evidence/semantic_invalid/modeled_as_observed.json",
+    "fixtures/domains/fauna/occurrence_evidence/semantic_invalid/observed_without_raw_artifact.json",
+    "fixtures/domains/fauna/occurrence_evidence/semantic_invalid/rights_unresolved_pass.json",
+    "fixtures/domains/fauna/occurrence_evidence/semantic_invalid/sensitive_exact_without_generalization.json",
+    "fixtures/domains/fauna/occurrence_evidence/semantic_invalid/spec_hash_mismatch.json",
+    "fixtures/domains/fauna/occurrence_evidence/valid/valid_modeled_context.json",
+    "fixtures/domains/fauna/occurrence_evidence/valid/valid_observed_open.json",
+    "fixtures/domains/fauna/occurrence_evidence/valid/valid_sensitive_withheld_quarantine.json",
+    "schemas/contracts/v1/domains/fauna/occurrence_evidence.schema.json",
+    "tests/domains/fauna/test_occurrence_evidence.py",
+    "tools/validators/domains/fauna/occurrence/README.md",
+    "tools/validators/domains/fauna/occurrence/validate_occurrence_evidence.py"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "attachment:KFM_Pass_3_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P3-PROG-0001",
+      "id": "attachment:pass3-occurrence-evidence-object",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:contracts/domains/fauna/occurrence_evidence.md@13fe1a725dee233cc1f0464848a4ee7dc7136fca",
+      "id": "repository:fauna-occurrence-contract-scaffold",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:schemas/contracts/v1/domains/fauna/occurrence_evidence.schema.json@13fe1a725dee233cc1f0464848a4ee7dc7136fca",
+      "id": "repository:fauna-occurrence-schema-scaffold",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@13fe1a725dee233cc1f0464848a4ee7dc7136fca",
+      "id": "repository:directory-governance",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-08T15:58:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Pass_3_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf"
+    ],
+    "evidence_hashes": [
+      "sha256:b2a42b3dac7fbf7c4c37cb8a72913a6cb57c9f37fcd4bdf745ed415bef91be0e"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Pass_3_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-P3-PROG-0001",
+      "attachment:KFM_Pass_3_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-IDX-OCC-002",
+      "attachment:KFM_Pass_3_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-IDX-OCC-003",
+      "attachment:KFM_Pass_3_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#KFM-IDX-OCC-007",
+      "repo:contracts/domains/fauna/occurrence_evidence.md@13fe1a725dee233cc1f0464848a4ee7dc7136fca",
+      "repo:schemas/contracts/v1/domains/fauna/occurrence_evidence.schema.json@13fe1a725dee233cc1f0464848a4ee7dc7136fca",
+      "repo:docs/domains/fauna/SOURCE_ROLES.md@13fe1a725dee233cc1f0464848a4ee7dc7136fca",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@13fe1a725dee233cc1f0464848a4ee7dc7136fca"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "GPT-5.6 Pro",
+    "provider": "OpenAI",
+    "version": "2026-08-08"
+  },
+  "notes": "Fixture-first implementation of KFM-P3-PROG-0001 at the existing Fauna responsibility-rooted paths. It closes the permissive schema scaffold, adds deterministic identity and source-role/rights/geoprivacy checks, and keeps source activation, EvidenceBundle closure, policy execution, public/restricted conversion, proof, release, deployment, and publication held.",
+  "override_record": null,
+  "parameters": {
+    "max_tokens": null,
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local deterministic validation"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:7a9f98e9e781bdbe024a956b69ee27dd359415d70c4cc583467bcc15e06b7edd",
+  "receipt_id": "genrec-fauna-occurrence-evidence-20260808",
+  "truth_labels": {
+    ".github/workflows/fauna-occurrence-evidence.yml": "CONFIRMED",
+    "contracts/domains/fauna/occurrence_evidence.md": "PROPOSED",
+    "fixtures/domains/fauna/occurrence_evidence/README.md": "CONFIRMED",
+    "fixtures/domains/fauna/occurrence_evidence/expected_findings_manifest.json": "CONFIRMED",
+    "fixtures/domains/fauna/occurrence_evidence/semantic_invalid/modeled_as_observed.json": "CONFIRMED",
+    "fixtures/domains/fauna/occurrence_evidence/semantic_invalid/observed_without_raw_artifact.json": "CONFIRMED",
+    "fixtures/domains/fauna/occurrence_evidence/semantic_invalid/rights_unresolved_pass.json": "CONFIRMED",
+    "fixtures/domains/fauna/occurrence_evidence/semantic_invalid/sensitive_exact_without_generalization.json": "CONFIRMED",
+    "fixtures/domains/fauna/occurrence_evidence/semantic_invalid/spec_hash_mismatch.json": "CONFIRMED",
+    "fixtures/domains/fauna/occurrence_evidence/valid/valid_modeled_context.json": "CONFIRMED",
+    "fixtures/domains/fauna/occurrence_evidence/valid/valid_observed_open.json": "CONFIRMED",
+    "fixtures/domains/fauna/occurrence_evidence/valid/valid_sensitive_withheld_quarantine.json": "CONFIRMED",
+    "schemas/contracts/v1/domains/fauna/occurrence_evidence.schema.json": "PROPOSED",
+    "tests/domains/fauna/test_occurrence_evidence.py": "CONFIRMED",
+    "tools/validators/domains/fauna/occurrence/README.md": "PROPOSED",
+    "tools/validators/domains/fauna/occurrence/validate_occurrence_evidence.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "json-and-schema-meta-validation",
+      "outcome": "PASS",
+      "reason": "Ten JSON documents parsed and the closed Draft 2020-12 schema passed meta-validation."
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS",
+      "reason": "The dedicated fauna-occurrence-evidence workflow parsed as YAML and keeps live source, proof, release, deployment, and publication outside its authority."
+    },
+    {
+      "gate": "focused-unit-tests",
+      "outcome": "PASS",
+      "reason": "Eight deterministic no-network OccurrenceEvidence tests passed locally."
+    },
+    {
+      "gate": "fixture-manifest-polarity",
+      "outcome": "PASS",
+      "reason": "Three valid and five semantic-invalid fixtures matched exact value-free findings."
+    },
+    {
+      "gate": "shared-hashing-dependency",
+      "outcome": "SKIPPED",
+      "reason": "Local testing used a compatibility implementation of the declared hashing API; hosted CI installs the repository-pinned RFC 8785 dependency and is authoritative."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ]
+}

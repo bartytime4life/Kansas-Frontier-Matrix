@@ -1,0 +1,318 @@
+{
+  "base_candidate": {
+    "profile": "kfm.geoparquet-2-rc-compatibility-assessment.v2",
+    "candidate_version": "2.0.0-rc.1",
+    "declared_default": "1.1.0",
+    "release_kind": "RELEASE_CANDIDATE",
+    "upstream_commit": "0c7fab74cf1177e2fe61df8eb7fcd1813b73e4aa",
+    "format_expectations": {
+      "logical_type": "GEOMETRY",
+      "physical_type": "BYTE_ARRAY",
+      "encoding": "WKB",
+      "root_geometry": true,
+      "parquet_crs_source_of_truth": true,
+      "geo_metadata_crs_inline_projjson": true,
+      "crs_semantically_equivalent": true,
+      "parquet_native_spatial_statistics": true,
+      "covering_bbox_column_required": false,
+      "legacy_1_1_fixtures_preserved": true
+    },
+    "toolchain_matrix": {
+      "GDAL": {
+        "tool_version": "3.13.2",
+        "source_ref": "upstream:OSGeo/gdal@b40672525acf3f5c4f29d8541aa7dcff1e18eb92",
+        "artifact_digest": "sha256:3b8e9b6b6a1858133fd75d4252548333482b6a9b306ec0322600d466324f23d4",
+        "pinned": true,
+        "native_type_inspection": "PASS",
+        "crs_round_trip": "PASS",
+        "legacy_1_1_read": "PASS",
+        "unknown_metadata_preservation": "PASS",
+        "unsupported_assumption_behavior": "REJECT",
+        "native_geometry_write": "PASS",
+        "native_geometry_read": "PASS",
+        "row_group_spatial_statistics": "PASS",
+        "evidence_ref": "fixture:gdal-3.13.2"
+      },
+      "DUCKDB": {
+        "tool_version": "1.5.5",
+        "source_ref": "upstream:duckdb/duckdb@d8cdaa33fda8df955cc76ef58a280f68f4cd43fa",
+        "extension_version": "spatial@1.5.5",
+        "artifact_digest": "sha256:163829e837e3943cbd4302627511e4747408100a49aff73bf6c1a579bd652edd",
+        "pinned": true,
+        "native_type_inspection": "PASS",
+        "crs_round_trip": "PASS",
+        "legacy_1_1_read": "PASS",
+        "unknown_metadata_preservation": "PASS",
+        "unsupported_assumption_behavior": "REJECT",
+        "extension_digest": "sha256:2ba7e28483fed316b2715209054f131b3f2e2e03bf3768ceb9ffd053057d19de",
+        "native_geometry_read": "PASS",
+        "row_group_spatial_pruning": "PASS",
+        "evidence_ref": "fixture:duckdb-1.5.5"
+      },
+      "SEDONA_SPARK": {
+        "tool_version": "1.9.0",
+        "source_ref": "upstream:apache/sedona@34098262086a6137d105cd8d9e0b366e4a8246c0",
+        "spark_version": "3.5.9",
+        "spark_source_ref": "upstream:apache/spark@7c14a3c28b141cc97a330c4d0f5d2a6da7267f85",
+        "java_major": "11",
+        "scala_version": "2.12.18",
+        "parquet_java_version": "1.13.1",
+        "artifact_digest": "sha256:ad6d51a4821ba53beb972cb081da97bdc394ddbffd9754ce383a43ea0a35a795",
+        "pinned": true,
+        "native_type_inspection": "PASS",
+        "crs_round_trip": "PASS",
+        "legacy_1_1_read": "PASS",
+        "unknown_metadata_preservation": "PASS",
+        "unsupported_assumption_behavior": "REJECT",
+        "spark_distribution_digest": "sha256:42697f609357acb96fc897800364bbbf256f9c79304a31f05125711cda18d62b",
+        "workflow_round_trip": "PASS",
+        "row_group_spatial_pruning": "PASS",
+        "evidence_ref": "fixture:sedona-spark-1.9.0"
+      },
+      "SEDONA_DB": {
+        "tool_version": "0.4.0",
+        "source_ref": "upstream:apache/sedona:sedonadb-0.4.0-release",
+        "artifact_digest": "sha256:c090d310c9b3073f7cbc4a5eb0d3da74a9f8fa025202dd76a4b75a9cf96fc61f",
+        "pinned": true,
+        "native_type_inspection": "PASS",
+        "crs_round_trip": "PASS",
+        "legacy_1_1_read": "PASS",
+        "unknown_metadata_preservation": "PASS",
+        "unsupported_assumption_behavior": "REJECT",
+        "workflow_round_trip": "PASS",
+        "native_geometry_write": "PASS",
+        "native_geography_write": "PASS",
+        "row_group_spatial_pruning": "PASS",
+        "evidence_ref": "fixture:sedonadb-0.4.0"
+      }
+    },
+    "inspector": {
+      "tool_name": "PYARROW",
+      "tool_version": "25.0.0",
+      "source_ref": "upstream:apache/arrow@apache-arrow-25.0.0",
+      "artifact_digest": "sha256:30bb32bb6245dc18a6eafdfb53509522b6c040e2446a766d719cc5386f0d31ab",
+      "pinned": true,
+      "logical_type_footer_inspection": "PASS",
+      "row_group_statistics_inspection": "PASS",
+      "evidence_ref": "fixture:pyarrow-25.0.0"
+    },
+    "governance": {
+      "default_changed": false,
+      "adoption_authorized": false,
+      "migration_authorized": false,
+      "release_authorized": false,
+      "publication_authorized": false
+    },
+    "outcome": "READY"
+  },
+  "cases": [
+    {
+      "case_id": "hold_byte_probes_pending",
+      "all_probe_status": "NOT_RUN",
+      "overrides": {
+        "outcome": "HOLD"
+      },
+      "expected": {
+        "outcome": "HOLD",
+        "reason_codes": [
+          "BYTE_PROBES_PENDING"
+        ]
+      }
+    },
+    {
+      "case_id": "ready_exact_synthetic_declaration",
+      "expected": {
+        "outcome": "READY",
+        "reason_codes": []
+      }
+    },
+    {
+      "case_id": "hold_probe_failure",
+      "overrides": {
+        "toolchain_matrix": {
+          "DUCKDB": {
+            "row_group_spatial_pruning": "FAIL"
+          }
+        },
+        "outcome": "HOLD"
+      },
+      "expected": {
+        "outcome": "HOLD",
+        "reason_codes": [
+          "BYTE_PROBE_FAILED"
+        ]
+      }
+    },
+    {
+      "case_id": "hold_tool_unpinned",
+      "overrides": {
+        "toolchain_matrix": {
+          "GDAL": {
+            "pinned": false
+          }
+        },
+        "outcome": "HOLD"
+      },
+      "expected": {
+        "outcome": "HOLD",
+        "reason_codes": [
+          "TOOL_VERSION_NOT_PINNED"
+        ]
+      }
+    },
+    {
+      "case_id": "hold_warning_only",
+      "overrides": {
+        "toolchain_matrix": {
+          "SEDONA_DB": {
+            "unsupported_assumption_behavior": "WARN"
+          }
+        },
+        "outcome": "HOLD"
+      },
+      "expected": {
+        "outcome": "HOLD",
+        "reason_codes": [
+          "UNSUPPORTED_ASSUMPTION_NOT_FAIL_CLOSED"
+        ]
+      }
+    },
+    {
+      "case_id": "error_gdal_version_mismatch",
+      "overrides": {
+        "toolchain_matrix": {
+          "GDAL": {
+            "tool_version": "3.13.1"
+          }
+        },
+        "outcome": "ERROR"
+      },
+      "expected": {
+        "outcome": "ERROR",
+        "reason_codes": [
+          "TOOLCHAIN_VERSION_MISMATCH"
+        ]
+      }
+    },
+    {
+      "case_id": "error_duckdb_extension_digest",
+      "overrides": {
+        "toolchain_matrix": {
+          "DUCKDB": {
+            "extension_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+          }
+        },
+        "outcome": "ERROR"
+      },
+      "expected": {
+        "outcome": "ERROR",
+        "reason_codes": [
+          "TOOL_ARTIFACT_DIGEST_INVALID"
+        ]
+      }
+    },
+    {
+      "case_id": "error_sedona_spark_transitive",
+      "overrides": {
+        "toolchain_matrix": {
+          "SEDONA_SPARK": {
+            "parquet_java_version": "1.16.0"
+          }
+        },
+        "outcome": "ERROR"
+      },
+      "expected": {
+        "outcome": "ERROR",
+        "reason_codes": [
+          "TOOLCHAIN_TRANSITIVE_PIN_MISMATCH"
+        ]
+      }
+    },
+    {
+      "case_id": "error_duplicate_evidence_ref",
+      "overrides": {
+        "toolchain_matrix": {
+          "SEDONA_DB": {
+            "evidence_ref": "fixture:gdal-3.13.2"
+          }
+        },
+        "outcome": "ERROR"
+      },
+      "expected": {
+        "outcome": "ERROR",
+        "reason_codes": [
+          "EVIDENCE_REF_REUSED"
+        ]
+      }
+    },
+    {
+      "case_id": "error_default_changed",
+      "overrides": {
+        "declared_default": "2.0.0-rc.1",
+        "outcome": "ERROR"
+      },
+      "expected": {
+        "outcome": "ERROR",
+        "reason_codes": [
+          "DECLARED_DEFAULT_CHANGED"
+        ]
+      }
+    },
+    {
+      "case_id": "error_covering_assumption",
+      "overrides": {
+        "format_expectations": {
+          "covering_bbox_column_required": true
+        },
+        "outcome": "ERROR"
+      },
+      "expected": {
+        "outcome": "ERROR",
+        "reason_codes": [
+          "GEOPARQUET_1X_COVERING_ASSUMPTION_CONFLICT"
+        ]
+      }
+    },
+    {
+      "case_id": "error_crs_conflict",
+      "overrides": {
+        "format_expectations": {
+          "crs_semantically_equivalent": false
+        },
+        "outcome": "ERROR"
+      },
+      "expected": {
+        "outcome": "ERROR",
+        "reason_codes": [
+          "GEOPARQUET_CRS_EQUIVALENCE_REQUIRED"
+        ]
+      }
+    },
+    {
+      "case_id": "error_governance",
+      "overrides": {
+        "governance": {
+          "adoption_authorized": true
+        },
+        "outcome": "ERROR"
+      },
+      "expected": {
+        "outcome": "ERROR",
+        "reason_codes": [
+          "GOVERNANCE_BOUNDARY_VIOLATION"
+        ]
+      }
+    },
+    {
+      "case_id": "error_declared_outcome_mismatch",
+      "all_probe_status": "NOT_RUN",
+      "expected": {
+        "outcome": "ERROR",
+        "reason_codes": [
+          "BYTE_PROBES_PENDING",
+          "DECLARED_OUTCOME_MISMATCH"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,181 @@
+{
+  "receipt_id": "genrec-pipelines-agriculture-readme-132fdbb7",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "pipelines/domains/agriculture/README.md"
+  ],
+  "artifact_hashes": {
+    "pipelines/domains/agriculture/README.md": "sha256:132fdbb7b3f32dc8cba9deb97a693424fa3f4cf3f160ae77a79e95f042f9b87e"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-19"
+  },
+  "prompt_or_contract": "sha256:10810114bc1a135b773d197b5ea27398c7fced942ee8dba7651133ad7a8dd8b4",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "repository code search",
+      "repository file reads",
+      "remote branch and contents writes",
+      "local deterministic content validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:10810114bc1a135b773d197b5ea27398c7fced942ee8dba7651133ad7a8dd8b4"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "repo:bartytime4life/Kansas-Frontier-Matrix:pipelines/domains/agriculture/README.md@73aae8bff1e5f8e1d41889283bba85fcb70429f4",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:pipelines/README.md@73aae8bff1e5f8e1d41889283bba85fcb70429f4",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:pipelines/domains/README.md@73aae8bff1e5f8e1d41889283bba85fcb70429f4",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:docs/architecture/directory-rules.md@73aae8bff1e5f8e1d41889283bba85fcb70429f4",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:docs/domains/agriculture/PIPELINE.md@73aae8bff1e5f8e1d41889283bba85fcb70429f4",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:pipeline_specs/agriculture/README.md@73aae8bff1e5f8e1d41889283bba85fcb70429f4",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:packages/domains/agriculture/src/agriculture/README.md@73aae8bff1e5f8e1d41889283bba85fcb70429f4",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:contracts/domains/agriculture/README.md@73aae8bff1e5f8e1d41889283bba85fcb70429f4",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:schemas/contracts/v1/domains/agriculture/README.md@73aae8bff1e5f8e1d41889283bba85fcb70429f4",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:policy/domains/agriculture/README.md@73aae8bff1e5f8e1d41889283bba85fcb70429f4",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:fixtures/domains/agriculture/README.md@73aae8bff1e5f8e1d41889283bba85fcb70429f4",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:tests/domains/agriculture/README.md@73aae8bff1e5f8e1d41889283bba85fcb70429f4",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:tools/validators/agriculture/README.md@73aae8bff1e5f8e1d41889283bba85fcb70429f4",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:.github/workflows/domain-agriculture.yml@73aae8bff1e5f8e1d41889283bba85fcb70429f4",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:release/agriculture/README.md@73aae8bff1e5f8e1d41889283bba85fcb70429f4",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:schemas/contracts/v1/receipts/generated_receipt.schema.json@73aae8bff1e5f8e1d41889283bba85fcb70429f4",
+      "repo:bartytime4life/Kansas-Frontier-Matrix:pipelines/domains/agriculture/README.md@5bde8d18ac23c3f0dc0e7dfe70fdfcb164be5e5f"
+    ]
+  },
+  "truth_labels": {
+    "pipelines/domains/agriculture/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "task-contract-and-change-budget",
+      "outcome": "PASS",
+      "reason": "Scope is limited to one existing Agriculture pipeline README plus the required generated-work receipt; no executable, source, schema, contract, policy, fixture, test, workflow, lifecycle, proof, release, runtime, or public behavior is changed."
+    },
+    {
+      "gate": "base-drift-reconciliation",
+      "outcome": "PASS",
+      "reason": "Main advanced from 0c0fc543a82123ea4b2216df7a4b41df0c1c82ae to 73aae8bff1e5f8e1d41889283bba85fcb70429f4 through an unrelated review-console documentation merge. The target retained blob ec53bc7e47590d47f2289b14aaad2df478b52822, so the revision was re-pinned without overwriting concurrent work."
+    },
+    {
+      "gate": "directory-authority-and-duplicate-preflight",
+      "outcome": "PASS",
+      "reason": "The existing pipelines/domains/agriculture path and document identity were retained. Directory Rules, parent pipeline boundaries, Agriculture docs, spec, package, contracts, schemas, policy, fixtures, tests, validators, workflow, release state, branches, and open pull requests were inspected without creating parallel authority."
+    },
+    {
+      "gate": "repository-inventory-and-no-overclaim",
+      "outcome": "PASS",
+      "reason": "The README distinguishes confirmed documentation/scaffolds from absent or unverified runner, source activation, contract/schema closure, policy evaluator, validator, executable tests, substantive CI, receipts, proofs, runtime, release approval, and public effects."
+    },
+    {
+      "gate": "agriculture-authority-and-sensitivity",
+      "outcome": "PASS",
+      "reason": "The revision preserves Agriculture ownership while retaining Soil, Hydrology, Atmosphere, Hazards, Habitat, People/Land, Infrastructure, Flora, Fauna, evidence, policy, and release authority. Exact field/operator/parcel exposure, rights uncertainty, and join-induced re-identification fail closed."
+    },
+    {
+      "gate": "markdown-meta-anchor-and-structure",
+      "outcome": "PASS",
+      "reason": "The final README has one H1, one closed KFM Meta Block v2, 73 unique heading slugs, 44 resolved internal anchors, balanced code fences, no trailing whitespace, and a final newline."
+    },
+    {
+      "gate": "repository-relative-link-validation",
+      "outcome": "PASS",
+      "reason": "All repository-relative links in the revised README point to files inspected at the pinned repository snapshot."
+    },
+    {
+      "gate": "workflow-trigger-threat-preflight",
+      "outcome": "PASS",
+      "reason": "The Agriculture workflow uses read-only contents permission and no persisted checkout credentials, and it implements explicit readiness holds rather than validation, proof, release, deployment, or publication authority. Broad pull-request workflows remain separate evidence."
+    },
+    {
+      "gate": "security-privacy-rights-and-sensitivity",
+      "outcome": "PASS",
+      "reason": "The revision contains no credentials, source tokens, restricted payloads, exact field/operator/parcel records, living-person or genomic data, private operational details, infrastructure vulnerability data, or redaction reversal instructions."
+    },
+    {
+      "gate": "no-loss-preservation",
+      "outcome": "PASS",
+      "reason": "Useful v0.1 scope, lifecycle, source-role, aggregation, privacy, evidence, policy, no-direct-publish, promotion, correction, rollback, and fixture-first obligations were retained and strengthened. Proposed trees and pseudo-machine examples were reclassified rather than treated as implementation."
+    },
+    {
+      "gate": "remote-readback-and-content-hash",
+      "outcome": "PASS",
+      "reason": "GitHub returned README blob 74320b83b01c1627143b50cdb6a7d3fc9b16136a on commit 5bde8d18ac23c3f0dc0e7dfe70fdfcb164be5e5f, matching the locally computed Git blob and SHA-256 artifact hash."
+    },
+    {
+      "gate": "repository-native-execution",
+      "outcome": "SKIPPED",
+      "reason": "The API-only workflow did not clone or execute repository code, and current repository evidence establishes no accepted Agriculture runner or substantive pipeline-test command. Pull-request checks are observed separately and never inferred as passing."
+    },
+    {
+      "gate": "generated-receipt-shape",
+      "outcome": "PASS",
+      "reason": "The receipt contains all required generated-receipt fields, valid truth/review/outcome enums, SHA-256 patterns, ISO-8601 time, and no undeclared top-level properties."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human governance review remains pending and separate from generation, static validation, mergeability, release, and publication."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "user-request-agriculture-pipeline-readme",
+      "validated": true,
+      "evidence_ref": "prompt://sha256:10810114bc1a135b773d197b5ea27398c7fced942ee8dba7651133ad7a8dd8b4"
+    },
+    {
+      "id": "agriculture-pipeline-base",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:pipelines/domains/agriculture/README.md@73aae8bff1e5f8e1d41889283bba85fcb70429f4"
+    },
+    {
+      "id": "agriculture-spec-maturity",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:pipeline_specs/agriculture/README.md@73aae8bff1e5f8e1d41889283bba85fcb70429f4"
+    },
+    {
+      "id": "agriculture-package-scaffold",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:packages/domains/agriculture/src/agriculture/README.md@73aae8bff1e5f8e1d41889283bba85fcb70429f4"
+    },
+    {
+      "id": "agriculture-policy-maturity",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:policy/domains/agriculture/README.md@73aae8bff1e5f8e1d41889283bba85fcb70429f4"
+    },
+    {
+      "id": "agriculture-test-and-workflow-maturity",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:tests/domains/agriculture/README.md@73aae8bff1e5f8e1d41889283bba85fcb70429f4"
+    },
+    {
+      "id": "final-readme-remote-readback",
+      "validated": true,
+      "evidence_ref": "repo:bartytime4life/Kansas-Frontier-Matrix:pipelines/domains/agriculture/README.md@5bde8d18ac23c3f0dc0e7dfe70fdfcb164be5e5f"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-19T17:02:11Z",
+  "emitter": "OpenAI GPT-5.6 Thinking via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Task kfm-pipelines-agriculture-readme-v0-2-20260719. Documentation-only update. This receipt records provenance and bounded validation outcomes; it is not Agriculture evidence, policy approval, human review, lifecycle promotion, release approval, agronomic guidance, or publication authority."
+}

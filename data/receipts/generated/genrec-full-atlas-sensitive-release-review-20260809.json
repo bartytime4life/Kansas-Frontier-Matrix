@@ -1,0 +1,135 @@
+{
+  "receipt_id": "genrec-full-atlas-sensitive-release-review-20260809",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/sensitive-release-review-closure.yml",
+    "contracts/governance/sensitive_release_review_closure.md",
+    "docs/intake/exploratory/full-atlas-sensitive-release-review-source-map.md",
+    "fixtures/contracts/v1/governance/sensitive_release_review_closure/cases.json",
+    "schemas/contracts/v1/governance/sensitive_release_review_closure.schema.json",
+    "tests/validators/governance/test_sensitive_release_review_closure.py",
+    "tools/validators/governance/validate_sensitive_release_review_closure.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/sensitive-release-review-closure.yml": "sha256:1b64159ab8489719def2bd9c13922e36183bd4b8a268c22ffe259c995aef3954",
+    "contracts/governance/sensitive_release_review_closure.md": "sha256:cdf3fa28b199ee9596d67d89f1d4985400d837328b9c1d0bfa0a4c77a1e2191a",
+    "docs/intake/exploratory/full-atlas-sensitive-release-review-source-map.md": "sha256:8fa5383058cfdc5b0a938fb0dac4361cc95448becc55376a201c3c6bef5aea3b",
+    "fixtures/contracts/v1/governance/sensitive_release_review_closure/cases.json": "sha256:02f6d1028717a3558daf747a1d190798c68be5082afbd1f4b83cc13bb814067a",
+    "schemas/contracts/v1/governance/sensitive_release_review_closure.schema.json": "sha256:af6dd10f701a18871c57d99b58269ebccfe45539abfb3542ba5016410a2d638e",
+    "tests/validators/governance/test_sensitive_release_review_closure.py": "sha256:f8f0fc6c9061666ddebffa74a3bd87cb14eeac4a7d84cb87d63daded8c4cc10e",
+    "tools/validators/governance/validate_sensitive_release_review_closure.py": "sha256:b31d03e796f236ba87b51764e8fb4c0deaf208060520c50133c35684e1ff10d7"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-09"
+  },
+  "prompt_or_contract": "sha256:a45f14e489ac2dfb64ac12c075b0bb1bd1557dcf097fed18628c5336d486901f",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Google Drive connector",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Full_Atlas_seed_cards (Google Drive document)"
+    ],
+    "evidence_refs": [
+      "gdrive:1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho#two-person-rule-for-t3-t4-release",
+      "repo:contracts/governance/review_authority_binding.md@f5efa63a3600f688cb9d6ed0255e20b9dfbac6dc",
+      "repo:schemas/contracts/v1/governance/review_authority_binding.schema.json@f5efa63a3600f688cb9d6ed0255e20b9dfbac6dc",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@f5efa63a3600f688cb9d6ed0255e20b9dfbac6dc"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/sensitive-release-review-closure.yml": "PROPOSED",
+    "contracts/governance/sensitive_release_review_closure.md": "PROPOSED",
+    "docs/intake/exploratory/full-atlas-sensitive-release-review-source-map.md": "PROPOSED",
+    "fixtures/contracts/v1/governance/sensitive_release_review_closure/cases.json": "PROPOSED",
+    "schemas/contracts/v1/governance/sensitive_release_review_closure.schema.json": "PROPOSED",
+    "tests/validators/governance/test_sensitive_release_review_closure.py": "PROPOSED",
+    "tools/validators/governance/validate_sensitive_release_review_closure.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "focused-fixture-profile",
+      "outcome": "PASS",
+      "reason": "Six coherent closure, hold, or deny cases and six fail-closed tamper/binding cases passed exact deterministic polarity checks."
+    },
+    {
+      "gate": "focused-validator-tests",
+      "outcome": "PASS",
+      "reason": "Ten focused tests passed locally, including reuse of ReviewAuthorityBinding, T3/T4 closure, separation of duties, identity, symlink, determinism, and no-network/write checks."
+    },
+    {
+      "gate": "adjacent-governance-and-receipt-tests",
+      "outcome": "PASS",
+      "reason": "Forty-six ReviewAuthorityBinding, SensitiveReleaseReviewClosure, and GENERATED_RECEIPT tests passed locally."
+    },
+    {
+      "gate": "generated-receipt-integrity",
+      "outcome": "PASS",
+      "reason": "The repository GENERATED_RECEIPT validator bound the listed SHA-256 values to final local artifact bytes."
+    },
+    {
+      "gate": "repository-wide-pytest",
+      "outcome": "SKIPPED",
+      "reason": "Collection is blocked by inherited default-import name collisions, missing test-support import paths, and a syntax-corrupted unmodified replay-safe-effect-ledger semantics module on the selected main revision."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks require the pushed exact branch head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human semantic and authority review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "google-drive:full-atlas-two-person-rule",
+      "validated": true,
+      "evidence_ref": "gdrive:1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho#two-person-rule-for-t3-t4-release"
+    },
+    {
+      "id": "repository:review-authority-binding-contract",
+      "validated": true,
+      "evidence_ref": "repo:contracts/governance/review_authority_binding.md@f5efa63a3600f688cb9d6ed0255e20b9dfbac6dc"
+    },
+    {
+      "id": "repository:review-authority-binding-schema",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/governance/review_authority_binding.schema.json@f5efa63a3600f688cb9d6ed0255e20b9dfbac6dc"
+    },
+    {
+      "id": "repository:adr-0029-directory-rules-v2",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@f5efa63a3600f688cb9d6ed0255e20b9dfbac6dc"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-09T20:30:28Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only SensitiveReleaseReviewClosure candidate adapted from the Full Atlas. It reuses the existing ReviewAuthorityBinding and can close only the independent-review precondition for a separate T3/T4 release gate; it grants no policy, promotion, release, deployment, publication, or public-use authority."
+}

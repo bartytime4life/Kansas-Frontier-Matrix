@@ -1,0 +1,166 @@
+{
+  "receipt_id": "genrec-hazards-no-network-runbook-20260827",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/runbooks/hazards/NO_NETWORK_TEST_RUNBOOK.md"
+  ],
+  "artifact_hashes": {
+    "docs/runbooks/hazards/NO_NETWORK_TEST_RUNBOOK.md": "sha256:daa9b6310820cc10cf2af9ddda75c0afba65884770611b5e20cf7040f3b8c36f"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-27"
+  },
+  "prompt_or_contract": "sha256:62a198576c6d33784ecc217bf6630ca60a3cbee8377eae248190e7a765dc3682",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector repository inspection and feature-branch authoring",
+      "Google Drive read-only source search and inspection",
+      "Notion workspace alignment inspection and coordination",
+      "local SHA-256 hashing and Markdown/JSON structural validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:62a198576c6d33784ecc217bf6630ca60a3cbee8377eae248190e7a765dc3682"
+    ],
+    "attached_docs": [
+      "Pasted markdown(20260827-215859).md — KFM Markdown Update & Modernization Agent v1.0",
+      "kfm_hazards_extended_pro_pdf_only_blueprint.pdf — Google Drive planning lineage"
+    ],
+    "evidence_refs": [
+      "attachment:sha256:62a198576c6d33784ecc217bf6630ca60a3cbee8377eae248190e7a765dc3682",
+      "drive:1nTzBV_-7_-DzzXxCQPsrQRGffoO2zZSv",
+      "notion:3c5a9202-1bf6-81b5-982e-e75dc4376b4e",
+      "repo:docs/runbooks/hazards/NO_NETWORK_TEST_RUNBOOK.md@7da7e26240859ba0d3c7bd9f992a4590e8146cf2",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@7da7e26240859ba0d3c7bd9f992a4590e8146cf2",
+      "repo:docs/doctrine/directory-rules.md@7da7e26240859ba0d3c7bd9f992a4590e8146cf2",
+      "repo:.github/workflows/domain-hazards.yml@7da7e26240859ba0d3c7bd9f992a4590e8146cf2",
+      "repo:Makefile@7da7e26240859ba0d3c7bd9f992a4590e8146cf2",
+      "repo:tests/domains/hazards/test_hazards_smoke.py@7da7e26240859ba0d3c7bd9f992a4590e8146cf2",
+      "repo:tests/domains/hazards/test_validate_usdm_materiality.py@7da7e26240859ba0d3c7bd9f992a4590e8146cf2",
+      "repo:tools/validators/domains/hazards/validate_usdm_materiality.py@7da7e26240859ba0d3c7bd9f992a4590e8146cf2",
+      "repo:tools/ci/install_python_ci.py@7da7e26240859ba0d3c7bd9f992a4590e8146cf2",
+      "repo:fixtures/domains/hazards/usdm_materiality/cases.json@7da7e26240859ba0d3c7bd9f992a4590e8146cf2"
+    ]
+  },
+  "truth_labels": {
+    "docs/runbooks/hazards/NO_NETWORK_TEST_RUNBOOK.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-target-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Current main, target blob, and open pull requests were re-read; no open pull request owned the target path before authoring."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "Accepted ADR-0029 and the existing tracked same-path runbook preserve docs/runbooks as the human operational responsibility root."
+    },
+    {
+      "gate": "repository-and-lineage-reconciliation",
+      "outcome": "PASS",
+      "reason": "Current GitHub implementation evidence controls commands and maturity claims; the Drive Hazards blueprint is retained only for bounded planning lineage."
+    },
+    {
+      "gate": "markdown-meta-block-yaml",
+      "outcome": "PASS",
+      "reason": "The KFM Meta Block v2 parsed locally as one YAML mapping with evidence, source-lineage, relation, and non-effect fields."
+    },
+    {
+      "gate": "markdown-structure-and-anchor-scan",
+      "outcome": "PASS",
+      "reason": "One H1, balanced code fences, unique explicit anchors, resolved internal links, no tabs or trailing whitespace, and a final newline were confirmed locally."
+    },
+    {
+      "gate": "relative-link-target-inventory",
+      "outcome": "PASS",
+      "reason": "All sixteen repository-relative Markdown targets were resolved against current repository paths at the pinned base."
+    },
+    {
+      "gate": "sensitive-content-pattern-review",
+      "outcome": "PASS",
+      "reason": "The document contains no live source payload, precise hazard location, credential, private endpoint, emergency instruction, or restricted operational detail."
+    },
+    {
+      "gate": "artifact-sha256-binding",
+      "outcome": "PASS",
+      "reason": "The receipt binds the final runbook bytes as sha256:daa9b6310820cc10cf2af9ddda75c0afba65884770611b5e20cf7040f3b8c36f."
+    },
+    {
+      "gate": "repository-native-hazards-test-execution",
+      "outcome": "SKIPPED",
+      "reason": "No mounted repository checkout was available in the connector environment; exact current commands are documented and hosted execution is pending at the pull-request head."
+    },
+    {
+      "gate": "repository-generated-receipt-validator",
+      "outcome": "SKIPPED",
+      "reason": "The repository validator could not be executed without a mounted checkout; JSON shape, key parity, digest form, citation presence, and local artifact hash were checked before commit."
+    },
+    {
+      "gate": "hosted-exact-pr-validation",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks begin after the draft pull request is opened and remain bound to its exact current head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending and is not represented as approval."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "KFM-MARKDOWN-MODERNIZATION-V1-2026-08-27",
+      "validated": true,
+      "evidence_ref": "attachment:sha256:62a198576c6d33784ecc217bf6630ca60a3cbee8377eae248190e7a765dc3682"
+    },
+    {
+      "id": "KFM-HAZARDS-BLUEPRINT-2026-04-21",
+      "validated": true,
+      "evidence_ref": "drive:1nTzBV_-7_-DzzXxCQPsrQRGffoO2zZSv"
+    },
+    {
+      "id": "KFM-ALIGNMENT-REGISTER-2026-08-27",
+      "validated": true,
+      "evidence_ref": "notion:3c5a9202-1bf6-81b5-982e-e75dc4376b4e"
+    },
+    {
+      "id": "ADR-0029@7da7e262",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@7da7e26240859ba0d3c7bd9f992a4590e8146cf2"
+    },
+    {
+      "id": "DOMAIN-HAZARDS-WORKFLOW@7da7e262",
+      "validated": true,
+      "evidence_ref": "repo:.github/workflows/domain-hazards.yml@7da7e26240859ba0d3c7bd9f992a4590e8146cf2"
+    },
+    {
+      "id": "HAZARDS-FOCUSED-TESTS-AND-VALIDATOR@7da7e262",
+      "validated": true,
+      "evidence_ref": "repo:tests/domains/hazards/@7da7e26240859ba0d3c7bd9f992a4590e8146cf2"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-27T22:16:22Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "AI-authoring provenance for the same-path modernization of the Hazards no-network test runbook. The runbook replaces stale no-repository proposals with current bounded drought-schema, fixture-polarity, in-process network-guard, USDM materiality, workflow-hold, and dependency-bootstrap evidence. It creates no source admission, connector activation, live retrieval, current-condition claim, emergency instruction, restricted data, EvidenceBundle, active policy result, review approval, proof, candidate, release, deployment, promotion, rollback execution, publication, or public behavior."
+}

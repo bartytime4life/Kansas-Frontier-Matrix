@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 580" width="1280" height="580" role="img" aria-labelledby="t d">
+  <title id="t">Focus Mode — six gates, four finite outcomes</title>
+  <desc id="d">Illustration of KFM Focus Mode. A selected map feature and four question intents (explain current context, why this outcome, trace the evidence, compare active and source time) feed an example gate trace: context identity PASS, temporal closure HOLD, evidence resolution PASS, rights and policy PASS, release posture NOTICE, correction posture PASS. The trace selects one of four finite outcomes: ANSWER (CITATIONS_VALID), ABSTAIN (TIME_SCOPE_MISMATCH, selected in this example), DENY (PUBLIC_DISCLOSURE_BLOCKED), or ERROR (ADAPTER_UNAVAILABLE).</desc>
+  <defs>
+    <clipPath id="frame"><rect x="1" y="1" width="1278" height="578" rx="18"/></clipPath>
+    <style>
+      .serif{font-family:Georgia,'Times New Roman',serif}
+      .sans{font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif}
+      .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+      .lbl{font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:14px;letter-spacing:2.5px;font-weight:700}
+      .g0{animation:gate 14s ease-out infinite;animation-delay:0.60s}
+      .g1{animation:gate 14s ease-out infinite;animation-delay:1.40s}
+      .g2{animation:gate 14s ease-out infinite;animation-delay:2.20s}
+      .g3{animation:gate 14s ease-out infinite;animation-delay:3.00s}
+      .g4{animation:gate 14s ease-out infinite;animation-delay:3.80s}
+      .g5{animation:gate 14s ease-out infinite;animation-delay:4.60s}
+      @keyframes gate{0%{opacity:0;transform:translateX(-10px)}4%,84.3%{opacity:1;transform:translateX(0)}90.0%,100%{opacity:0}}
+      .gate{opacity:1}.scan{animation:scan 14s cubic-bezier(.4,0,.3,1) infinite}@keyframes scan{0%,4.29%{transform:translateY(0);opacity:1}37.14%{transform:translateY(270px);opacity:1}40.00%,100%{transform:translateY(270px);opacity:0}}
+      .pick{animation:pick 14s ease-out infinite}@keyframes pick{0%,40.00%{opacity:0}44.29%,88.57%{opacity:1}94.29%,100%{opacity:0}}
+      @media (prefers-reduced-motion: reduce){.gate,.scan,.pick{animation:none!important}.scan{opacity:0}.pick{opacity:1}}
+    </style>
+  </defs>
+  <g clip-path="url(#frame)">
+    <rect width="1280" height="580" fill="#FAF7F0"/>
+<defs><marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#8E5A2A"/></marker></defs>
+    <text x="40" y="48" class="lbl" fill="#3B7A57">FOCUS MODE</text><text x="40" y="76" class="sans" font-size="17" fill="#1F3A66">Ask about what you selected. Six gates decide what can be said.</text>
+    <g transform="translate(40,110)"><rect width="340" height="400" rx="14" fill="#FFFFFF" stroke="#D9CFBD"/>
+    <text x="20" y="34" class="sans" font-size="12" font-weight="700" letter-spacing="1.5" fill="#8E5A2A">SELECTED</text>
+    <rect x="20" y="46" width="300" height="64" rx="10" fill="#F6F1E7"/><circle cx="46" cy="78" r="9" fill="#4A6FA5" stroke="#FFFFFF" stroke-width="2"/><text x="66" y="73" class="sans" font-size="14" font-weight="600" fill="#0E1F3A">Map feature · layer fixture</text><text x="66" y="93" class="sans" font-size="12" fill="#6B6B6B">feature year ≠ active map year</text>
+    <text x="20" y="148" class="sans" font-size="12" font-weight="700" letter-spacing="1.5" fill="#8E5A2A">ASK</text>
+    <rect x="20" y="162" width="300" height="40" rx="20" fill="#FFFFFF" stroke="#D9CFBD"/><text x="40" y="187" class="sans" font-size="14" fill="#1F3A66">Explain current context</text>
+    <rect x="20" y="214" width="300" height="40" rx="20" fill="#0B1F3A" stroke="#0B1F3A"/><text x="40" y="239" class="sans" font-size="14" fill="#FFFFFE">Why this outcome?</text>
+    <rect x="20" y="266" width="300" height="40" rx="20" fill="#FFFFFF" stroke="#D9CFBD"/><text x="40" y="291" class="sans" font-size="14" fill="#1F3A66">Trace the evidence</text>
+    <rect x="20" y="318" width="300" height="40" rx="20" fill="#FFFFFF" stroke="#D9CFBD"/><text x="40" y="343" class="sans" font-size="14" fill="#1F3A66">Compare active and source time</text>
+    <text x="20" y="384" class="sans" font-size="11.5" fill="#6B6B6B">Intents and gates from app/focus-mode.ts</text></g>
+    <path d="M392,310 H416" stroke="#8E5A2A" stroke-width="2" marker-end="url(#ar)"/>
+    <g transform="translate(424,110)"><rect width="420" height="400" rx="14" fill="#FFFFFF" stroke="#D9CFBD"/>
+    <text x="20" y="34" class="sans" font-size="12" font-weight="700" letter-spacing="1.5" fill="#8E5A2A">GATE TRACE · EXAMPLE</text>
+    <g class="gate g0"><rect x="16" y="52" width="388" height="46" rx="10" fill="#F6F1E7"/><text x="32" y="72" class="sans" font-size="14" font-weight="600" fill="#0E1F3A">Context identity</text><text x="32" y="89" class="sans" font-size="11.5" fill="#6B6B6B">Stable feature and layer identifiers</text><rect x="312" y="63" width="80" height="24" rx="12" fill="#E5F0E0" stroke="#3B7A57"/><text x="352" y="79.5" text-anchor="middle" class="mono" font-size="12" font-weight="700" fill="#3B7A57">PASS</text></g>
+    <g class="gate g1"><rect x="16" y="106" width="388" height="46" rx="10" fill="#F6F1E7"/><text x="32" y="126" class="sans" font-size="14" font-weight="600" fill="#0E1F3A">Temporal closure</text><text x="32" y="143" class="sans" font-size="11.5" fill="#6B6B6B">Source year does not close against active year</text><rect x="312" y="117" width="80" height="24" rx="12" fill="#FFF8E6" stroke="#9A7A12"/><text x="352" y="133.5" text-anchor="middle" class="mono" font-size="12" font-weight="700" fill="#9A7A12">HOLD</text></g>
+    <g class="gate g2"><rect x="16" y="160" width="388" height="46" rx="10" fill="#F6F1E7"/><text x="32" y="180" class="sans" font-size="14" font-weight="600" fill="#0E1F3A">Evidence resolution</text><text x="32" y="197" class="sans" font-size="11.5" fill="#6B6B6B">Matching demonstration EvidenceRef present</text><rect x="312" y="171" width="80" height="24" rx="12" fill="#E5F0E0" stroke="#3B7A57"/><text x="352" y="187.5" text-anchor="middle" class="mono" font-size="12" font-weight="700" fill="#3B7A57">PASS</text></g>
+    <g class="gate g3"><rect x="16" y="214" width="388" height="46" rx="10" fill="#F6F1E7"/><text x="32" y="234" class="sans" font-size="14" font-weight="600" fill="#0E1F3A">Rights and policy</text><text x="32" y="251" class="sans" font-size="11.5" fill="#6B6B6B">No disclosure block controls this result</text><rect x="312" y="225" width="80" height="24" rx="12" fill="#E5F0E0" stroke="#3B7A57"/><text x="352" y="241.5" text-anchor="middle" class="mono" font-size="12" font-weight="700" fill="#3B7A57">PASS</text></g>
+    <g class="gate g4"><rect x="16" y="268" width="388" height="46" rx="10" fill="#F6F1E7"/><text x="32" y="288" class="sans" font-size="14" font-weight="600" fill="#0E1F3A">Release posture</text><text x="32" y="305" class="sans" font-size="11.5" fill="#6B6B6B">Visible site posture, not publication</text><rect x="312" y="279" width="80" height="24" rx="12" fill="#DCE6F2" stroke="#4A6FA5"/><text x="352" y="295.5" text-anchor="middle" class="mono" font-size="12" font-weight="700" fill="#4A6FA5">NOTICE</text></g>
+    <g class="gate g5"><rect x="16" y="322" width="388" height="46" rx="10" fill="#F6F1E7"/><text x="32" y="342" class="sans" font-size="14" font-weight="600" fill="#0E1F3A">Correction posture</text><text x="32" y="359" class="sans" font-size="11.5" fill="#6B6B6B">No correction marker attached</text><rect x="312" y="333" width="80" height="24" rx="12" fill="#E5F0E0" stroke="#3B7A57"/><text x="352" y="349.5" text-anchor="middle" class="mono" font-size="12" font-weight="700" fill="#3B7A57">PASS</text></g>
+    <g class="scan"><rect x="16" y="52" width="4" height="46" rx="2" fill="#C9A227"/></g></g>
+    <path d="M856,310 H880" stroke="#8E5A2A" stroke-width="2" marker-end="url(#ar)"/>
+    <g transform="translate(888,110)"><text x="0" y="-6" class="sans" font-size="12" font-weight="700" letter-spacing="1.5" fill="#8E5A2A">FOUR FINITE OUTCOMES</text>
+    <rect x="0" y="8" width="352" height="86" rx="12" fill="#E5F0E0" stroke="#3B7A57" stroke-opacity=".6"/><rect x="0" y="8" width="6" height="86" rx="3" fill="#3B7A57"/><text x="22" y="36" class="sans" font-size="17" font-weight="800" letter-spacing="1" fill="#3B7A57">ANSWER</text><text x="340" y="36" text-anchor="end" class="mono" font-size="11" fill="#3B7A57">CITATIONS_VALID</text><text x="22" y="60" class="sans" font-size="13.5" fill="#0E1F3A">Bounded interpretation</text><text x="22" y="78" class="sans" font-size="13.5" fill="#0E1F3A">supported</text>
+    <rect x="0" y="106" width="352" height="86" rx="12" fill="#FFF8E6" stroke="#9A7A12" stroke-opacity=".6"/><rect x="0" y="106" width="6" height="86" rx="3" fill="#9A7A12"/><text x="22" y="134" class="sans" font-size="17" font-weight="800" letter-spacing="1" fill="#9A7A12">ABSTAIN</text><text x="340" y="134" text-anchor="end" class="mono" font-size="11" fill="#9A7A12">TIME_SCOPE_MISMATCH</text><text x="22" y="158" class="sans" font-size="13.5" fill="#0E1F3A">Active time is outside the</text><text x="22" y="176" class="sans" font-size="13.5" fill="#0E1F3A">selected support</text>
+    <rect x="0" y="204" width="352" height="86" rx="12" fill="#F2D7D7" stroke="#A33A3A" stroke-opacity=".6"/><rect x="0" y="204" width="6" height="86" rx="3" fill="#A33A3A"/><text x="22" y="232" class="sans" font-size="17" font-weight="800" letter-spacing="1" fill="#A33A3A">DENY</text><text x="340" y="232" text-anchor="end" class="mono" font-size="11" fill="#A33A3A">PUBLIC_DISCLOSURE_BLOCKED</text><text x="22" y="256" class="sans" font-size="13.5" fill="#0E1F3A">Protected detail remains</text><text x="22" y="274" class="sans" font-size="13.5" fill="#0E1F3A">withheld</text>
+    <rect x="0" y="302" width="352" height="86" rx="12" fill="#F4F4F4" stroke="#5E6E7C" stroke-opacity=".6"/><rect x="0" y="302" width="6" height="86" rx="3" fill="#5E6E7C"/><text x="22" y="330" class="sans" font-size="17" font-weight="800" letter-spacing="1" fill="#5E6E7C">ERROR</text><text x="340" y="330" text-anchor="end" class="mono" font-size="11" fill="#5E6E7C">ADAPTER_UNAVAILABLE</text><text x="22" y="354" class="sans" font-size="13.5" fill="#0E1F3A">Adapter failed safely; no</text><text x="22" y="372" class="sans" font-size="13.5" fill="#0E1F3A">fallback claim</text>
+    <g class="pick"><rect x="-6" y="100" width="364" height="98" rx="16" fill="none" stroke="#9A7A12" stroke-width="3"/><text x="364" y="150" class="sans" font-size="20" fill="#9A7A12">◀</text></g></g>
+    <text x="40" y="548" class="sans" font-size="12.5" fill="#6B6B6B">Bounded proof on site-local demonstration fixtures. A model may explain a result only after these gates — it never issues life-safety, regulatory, health or engineering instructions.</text>
+  </g>
+  <rect x="1" y="1" width="1278" height="578" rx="18" fill="none" stroke="#D9CFBD" stroke-width="2"/>
+</svg>

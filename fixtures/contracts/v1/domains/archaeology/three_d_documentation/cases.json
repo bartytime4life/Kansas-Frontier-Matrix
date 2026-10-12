@@ -1,0 +1,239 @@
+{
+  "object_type": "ThreeDDocumentationFixtureManifest",
+  "schema_version": "1.0.0",
+  "bases": {
+    "internal": {
+      "object_type": "ThreeDDocumentation",
+      "schema_version": "1.0.0",
+      "profile": "kfm.archaeology.three-d-documentation.fixture.v1",
+      "source_card": "KFM-P18-INV-410",
+      "recorded_at": "2026-08-11T18:00:00Z",
+      "documentation_type": "IMAGE_BASED_MODEL",
+      "subject_refs": ["fixture:archaeology-subject:context-001"],
+      "capture": {
+        "state": "COMPLETE",
+        "methods": ["PHOTOGRAMMETRY"],
+        "device_refs": ["fixture:capture-device:camera-001"],
+        "acquisition_receipt_ref": "fixture:receipt:acquisition-001",
+        "method_statement": "Synthetic overlapping image capture for bounded internal review."
+      },
+      "processing_steps": [
+        {
+          "sequence": 1,
+          "operation": "RECONSTRUCTION",
+          "input_asset_refs": ["fixture:asset:source-image-set-001"],
+          "output_asset_refs": ["fixture:asset:derived-model-001"],
+          "method_statement": "Synthetic reconstruction with declared inputs and output lineage.",
+          "receipt_ref": "fixture:receipt:processing-001",
+          "interpretive": false
+        }
+      ],
+      "spatial_reference": {
+        "scale_state": "MEASURED",
+        "scale_statement": "Synthetic scale was established from a fixture-only reference target.",
+        "scale_receipt_ref": "fixture:receipt:scale-001",
+        "georeference_state": "LOCAL_FRAME",
+        "crs_ref": null,
+        "georeference_receipt_ref": null,
+        "orientation_statement": "Synthetic local axes are declared without real-world coordinates."
+      },
+      "interpretation": {
+        "knowledge_character": "REALITY_BASED",
+        "representation_kind": "TRUE_3D",
+        "interpretive_step_refs": [],
+        "uncertainty_statement": "Synthetic carrier accuracy is bounded by the fixture capture and processing declarations.",
+        "vertical_surface_loss_disclosed": null
+      },
+      "assets": {
+        "source_asset_refs": ["fixture:asset:source-image-set-001"],
+        "derived_asset_refs": ["fixture:asset:derived-model-001"],
+        "public_safe_asset_refs": []
+      },
+      "governance": {
+        "state": "COMPLETE",
+        "intended_use": "INTERNAL_REVIEW",
+        "sensitivity_state": "CONTROLLED",
+        "evidence_bundle_ref": "fixture:evidence-bundle:three-d-001",
+        "rights_ref": "fixture:rights:three-d-001",
+        "technical_review_ref": "fixture:review:technical-001",
+        "cultural_review_ref": "fixture:review:cultural-001",
+        "policy_decision_ref": "fixture:policy-decision:three-d-001",
+        "publication_transform_receipt_ref": null,
+        "release_manifest_ref": null,
+        "correction_ref": null,
+        "rollback_ref": null
+      },
+      "limitations": [
+        "DECLARATION_ONLY",
+        "NO_ASSET_CREATION_OR_MUTATION",
+        "NO_EVIDENCE_OR_INTERPRETATION_AUTHORITY",
+        "NO_POLICY_OR_REVIEW_AUTHORITY",
+        "NO_RELEASE_OR_PUBLICATION_AUTHORITY",
+        "SYNTHETIC_REFERENCES_ONLY"
+      ],
+      "authority_claims": {
+        "asset_mutation_authority": false,
+        "evidence_authority": false,
+        "interpretation_authority": false,
+        "policy_authority": false,
+        "review_authority": false,
+        "release_authority": false,
+        "publication_authority": false,
+        "public_use_authority": false
+      }
+    },
+    "public": {
+      "extends": "internal",
+      "documentation_type": "INTEGRATED_SCENE",
+      "processing_steps": [
+        {
+          "sequence": 1,
+          "operation": "RECONSTRUCTION",
+          "input_asset_refs": ["fixture:asset:source-image-set-001"],
+          "output_asset_refs": ["fixture:asset:derived-model-001"],
+          "method_statement": "Synthetic reconstruction with declared inputs and output lineage.",
+          "receipt_ref": "fixture:receipt:processing-001",
+          "interpretive": false
+        },
+        {
+          "sequence": 2,
+          "operation": "GEOREFERENCING",
+          "input_asset_refs": ["fixture:asset:derived-model-001"],
+          "output_asset_refs": ["fixture:asset:derived-model-georeferenced-001"],
+          "method_statement": "Synthetic georeferencing binds the derived carrier to a fixture coordinate reference.",
+          "receipt_ref": "fixture:receipt:georeference-001",
+          "interpretive": false
+        },
+        {
+          "sequence": 3,
+          "operation": "DECIMATION",
+          "input_asset_refs": ["fixture:asset:derived-model-georeferenced-001"],
+          "output_asset_refs": ["fixture:asset:public-safe-model-001"],
+          "method_statement": "Synthetic public-safe transform removes controlled detail for review.",
+          "receipt_ref": "fixture:receipt:public-transform-001",
+          "interpretive": false
+        }
+      ],
+      "spatial_reference": {
+        "scale_state": "MEASURED",
+        "scale_statement": "Synthetic scale was established from a fixture-only reference target.",
+        "scale_receipt_ref": "fixture:receipt:scale-001",
+        "georeference_state": "GEOREFERENCED",
+        "crs_ref": "fixture:crs:review-only-001",
+        "georeference_receipt_ref": "fixture:receipt:georeference-001",
+        "orientation_statement": "Synthetic orientation is recorded without disclosing a real location."
+      },
+      "assets": {
+        "source_asset_refs": ["fixture:asset:source-image-set-001"],
+        "derived_asset_refs": [
+          "fixture:asset:derived-model-001",
+          "fixture:asset:derived-model-georeferenced-001",
+          "fixture:asset:public-safe-model-001"
+        ],
+        "public_safe_asset_refs": ["fixture:asset:public-safe-model-001"]
+      },
+      "governance": {
+        "state": "COMPLETE",
+        "intended_use": "PUBLIC_CANDIDATE",
+        "sensitivity_state": "PUBLIC_SAFE_REVIEWED",
+        "evidence_bundle_ref": "fixture:evidence-bundle:three-d-001",
+        "rights_ref": "fixture:rights:three-d-001",
+        "technical_review_ref": "fixture:review:technical-001",
+        "cultural_review_ref": "fixture:review:cultural-001",
+        "policy_decision_ref": "fixture:policy-decision:three-d-001",
+        "publication_transform_receipt_ref": "fixture:receipt:publication-transform-001",
+        "release_manifest_ref": "fixture:release-manifest:three-d-001",
+        "correction_ref": "fixture:correction:three-d-001",
+        "rollback_ref": "fixture:rollback:three-d-001"
+      }
+    },
+    "incomplete": {
+      "extends": "internal",
+      "capture": {
+        "state": "INCOMPLETE",
+        "methods": [],
+        "device_refs": [],
+        "acquisition_receipt_ref": null,
+        "method_statement": null
+      },
+      "processing_steps": [],
+      "spatial_reference": {
+        "scale_state": "UNRESOLVED",
+        "scale_statement": null,
+        "scale_receipt_ref": null,
+        "georeference_state": "UNRESOLVED",
+        "crs_ref": null,
+        "georeference_receipt_ref": null,
+        "orientation_statement": null
+      },
+      "interpretation": {
+        "knowledge_character": "UNKNOWN",
+        "representation_kind": "UNKNOWN",
+        "interpretive_step_refs": [],
+        "uncertainty_statement": null,
+        "vertical_surface_loss_disclosed": null
+      },
+      "governance": {
+        "state": "INCOMPLETE",
+        "intended_use": "UNKNOWN",
+        "sensitivity_state": "UNRESOLVED",
+        "evidence_bundle_ref": null,
+        "rights_ref": null,
+        "technical_review_ref": null,
+        "cultural_review_ref": null,
+        "policy_decision_ref": null,
+        "publication_transform_receipt_ref": null,
+        "release_manifest_ref": null,
+        "correction_ref": null,
+        "rollback_ref": null
+      }
+    },
+    "error": {
+      "extends": "incomplete",
+      "capture": {
+        "state": "ERROR",
+        "methods": [],
+        "device_refs": [],
+        "acquisition_receipt_ref": null,
+        "method_statement": null
+      },
+      "governance": {
+        "state": "ERROR",
+        "intended_use": "UNKNOWN",
+        "sensitivity_state": "UNRESOLVED",
+        "evidence_bundle_ref": null,
+        "rights_ref": null,
+        "technical_review_ref": null,
+        "cultural_review_ref": null,
+        "policy_decision_ref": null,
+        "publication_transform_receipt_ref": null,
+        "release_manifest_ref": null,
+        "correction_ref": null,
+        "rollback_ref": null
+      }
+    }
+  },
+  "cases": [
+    {"name": "pass_internal_reality_based", "base": "internal", "expected_outcome": "PASS", "expected_findings": []},
+    {"name": "pass_public_candidate", "base": "public", "expected_outcome": "PASS", "expected_findings": []},
+    {"name": "abstain_incomplete_paradata", "base": "incomplete", "expected_outcome": "ABSTAIN", "expected_findings": ["CAPTURE_INCOMPLETE", "GOVERNANCE_INCOMPLETE", "INTERPRETATION_UNKNOWN", "SPATIAL_REFERENCE_UNRESOLVED"]},
+    {"name": "error_declared", "base": "error", "expected_outcome": "ERROR", "expected_findings": ["DOCUMENTATION_ERROR"]},
+    {"name": "deny_asset_role_collapse", "base": "internal", "mutations": [{"path": "/assets/derived_asset_refs", "value": ["fixture:asset:source-image-set-001"]}], "expected_outcome": "DENY", "expected_findings": ["ASSET_ROLE_COLLAPSE", "PROCESS_OUTPUT_UNDECLARED"]},
+    {"name": "deny_process_output_undeclared", "base": "internal", "mutations": [{"path": "/processing_steps/0/output_asset_refs", "value": ["fixture:asset:undeclared-output-001"]}], "expected_outcome": "DENY", "expected_findings": ["DERIVED_ASSET_WITHOUT_PROCESSING", "PROCESS_OUTPUT_UNDECLARED"]},
+    {"name": "deny_process_sequence_gap", "base": "public", "mutations": [{"path": "/processing_steps/1/sequence", "value": 3}], "expected_outcome": "DENY", "expected_findings": ["PROCESS_SEQUENCE_INVALID"]},
+    {"name": "deny_interpretive_steps_missing", "base": "internal", "mutations": [{"path": "/interpretation/knowledge_character", "value": "INTERPRETIVE"}], "expected_outcome": "DENY", "expected_findings": ["INTERPRETIVE_PARADATA_REQUIRED"]},
+    {"name": "deny_2_5d_loss_undisclosed", "base": "internal", "mutations": [{"path": "/interpretation/representation_kind", "value": "TWO_POINT_FIVE_D"}, {"path": "/interpretation/vertical_surface_loss_disclosed", "value": false}], "expected_outcome": "DENY", "expected_findings": ["VERTICAL_SURFACE_LOSS_DISCLOSURE_REQUIRED"]},
+    {"name": "deny_georeference_receipt_missing", "base": "public", "mutations": [{"path": "/spatial_reference/georeference_receipt_ref", "value": null}], "expected_outcome": "DENY", "expected_findings": ["GEOREFERENCE_CLOSURE_REQUIRED"]},
+    {"name": "deny_scale_receipt_missing", "base": "internal", "mutations": [{"path": "/spatial_reference/scale_receipt_ref", "value": null}], "expected_outcome": "DENY", "expected_findings": ["SCALE_CLOSURE_REQUIRED"]},
+    {"name": "deny_public_safe_asset_missing", "base": "public", "mutations": [{"path": "/assets/public_safe_asset_refs", "value": []}], "expected_outcome": "DENY", "expected_findings": ["PUBLIC_SAFE_ASSET_REQUIRED"]},
+    {"name": "deny_public_sensitivity_unresolved", "base": "public", "mutations": [{"path": "/governance/sensitivity_state", "value": "UNRESOLVED"}], "expected_outcome": "DENY", "expected_findings": ["PUBLIC_SENSITIVITY_REVIEW_REQUIRED"]},
+    {"name": "deny_public_evidence_missing", "base": "public", "mutations": [{"path": "/governance/evidence_bundle_ref", "value": null}], "expected_outcome": "DENY", "expected_findings": ["GOVERNANCE_REFERENCE_REQUIRED"]},
+    {"name": "deny_public_transform_missing", "base": "public", "mutations": [{"path": "/governance/publication_transform_receipt_ref", "value": null}], "expected_outcome": "DENY", "expected_findings": ["PUBLIC_RELEASE_CLOSURE_REQUIRED"]},
+    {"name": "deny_public_rollback_missing", "base": "public", "mutations": [{"path": "/governance/rollback_ref", "value": null}], "expected_outcome": "DENY", "expected_findings": ["PUBLIC_RELEASE_CLOSURE_REQUIRED"]},
+    {"name": "deny_internal_release_claim", "base": "internal", "mutations": [{"path": "/governance/release_manifest_ref", "value": "fixture:release-manifest:unexpected"}], "expected_outcome": "DENY", "expected_findings": ["INTERNAL_RELEASE_REFERENCE_FORBIDDEN"]},
+    {"name": "deny_noncanonical_subject_refs", "base": "internal", "mutations": [{"path": "/subject_refs", "value": ["fixture:subject:z", "fixture:subject:a"]}], "expected_outcome": "DENY", "expected_findings": ["REFERENCE_ARRAY_NOT_CANONICAL"]},
+    {"name": "deny_spec_hash_mismatch", "base": "internal", "spec_hash_override": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff", "expected_outcome": "DENY", "expected_findings": ["SPEC_HASH_MISMATCH"]},
+    {"name": "deny_documentation_id_mismatch", "base": "internal", "documentation_id_override": "kfm:archaeology:three-d-documentation:ffffffffffffffffffffffff", "expected_outcome": "DENY", "expected_findings": ["DOCUMENTATION_ID_MISMATCH"]},
+    {"name": "deny_authority_overreach", "base": "internal", "mutations": [{"path": "/authority_claims/public_use_authority", "value": true}], "expected_outcome": "DENY", "expected_findings": ["SCHEMA_INVALID"]}
+  ]
+}

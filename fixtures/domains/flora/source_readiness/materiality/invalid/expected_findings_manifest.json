@@ -1,0 +1,29 @@
+{
+  "invalid_missing_metric.json": [
+    "METRIC_MISSING"
+  ],
+  "invalid_fraction_out_of_range.json": [
+    "METRIC_INVALID"
+  ],
+  "invalid_negative_uncertainty.json": [
+    "METRIC_INVALID"
+  ],
+  "invalid_sensitivity_posture.json": [
+    "METRIC_INVALID"
+  ],
+  "invalid_time_order.json": [
+    "BASELINE_AFTER_CANDIDATE"
+  ],
+  "invalid_noncanonical_refs.json": [
+    "REFS_NOT_CANONICAL"
+  ],
+  "invalid_unknown_field.json": [
+    "INPUT_FIELD_UNKNOWN"
+  ],
+  "invalid_zero_digest.json": [
+    "DIGEST_PLACEHOLDER"
+  ],
+  "invalid_missing_evidence_field.json": [
+    "EVIDENCE_FIELDS_INVALID"
+  ]
+}

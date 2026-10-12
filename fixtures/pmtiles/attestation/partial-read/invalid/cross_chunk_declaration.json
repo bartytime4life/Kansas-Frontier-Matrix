@@ -1,0 +1,11 @@
+{
+  "case_id": "partial-read-cross-chunk-declaration",
+  "expected": {
+    "issue_codes": [
+      "PMIDX_RANGE_LEAF_BINDING_INVALID"
+    ],
+    "status": "DENY"
+  },
+  "fixture_profile": "kfm.pmtiles.partial-read.compat.v1",
+  "mutation": "cross_chunk_declaration"
+}

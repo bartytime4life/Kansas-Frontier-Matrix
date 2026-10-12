@@ -1,0 +1,440 @@
+{
+  "profile": "kfm.agriculture-observation.fixture-suite.v1",
+  "base": {
+    "object_type": "AgricultureObservation",
+    "profile": "kfm.agriculture-observation.fixture.v1",
+    "observation_id": "kfm:agriculture-observation:000000000000000000000000",
+    "subject": {
+      "geography_version_ref": "kfm://common/geography-version/synthetic@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "geography_version_profile": "kfm.geography-version.fixture.v1",
+      "geography_feature_key": "20001",
+      "unit_level": "COUNTY",
+      "jurisdiction_code": "US-KS",
+      "identity_scope": "VERSION_LOCAL"
+    },
+    "temporal": {
+      "reference_period_kind": "CALENDAR_YEAR",
+      "reference_year": 2022,
+      "reference_period_start": "2022-01-01",
+      "reference_period_end": "2022-12-31",
+      "source_released_at": "2024-02-13T00:00:00Z",
+      "retrieved_at": "2024-03-01T00:00:00Z",
+      "corrected_at": null
+    },
+    "measure": {
+      "measure_key": "farm_count",
+      "measure_family": "FARM_COUNT",
+      "unit": "COUNT",
+      "source_unit_ref": null,
+      "result_state": "OBSERVED",
+      "value": 480,
+      "missing_reason": "NOT_APPLICABLE",
+      "price_basis": "NOT_APPLICABLE",
+      "price_year": null,
+      "classification_scope": "ALL_AGRICULTURE",
+      "classification_kind": null,
+      "classification_scheme_ref": null,
+      "classification_code": null
+    },
+    "suppression": {
+      "status": "NOT_APPLICABLE",
+      "reason": null,
+      "method_ref": null
+    },
+    "source": {
+      "source_descriptor_ref": "kfm://source/synthetic-agriculture@sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "dataset_version_ref": "kfm://dataset/synthetic-agriculture-2022@sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "source_table_ref": "kfm://source-table/synthetic-agriculture-county@sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "source_variable_ref": "kfm://source-variable/synthetic-farm-count@sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+      "source_role": "OFFICIAL_AGRICULTURAL_AGGREGATE",
+      "source_state": "REFERENCED_NOT_RESOLVED",
+      "evidence_refs": [
+        "kfm://evidence/agriculture/source@sha256:1111111111111111111111111111111111111111111111111111111111111111",
+        "kfm://evidence/agriculture/table@sha256:2222222222222222222222222222222222222222222222222222222222222222"
+      ],
+      "rights_state": "REFERENCED_NOT_EVALUATED",
+      "sensitivity_state": "REFERENCED_NOT_EVALUATED"
+    },
+    "lineage": {
+      "correction_state": "ORIGINAL",
+      "predecessor_ref": null,
+      "correction_record_ref": null
+    },
+    "disclosure": {
+      "interpretation_limits": [
+        "AGGREGATE_ONLY",
+        "NO_CAUSAL_CLAIM",
+        "NO_FARM_OR_PRODUCER_INFERENCE",
+        "NO_PUBLICATION_AUTHORITY",
+        "SOURCE_ROLE_PRESERVED",
+        "SUPPRESSION_PRESERVED",
+        "UNIT_AND_CLASSIFICATION_DECLARED",
+        "VERSION_BOUND"
+      ]
+    },
+    "governance": {
+      "execution_mode": "FIXTURE_ONLY",
+      "network_attempted": false,
+      "source_data_accessed": false,
+      "geography_resolved": false,
+      "evidence_resolved": false,
+      "classification_resolved": false,
+      "farm_or_producer_identified": false,
+      "rights_evaluated": false,
+      "sensitivity_evaluated": false,
+      "policy_evaluated": false,
+      "review_approved": false,
+      "promotion_authorized": false,
+      "release_authorized": false,
+      "public_use_allowed": false,
+      "publication_authorized": false
+    },
+    "spec_hash": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  "variants": {
+    "farm_count": [],
+    "land_in_farms": [
+      { "path": "/measure/measure_key", "value": "land_in_farms" },
+      { "path": "/measure/measure_family", "value": "LAND_IN_FARMS" },
+      { "path": "/measure/unit", "value": "ACRES" },
+      { "path": "/measure/value", "value": 215000 }
+    ],
+    "harvested_cropland": [
+      { "path": "/measure/measure_key", "value": "harvested_cropland" },
+      { "path": "/measure/measure_family", "value": "HARVESTED_CROPLAND" },
+      { "path": "/measure/unit", "value": "ACRES" },
+      { "path": "/measure/value", "value": 132000 }
+    ],
+    "improved_acres": [
+      { "path": "/measure/measure_key", "value": "improved_acres" },
+      { "path": "/measure/measure_family", "value": "IMPROVED_ACRES" },
+      { "path": "/measure/unit", "value": "ACRES" },
+      { "path": "/measure/value", "value": 101000 }
+    ],
+    "market_current": [
+      { "path": "/measure/measure_key", "value": "market_value_sales" },
+      { "path": "/measure/measure_family", "value": "MARKET_VALUE_SALES" },
+      { "path": "/measure/unit", "value": "USD" },
+      { "path": "/measure/value", "value": 127500000 },
+      { "path": "/measure/price_basis", "value": "CURRENT_DOLLARS" }
+    ],
+    "market_constant": [
+      { "path": "/measure/measure_key", "value": "market_value_sales_constant" },
+      { "path": "/measure/measure_family", "value": "MARKET_VALUE_SALES" },
+      { "path": "/measure/unit", "value": "USD" },
+      { "path": "/measure/value", "value": 119000000 },
+      { "path": "/measure/price_basis", "value": "CONSTANT_DOLLARS" },
+      { "path": "/measure/price_year", "value": 2020 }
+    ],
+    "crop_production": [
+      { "path": "/measure/measure_key", "value": "winter_wheat_production" },
+      { "path": "/measure/measure_family", "value": "CROP_PRODUCTION" },
+      { "path": "/measure/unit", "value": "SOURCE_DEFINED" },
+      { "path": "/measure/source_unit_ref", "value": "kfm://unit/synthetic-bushel@sha256:3333333333333333333333333333333333333333333333333333333333333333" },
+      { "path": "/measure/value", "value": 985000 },
+      { "path": "/measure/classification_scope", "value": "SOURCE_CLASSIFIED" },
+      { "path": "/measure/classification_kind", "value": "CROP" },
+      { "path": "/measure/classification_scheme_ref", "value": "kfm://classification/synthetic-crop@sha256:4444444444444444444444444444444444444444444444444444444444444444" },
+      { "path": "/measure/classification_code", "value": "WHEAT.WINTER" }
+    ],
+    "livestock_inventory": [
+      { "path": "/measure/measure_key", "value": "cattle_inventory" },
+      { "path": "/measure/measure_family", "value": "LIVESTOCK_INVENTORY" },
+      { "path": "/measure/unit", "value": "HEAD" },
+      { "path": "/measure/value", "value": 42000 },
+      { "path": "/measure/classification_scope", "value": "SOURCE_CLASSIFIED" },
+      { "path": "/measure/classification_kind", "value": "LIVESTOCK" },
+      { "path": "/measure/classification_scheme_ref", "value": "kfm://classification/synthetic-livestock@sha256:5555555555555555555555555555555555555555555555555555555555555555" },
+      { "path": "/measure/classification_code", "value": "CATTLE.ALL" }
+    ],
+    "observed_zero": [
+      { "path": "/measure/value", "value": 0 }
+    ],
+    "suppressed": [
+      { "path": "/measure/result_state", "value": "SUPPRESSED" },
+      { "path": "/measure/value", "value": null },
+      { "path": "/measure/missing_reason", "value": "SOURCE_SUPPRESSED" },
+      { "path": "/suppression/status", "value": "SOURCE_SUPPRESSED" },
+      { "path": "/suppression/reason", "value": "Synthetic source disclosure rule" },
+      { "path": "/suppression/method_ref", "value": "kfm://method/synthetic-suppression@sha256:6666666666666666666666666666666666666666666666666666666666666666" }
+    ],
+    "missing": [
+      { "path": "/measure/result_state", "value": "MISSING" },
+      { "path": "/measure/value", "value": null },
+      { "path": "/measure/missing_reason", "value": "SOURCE_MISSING" }
+    ],
+    "corrected": [
+      { "path": "/temporal/corrected_at", "value": "2024-04-01T00:00:00Z" },
+      { "path": "/lineage/correction_state", "value": "CORRECTED" },
+      { "path": "/lineage/predecessor_ref", "value": "kfm://observation/agriculture/prior@sha256:7777777777777777777777777777777777777777777777777777777777777777" },
+      { "path": "/lineage/correction_record_ref", "value": "kfm://correction/agriculture/synthetic@sha256:8888888888888888888888888888888888888888888888888888888888888888" }
+    ]
+  },
+  "cases": [
+    { "case_id": "valid-farm-count", "base": "farm_count", "expected_outcome": "PASS", "expected_findings": [] },
+    { "case_id": "valid-land-in-farms", "base": "land_in_farms", "expected_outcome": "PASS", "expected_findings": [] },
+    { "case_id": "valid-harvested-cropland", "base": "harvested_cropland", "expected_outcome": "PASS", "expected_findings": [] },
+    { "case_id": "valid-improved-acres", "base": "improved_acres", "expected_outcome": "PASS", "expected_findings": [] },
+    { "case_id": "valid-current-dollar-sales", "base": "market_current", "expected_outcome": "PASS", "expected_findings": [] },
+    { "case_id": "valid-constant-dollar-sales", "base": "market_constant", "expected_outcome": "PASS", "expected_findings": [] },
+    { "case_id": "valid-source-defined-crop", "base": "crop_production", "expected_outcome": "PASS", "expected_findings": [] },
+    { "case_id": "valid-classified-livestock", "base": "livestock_inventory", "expected_outcome": "PASS", "expected_findings": [] },
+    { "case_id": "valid-observed-zero", "base": "observed_zero", "expected_outcome": "PASS", "expected_findings": [] },
+    { "case_id": "valid-source-suppressed", "base": "suppressed", "expected_outcome": "PASS", "expected_findings": [] },
+    { "case_id": "valid-source-missing", "base": "missing", "expected_outcome": "PASS", "expected_findings": [] },
+    { "case_id": "valid-corrected", "base": "corrected", "expected_outcome": "PASS", "expected_findings": [] },
+    {
+      "case_id": "deny-period-start-drift",
+      "base": "farm_count",
+      "mutations": [{ "path": "/temporal/reference_period_start", "value": "2022-02-01" }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "AGRICULTURE_PERIOD_START_INVALID", "path": "/temporal/reference_period_start" }]
+    },
+    {
+      "case_id": "deny-period-end-drift",
+      "base": "farm_count",
+      "mutations": [{ "path": "/temporal/reference_period_end", "value": "2022-12-30" }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "AGRICULTURE_PERIOD_END_INVALID", "path": "/temporal/reference_period_end" }]
+    },
+    {
+      "case_id": "deny-release-precedes-period",
+      "base": "farm_count",
+      "mutations": [{ "path": "/temporal/source_released_at", "value": "2022-12-01T00:00:00Z" }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "AGRICULTURE_RELEASE_PRECEDES_PERIOD", "path": "/temporal/source_released_at" }]
+    },
+    {
+      "case_id": "deny-retrieval-precedes-release",
+      "base": "farm_count",
+      "mutations": [{ "path": "/temporal/retrieved_at", "value": "2024-01-01T00:00:00Z" }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "AGRICULTURE_RETRIEVAL_PRECEDES_RELEASE", "path": "/temporal/retrieved_at" }]
+    },
+    {
+      "case_id": "deny-correction-precedes-release",
+      "base": "corrected",
+      "mutations": [{ "path": "/temporal/corrected_at", "value": "2024-01-01T00:00:00Z" }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "AGRICULTURE_CORRECTION_PRECEDES_RELEASE", "path": "/temporal/corrected_at" }]
+    },
+    {
+      "case_id": "deny-observed-without-value",
+      "base": "farm_count",
+      "mutations": [{ "path": "/measure/value", "value": null }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "AGRICULTURE_OBSERVED_VALUE_REQUIRED", "path": "/measure/value" }]
+    },
+    {
+      "case_id": "deny-observed-with-missing-reason",
+      "base": "farm_count",
+      "mutations": [{ "path": "/measure/missing_reason", "value": "SOURCE_MISSING" }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "AGRICULTURE_OBSERVED_MISSING_REASON_INVALID", "path": "/measure/missing_reason" }]
+    },
+    {
+      "case_id": "deny-suppressed-with-value",
+      "base": "suppressed",
+      "mutations": [{ "path": "/measure/value", "value": 1 }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "AGRICULTURE_SUPPRESSED_VALUE_DENIED", "path": "/measure/value" }]
+    },
+    {
+      "case_id": "deny-suppression-block-incomplete",
+      "base": "suppressed",
+      "mutations": [{ "path": "/suppression/method_ref", "value": null }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "AGRICULTURE_SUPPRESSION_BLOCK_REQUIRED", "path": "/suppression" }]
+    },
+    {
+      "case_id": "deny-missing-with-value",
+      "base": "missing",
+      "mutations": [{ "path": "/measure/value", "value": 1 }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "AGRICULTURE_MISSING_VALUE_DENIED", "path": "/measure/value" }]
+    },
+    {
+      "case_id": "deny-missing-with-suppression-reason",
+      "base": "missing",
+      "mutations": [{ "path": "/measure/missing_reason", "value": "SOURCE_SUPPRESSED" }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "AGRICULTURE_MISSING_REASON_INVALID", "path": "/measure/missing_reason" }]
+    },
+    {
+      "case_id": "deny-nonsuppressed-carries-suppression",
+      "base": "farm_count",
+      "mutations": [{ "path": "/suppression/status", "value": "SOURCE_SUPPRESSED" }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "AGRICULTURE_SUPPRESSION_BLOCK_DENIED", "path": "/suppression" }]
+    },
+    {
+      "case_id": "deny-family-unit-mismatch",
+      "base": "farm_count",
+      "mutations": [{ "path": "/measure/unit", "value": "ACRES" }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "AGRICULTURE_UNIT_MISMATCH", "path": "/measure/unit" }]
+    },
+    {
+      "case_id": "deny-source-unit-missing",
+      "base": "crop_production",
+      "mutations": [{ "path": "/measure/source_unit_ref", "value": null }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "AGRICULTURE_SOURCE_UNIT_REQUIRED", "path": "/measure/source_unit_ref" }]
+    },
+    {
+      "case_id": "deny-source-unit-on-fixed-unit",
+      "base": "farm_count",
+      "mutations": [{ "path": "/measure/source_unit_ref", "value": "kfm://unit/synthetic-count@sha256:9999999999999999999999999999999999999999999999999999999999999999" }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "AGRICULTURE_SOURCE_UNIT_DENIED", "path": "/measure/source_unit_ref" }]
+    },
+    {
+      "case_id": "deny-sales-without-price-basis",
+      "base": "market_current",
+      "mutations": [{ "path": "/measure/price_basis", "value": "NOT_APPLICABLE" }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "AGRICULTURE_PRICE_BASIS_REQUIRED", "path": "/measure/price_basis" }]
+    },
+    {
+      "case_id": "deny-constant-sales-without-price-year",
+      "base": "market_constant",
+      "mutations": [{ "path": "/measure/price_year", "value": null }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "AGRICULTURE_PRICE_YEAR_REQUIRED", "path": "/measure/price_year" }]
+    },
+    {
+      "case_id": "deny-current-sales-with-price-year",
+      "base": "market_current",
+      "mutations": [{ "path": "/measure/price_year", "value": 2020 }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "AGRICULTURE_PRICE_YEAR_DENIED", "path": "/measure/price_year" }]
+    },
+    {
+      "case_id": "deny-nonmonetary-price-basis",
+      "base": "farm_count",
+      "mutations": [{ "path": "/measure/price_basis", "value": "CURRENT_DOLLARS" }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "AGRICULTURE_PRICE_BASIS_DENIED", "path": "/measure/price_basis" }]
+    },
+    {
+      "case_id": "deny-source-classification-incomplete",
+      "base": "crop_production",
+      "mutations": [{ "path": "/measure/classification_code", "value": null }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "AGRICULTURE_CLASSIFICATION_REQUIRED", "path": "/measure" }]
+    },
+    {
+      "case_id": "deny-all-agriculture-carries-classification",
+      "base": "farm_count",
+      "mutations": [{ "path": "/measure/classification_kind", "value": "CROP" }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "AGRICULTURE_CLASSIFICATION_DENIED", "path": "/measure" }]
+    },
+    {
+      "case_id": "deny-evidence-order-drift",
+      "base": "farm_count",
+      "mutations": [{
+        "path": "/source/evidence_refs",
+        "value": [
+          "kfm://evidence/agriculture/table@sha256:2222222222222222222222222222222222222222222222222222222222222222",
+          "kfm://evidence/agriculture/source@sha256:1111111111111111111111111111111111111111111111111111111111111111"
+        ]
+      }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "AGRICULTURE_EVIDENCE_ORDER_INVALID", "path": "/source/evidence_refs" }]
+    },
+    {
+      "case_id": "deny-original-carries-predecessor",
+      "base": "farm_count",
+      "mutations": [{ "path": "/lineage/predecessor_ref", "value": "kfm://observation/agriculture/prior@sha256:7777777777777777777777777777777777777777777777777777777777777777" }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "AGRICULTURE_ORIGINAL_LINEAGE_INVALID", "path": "/lineage" }]
+    },
+    {
+      "case_id": "deny-corrected-missing-predecessor",
+      "base": "corrected",
+      "mutations": [{ "path": "/lineage/predecessor_ref", "value": null }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "AGRICULTURE_CORRECTED_LINEAGE_INCOMPLETE", "path": "/lineage" }]
+    },
+    {
+      "case_id": "deny-limit-order-drift",
+      "base": "farm_count",
+      "mutations": [{
+        "path": "/disclosure/interpretation_limits",
+        "value": [
+          "VERSION_BOUND",
+          "UNIT_AND_CLASSIFICATION_DECLARED",
+          "SUPPRESSION_PRESERVED",
+          "SOURCE_ROLE_PRESERVED",
+          "NO_PUBLICATION_AUTHORITY",
+          "NO_FARM_OR_PRODUCER_INFERENCE",
+          "NO_CAUSAL_CLAIM",
+          "AGGREGATE_ONLY"
+        ]
+      }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "AGRICULTURE_LIMIT_ORDER_INVALID", "path": "/disclosure/interpretation_limits" }]
+    },
+    {
+      "case_id": "deny-stored-spec-hash-drift",
+      "base": "farm_count",
+      "spec_hash_override": "sha256:9999999999999999999999999999999999999999999999999999999999999999",
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "AGRICULTURE_SPEC_HASH_MISMATCH", "path": "/spec_hash" }]
+    },
+    {
+      "case_id": "deny-stored-observation-id-drift",
+      "base": "farm_count",
+      "observation_id_override": "kfm:agriculture-observation:999999999999999999999999",
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "AGRICULTURE_OBSERVATION_ID_MISMATCH", "path": "/observation_id" }]
+    },
+    {
+      "case_id": "deny-nondigest-geography-reference",
+      "base": "farm_count",
+      "mutations": [{ "path": "/subject/geography_version_ref", "value": "kfm://common/geography-version/synthetic" }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "AGRICULTURE_SCHEMA_INVALID", "path": "/subject/geography_version_ref" }]
+    },
+    {
+      "case_id": "deny-negative-value",
+      "base": "farm_count",
+      "mutations": [{ "path": "/measure/value", "value": -1 }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "AGRICULTURE_SCHEMA_INVALID", "path": "/measure/value" }]
+    },
+    {
+      "case_id": "deny-public-use-authority",
+      "base": "farm_count",
+      "mutations": [{ "path": "/governance/public_use_allowed", "value": true }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "AGRICULTURE_SCHEMA_INVALID", "path": "/governance/public_use_allowed" }]
+    },
+    {
+      "case_id": "deny-extra-producer-field",
+      "base": "farm_count",
+      "mutations": [{ "path": "/producer_id", "value": "forbidden" }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "AGRICULTURE_SCHEMA_INVALID", "path": "/" }]
+    },
+    {
+      "case_id": "deny-incomplete-limit-set",
+      "base": "farm_count",
+      "mutations": [{
+        "path": "/disclosure/interpretation_limits",
+        "value": [
+          "AGGREGATE_ONLY",
+          "NO_CAUSAL_CLAIM",
+          "NO_FARM_OR_PRODUCER_INFERENCE",
+          "NO_PUBLICATION_AUTHORITY",
+          "SOURCE_ROLE_PRESERVED",
+          "SUPPRESSION_PRESERVED",
+          "VERSION_BOUND"
+        ]
+      }],
+      "expected_outcome": "DENY",
+      "expected_findings": [{ "code": "AGRICULTURE_SCHEMA_INVALID", "path": "/disclosure/interpretation_limits" }]
+    }
+  ]
+}

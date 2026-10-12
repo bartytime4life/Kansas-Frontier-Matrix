@@ -1,0 +1,103 @@
+{
+  "receipt_id": "genrec-hydrology-held-stage-entrypoints-20261002",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/domain-hydrology.yml",
+    ".github/workflows/hydrology-proof-slice.yml",
+    "control_plane/verification_backlog.yaml",
+    "pipelines/domains/hydrology/README.md",
+    "pipelines/domains/hydrology/ingest.py",
+    "pipelines/domains/hydrology/publish.py",
+    "pipelines/domains/hydrology/rollback.py",
+    "pipelines/domains/hydrology/triplets.py",
+    "tests/domains/hydrology/test_pipeline_stage_holds.py",
+    "tools/qa/completion_queue.py",
+    "tools/qa/scaffold_baseline.json"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/domain-hydrology.yml": "sha256:15dcbef681566ec11378cc605f43a9d4863ce9fdd15b5a8c516da148a4f4a193",
+    ".github/workflows/hydrology-proof-slice.yml": "sha256:6406e9e7d790f82cd1c0b3b899e6ec36cc3b9ff6978ff59e4c5b0e2db72c433e",
+    "control_plane/verification_backlog.yaml": "sha256:bb1aad266c45b0e3b405bf99daae7fed457d2efc439fdc57a65586330835a06b",
+    "pipelines/domains/hydrology/README.md": "sha256:9e40254e1769a280b48e047ad1a3d203fada62a57cd51a6146f08aaa372a3a67",
+    "pipelines/domains/hydrology/ingest.py": "sha256:3e7dc5f8a425c0cb7fa9ed1d006a689b7df70d1ca0ebcb75415a6542548bd7b4",
+    "pipelines/domains/hydrology/publish.py": "sha256:788cbdc63b43b80c793e2c696d2935da9906b25eb06d1e7e45114d39bed350f0",
+    "pipelines/domains/hydrology/rollback.py": "sha256:924babd7499a742574a243aac945c9b07e27d0e30fa7bf92b2ffd8a6cb5be071",
+    "pipelines/domains/hydrology/triplets.py": "sha256:4a520b80ba65be2fddaa8779cd2b4cb9f26137473e149a34a12df15e5e57f363",
+    "tests/domains/hydrology/test_pipeline_stage_holds.py": "sha256:1642c7099df5084ce11e34ff52c1831461cc8a6da02c3b3b632b97bd6a668de7",
+    "tools/qa/completion_queue.py": "sha256:056aa0148650976870ce1da6b0f23676d13a0c903cf26c0717355bb740949f1c",
+    "tools/qa/scaffold_baseline.json": "sha256:7677e992239120d037527112ebe97dabaf557dea7bcdb695a3c575eb4e47fa8c"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:9881d22dac4ba3558d05a61adc802fb30cc5a6171ff205f84965c3f4fd0845ba",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/3996d29f17ccca73d8e29b698103c31b80c5eea2",
+      "repo:tools/validators/docs/link-check/check_links.py"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/domain-hydrology.yml": "CONFIRMED",
+    ".github/workflows/hydrology-proof-slice.yml": "CONFIRMED",
+    "control_plane/verification_backlog.yaml": "CONFIRMED",
+    "pipelines/domains/hydrology/README.md": "CONFIRMED",
+    "pipelines/domains/hydrology/ingest.py": "CONFIRMED",
+    "pipelines/domains/hydrology/publish.py": "CONFIRMED",
+    "pipelines/domains/hydrology/rollback.py": "CONFIRMED",
+    "pipelines/domains/hydrology/triplets.py": "CONFIRMED",
+    "tests/domains/hydrology/test_pipeline_stage_holds.py": "CONFIRMED",
+    "tools/qa/completion_queue.py": "CONFIRMED",
+    "tools/qa/scaffold_baseline.json": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Behavior",
+      "outcome": "PASS",
+      "reason": "tests/domains/hydrology/test_pipeline_stage_holds.py runs each entry point from an isolated copy: each exits 2 with its exact HOLD envelope (INGEST_, PUBLISH_, ROLLBACK_, TRIPLETS_NOT_IMPLEMENTED and a false authorization flag), writes nothing to stderr, and leaves no file behind; a static check rejects write, open, or network calls."
+    },
+    {
+      "gate": "Ratchets",
+      "outcome": "PASS",
+      "reason": "scaffold_inventory.py --check passes with the baseline tightened from 925 to 917 findings; completion_queue.py --check passes with the four backlog entries recorded as PARTIAL with disposition explicit_hold; gap_scan.py --check passes."
+    },
+    {
+      "gate": "Workflows",
+      "outcome": "PASS",
+      "reason": "hydrology-proof-slice now requires the HOLD markers instead of the placeholder bytes for the four stages (catalog.py stays pinned) and runs the new test; domain-hydrology accepts it in its test inventory. Replayed domain-hydrology readiness and bounded schema validation steps pass with the no-network guard and water-pilot profile; 524 tests across tests/domains/hydrology, tests/qa, tests/ci, and the hydrology e2e test pass; make workflow-security passes."
+    },
+    {
+      "gate": "Hosted CI and independent review",
+      "outcome": "SKIPPED",
+      "reason": "Read after push."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/3996d29f17ccca73d8e29b698103c31b80c5eea2"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-10-02T16:41:00Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "pipelines/domains/hydrology/catalog.py is deliberately unchanged: hydrology-proof-slice pins its placeholder bytes until CatalogMatrix, STAC, DCAT, PROV, evidence, release, correction, and rollback semantics are reconciled. The held entry points confer no lifecycle, release, or publication authority."
+}

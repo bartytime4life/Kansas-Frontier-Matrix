@@ -1,0 +1,134 @@
+{
+  "receipt_id": "genrec-feature-issue-template-6f80fbbe",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/ISSUE_TEMPLATE/feature.md"
+  ],
+  "artifact_hashes": {
+    ".github/ISSUE_TEMPLATE/feature.md": "sha256:6f80fbbe74299600fe32fe1fb017b39746a621a5ae244ce84ff45cb318c793e5"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-17"
+  },
+  "prompt_or_contract": "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "repository evidence inspection",
+      "historical repository evidence recovery",
+      "Markdown issue-template validation",
+      "generated receipt validation",
+      "remote repository verification"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM GitHub Repository Documentation Implementation Agent v3.1"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/dc30140567828b45d54426b0e55055ef8d83b5a7",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/dc30140567828b45d54426b0e55055ef8d83b5a7/.github/ISSUE_TEMPLATE/feature.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/dc30140567828b45d54426b0e55055ef8d83b5a7/.github/ISSUE_TEMPLATE/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/dc30140567828b45d54426b0e55055ef8d83b5a7/.github/ISSUE_TEMPLATE/adr.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/dc30140567828b45d54426b0e55055ef8d83b5a7/CONTRIBUTING.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/dc30140567828b45d54426b0e55055ef8d83b5a7/SECURITY.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/dc30140567828b45d54426b0e55055ef8d83b5a7/.github/CODEOWNERS",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/dc30140567828b45d54426b0e55055ef8d83b5a7/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/70af74326ffd1748d654012cf3dfa6436795153f",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/e97fddf3cf3db8d63042c3487193c0913694b5e6"
+    ]
+  },
+  "truth_labels": {
+    ".github/ISSUE_TEMPLATE/feature.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-base-preflight",
+      "outcome": "PASS",
+      "reason": "Verified repository identity and admin permission, default-branch base dc30140567828b45d54426b0e55055ef8d83b5a7, target feature.md stub and blob, issue-intake authority boundary, contribution rules, ADR routing, security posture, CODEOWNERS, receipt schema, and absence of overlapping open work."
+    },
+    {
+      "gate": "historical-no-loss-recovery",
+      "outcome": "PASS",
+      "reason": "Recovered useful historical feature-request concepts covering problem, proposed solution, affected components, dependencies, governance risks, documentation impact, and acceptance criteria while rejecting stale workflow, certification, path, and architecture claims as current evidence."
+    },
+    {
+      "gate": "markdown-front-matter-and-structure",
+      "outcome": "PASS",
+      "reason": "Parsed front matter with name/about/title/labels/assignees; verified balanced comments and code fences, final newline, ordered section inventory, empty unverified labels, and assignment to verified repository owner bartytime4life."
+    },
+    {
+      "gate": "feature-adr-and-authority-routing",
+      "outcome": "PASS",
+      "reason": "The template distinguishes feature intake from roadmap commitment, design approval, path reservation, policy, implementation, release, and publication; ADR-triggering proposals route to the governed ADR issue and docs/adr process."
+    },
+    {
+      "gate": "governance-safety-and-acceptance",
+      "outcome": "PASS",
+      "reason": "The template captures responsibility roots, lifecycle stages, public interfaces, source/evidence/provenance, rights and sensitivity, safe negative outcomes, compatibility, validation, release/correction/rollback, review duties, and observable acceptance criteria."
+    },
+    {
+      "gate": "artifact-hash-and-remote-readback",
+      "outcome": "PASS",
+      "reason": "Computed SHA-256 6f80fbbe74299600fe32fe1fb017b39746a621a5ae244ce84ff45cb318c793e5 and Git blob SHA db521895f400354cebe4f56cd4866ab3aba12747; GitHub returned the same blob SHA after the update."
+    },
+    {
+      "gate": "issue-chooser-render-and-platform-settings",
+      "outcome": "SKIPPED",
+      "reason": "The template is not yet on the default branch. Issue chooser rendering, project automation, repository issue settings, prioritization workflow, and required-review enforcement remain NEEDS VERIFICATION after merge."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "current-feature-template-stub",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/dc30140567828b45d54426b0e55055ef8d83b5a7/.github/ISSUE_TEMPLATE/feature.md"
+    },
+    {
+      "id": "issue-intake-authority-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/dc30140567828b45d54426b0e55055ef8d83b5a7/.github/ISSUE_TEMPLATE/README.md"
+    },
+    {
+      "id": "contribution-and-validation-rules",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/dc30140567828b45d54426b0e55055ef8d83b5a7/CONTRIBUTING.md"
+    },
+    {
+      "id": "adr-routing-template",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/dc30140567828b45d54426b0e55055ef8d83b5a7/.github/ISSUE_TEMPLATE/adr.md"
+    },
+    {
+      "id": "private-first-security-routing",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/dc30140567828b45d54426b0e55055ef8d83b5a7/SECURITY.md"
+    },
+    {
+      "id": "historical-feature-form",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/70af74326ffd1748d654012cf3dfa6436795153f"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-17T17:40:04Z",
+  "emitter": "openai/gpt-5.6-thinking",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored replacement of the public feature issue-template stub on a scoped review branch. The artifact structures proposal intake and triage only. It does not create a roadmap commitment, accept an architecture decision, reserve a path, decide policy, authorize implementation, approve release or publication, or prove the feature exists. Historical feature-form material was used only to recover useful requirements, not as current implementation proof. Human review remains pending."
+}

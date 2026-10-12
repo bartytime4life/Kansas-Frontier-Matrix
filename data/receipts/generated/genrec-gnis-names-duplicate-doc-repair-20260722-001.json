@@ -1,0 +1,145 @@
+{
+  "receipt_id": "genrec-gnis-names-duplicate-doc-repair-20260722-001",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/sources/catalog/usgs/gnis-names.md"
+  ],
+  "artifact_hashes": {
+    "docs/sources/catalog/usgs/gnis-names.md": "sha256:a5ca9227d6feae20e39f54cfd0958bcc68ae7408627a677bef12452571ab0170"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5 family Work Mode session; exact deployment identifier unavailable"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Personal Context connector",
+      "GitHub connector",
+      "multi-agent read-only repository inspection",
+      "local Git validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+      "sha256:cf328b53fb5f35654f30bcb4f23d411584e5c36a3ab282f5b730528cb237475a",
+      "sha256:a5ca9227d6feae20e39f54cfd0958bcc68ae7408627a677bef12452571ab0170",
+      "sha256:8e5d61b464ef6d04b8ccb881b14c1ed063784fad585a25936c27d0ef18ebdd36",
+      "sha256:425e998e5584a7e400e99c963aba019b33ff685f9fa26b5b474d8758a3160b2a"
+    ],
+    "attached_docs": [
+      "Directory Rules.pdf",
+      "Kansas Frontier Matrix Repository Structure Guiding Document.md",
+      "KFM Unified Doctrine Synthesis.md",
+      "Kansas Frontier Matrix — AI Build Operating Contract.md",
+      "Kansas Frontier Matrix — Connected-Dots Architecture Brief.md"
+    ],
+    "evidence_refs": [
+      "repository:bartytime4life/Kansas-Frontier-Matrix@70758bb52a773b7914ee9295c7d5890f16b14368",
+      "issue:https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1531#gnis-names-duplicate-document-repair-discovery-and-claim-v1",
+      "path:docs/sources/catalog/usgs/gnis-names.md@70758bb52a773b7914ee9295c7d5890f16b14368",
+      "path:docs/doctrine/directory-rules.md@70758bb52a773b7914ee9295c7d5890f16b14368",
+      "path:schemas/contracts/v1/receipts/generated_receipt.schema.json@70758bb52a773b7914ee9295c7d5890f16b14368"
+    ]
+  },
+  "truth_labels": {
+    "docs/sources/catalog/usgs/gnis-names.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Deterministic document extraction",
+      "outcome": "PASS",
+      "reason": "The repair retains only the complete embedded v0.2 document, byte-for-byte, and removes the stale surrounding v0.1 wrapper and scaffold."
+    },
+    {
+      "gate": "Markdown structural integrity",
+      "outcome": "PASS",
+      "reason": "The target is 687 lines and 52,769 UTF-8 bytes with one KFM metadata opener, one metadata closer, one H1, and balanced fenced blocks."
+    },
+    {
+      "gate": "Artifact hash binding",
+      "outcome": "PASS",
+      "reason": "The retained v0.2 document hashes to sha256:a5ca9227d6feae20e39f54cfd0958bcc68ae7408627a677bef12452571ab0170."
+    },
+    {
+      "gate": "Generated receipt shape",
+      "outcome": "PASS",
+      "reason": "The receipt contains the generated-receipt schema's required fields and binds the repaired document path to its SHA-256 digest."
+    },
+    {
+      "gate": "Repository-wide make validate",
+      "outcome": "PASS",
+      "reason": "The aggregate schema runner completed and 18 schema/contract tests passed."
+    },
+    {
+      "gate": "Repository boundary guards",
+      "outcome": "PASS",
+      "reason": "All 15 configured policy, pipeline/connector, Explorer, and governed-API boundary guards passed."
+    },
+    {
+      "gate": "Retained relative-link target audit",
+      "outcome": "SKIPPED",
+      "reason": "The byte-identical retained v0.2 document contains 18 references to 11 currently missing relative targets. Repairing those pre-existing targets would change retained prose or create unverified paths and is outside this deterministic extraction batch."
+    },
+    {
+      "gate": "Secret, sensitive-content, and authority-boundary scan",
+      "outcome": "PASS",
+      "reason": "The two-path batch removes duplicated public documentation and records provenance; it contains no credentials, private keys, row-level data, protected locations, source activation, release approval, publication payload, or deployment action."
+    },
+    {
+      "gate": "Human review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "kfm-main-snapshot",
+      "validated": true,
+      "evidence_ref": "repository:bartytime4life/Kansas-Frontier-Matrix@70758bb52a773b7914ee9295c7d5890f16b14368"
+    },
+    {
+      "id": "campaign-claim",
+      "validated": true,
+      "evidence_ref": "issue:https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/1531#gnis-names-duplicate-document-repair-discovery-and-claim-v1"
+    },
+    {
+      "id": "malformed-gnis-document",
+      "validated": true,
+      "evidence_ref": "path:docs/sources/catalog/usgs/gnis-names.md@70758bb52a773b7914ee9295c7d5890f16b14368"
+    },
+    {
+      "id": "directory-rules",
+      "validated": true,
+      "evidence_ref": "path:docs/doctrine/directory-rules.md@70758bb52a773b7914ee9295c7d5890f16b14368"
+    },
+    {
+      "id": "generated-receipt-schema",
+      "validated": true,
+      "evidence_ref": "path:schemas/contracts/v1/receipts/generated_receipt.schema.json@70758bb52a773b7914ee9295c7d5890f16b14368"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [
+      "@bartytime4life"
+    ],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-23T03:51:08.717Z",
+  "emitter": "OpenAI Codex Work Mode",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Deterministic repair of a nested superseding document plus stale scaffold in docs/sources/catalog/usgs/gnis-names.md. The retained v0.2 document still contains 18 references to 11 missing relative targets; they are preserved and explicitly out of scope because this batch does not alter retained v0.2 content. This receipt records AI-assisted structural restoration only. It does not change source identity, activate or retrieve a source, change a connector, decide policy, alter schema or lifecycle state, approve release, promote, publish, deploy, migrate artifacts, or change ADR status."
+}

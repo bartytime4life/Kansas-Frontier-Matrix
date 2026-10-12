@@ -1,0 +1,23 @@
+{
+  "action": "ready_for_review",
+  "repository": {
+    "full_name": "bartytime4life/Kansas-Frontier-Matrix",
+    "default_branch": "main",
+    "owner": {
+      "login": "bartytime4life"
+    }
+  },
+  "pull_request": {
+    "number": 9001,
+    "state": "open",
+    "draft": false,
+    "base": {
+      "ref": "main",
+      "sha": "1111111111111111111111111111111111111111"
+    },
+    "head": {
+      "ref": "agent/synthetic-transition-guard",
+      "sha": "2222222222222222222222222222222222222222"
+    }
+  }
+}

@@ -1,0 +1,139 @@
+{
+  "receipt_id": "genrec-dependabot-coverage-labels-36faabe1",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/dependabot.yml"
+  ],
+  "artifact_hashes": {
+    ".github/dependabot.yml": "sha256:36faabe18c7150e485b03b95d4a2d1e4a72a7aad2baf7859e439aca2c51b7bde"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5 Codex",
+    "version": "2026-08-12"
+  },
+  "prompt_or_contract": "sha256:95ca7f041c97a2b7d1a9c855db3ece97c4e050ecd6346844a2528170c796da3e",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "repository evidence inspection",
+      "official GitHub Dependabot documentation",
+      "duplicate-key YAML validation",
+      "JSON Schema validation",
+      "remote branch readback"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/0358516e7deaefaf3cbc8a2d7752ff174e1937e2",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0358516e7deaefaf3cbc8a2d7752ff174e1937e2/.github/dependabot.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0358516e7deaefaf3cbc8a2d7752ff174e1937e2/.github/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0358516e7deaefaf3cbc8a2d7752ff174e1937e2/.github/CODEOWNERS",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0358516e7deaefaf3cbc8a2d7752ff174e1937e2/package.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0358516e7deaefaf3cbc8a2d7752ff174e1937e2/infra/docker/explorer-web/package.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0358516e7deaefaf3cbc8a2d7752ff174e1937e2/infra/docker/explorer-web/package-lock.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0358516e7deaefaf3cbc8a2d7752ff174e1937e2/.pre-commit-config.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0358516e7deaefaf3cbc8a2d7752ff174e1937e2/data/receipts/generated/genrec-dependabot-config-bb88ad97.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/0358516e7deaefaf3cbc8a2d7752ff174e1937e2/data/receipts/generated/genrec-dependabot-cooldowns-0fda7f11.json",
+      "https://api.github.com/repos/bartytime4life/Kansas-Frontier-Matrix/labels?per_page=100",
+      "https://docs.github.com/en/code-security/reference/supply-chain-security/dependabot-options-reference"
+    ]
+  },
+  "truth_labels": {
+    ".github/dependabot.yml": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-authority-preflight",
+      "outcome": "PASS",
+      "reason": "Verified repository identity, immutable base commit, current Dependabot configuration, .github authority boundary, CODEOWNERS route, prior receipts, and absence of overlapping open Dependabot pull requests or the target branch."
+    },
+    {
+      "gate": "yaml-and-required-shape",
+      "outcome": "PASS",
+      "reason": "Parsed the final YAML with duplicate-key rejection and verified version 2, five update entries, exclusive directory/directories usage, non-overlapping ecosystem-directory pairs, weekly schedules, positive pull-request limits, and version-update-only groups."
+    },
+    {
+      "gate": "isolated-npm-manifest-coverage",
+      "outcome": "PASS",
+      "reason": "Verified that infra/docker/explorer-web has an independent package.json and package-lock.json, that both declare the same production dependencies, and that the directory is outside the root apps/* and packages/* workspaces."
+    },
+    {
+      "gate": "repository-label-inventory",
+      "outcome": "PASS",
+      "reason": "Verified dependencies, python, javascript, github_actions, pre_commit, ci, and needs-review against the live repository label inventory before configuring them as routing-only labels."
+    },
+    {
+      "gate": "security-default-branch-and-cooldown-boundaries",
+      "outcome": "PASS",
+      "reason": "No target branch, registry, external-code-execution option, auto-merge behavior, or security-update group was added. Cooldowns and all groups remain scoped to version-update behavior, so security updates remain default-branch based and outside those groups."
+    },
+    {
+      "gate": "unverified-ecosystem-restraint",
+      "outcome": "PASS",
+      "reason": "Docker monitoring and private registries remain disabled pending their separate discovery, credentials, least-privilege, and external-code-execution reviews."
+    },
+    {
+      "gate": "remote-readback-and-hash",
+      "outcome": "PASS",
+      "reason": "Read the branch file back from GitHub as blob b5c798807b973dba6145db0822ab88071479ab93 and verified exact byte equality plus the SHA-256 recorded in this receipt."
+    },
+    {
+      "gate": "receipt-schema-and-artifact-binding",
+      "outcome": "PASS",
+      "reason": "Validated this receipt with the repository Draft 2020-12 schema and verified that artifact_paths, artifact_hashes, and the final Dependabot configuration bytes agree."
+    },
+    {
+      "gate": "dependabot-default-branch-runtime-validation",
+      "outcome": "SKIPPED",
+      "reason": "Dependabot parses and executes configuration only after merge to the default branch; job logs and generated update behavior remain pending."
+    },
+    {
+      "gate": "independent-human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending. This receipt is provenance only and does not authorize merge, release, or publication."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "current-dependabot-config",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/0358516e7deaefaf3cbc8a2d7752ff174e1937e2/.github/dependabot.yml"
+    },
+    {
+      "id": "isolated-explorer-npm-manifest",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/0358516e7deaefaf3cbc8a2d7752ff174e1937e2/infra/docker/explorer-web/package.json"
+    },
+    {
+      "id": "repository-label-inventory",
+      "validated": true,
+      "evidence_ref": "https://api.github.com/repos/bartytime4life/Kansas-Frontier-Matrix/labels?per_page=100"
+    },
+    {
+      "id": "dependabot-options-reference",
+      "validated": true,
+      "evidence_ref": "https://docs.github.com/en/code-security/reference/supply-chain-security/dependabot-options-reference"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-13T02:24:12Z",
+  "emitter": "openai/codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored Dependabot coverage and routing update. The isolated Explorer image override lockfile gains its own npm lane, verified repository labels are added for routing, existing cooldowns and proposal-only authority are preserved, and major npm updates remain individual. This change does not prove future Dependabot job success, dependency compatibility, security, review, merge, release, or publication."
+}

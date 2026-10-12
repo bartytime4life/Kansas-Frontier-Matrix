@@ -1,0 +1,342 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/ui/time_bucket_playback_manifest.schema.json",
+  "title": "TimeBucketPlaybackManifestCandidate",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "profile_version",
+    "manifest_id",
+    "spec_hash",
+    "scene_manifest_ref",
+    "resource_envelope_ref",
+    "time_semantics",
+    "buckets",
+    "transition",
+    "worker_boundary",
+    "display_requirements",
+    "boundary"
+  ],
+  "properties": {
+    "profile_version": {
+      "const": "kfm.time-bucket-playback-manifest.fixture.v1"
+    },
+    "manifest_id": {
+      "type": "string",
+      "pattern": "^kfm:time-bucket-playback:[a-f0-9]{24}$"
+    },
+    "spec_hash": {
+      "$ref": "#/$defs/digest"
+    },
+    "scene_manifest_ref": {
+      "type": "string",
+      "pattern": "^kfm:scene-manifest:[a-z0-9][a-z0-9._:-]{2,159}$"
+    },
+    "resource_envelope_ref": {
+      "type": "string",
+      "pattern": "^kfm:verified-rendering-resource-envelope:[a-z0-9][a-z0-9._:-]{2,159}$"
+    },
+    "time_semantics": {
+      "$ref": "#/$defs/time_semantics"
+    },
+    "buckets": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 24,
+      "items": {
+        "$ref": "#/$defs/bucket"
+      }
+    },
+    "transition": {
+      "$ref": "#/$defs/transition"
+    },
+    "worker_boundary": {
+      "$ref": "#/$defs/worker_boundary"
+    },
+    "display_requirements": {
+      "$ref": "#/$defs/display_requirements"
+    },
+    "boundary": {
+      "$ref": "#/$defs/boundary"
+    }
+  },
+  "$defs": {
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "date_time": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+    },
+    "reference": {
+      "type": "string",
+      "pattern": "^kfm:[a-z0-9][a-z0-9._:/-]{5,220}$"
+    },
+    "time_semantics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "filter_time_kind",
+        "filter_field",
+        "cadence",
+        "precision",
+        "freshness_state",
+        "window_start",
+        "window_end",
+        "correction_cutoff"
+      ],
+      "properties": {
+        "filter_time_kind": {
+          "enum": [
+            "VALID_TIME",
+            "OBSERVED_TIME",
+            "SOURCE_TIME",
+            "RETRIEVAL_TIME",
+            "RELEASE_TIME",
+            "CORRECTION_TIME"
+          ]
+        },
+        "filter_field": {
+          "enum": [
+            "valid_time",
+            "observed_time",
+            "source_time",
+            "retrieval_time",
+            "release_time",
+            "correction_time"
+          ]
+        },
+        "cadence": {
+          "enum": ["HOURLY", "DAILY", "WEEKLY", "MONTHLY", "QUARTERLY", "YEARLY", "IRREGULAR"]
+        },
+        "precision": {
+          "enum": ["SECOND", "MINUTE", "HOUR", "DAY", "MONTH", "YEAR"]
+        },
+        "freshness_state": {
+          "enum": ["CURRENT", "STALE", "UNKNOWN"]
+        },
+        "window_start": {
+          "$ref": "#/$defs/date_time"
+        },
+        "window_end": {
+          "$ref": "#/$defs/date_time"
+        },
+        "correction_cutoff": {
+          "$ref": "#/$defs/date_time"
+        }
+      }
+    },
+    "interval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["start_inclusive", "end_exclusive"],
+      "properties": {
+        "start_inclusive": {
+          "$ref": "#/$defs/date_time"
+        },
+        "end_exclusive": {
+          "$ref": "#/$defs/date_time"
+        }
+      }
+    },
+    "bucket": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "bucket_id",
+        "bucket_hash",
+        "ordinal",
+        "interval",
+        "time_field",
+        "artifact_ref",
+        "artifact_digest",
+        "release_ref",
+        "evidence_refs",
+        "transport_hint",
+        "gap_after"
+      ],
+      "properties": {
+        "bucket_id": {
+          "type": "string",
+          "pattern": "^kfm:time-bucket:[a-f0-9]{24}$"
+        },
+        "bucket_hash": {
+          "$ref": "#/$defs/digest"
+        },
+        "ordinal": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 23
+        },
+        "interval": {
+          "$ref": "#/$defs/interval"
+        },
+        "time_field": {
+          "enum": [
+            "valid_time",
+            "observed_time",
+            "source_time",
+            "retrieval_time",
+            "release_time",
+            "correction_time"
+          ]
+        },
+        "artifact_ref": {
+          "type": "string",
+          "pattern": "^kfm:released-artifact:[a-z0-9][a-z0-9._:-]{2,159}$"
+        },
+        "artifact_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "release_ref": {
+          "type": "string",
+          "pattern": "^kfm:release-manifest:[a-z0-9][a-z0-9._:-]{2,159}$"
+        },
+        "evidence_refs": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/reference"
+          }
+        },
+        "transport_hint": {
+          "enum": ["SAME_SOURCE_FILTER", "SOURCE_SWAP"]
+        },
+        "gap_after": {
+          "type": "boolean"
+        }
+      }
+    },
+    "transition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "selection_mode",
+        "gap_policy",
+        "swap_failure",
+        "autoplay",
+        "loop",
+        "reduced_motion_mode",
+        "outcome_requires_playback"
+      ],
+      "properties": {
+        "selection_mode": {
+          "enum": ["FILTER", "SWAP", "HYBRID"]
+        },
+        "gap_policy": {
+          "enum": ["SHOW_GAP", "PAUSE", "DISABLE_PLAYBACK"]
+        },
+        "swap_failure": {
+          "enum": ["RETAIN_LAST_VERIFIED", "STOP_AND_SHOW_UNAVAILABLE"]
+        },
+        "autoplay": {
+          "const": false
+        },
+        "loop": {
+          "const": false
+        },
+        "reduced_motion_mode": {
+          "const": "DISCRETE_STEPS"
+        },
+        "outcome_requires_playback": {
+          "const": false
+        }
+      }
+    },
+    "worker_boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "message_profile",
+        "digest_required",
+        "released_refs_only",
+        "raw_payload_allowed",
+        "unverified_uri_allowed"
+      ],
+      "properties": {
+        "message_profile": {
+          "const": "kfm.time-bucket-worker-message.v1"
+        },
+        "digest_required": {
+          "const": true
+        },
+        "released_refs_only": {
+          "const": true
+        },
+        "raw_payload_allowed": {
+          "const": false
+        },
+        "unverified_uri_allowed": {
+          "const": false
+        }
+      }
+    },
+    "display_requirements": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "show_active_window",
+        "show_cadence",
+        "show_time_kind",
+        "show_precision",
+        "show_freshness",
+        "show_bucket_identity",
+        "show_transition_gaps",
+        "show_reduced_motion_state",
+        "show_evidence_links"
+      ],
+      "properties": {
+        "show_active_window": {"const": true},
+        "show_cadence": {"const": true},
+        "show_time_kind": {"const": true},
+        "show_precision": {"const": true},
+        "show_freshness": {"const": true},
+        "show_bucket_identity": {"const": true},
+        "show_transition_gaps": {"const": true},
+        "show_reduced_motion_state": {"const": true},
+        "show_evidence_links": {"const": true}
+      }
+    },
+    "boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "fixture_only",
+        "renderer_neutral",
+        "runtime_execution_performed",
+        "worker_execution_performed",
+        "artifact_fetch_performed",
+        "artifact_integrity_verified",
+        "evidence_resolution_performed",
+        "policy_evaluation_performed",
+        "release_authorized",
+        "deployment_authorized",
+        "publication_authorized",
+        "public_use_authorized"
+      ],
+      "properties": {
+        "fixture_only": {"const": true},
+        "renderer_neutral": {"const": true},
+        "runtime_execution_performed": {"const": false},
+        "worker_execution_performed": {"const": false},
+        "artifact_fetch_performed": {"const": false},
+        "artifact_integrity_verified": {"const": false},
+        "evidence_resolution_performed": {"const": false},
+        "policy_evaluation_performed": {"const": false},
+        "release_authorized": {"const": false},
+        "deployment_authorized": {"const": false},
+        "publication_authorized": {"const": false},
+        "public_use_authorized": {"const": false}
+      }
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED_INACTIVE",
+    "contract_doc": "contracts/ui/time_bucket_playback_manifest.md",
+    "authority": "NONE"
+  }
+}

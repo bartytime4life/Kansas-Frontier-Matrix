@@ -1,0 +1,15 @@
+{
+  "packet_id": "fixture:hydrology:living-waters:first-proof",
+  "profile": "living-waters-fixture-v1",
+  "snapshot": {"identity": "fixture://hydrology/snapshot/watershed-reaches", "version": "fixture-v1", "content_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111", "huc12": "102600150101", "reach_ids": ["fixture-reach-01", "fixture-reach-02"], "role": "synthetic_reference"},
+  "gauge": {"site_id": "fixture-ks-06864500", "state": "KS", "spatial_support": "generalized_county", "role": "synthetic_site_metadata"},
+  "series": {"parameter_code": "00060", "parameter_name": "discharge", "statistic_code": "00000", "statistic_name": "instantaneous", "unit_code": "ft3/s", "qualifier_code": "P", "qualifier_name": "provisional", "points": [{"observed_at": "2026-09-10T12:00:00Z", "value": 118.0}, {"observed_at": "2026-09-10T12:15:00Z", "value": 121.0}, {"observed_at": "2026-09-10T12:30:00Z", "value": 125.0}]},
+  "scenarios": [
+    {"id": "current", "state": "AVAILABLE", "join_outcome": "EXACT", "reason_codes": ["FIXTURE_EVIDENCE_RESOLVED"], "display_message": "Synthetic hydrograph available."},
+    {"id": "stale", "state": "STALE", "join_outcome": "EXACT", "reason_codes": ["FRESHNESS_THRESHOLD_EXCEEDED"], "display_message": "Synthetic observations are stale."},
+    {"id": "no-results", "state": "NO_RESULTS", "join_outcome": "NOT_ATTEMPTED", "reason_codes": ["BOUNDED_QUERY_EMPTY"], "display_message": "No observations."},
+    {"id": "unavailable", "state": "UNAVAILABLE", "join_outcome": "NOT_ATTEMPTED", "reason_codes": ["ARTIFACT_UNAVAILABLE"], "display_message": "Unavailable."},
+    {"id": "ambiguous-reach", "state": "AVAILABLE", "join_outcome": "AMBIGUOUS", "reason_codes": ["MULTIPLE_REACH_CANDIDATES"], "display_message": "A reach was selected."}
+  ],
+  "governance": {"source_admitted": false, "source_activated": false, "policy_evaluated": false, "released": false, "deployed": false, "published": false, "fixture_only": true}
+}

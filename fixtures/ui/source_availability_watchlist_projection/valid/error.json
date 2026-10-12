@@ -1,0 +1,20 @@
+{
+  "profile": "kfm.explorer.source-availability-watchlist.public-safe.v1",
+  "panel_id": "kfm:source-availability-panel:synthetic:error-001",
+  "outcome": "ERROR",
+  "reason_code": "UPSTREAM_ERROR",
+  "observed_at": null,
+  "watchlist_id": null,
+  "state": null,
+  "summary": null,
+  "entries": [],
+  "governance": {
+    "network_attempted": false,
+    "source_activation_allowed": false,
+    "candidate_execution_allowed": false,
+    "lifecycle_write_allowed": false,
+    "authority_created": false,
+    "release_authorized": false,
+    "publication_allowed": false
+  }
+}

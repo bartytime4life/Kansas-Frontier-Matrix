@@ -1,0 +1,114 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kansasfrontiermatrix.org/schemas/contracts/v1/release/promotion_verification_execution_result.schema.json",
+  "title": "PromotionVerificationExecutionResult",
+  "description": "Finite, non-authorizing result emitted by the bounded promotion verification executor.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "execution_id",
+    "evaluated_at",
+    "status",
+    "readiness",
+    "promotion_gate",
+    "cosign_plan_validation",
+    "tools",
+    "references",
+    "findings",
+    "authority"
+  ],
+  "properties": {
+    "object_type": {"const": "PromotionVerificationExecutionResult"},
+    "schema_version": {"const": "1.0.0"},
+    "execution_id": {"type": ["string", "null"]},
+    "evaluated_at": {"type": ["string", "null"], "format": "date-time"},
+    "status": {"enum": ["PASS", "ABSTAIN", "DENY", "ERROR"]},
+    "readiness": {"enum": ["APPROVE_READY", "BLOCKED"]},
+    "promotion_gate": {"$ref": "#/$defs/stage"},
+    "cosign_plan_validation": {"$ref": "#/$defs/stage"},
+    "tools": {
+      "type": "object",
+      "additionalProperties": {"$ref": "#/$defs/toolResult"}
+    },
+    "references": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["kind", "status"],
+        "properties": {
+          "kind": {"enum": ["EVIDENCE_BUNDLE", "STAC", "DCAT", "PROV", "ROLLBACK", "CORRECTION"]},
+          "status": {"enum": ["PASS", "ABSTAIN", "DENY", "ERROR"]}
+        }
+      }
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["code", "path", "status"],
+        "properties": {
+          "code": {"type": "string", "pattern": "^[A-Z0-9_]+$"},
+          "path": {"type": "string", "minLength": 1},
+          "status": {"enum": ["ABSTAIN", "DENY", "ERROR"]}
+        }
+      }
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "lifecycle_write",
+        "promotion_authorized",
+        "release_authorized",
+        "deployment_authorized",
+        "publication_authorized"
+      ],
+      "properties": {
+        "lifecycle_write": {"const": false},
+        "promotion_authorized": {"const": false},
+        "release_authorized": {"const": false},
+        "deployment_authorized": {"const": false},
+        "publication_authorized": {"const": false}
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"status": {"const": "PASS"}}},
+      "then": {
+        "properties": {
+          "readiness": {"const": "APPROVE_READY"},
+          "findings": {"maxItems": 0}
+        }
+      },
+      "else": {"properties": {"readiness": {"const": "BLOCKED"}}}
+    }
+  ],
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "stage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status"],
+      "properties": {
+        "status": {"enum": ["PASS", "ABSTAIN", "DENY", "ERROR", "NOT_EVALUATED"]},
+        "result_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "toolResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status"],
+      "properties": {
+        "status": {"enum": ["PASS", "ABSTAIN", "DENY", "ERROR"]},
+        "exit_code": {"type": ["integer", "null"]},
+        "stdout_sha256": {"oneOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]},
+        "stderr_sha256": {"oneOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]}
+      }
+    }
+  }
+}

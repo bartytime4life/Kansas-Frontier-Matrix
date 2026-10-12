@@ -1,0 +1,104 @@
+{
+  "attempt": {
+    "adapter_id": "kfm:fixture:conditional-writer:v1",
+    "after_state": {
+      "content_digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "etag": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "state": "PRESENT"
+    },
+    "attempted_at": "2026-08-07T02:00:00Z",
+    "method": "PUT",
+    "request_content_digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "request_content_length": 128,
+    "request_emitted": true,
+    "request_headers": {
+      "if_match": null,
+      "if_none_match": "*"
+    },
+    "response_content_digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+    "response_etag": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+    "response_status": 201,
+    "transport": "HTTP",
+    "transport_error": null
+  },
+  "claims": {
+    "deterministic_assessment": true,
+    "external_state_authenticated": false,
+    "lifecycle_write_verified": false,
+    "preflight_authority_verified": false,
+    "public_use_authorized": false,
+    "published": false,
+    "release_created": false,
+    "subject_execution_authenticated": false,
+    "validator_network_accessed": false,
+    "write_verified": false
+  },
+  "execution_mode": "FIXTURE_ONLY_DECLARATION",
+  "object_type": "ConditionalWriteAttemptReceiptCandidate",
+  "preflight_candidate": {
+    "claims": {
+      "deterministic_preflight": true,
+      "external_state_resolved": false,
+      "lifecycle_write_performed": false,
+      "network_accessed": false,
+      "public_use_authorized": false,
+      "published": false,
+      "release_created": false,
+      "upstream_authority_verified": false,
+      "write_performed": false,
+      "write_request_emitted": false
+    },
+    "execution_mode": "FIXTURE_ONLY",
+    "intent_id": "kfm:conditional-write-intent:7b9764500c3c24937878eef7dc5983096f70c826a4672e37d26937c573b73e74",
+    "object_type": "ConditionalWritePreflightCandidate",
+    "preflight": {
+      "condition_fingerprint": "sha256:e5b628f4d90ebb188045b7a54cd4dd9862aefa47bc38d978eada5ca31befd3b1",
+      "outcome": "PROPOSE_WRITE",
+      "reason_codes": [
+        "CONDITION_SATISFIED"
+      ],
+      "request_headers": {
+        "if_match": null,
+        "if_none_match": "*"
+      }
+    },
+    "profile": "kfm.release.conditional-write-preflight.v1",
+    "request": {
+      "content_type": "application/json",
+      "expected_etag": null,
+      "idempotency_key": "sha256:f2706a414b8f473452b4ed986ee9f9902fe5aace9faab0b93fad4df56cca0e07",
+      "proposed_content_digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "proposed_content_length": 128
+    },
+    "schema_version": "1.0.0",
+    "spec_hash": "sha256:7b9764500c3c24937878eef7dc5983096f70c826a4672e37d26937c573b73e74",
+    "target": {
+      "observed_content_digest": null,
+      "observed_etag": null,
+      "observed_state": "ABSENT",
+      "operation": "CREATE_IF_ABSENT",
+      "target_ref": "kfm://fixture/release/objects/create"
+    },
+    "upstream": {
+      "policy_decision_ref": "kfm://fixture/policy/allow",
+      "policy_outcome": "ALLOW",
+      "promotion_decision_ref": "kfm://fixture/promotion/approved",
+      "promotion_state": "APPROVED",
+      "release_manifest_candidate_ref": "kfm://fixture/release-manifest/candidate",
+      "review_record_ref": "kfm://fixture/review/approved",
+      "review_state": "APPROVED",
+      "rollback_ref": "kfm://fixture/rollback/previous-state"
+    }
+  },
+  "profile": "kfm.release.conditional-write-attempt-receipt.v1",
+  "receipt_id": "kfm:conditional-write-attempt-receipt:ad7580cb5f04b22ddc0d3db7a105e58b901f8659cb1b280f56f71c3d206cbd5f",
+  "result": {
+    "attempt_fingerprint": "sha256:5071c8f013b1f68cf5ce0cb868c55949cfd2cda1dfd7fb8a065b989d754cc6ec",
+    "outcome": "APPLIED",
+    "reason_codes": [
+      "WRITE_APPLIED"
+    ]
+  },
+  "schema_version": "1.0.0",
+  "spec_hash": "sha256:ad7580cb5f04b22ddc0d3db7a105e58b901f8659cb1b280f56f71c3d206cbd5f"
+}

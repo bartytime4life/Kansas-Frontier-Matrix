@@ -1,0 +1,42 @@
+{
+  "object_type": "SourceRoleTransitionAssessment",
+  "schema_version": "1.0.0",
+  "assessment_id": "kfm:source-role:observed-passthrough:v1",
+  "operation": "PASSTHROUGH",
+  "inputs": [
+    {
+      "source_ref": "kfm:source:usgs-gage:06861000",
+      "source_role": "OBSERVED",
+      "evidence_bundle_ref": "kfm:evidence-bundle:usgs-gage:06861000"
+    }
+  ],
+  "output": {
+    "artifact_ref": "kfm:artifact:gage-observation:06861000",
+    "source_role": "OBSERVED",
+    "lineage_roles": [
+      "OBSERVED"
+    ]
+  },
+  "receipts": {
+    "aggregation_receipt_ref": null,
+    "model_run_receipt_ref": null,
+    "representation_receipt_ref": null,
+    "reality_boundary_note_ref": null
+  },
+  "outcome": "PASS",
+  "reason_codes": [],
+  "obligations": [],
+  "validator_error_ref": null,
+  "evaluated_at": "2026-08-07T23:00:00Z",
+  "governance": {
+    "fixture_only": true,
+    "lifecycle_write": false,
+    "source_activation": false,
+    "truth_authority": false,
+    "policy_authority": false,
+    "review_authority": false,
+    "release_authority": false,
+    "publication_authority": false
+  },
+  "spec_hash": "sha256:f064e74655c943eefd744afacd8963033467fb61a8ae46b22773cdc2917e0b52"
+}

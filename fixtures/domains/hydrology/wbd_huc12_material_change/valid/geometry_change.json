@@ -1,0 +1,107 @@
+{
+  "object_type": "WbdHuc12MaterialChangeAssessment",
+  "schema_version": "1.0.0",
+  "assessment_id": "huc12-change:geometry",
+  "assessed_at": "2026-04-11T18:00:00Z",
+  "source_descriptor_ref": "data/registry/hydrology/sources/wbd_huc12.yaml",
+  "huc12": "102600030504",
+  "normalization": {
+    "crs": "EPSG:4326",
+    "coordinate_precision": 6,
+    "normalize_ring_direction": true,
+    "sort_rings": true
+  },
+  "prior": {
+    "feature": {
+      "huc12": "102600030504",
+      "areasqkm": 12.345678,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -98.1,
+              38.4
+            ],
+            [
+              -98.0,
+              38.4
+            ],
+            [
+              -98.0,
+              38.5
+            ],
+            [
+              -98.1,
+              38.5
+            ],
+            [
+              -98.1,
+              38.4
+            ]
+          ]
+        ]
+      },
+      "source_metadata": {
+        "load_date": "2026-04-01",
+        "last_edit_date": "2026-04-01",
+        "etag": null
+      }
+    },
+    "fingerprint": "sha256:8227613e624676514274af29f4bbcfd4c55afa3ff264eb7f8040639c8265eabd"
+  },
+  "current": {
+    "feature": {
+      "huc12": "102600030504",
+      "areasqkm": 12.345678,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -98.1,
+              38.4
+            ],
+            [
+              -97.99,
+              38.4
+            ],
+            [
+              -97.99,
+              38.5
+            ],
+            [
+              -98.1,
+              38.5
+            ],
+            [
+              -98.1,
+              38.4
+            ]
+          ]
+        ]
+      },
+      "source_metadata": {
+        "load_date": "2026-04-10",
+        "last_edit_date": "2026-04-10",
+        "etag": null
+      }
+    },
+    "fingerprint": "sha256:b03eb62ca95c458c8f6cd8e473a603da3bb24e87029703aeae6950cdd38f4123"
+  },
+  "decision": {
+    "outcome": "MATERIAL_CHANGE",
+    "change_types": [
+      "geometry_change"
+    ]
+  },
+  "governance": {
+    "fixture_only": true,
+    "network_fetch": false,
+    "source_activation": false,
+    "lifecycle_write": false,
+    "promotion_allowed": false,
+    "publication_allowed": false
+  },
+  "spec_hash": "sha256:bb7b69adfd91f6ca0a2b11f8a518d651b9faf6eba304e1dee607f940712bfa9e"
+}

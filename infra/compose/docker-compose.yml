@@ -1,0 +1,7 @@
+# KFM dev compose — greenfield placeholder.
+services:
+  governed-api:
+    build:
+      context: ../docker
+      dockerfile: Dockerfile.governed-api
+    ports: ["127.0.0.1:8080:8080"]

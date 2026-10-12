@@ -1,0 +1,131 @@
+{
+  "receipt_id": "genrec-retire-transition-check-20260925",
+  "artifact_paths": [
+    ".github/README.md",
+    ".github/workflows/README.md",
+    "CONTRIBUTING.md",
+    "README.md",
+    "apps/kansas-frontier-matrix-explorer/docs/earth-layer-library-integration.md",
+    "apps/kansas-frontier-matrix-explorer/docs/live-feed-startup.md",
+    "apps/kansas-frontier-matrix-explorer/docs/usgs-earthquake-response-candidate.md",
+    "configs/domains/atmosphere/README.md",
+    "connectors/agriculture/README.md",
+    "contracts/governance/repository_control_state.md",
+    "docs/architecture/ui/firemap-inspired-hazard-workspace.md",
+    "docs/governance/repository_transition_control_source.md",
+    "docs/runbooks/explorer-context-feed-repair.md",
+    "docs/runbooks/usgs-earthquake-live-history.md",
+    "schemas/contracts/v1/governance/README.md",
+    "tests/validators/test_repository_control_source.py",
+    "tests/validators/test_repository_control_strict_input.py",
+    "tools/ci/README.md"
+  ],
+  "artifact_hashes": {
+    ".github/README.md": "sha256:008a4428450b2aa82a05ae2785208de13c3877df6dbd70be56b7396c544327c5",
+    ".github/workflows/README.md": "sha256:90487466d1043a7e0024405202de194dbad8301f7a2a5e9a5c41f17eac01458a",
+    "CONTRIBUTING.md": "sha256:e8122d448fe5e122fd0a230dd45a4261e20a5a674f1ce403381a7cedfe3d1592",
+    "README.md": "sha256:6ca9a0aa3e3965329d6be7bf1c00532b1ff580023bb165516531f7a988a901b4",
+    "apps/kansas-frontier-matrix-explorer/docs/earth-layer-library-integration.md": "sha256:52b00b95c49ad9493ecd7a21585105273dc57a3198c4077fb2c625f9706988f0",
+    "apps/kansas-frontier-matrix-explorer/docs/live-feed-startup.md": "sha256:12de329dcf8bd932003970043d1d4e9da0d692e550451abbfc5a85fa5bc1043a",
+    "apps/kansas-frontier-matrix-explorer/docs/usgs-earthquake-response-candidate.md": "sha256:2b2d79a5881b5e4919b6c0d8a8eb1e1947e630f91d2f9c1e211f9216ee9a52b2",
+    "configs/domains/atmosphere/README.md": "sha256:c51cffe0b59fff0669cab248eca07dde914644da4c0b296bff4d19573024f9c3",
+    "connectors/agriculture/README.md": "sha256:76590388a0af8594d89eb590c4089e015b169c6f28ca688ff01c62908206c297",
+    "contracts/governance/repository_control_state.md": "sha256:d9dfa79f7e48c09b412bbba702ede9ebb7151fb39bd042de15101cc0089d9ad2",
+    "docs/architecture/ui/firemap-inspired-hazard-workspace.md": "sha256:4e1a4509fb19ec55dd1f6d373797cf29386c29115bf90d1721cdc8c6c4288989",
+    "docs/governance/repository_transition_control_source.md": "sha256:88f4d625a777a1d25ea47e2a45b01806933a56f8e7741e16b700e8406485edd9",
+    "docs/runbooks/explorer-context-feed-repair.md": "sha256:cddfb718991491b8d9408ba400d94d8aab4acbec8d69ac03974adc04066cf48f",
+    "docs/runbooks/usgs-earthquake-live-history.md": "sha256:eea12a1d027e2eb63d22460b9fe6ad8415b1a0ce4a475c0274ce222daa9cbd29",
+    "schemas/contracts/v1/governance/README.md": "sha256:0049ee61baaf9aff484d66000e08b086bc2a222f76ed59f3eee7e06baf1c1623",
+    "tests/validators/test_repository_control_source.py": "sha256:0a22c2739465fca8f0794365bd8fd6e2635b7fc1b36a5d5e4ba83d670e4ceb51",
+    "tests/validators/test_repository_control_strict_input.py": "sha256:532c5cf5955eb02c92cf6da104012a2c1fe120620624f00ebf479fc94202b1b5",
+    "tools/ci/README.md": "sha256:3a5319f4def7476b898f9f4c16240de52d5ee60686331e44455e16af3335b351"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6",
+    "version": "runtime revision not exposed"
+  },
+  "prompt_or_contract": "sha256:e8122d448fe5e122fd0a230dd45a4261e20a5a674f1ce403381a7cedfe3d1592",
+  "parameters": {
+    "temperature": null,
+    "seed": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/7e25a287eaeb080bf18a743ae2518147b08b7e2a",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/rules/15484585",
+      "https://docs.github.com/en/rest/repos/rules#update-a-repository-ruleset",
+      "https://docs.github.com/en/rest/actions/workflows#disable-a-workflow"
+    ]
+  },
+  "truth_labels": {
+    ".github/README.md": "CONFIRMED",
+    ".github/workflows/README.md": "CONFIRMED",
+    "CONTRIBUTING.md": "CONFIRMED",
+    "README.md": "CONFIRMED",
+    "apps/kansas-frontier-matrix-explorer/docs/earth-layer-library-integration.md": "CONFIRMED",
+    "apps/kansas-frontier-matrix-explorer/docs/live-feed-startup.md": "CONFIRMED",
+    "apps/kansas-frontier-matrix-explorer/docs/usgs-earthquake-response-candidate.md": "CONFIRMED",
+    "configs/domains/atmosphere/README.md": "CONFIRMED",
+    "connectors/agriculture/README.md": "CONFIRMED",
+    "contracts/governance/repository_control_state.md": "CONFIRMED",
+    "docs/architecture/ui/firemap-inspired-hazard-workspace.md": "CONFIRMED",
+    "docs/governance/repository_transition_control_source.md": "CONFIRMED",
+    "docs/runbooks/explorer-context-feed-repair.md": "CONFIRMED",
+    "docs/runbooks/usgs-earthquake-live-history.md": "CONFIRMED",
+    "schemas/contracts/v1/governance/README.md": "CONFIRMED",
+    "tests/validators/test_repository_control_source.py": "CONFIRMED",
+    "tests/validators/test_repository_control_strict_input.py": "CONFIRMED",
+    "tools/ci/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "platform-retirement-readback",
+      "outcome": "PASS",
+      "reason": "Only authorize-ready-and-merge required rule removed; every other ruleset field except update time compared equal. Workflow 324077182 read back disabled_manually; effective main rules retain deletion, non-fast-forward and pull-request protection."
+    },
+    {
+      "gate": "retained-repository-control-tests",
+      "outcome": "PASS",
+      "reason": "117 focused tests passed. Only two prose-contract assertions changed to reflect explicit gate retirement; validator and workflow source bytes unchanged."
+    },
+    {
+      "gate": "local-markdown-links",
+      "outcome": "PASS",
+      "reason": "All 16 changed Markdown files pass bounded offline link check; external links unverified."
+    },
+    {
+      "gate": "broad-document-metadata",
+      "outcome": "FAIL",
+      "reason": "Nine metadata findings in two touched documents reproduced identically on base; no metadata-validator relaxation or baseline change."
+    },
+    {
+      "gate": "hosted-ci-independent-review",
+      "outcome": "SKIPPED",
+      "reason": "Not yet available at authoring time. Draft PR evidence will bind final head. No independent review, merge or deployment claimed."
+    }
+  ],
+  "policy_decisions": [
+    "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@7e25a287eaeb080bf18a743ae2518147b08b7e2a"
+  ],
+  "citations": [
+    {
+      "id": "base",
+      "validated": true,
+      "evidence_ref": "7e25a287eaeb080bf18a743ae2518147b08b7e2a"
+    },
+    {
+      "id": "placement",
+      "validated": true,
+      "evidence_ref": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "state": "pending",
+    "reviewer_ids": []
+  },
+  "created_at": "2026-09-25T01:32:58.170650Z",
+  "emitter": "Codex",
+  "notes": "Explicit owner-requested retirement, not validator defect remediation. Live GitHub settings change is separate from branch documentation. Removes automated exact-owner-record prerequisite and incident-specific draft-delivery hold; historical evidence remains. No source admission, topology, hosting, release, deployment or merge authorization. Other controls and parser behavior preserved. The ADR reference records placement guidance consulted; retirement authority is the separate direct owner instruction, not an inferred PolicyDecision or independent acceptance.",
+  "contract_version": "3.0.0"
+}

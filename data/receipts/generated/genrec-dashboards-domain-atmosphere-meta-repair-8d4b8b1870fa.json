@@ -1,0 +1,181 @@
+{
+  "receipt_id": "genrec-dashboards-domain-atmosphere-meta-repair-8d4b8b1870fa",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/dashboards/domain/atmosphere.md",
+    "docs/dashboards/DASHBOARD_CATALOG.md"
+  ],
+  "artifact_hashes": {
+    "docs/dashboards/domain/atmosphere.md": "sha256:8d4b8b1870fa3cfe4d7817ec75bd6a890505bfc76683857404b1ed5cfcb6377d",
+    "docs/dashboards/DASHBOARD_CATALOG.md": "sha256:ad6fdd72b330fbb83e7960d4ee2561350c6ca4d37236f9de76db30a67f479a59"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-5)",
+    "version": "Exact serving revision not exposed; 2026-08-21 session"
+  },
+  "prompt_or_contract": "sha256:b816fbd7f288a9e3cea584a8b3d22beea235d7ac8eeb85b3ccd24f6bdc5355b0",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector (repository evidence, feature-branch writes, draft-PR delivery)",
+      "repository-native deterministic KFM metadata validator and local Markdown/hash checks",
+      "KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0"
+    ],
+    "evidence_refs": [
+      "repo:commit/464148b8b1b3dff558086b23fc5ec8fb16d60572",
+      "repo:branch/fix/atmosphere-dashboard-metadata-20260821",
+      "repo:docs/dashboards/domain/atmosphere.md@464148b8b1b3dff558086b23fc5ec8fb16d60572#blob=6793cd98170217205e7a72f61ae1b8b5efe541de",
+      "repo:docs/dashboards/DASHBOARD_CATALOG.md@464148b8b1b3dff558086b23fc5ec8fb16d60572#blob=207aa04e27f750570d80cb9d23c285e35cad60fe",
+      "repo:data/receipts/generated/genrec-dashboards-domain-atmosphere-720bb8dd3c70.json@464148b8b1b3dff558086b23fc5ec8fb16d60572#blob=7f021678597e1c0cf25f278d65f4b77a7039e293",
+      "repo:tools/validators/docs/meta-block/check_meta_blocks.py@464148b8b1b3dff558086b23fc5ec8fb16d60572#blob=f5dfd61abf95f7f8d424ec7d8db4ed4fb9feae42",
+      "repo:.github/workflows/docs-meta-block.yml@464148b8b1b3dff558086b23fc5ec8fb16d60572#blob=c2054a053ba3050cf41b731d85a7a0996e9231f6",
+      "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@464148b8b1b3dff558086b23fc5ec8fb16d60572#blob=fba21ed27ebccf1362fe397fe0c3ebd85e072685",
+      "repo:tools/validators/validate_generated_receipt.py@464148b8b1b3dff558086b23fc5ec8fb16d60572#blob=f5cbcec72a4217190c5e88711cc70975688dd275",
+      "repo:docs/doctrine/directory-rules.md@464148b8b1b3dff558086b23fc5ec8fb16d60572#blob=fd49a0b83e55cef52c1124281f093e263526898d",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@464148b8b1b3dff558086b23fc5ec8fb16d60572#blob=a4de0d7a96b78da59cfc499d1025e1508afd8dd9",
+      "repo:pull/3191",
+      "repo:workflow-run/32490022651",
+      "repo:workflow-job/96795234299",
+      "attachment:KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0"
+    ]
+  },
+  "truth_labels": {
+    "docs/dashboards/domain/atmosphere.md": "PROPOSED",
+    "docs/dashboards/DASHBOARD_CATALOG.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "external-merge-and-forward-fix-preflight",
+      "outcome": "PASS",
+      "reason": "GitHub recorded PR #3191 merged at 464148b8b1b3dff558086b23fc5ec8fb16d60572 with repository-owner login bartytime4life after the agent delivered a draft. The merge commit has parents 51d45e45a56d19961a3014009b80c2c94b1107ee and 458a4e40a54c52f364e6a8c4f8610afb9c6f7dc2. Main bytes were read back before fix/atmosphere-dashboard-metadata-20260821 was created from the exact merge commit."
+    },
+    {
+      "gate": "exact-head-docs-metadata-failure-diagnosis",
+      "outcome": "PASS",
+      "reason": "Exact head 458a4e40a54c52f364e6a8c4f8610afb9c6f7dc2 failed docs-meta-block run 32490022651 only after all 24 focused metadata tests passed. The changed-document validation failed because both edited legacy blocks lacked now-required owning_root, responsibility, and truth_posture fields."
+    },
+    {
+      "gate": "repository-native-metadata-validation",
+      "outcome": "PASS",
+      "reason": "Ran the pinned metadata validator over both repaired documents with profile present. It reported DOC_META_BLOCK_PASS: 2 documents, 2 valid metadata blocks, 0 invalid blocks, 0 fail findings, and 0 warnings. Both documents declare owning_root docs/ and bounded responsibility/truth posture without changing authority."
+    },
+    {
+      "gate": "markdown-and-link-regression-check",
+      "outcome": "PASS",
+      "reason": "The forward fix adds exactly three metadata keys to each Markdown file. H1s, headings, explicit anchors, fences, alerts, tables, links, prose, line endings, and final newlines remain unchanged from the remotely verified merge bytes."
+    },
+    {
+      "gate": "successor-receipt-and-historical-immutability",
+      "outcome": "PASS",
+      "reason": "The merged receipt genrec-dashboards-domain-atmosphere-720bb8dd3c70 remains byte-identical. This successor receipt binds the repaired target and catalog bytes and does not bind or modify the PM trust packet or any historical receipt."
+    },
+    {
+      "gate": "prepared-artifact-sha256-binding",
+      "outcome": "PASS",
+      "reason": "The exact repaired UTF-8 bytes bind to SHA-256 8d4b8b1870fa3cfe4d7817ec75bd6a890505bfc76683857404b1ed5cfcb6377d and ad6fdd72b330fbb83e7960d4ee2561350c6ca4d37236f9de76db30a67f479a59 for the Atmosphere specification and dashboard catalog respectively."
+    },
+    {
+      "gate": "generated-receipt-shape-and-cross-field-check",
+      "outcome": "PASS",
+      "reason": "Receipt object was checked for contract version 3.0.0, exact artifact/hash/truth-label key parity, supported SHA-256 bindings, nonempty citations, pending human review, canonical repository-relative paths, and no receipt self-reference."
+    },
+    {
+      "gate": "remote-artifact-hash-readback",
+      "outcome": "SKIPPED",
+      "reason": "Remote branch commit and byte read-back occur after this immutable receipt is emitted; delivery verification is recorded in the corrective pull request and implementation handoff."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Corrective pull-request checks start after final branch delivery; exact-head hosted results were not available when this receipt was emitted."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending. The prior merge does not substitute for review of this corrective metadata patch."
+    },
+    {
+      "gate": "runtime-release-deployment-and-publication-non-effects",
+      "outcome": "PASS",
+      "reason": "The forward fix changes six metadata declarations and adds this successor authoring receipt only. It does not change dashboard prose or behavior, the PM trust packet, source state, policy, runtime, release, deployment, promotion, publication, merge state, or repository settings."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "merged-main",
+      "validated": true,
+      "evidence_ref": "repo:commit/464148b8b1b3dff558086b23fc5ec8fb16d60572"
+    },
+    {
+      "id": "merged-pull-request",
+      "validated": true,
+      "evidence_ref": "repo:pull/3191"
+    },
+    {
+      "id": "failed-docs-meta-run",
+      "validated": true,
+      "evidence_ref": "repo:workflow-run/32490022651"
+    },
+    {
+      "id": "failed-docs-meta-job",
+      "validated": true,
+      "evidence_ref": "repo:workflow-job/96795234299"
+    },
+    {
+      "id": "docs-meta-validator",
+      "validated": true,
+      "evidence_ref": "repo:tools/validators/docs/meta-block/check_meta_blocks.py@464148b8b1b3dff558086b23fc5ec8fb16d60572#blob=f5dfd61abf95f7f8d424ec7d8db4ed4fb9feae42"
+    },
+    {
+      "id": "merged-atmosphere-dashboard",
+      "validated": true,
+      "evidence_ref": "repo:docs/dashboards/domain/atmosphere.md@464148b8b1b3dff558086b23fc5ec8fb16d60572#blob=6793cd98170217205e7a72f61ae1b8b5efe541de"
+    },
+    {
+      "id": "merged-dashboard-catalog",
+      "validated": true,
+      "evidence_ref": "repo:docs/dashboards/DASHBOARD_CATALOG.md@464148b8b1b3dff558086b23fc5ec8fb16d60572#blob=207aa04e27f750570d80cb9d23c285e35cad60fe"
+    },
+    {
+      "id": "merged-authoring-receipt",
+      "validated": true,
+      "evidence_ref": "repo:data/receipts/generated/genrec-dashboards-domain-atmosphere-720bb8dd3c70.json@464148b8b1b3dff558086b23fc5ec8fb16d60572#blob=7f021678597e1c0cf25f278d65f4b77a7039e293"
+    },
+    {
+      "id": "generated-receipt-contract",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@464148b8b1b3dff558086b23fc5ec8fb16d60572#blob=fba21ed27ebccf1362fe397fe0c3ebd85e072685"
+    },
+    {
+      "id": "resolved-task-contract",
+      "validated": true,
+      "evidence_ref": "attachment:KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [
+      "@bartytime4life"
+    ],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-21T14:06:45Z",
+  "emitter": "OpenAI Codex KFM repository implementation agent",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Forward-fix for the metadata-profile failure discovered after PR #3191 was merged outside the agent's actions. The repair supplies required ownership-root, responsibility, and truth-posture declarations without changing dashboard semantics. The merged receipt and PM trust packet remain immutable. Review, merge, release, deployment, promotion, publication, and repository settings remain outside this corrective draft."
+}

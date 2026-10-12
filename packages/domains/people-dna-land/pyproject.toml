@@ -1,0 +1,4 @@
+# packages/domains/people-dna-land pyproject — greenfield placeholder
+[project]
+name = "kfm-domain-people-dna-land"
+version = "0.0.0"

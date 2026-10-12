@@ -1,0 +1,4 @@
+# Build only the declared payload-free review-image inputs.
+*
+!Dockerfile.governed-api
+!governed-api-requirements.lock

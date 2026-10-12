@@ -1,0 +1,123 @@
+{
+  "receipt_id": "genrec-kfm-hourly-habitat-20260828-habitat-flora-metadata-repair",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tools/validators/habitat_flora/README.md"
+  ],
+  "artifact_hashes": {
+    "tools/validators/habitat_flora/README.md": "sha256:85d89982aab6a451a00d3abec47a94b8b71424f4fa23d495b5f235d8ff41daea"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6",
+    "version": "2026-08-28 scheduled run"
+  },
+  "prompt_or_contract": "sha256:19e6bd640f5f356fcc32e5496a113618d17ea8c31366208bb0cddf0035fbef9b",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "Google Drive read-only search",
+      "Notion coordination update",
+      "local deterministic JSON, SHA-256, whitespace, and exact-byte validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:19e6bd640f5f356fcc32e5496a113618d17ea8c31366208bb0cddf0035fbef9b"
+    ],
+    "attached_docs": [
+      "KFM_HOURLY_HABITAT_BUILDER_V1 receipt correction: preserve the original PR #3811 receipt as immutable process memory; bind the v0.1.1 Habitat–Flora metadata repair in a new successor receipt; validate deterministically; stop at draft PR."
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/332a371f0be1aae68690853fba368a6289d2dab4/data/receipts/generated/genrec-kfm-vic-20260828-habitat-flora-validator-boundary.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/pull/3811",
+      "github://bartytime4life/Kansas-Frontier-Matrix/pull/3822",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/54866c131921576413d11d3daf69ffb7dc695419/tools/validators/habitat_flora/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/332a371f0be1aae68690853fba368a6289d2dab4/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/332a371f0be1aae68690853fba368a6289d2dab4/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "truth_labels": {
+    "tools/validators/habitat_flora/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "predecessor-receipt-immutability",
+      "outcome": "PASS",
+      "reason": "The original PR #3811 receipt is restored byte-for-byte from main and remains bound to the v0.1.0 generation."
+    },
+    {
+      "gate": "required-metadata-fields",
+      "outcome": "PASS",
+      "reason": "The v0.1.1 README contains created and one non-empty owner field as required by the present metadata profile."
+    },
+    {
+      "gate": "artifact-byte-binding",
+      "outcome": "PASS",
+      "reason": "The final v0.1.1 README SHA-256 is 85d89982aab6a451a00d3abec47a94b8b71424f4fa23d495b5f235d8ff41daea and remote exact-byte readback matched the validated content."
+    },
+    {
+      "gate": "generated-receipt-shape",
+      "outcome": "PASS",
+      "reason": "The successor receipt uses contract version 3.0.0, unique identity, exact artifact map parity, finite JSON values, pending human review, and no override."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks must be reconciled after the successor receipt is committed to the draft pull request."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending and is not represented as approval."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "predecessor-receipt",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/332a371f0be1aae68690853fba368a6289d2dab4/data/receipts/generated/genrec-kfm-vic-20260828-habitat-flora-validator-boundary.json"
+    },
+    {
+      "id": "metadata-review-finding",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/pull/3811"
+    },
+    {
+      "id": "successor-review-finding",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/pull/3822"
+    },
+    {
+      "id": "generated-receipt-contract",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/332a371f0be1aae68690853fba368a6289d2dab4/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    },
+    {
+      "id": "directory-rules-adoption",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/332a371f0be1aae68690853fba368a6289d2dab4/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-29T00:40:59.107Z",
+  "emitter": "openai/gpt-5.6-sol scheduled Habitat builder",
+  "links": {
+    "pr_number": 3822,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Forward-correction process memory for the v0.1.1 Habitat–Flora metadata repair. The predecessor receipt remains byte-for-byte historical and continues to describe only the v0.1.0 generation. This successor receipt does not create Habitat or Flora truth, source admission, rights or sensitivity decisions, policy approval, lifecycle transition, release, deployment, promotion, publication, or public-use authority."
+}

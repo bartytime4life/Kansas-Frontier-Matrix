@@ -1,0 +1,118 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "kfm://schema/policy/policy-enforcement-maturity/v1",
+  "title": "KFM PolicyEnforcementMaturity",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "profile",
+    "schema_version",
+    "assessment_id",
+    "policy_surface_ref",
+    "observed_commit",
+    "claimed_stage",
+    "evidence",
+    "deterministic",
+    "network_access",
+    "assessment_outcome",
+    "reason_codes",
+    "spec_hash"
+  ],
+  "properties": {
+    "profile": {
+      "const": "kfm.policy.enforcement-maturity.v1"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "assessment_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "policy_surface_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "observed_commit": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "claimed_stage": {
+      "enum": [
+        "DESIGNED",
+        "FIXTURE_TESTED",
+        "MERGE_BLOCKING",
+        "PROMOTION_BLOCKING",
+        "RUNTIME_ENFORCED"
+      ]
+    },
+    "evidence": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 5,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "stage",
+          "evidence_kind",
+          "refs"
+        ],
+        "properties": {
+          "stage": {
+            "enum": [
+              "DESIGNED",
+              "FIXTURE_TESTED",
+              "MERGE_BLOCKING",
+              "PROMOTION_BLOCKING",
+              "RUNTIME_ENFORCED"
+            ]
+          },
+          "evidence_kind": {
+            "enum": [
+              "CONTRACT_OR_POLICY",
+              "FIXTURE_OR_TEST",
+              "REQUIRED_CHECK",
+              "PROMOTION_GATE",
+              "RUNTIME_OBSERVATION"
+            ]
+          },
+          "refs": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      }
+    },
+    "deterministic": {
+      "type": "boolean"
+    },
+    "network_access": {
+      "type": "boolean"
+    },
+    "assessment_outcome": {
+      "enum": [
+        "PASS",
+        "DENY",
+        "ERROR"
+      ]
+    },
+    "reason_codes": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "spec_hash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    }
+  }
+}

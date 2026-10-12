@@ -1,0 +1,205 @@
+{
+  "receipt_id": "genrec-fixtures-domains-archaeology-synthetic-source-descriptor-readme-685374d1",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "fixtures/domains/archaeology/README.md",
+    "fixtures/domains/archaeology/synthetic_source_descriptor/README.md"
+  ],
+  "artifact_hashes": {
+    "fixtures/domains/archaeology/README.md": "sha256:aa2545d3117295f35baf6cb8b0c400ecb758928a9b0a4526ca4208bf91bfa321",
+    "fixtures/domains/archaeology/synthetic_source_descriptor/README.md": "sha256:685374d1a4686afd117219fef6df20cdfd1a8a1be07af1e355e6f21232858bee"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "not-exposed"
+  },
+  "prompt_or_contract": "sha256:a1d4d9e297d411fdd25f8b7fae71d10aabdcf9ea9f5af03df8e1118305991de5",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local git",
+      "GitHub connector",
+      "container validation",
+      "PDF text extraction"
+    ],
+    "deleted_artifact_paths": [
+      "fixtures/domains/archaeology/synthetic_source_descriptor/READAME.md"
+    ],
+    "deleted_artifact_preimage_hashes": {
+      "fixtures/domains/archaeology/synthetic_source_descriptor/READAME.md": "sha256:01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    }
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:a1d4d9e297d411fdd25f8b7fae71d10aabdcf9ea9f5af03df8e1118305991de5",
+      "sha256:759de4fcb51cf0f55896089e397d9c47481d60d9fb80ac9a44d47b2f60a0a335",
+      "sha256:5c219925938497836b844dbbc9ad70e356c60b5d3bec7cb83215865b0120f7e5",
+      "sha256:5dedca74aefd81e9b7eb17259e6db6bf10a762d9b0bc0078cedac01f472518cc",
+      "sha256:03f7511abbd2528bbc88fe86bd71362de88c6a410e160a2bab52ee775ae0a051",
+      "sha256:1b1bf14a7a290583f4395b0b3ef624384925fc80a355f4cc7dd4ad0b3779e46a",
+      "sha256:c0bd34f1fb8fb5a569a856e23ccfaa6105eb6d70109589d7559cb2abf9deb918",
+      "sha256:a89f0527052062ce0ae659a3e9b5f863b050bc6731a7a569c4c4403d3ff2f46c"
+    ],
+    "attached_docs": [
+      "Codex Repository Completion Agent - README-Driven Missing Files and Directories Build Prompt",
+      "Directory Rules.pdf"
+    ],
+    "evidence_refs": [
+      "attached://Pasted text(66).txt#sha256-a1d4d9e297d411fdd25f8b7fae71d10aabdcf9ea9f5af03df8e1118305991de5",
+      "attached://Directory Rules.pdf#sha256-759de4fcb51cf0f55896089e397d9c47481d60d9fb80ac9a44d47b2f60a0a335",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/e730fad9bc577adc53d7f8ee5ba242a3fadf9cd6",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/e730fad9bc577adc53d7f8ee5ba242a3fadf9cd6/fixtures/domains/archaeology/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/e730fad9bc577adc53d7f8ee5ba242a3fadf9cd6/fixtures/domains/archaeology/synthetic_source_descriptor/READAME.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/e730fad9bc577adc53d7f8ee5ba242a3fadf9cd6/fixtures/domains/archaeology/synthetic_source_descriptor/shpo_like.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/e730fad9bc577adc53d7f8ee5ba242a3fadf9cd6/schemas/contracts/v1/source/source_descriptor.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/e730fad9bc577adc53d7f8ee5ba242a3fadf9cd6/tools/validators/domains/archaeology/validate_source_descriptor.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/e730fad9bc577adc53d7f8ee5ba242a3fadf9cd6/tests/domains/archaeology/test_source_descriptor.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/e730fad9bc577adc53d7f8ee5ba242a3fadf9cd6/docs/adr/ADR-0017-source-descriptor-admission-process.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/e730fad9bc577adc53d7f8ee5ba242a3fadf9cd6/docs/architecture/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/e730fad9bc577adc53d7f8ee5ba242a3fadf9cd6/CONTRIBUTING.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/e730fad9bc577adc53d7f8ee5ba242a3fadf9cd6/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    ]
+  },
+  "truth_labels": {
+    "fixtures/domains/archaeology/README.md": "PROPOSED",
+    "fixtures/domains/archaeology/synthetic_source_descriptor/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "task-contract",
+      "outcome": "PASS",
+      "reason": "The current request superseded the prior scan-only cursor. Repository, pinned base, source-admission scope, exact target paths, two documentation artifacts plus one receipt, non-goals, validation, stop conditions, and draft-PR route were resolved before mutation."
+    },
+    {
+      "gate": "repository-preflight",
+      "outcome": "PASS",
+      "reason": "The default branch, current base SHA and tree, clean worktrees, remote state, CODEOWNERS, CONTRIBUTING guidance, current pull requests, and unrelated concurrent fixture work were inspected and reconciled before the first write."
+    },
+    {
+      "gate": "repository-readme-inventory",
+      "outcome": "PASS",
+      "reason": "The post-change staged index contains 2,249 tracked README paths, all discovered without truncation; pinned HEAD contained 2,248 before the misspelled file was replaced. A mechanical Markdown-link pass inspected 48,818 links and classified 427 unresolved relative targets for evidence review; unrelated and authority-conflicted candidates were deferred."
+    },
+    {
+      "gate": "evidence-threshold",
+      "outcome": "PASS",
+      "reason": "The target directory and placeholder payload already exist, the only local README is a blank misspelled READAME.md, all nine sibling child directories use README.md, and the parent explicitly requires index updates when child lanes change. No new authority or speculative implementation was inferred."
+    },
+    {
+      "gate": "directory-rules-adr-drift",
+      "outcome": "PASS",
+      "reason": "The correction stays within the existing fixtures responsibility root and Archaeology domain segment. Current and attached Directory Rules, ADR-0017, drift registers, and the unresolved SourceDescriptor path conflicts were inspected; this change neither selects schema authority nor creates a parallel home."
+    },
+    {
+      "gate": "bounded-lane-inventory",
+      "outcome": "PASS",
+      "reason": "The lane contains only the misspelled blank README and shpo_like.json. The payload parses as JSON but is an inventory placeholder, not a SourceDescriptor or admitted source."
+    },
+    {
+      "gate": "readme-filename-repair",
+      "outcome": "PASS",
+      "reason": "READAME.md was removed and replaced by the conventional README.md path with meaningful, fail-closed lane guidance; no compatibility duplicate was retained."
+    },
+    {
+      "gate": "parent-index",
+      "outcome": "PASS",
+      "reason": "The parent archaeology fixture README now lists the ninth direct child lane and narrows its completion claim to filename coverage only."
+    },
+    {
+      "gate": "markdown-structure-and-links",
+      "outcome": "PASS",
+      "reason": "Both documentation artifacts have one H1, balanced code fences, final newlines, no trailing whitespace, and every added repository-relative Markdown link resolves."
+    },
+    {
+      "gate": "placeholder-json-syntax",
+      "outcome": "PASS",
+      "reason": "python -m json.tool parsed shpo_like.json without mutation or network access."
+    },
+    {
+      "gate": "source-descriptor-shape-inspection",
+      "outcome": "PASS",
+      "reason": "The placeholder omits all 21 required fields of the currently wired detailed SourceDescriptor schema, supplies four unrecognized inventory keys, and the schema sets additionalProperties to false. The README records the resulting invalid-placeholder posture."
+    },
+    {
+      "gate": "source-descriptor-executable-validation",
+      "outcome": "SKIPPED",
+      "reason": "The archaeology SourceDescriptor validator raises NotImplementedError and tests/domains/archaeology/test_source_descriptor.py contains placeholder documentation only. The generic schema harness does not consume this domain fixture lane."
+    },
+    {
+      "gate": "domain-archaeology-workflow-readiness",
+      "outcome": "FAIL",
+      "reason": "A static reproduction of the current domain-archaeology workflow predicate finds the pre-existing executable test_archaeology_smoke.py::test_placeholder and validator placeholders including tools/validators/domains/archaeology/validate_schema.py. The workflow is expected to fail until its readiness sentinel is reconciled; that unrelated workflow repair is outside this bounded documentation batch."
+    },
+    {
+      "gate": "repository-native-baseline",
+      "outcome": "SKIPPED",
+      "reason": "No runtime, schema, contract, policy, fixture payload, or executable behavior changed. Repository dependency lockfiles are absent, and no dependency installation was performed for this documentation-only batch."
+    },
+    {
+      "gate": "sensitivity-and-secret-review",
+      "outcome": "PASS",
+      "reason": "The change adds no source payload, coordinates, living-person data, cultural or burial details, credentials, private endpoints, rights grants, activation decisions, or public-release material; it explicitly prohibits them."
+    },
+    {
+      "gate": "generated-receipt-schema",
+      "outcome": "PASS",
+      "reason": "The receipt is valid JSON and passed draft-2020 structural validation against schemas/contracts/v1/receipts/generated_receipt.schema.json. The validator reported date-time format checks as unsupported, so the non-null created_at value was parsed separately as ISO-8601; artifact hashes were recomputed separately."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "KFM-REPOSITORY-COMPLETION-PROMPT",
+      "validated": true,
+      "evidence_ref": "attached://Pasted text(66).txt#sha256-a1d4d9e297d411fdd25f8b7fae71d10aabdcf9ea9f5af03df8e1118305991de5"
+    },
+    {
+      "id": "KFM-DIRECTORY-RULES-PDF",
+      "validated": true,
+      "evidence_ref": "attached://Directory Rules.pdf#sha256-759de4fcb51cf0f55896089e397d9c47481d60d9fb80ac9a44d47b2f60a0a335"
+    },
+    {
+      "id": "KFM-DIRECTORY-RULES-REPOSITORY",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/e730fad9bc577adc53d7f8ee5ba242a3fadf9cd6/docs/architecture/directory-rules.md"
+    },
+    {
+      "id": "ARCHAEOLOGY-SYNTHETIC-SOURCE-DESCRIPTOR-LANE",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/tree/e730fad9bc577adc53d7f8ee5ba242a3fadf9cd6/fixtures/domains/archaeology/synthetic_source_descriptor"
+    },
+    {
+      "id": "SOURCE-DESCRIPTOR-SCHEMA",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/e730fad9bc577adc53d7f8ee5ba242a3fadf9cd6/schemas/contracts/v1/source/source_descriptor.schema.json"
+    },
+    {
+      "id": "SOURCE-ADMISSION-ADR-0017",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/e730fad9bc577adc53d7f8ee5ba242a3fadf9cd6/docs/adr/ADR-0017-source-descriptor-admission-process.md"
+    },
+    {
+      "id": "GENERATED-RECEIPT-SCHEMA",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/e730fad9bc577adc53d7f8ee5ba242a3fadf9cd6/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-21T18:01:20Z",
+  "emitter": "ai-builder/openai-codex-gpt-5",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Documentation-only repair of a misspelled blank README plus its parent index. The deleted READAME.md preimage was one newline byte and is recorded under parameters.deleted_artifact_preimage_hashes because artifact_hashes describes surviving authored artifacts. The existing shpo_like.json remains unchanged and explicitly classified as a PROPOSED inventory placeholder. This change does not validate or admit a source, select a canonical SourceDescriptor schema, implement an archaeology validator, activate a connector, change policy, move lifecycle data, issue a receipt other than generated-work provenance, approve release, or publish KFM material. Human review remains pending."
+}

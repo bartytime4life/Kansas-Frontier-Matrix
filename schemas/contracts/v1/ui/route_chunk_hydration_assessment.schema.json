@@ -1,0 +1,216 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kfm.local/schemas/contracts/v1/ui/route_chunk_hydration_assessment.schema.json",
+  "title": "Route Chunk Hydration Assessment Candidate",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "assessment_id",
+    "profile_spec_hash",
+    "source_card",
+    "observed_at",
+    "route",
+    "chunk",
+    "prerequisites",
+    "derived_state",
+    "limitations",
+    "authority_claims"
+  ],
+  "properties": {
+    "object_type": {"const": "RouteChunkHydrationAssessmentCandidate"},
+    "schema_version": {"const": "1.0.0"},
+    "profile": {"const": "kfm.ui.route-chunk-hydration-assessment.fixture.v1"},
+    "assessment_id": {
+      "type": "string",
+      "pattern": "^kfm:route-chunk-hydration:[a-f0-9]{24}$"
+    },
+    "profile_spec_hash": {"$ref": "#/$defs/digest"},
+    "source_card": {"const": "KFM-P18-INV-329"},
+    "observed_at": {"type": "string", "format": "date-time"},
+    "route": {"$ref": "#/$defs/route"},
+    "chunk": {"$ref": "#/$defs/chunk"},
+    "prerequisites": {"$ref": "#/$defs/prerequisites"},
+    "derived_state": {"$ref": "#/$defs/derived_state"},
+    "limitations": {
+      "type": "array",
+      "minItems": 6,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "ASSESSMENT_ONLY",
+          "NO_MODULE_LOAD_OR_ROUTE_BINDING",
+          "NO_REFERENCE_RESOLUTION_OR_POLICY_EVALUATION",
+          "NO_LAYER_ACTIVATION_OR_CACHE_MUTATION",
+          "NO_REVIEW_PROMOTION_RELEASE_OR_DEPLOYMENT_AUTHORITY",
+          "NO_PUBLICATION_OR_PUBLIC_USE_AUTHORITY"
+        ]
+      }
+    },
+    "authority_claims": {"$ref": "#/$defs/authority_claims"}
+  },
+  "$defs": {
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "ref": {
+      "type": "string",
+      "minLength": 10,
+      "maxLength": 256,
+      "pattern": "^kfm://[a-z0-9][a-z0-9._~:/-]+$"
+    },
+    "canonical_refs": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 32,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/ref"}
+    },
+    "route": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["view_id", "route_path", "view_registry_profile_ref"],
+      "properties": {
+        "view_id": {
+          "type": "string",
+          "pattern": "^kfm:view:[a-z0-9][a-z0-9._-]{2,96}$"
+        },
+        "route_path": {
+          "type": "string",
+          "pattern": "^/[a-z0-9][a-z0-9-]*(?:/[a-z0-9][a-z0-9-]*)*$"
+        },
+        "view_registry_profile_ref": {
+          "type": "string",
+          "pattern": "^kfm:view-registry:[a-f0-9]{24}$"
+        }
+      }
+    },
+    "chunk": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "chunk_id",
+        "chunk_name",
+        "module_ref",
+        "integrity_digest",
+        "load_mode",
+        "dependency_refs"
+      ],
+      "properties": {
+        "chunk_id": {
+          "type": "string",
+          "pattern": "^kfm://ui-chunk/[a-z][a-z0-9-]{2,63}$"
+        },
+        "chunk_name": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]{2,63}$"
+        },
+        "module_ref": {"$ref": "#/$defs/ref"},
+        "integrity_digest": {"$ref": "#/$defs/digest"},
+        "load_mode": {"const": "LAZY_ROUTE"},
+        "dependency_refs": {"$ref": "#/$defs/canonical_refs"}
+      }
+    },
+    "prerequisites": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "view_registry_state",
+        "render_hints_state",
+        "evidence_state",
+        "access_state",
+        "release_state",
+        "render_hint_ref",
+        "evidence_drawer_profile_ref",
+        "access_policy_ref",
+        "release_manifest_ref",
+        "validation_refs"
+      ],
+      "properties": {
+        "view_registry_state": {"enum": ["READY", "HOLD", "DENY", "UNKNOWN"]},
+        "render_hints_state": {"enum": ["READY", "HOLD", "DENY", "UNKNOWN"]},
+        "evidence_state": {"enum": ["RESOLVED", "PARTIAL", "MISSING", "UNKNOWN"]},
+        "access_state": {"enum": ["ALLOW", "HOLD", "DENY", "UNKNOWN"]},
+        "release_state": {"enum": ["RELEASED", "HOLD", "DENY", "UNKNOWN"]},
+        "render_hint_ref": {"$ref": "#/$defs/ref"},
+        "evidence_drawer_profile_ref": {"$ref": "#/$defs/ref"},
+        "access_policy_ref": {"$ref": "#/$defs/ref"},
+        "release_manifest_ref": {"$ref": "#/$defs/ref"},
+        "validation_refs": {"$ref": "#/$defs/canonical_refs"}
+      }
+    },
+    "derived_state": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["disposition", "reason_codes"],
+      "properties": {
+        "disposition": {"enum": ["HYDRATE_READY", "HOLD", "REJECT"]},
+        "reason_codes": {
+          "type": "array",
+          "maxItems": 10,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "VIEW_REGISTRY_HELD",
+              "VIEW_REGISTRY_UNKNOWN",
+              "VIEW_REGISTRY_DENIED",
+              "RENDER_HINTS_HELD",
+              "RENDER_HINTS_UNKNOWN",
+              "RENDER_HINTS_DENIED",
+              "EVIDENCE_PARTIAL",
+              "EVIDENCE_MISSING",
+              "EVIDENCE_UNKNOWN",
+              "ACCESS_HELD",
+              "ACCESS_UNKNOWN",
+              "ACCESS_DENIED",
+              "RELEASE_HELD",
+              "RELEASE_UNKNOWN",
+              "RELEASE_DENIED"
+            ]
+          }
+        }
+      }
+    },
+    "authority_claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "module_load_authority",
+        "route_binding_authority",
+        "reference_resolution_authority",
+        "policy_authority",
+        "layer_activation_authority",
+        "cache_mutation_authority",
+        "review_authority",
+        "promotion_authority",
+        "release_authority",
+        "deployment_authority",
+        "publication_authority",
+        "public_use_authority"
+      ],
+      "properties": {
+        "module_load_authority": {"const": false},
+        "route_binding_authority": {"const": false},
+        "reference_resolution_authority": {"const": false},
+        "policy_authority": {"const": false},
+        "layer_activation_authority": {"const": false},
+        "cache_mutation_authority": {"const": false},
+        "review_authority": {"const": false},
+        "promotion_authority": {"const": false},
+        "release_authority": {"const": false},
+        "deployment_authority": {"const": false},
+        "publication_authority": {"const": false},
+        "public_use_authority": {"const": false}
+      }
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED_INACTIVE",
+    "source_ideas": ["KFM-P18-INV-329", "ML-064-020", "ML-064-021"],
+    "validator": "tools/validators/ui/validate_route_chunk_hydration_assessment.py",
+    "authority": "local fixture consistency only"
+  }
+}

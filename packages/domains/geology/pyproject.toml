@@ -1,0 +1,4 @@
+# packages/domains/geology pyproject — greenfield placeholder
+[project]
+name = "kfm-domain-geology"
+version = "0.0.0"

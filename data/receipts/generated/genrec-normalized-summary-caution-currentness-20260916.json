@@ -1,0 +1,111 @@
+{
+  "receipt_id": "genrec-normalized-summary-caution-currentness-20260916",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/adr/NORMALIZED_SUMMARY_CONSUMER_READINESS_CHECKLIST.md"
+  ],
+  "artifact_hashes": {
+    "docs/adr/NORMALIZED_SUMMARY_CONSUMER_READINESS_CHECKLIST.md": "sha256:c8c56ec14b8745dbf8a706b8d0cb8f94c259f36d61d0cfe65525bc88cae3fb26"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "unknown"
+  },
+  "prompt_or_contract": "sha256:1f412ede75dea37ee2fa988b59ccbe245b19b729b5de5651c1ec4d001f3c164c",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "local-shell",
+      "GitHub-read-only"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:ea9c91e1366a08b414be22c0f283db2013f99bba273dcd3b9c81123437ab4b14",
+      "sha256:a0b360bc3e104e5d8e8468686ec8747354f5f6eab4ace66aa1193893072ccfcc",
+      "sha256:6d85a86ba79203e84d7b572d4033c0dab740321f605c430c765c81911f243dc3"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/280600f87157b830c7621fb4b6fc3788b42d95cb",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4596",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4604#discussion_r4028609400",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4024",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/280600f87157b830c7621fb4b6fc3788b42d95cb/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/280600f87157b830c7621fb4b6fc3788b42d95cb/data/receipts/generated/README.md"
+    ]
+  },
+  "truth_labels": {
+    "docs/adr/NORMALIZED_SUMMARY_CONSUMER_READINESS_CHECKLIST.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "normalized-summary focused regression",
+      "outcome": "PASS",
+      "reason": "Python 3.12.14 in the existing project validation environment: five focused modules reported 62 passed in 3.68 seconds with strict configuration and markers and no pytest cache provider."
+    },
+    {
+      "gate": "documentation local-link integrity",
+      "outcome": "PASS",
+      "reason": "The bounded no-network link checker passed for the changed document with 53 local targets and zero external targets."
+    },
+    {
+      "gate": "repository validation",
+      "outcome": "PASS",
+      "reason": "make validate completed in the existing project validation environment: all selected aggregate validators passed and tests/schemas plus tests/contracts reported 498 passed and 53 subtests passed."
+    },
+    {
+      "gate": "repository topology",
+      "outcome": "FAIL",
+      "reason": "Inherited failure reproduced on the unchanged topology inputs: 124 baselined warnings, catalog fingerprint sha256:71a120ae8ca2b69896266c9ddd52f6d03577ea91fa2de4390b7d57b9ceeb912f as new drift, stale fingerprint sha256:521388927153c91a67ca8cead55af9d688a6064517d109aa556cffca91505006, plus a local Git 2.43 --no-lazy-fetch test incompatibility. This branch changes no catalog, baseline, topology-governance, or topology-validator bytes."
+    },
+    {
+      "gate": "default runtime dependency availability",
+      "outcome": "SKIPPED",
+      "reason": "The primary runtime Python 3.12.14 does not include pytest; the same focused command was then executed successfully with the existing project validation environment."
+    },
+    {
+      "gate": "exact-head hosted evidence",
+      "outcome": "SKIPPED",
+      "reason": "This receipt precedes remote branch publication; no exact-head hosted workflow result exists yet."
+    },
+    {
+      "gate": "independent review and integration",
+      "outcome": "SKIPPED",
+      "reason": "No independent acceptance or eligible integration has occurred; issue #4024 retains VALIDATED_BRANCH_ONLY containment."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "accepted-placement-doctrine",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/280600f87157b830c7621fb4b6fc3788b42d95cb/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "unresolved-review-finding",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4604#discussion_r4028609400"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-09-16T18:14:24Z",
+  "emitter": "OpenAI Codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Documentation-only currentness correction following the exact merged bytes of PR #4604. The corrected checklist now matches the validator's strict structural guarantees while retaining explicit non-guarantees for value types, path/digest coupling, artifact-byte verification, consumer readiness, hosted proof, and cutover authority. This receipt excludes its own bytes to avoid a recursive hash; the future Git commit/tree binds it. No emitter, validator, schema, test, fixture, registry, policy, source, catalog, topology baseline, Site, settings, scheduler, release, deployment, promotion, publication, or access state changes. Abandon the branch before integration or revert its exact commit afterward."
+}

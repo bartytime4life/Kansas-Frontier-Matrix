@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/domains/archaeology/domain_feature_identity.schema.json",
+  "title": "domain_feature_identity",
+  "type": "object",
+  "description": "KFM v1 contract schema stub for domain_feature_identity. Greenfield placeholder; fields to be defined per the contract document and ADR.",
+  "x-kfm": {
+    "contract_doc": "contracts/domains/archaeology/domain_feature_identity.md",
+    "fixtures_root": "fixtures/domains/archaeology/domain_feature_identity/",
+    "validator": "tools/validators/domains/archaeology/validate_domain_feature_identity.py",
+    "policy": "policy/domains/archaeology/",
+    "status": "PROPOSED"
+  },
+  "properties": {
+    "spec_hash": {
+      "type": "string",
+      "description": "Deterministic content hash."
+    },
+    "id": {
+      "type": "string",
+      "description": "Canonical identifier."
+    },
+    "version": {
+      "type": "string",
+      "description": "Contract or object version."
+    }
+  },
+  "required": [
+    "id"
+  ],
+  "additionalProperties": true
+}

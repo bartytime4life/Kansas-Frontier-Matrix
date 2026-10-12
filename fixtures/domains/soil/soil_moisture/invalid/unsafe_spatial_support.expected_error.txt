@@ -1,0 +1,4 @@
+COUNTY_FIPS_INVALID	$.readings[0].spatial_support.county_fips
+PRECISE_LOCATION_FIELD_FORBIDDEN	$.readings[0].spatial_support.lat
+SPATIAL_SUPPORT_NOT_PUBLIC_SAFE	$.readings[0].spatial_support.kind
+UNDECLARED_SPATIAL_SUPPORT_FIELD	$.readings[0].spatial_support.lat

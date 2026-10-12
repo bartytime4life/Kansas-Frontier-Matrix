@@ -1,0 +1,9 @@
+{
+  "case_id": "tile-manifest-bounds-order-invalid",
+  "expected": {
+    "issue_codes": ["TILE_MANIFEST_BOUNDS_ORDER_INVALID"],
+    "status": "DENY"
+  },
+  "fixture_profile": "kfm.pmtiles.tile-artifact-manifest.compat.v1",
+  "mutation": "manifest_bounds_order_invalid"
+}

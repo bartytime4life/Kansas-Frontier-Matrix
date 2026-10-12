@@ -1,0 +1,236 @@
+{
+  "schema_version": "v1",
+  "assessment_id": "kfm://fixture/common/hash-binding-assessment/v1/baseline",
+  "status": "PROPOSED_INACTIVE",
+  "source_card": "KFM-TRIAD-042",
+  "readiness_matrix_ref": "control_plane/hash_profile_readiness_matrix.json",
+  "readiness_matrix_spec_hash": "sha256:acf43ed21bd8438a1825f10f4db90b93c61d1fff0c9ef8ba8b762279dad385d3",
+  "decision_ref": null,
+  "bindings": [
+    {
+      "profile_id": "kfm.hash.content-sha256-raw-bytes.v1",
+      "hash_role": "content_hash",
+      "purpose": "ARTIFACT_BYTE_INTEGRITY",
+      "subject_kind": "RAW_BYTES",
+      "algorithm": "SHA-256",
+      "digest_prefix": "sha256:",
+      "canonicalization_profile": "RAW-BYTES",
+      "included_fields": [
+        "$bytes"
+      ],
+      "excluded_fields": [],
+      "volatile_fields": [],
+      "digest_fields": [],
+      "signature_fields": [],
+      "unordered_collections": [],
+      "finite_numbers_required": false,
+      "crs_profile": null,
+      "equality_scope": "SAME_PROFILE_ONLY",
+      "comparison_profile_id": "kfm.hash.content-sha256-raw-bytes.v1",
+      "implementation_state": "SPEC_ONLY",
+      "activation_state": "INACTIVE"
+    },
+    {
+      "profile_id": "kfm.hash.descriptor-sha256-jcs.v1",
+      "hash_role": "descriptor_hash",
+      "purpose": "SEMANTIC_DESCRIPTOR_IDENTITY",
+      "subject_kind": "JSON_FIELD_SELECTION",
+      "algorithm": "SHA-256",
+      "digest_prefix": "sha256:",
+      "canonicalization_profile": "RFC8785-JCS",
+      "included_fields": [
+        "/descriptor_id",
+        "/rights",
+        "/source_kind",
+        "/source_uri",
+        "/version"
+      ],
+      "excluded_fields": [
+        "/descriptor_hash",
+        "/generated_at",
+        "/signature"
+      ],
+      "volatile_fields": [
+        "/generated_at"
+      ],
+      "digest_fields": [
+        "/descriptor_hash"
+      ],
+      "signature_fields": [
+        "/signature"
+      ],
+      "unordered_collections": [
+        {
+          "field": "/rights",
+          "ordering_rule": "UTF8_LEXICOGRAPHIC"
+        }
+      ],
+      "finite_numbers_required": true,
+      "crs_profile": null,
+      "equality_scope": "SAME_PROFILE_ONLY",
+      "comparison_profile_id": "kfm.hash.descriptor-sha256-jcs.v1",
+      "implementation_state": "SPEC_ONLY",
+      "activation_state": "INACTIVE"
+    },
+    {
+      "profile_id": "kfm.hash.range-blake3-bao.v1",
+      "hash_role": "range_hash",
+      "purpose": "RANGE_PROOF_IDENTITY",
+      "subject_kind": "BYTE_RANGE",
+      "algorithm": "BLAKE3",
+      "digest_prefix": "blake3:",
+      "canonicalization_profile": "BAO-TREE-V1",
+      "included_fields": [
+        "$byte_range"
+      ],
+      "excluded_fields": [],
+      "volatile_fields": [],
+      "digest_fields": [],
+      "signature_fields": [],
+      "unordered_collections": [],
+      "finite_numbers_required": false,
+      "crs_profile": null,
+      "equality_scope": "SAME_PROFILE_ONLY",
+      "comparison_profile_id": "kfm.hash.range-blake3-bao.v1",
+      "implementation_state": "UNAVAILABLE",
+      "activation_state": "INACTIVE"
+    },
+    {
+      "profile_id": "kfm.hash.root-sha256-fileset.v1",
+      "hash_role": "root_hash",
+      "purpose": "ORDERED_FILESET_IDENTITY",
+      "subject_kind": "ORDERED_FILESET",
+      "algorithm": "SHA-256",
+      "digest_prefix": "sha256:",
+      "canonicalization_profile": "ORDERED-FILESET-V1",
+      "included_fields": [
+        "/entries"
+      ],
+      "excluded_fields": [
+        "/root_hash"
+      ],
+      "volatile_fields": [],
+      "digest_fields": [
+        "/root_hash"
+      ],
+      "signature_fields": [],
+      "unordered_collections": [
+        {
+          "field": "/entries",
+          "ordering_rule": "PATH_UTF8_LEXICOGRAPHIC"
+        }
+      ],
+      "finite_numbers_required": false,
+      "crs_profile": null,
+      "equality_scope": "SAME_PROFILE_ONLY",
+      "comparison_profile_id": "kfm.hash.root-sha256-fileset.v1",
+      "implementation_state": "SPEC_ONLY",
+      "activation_state": "INACTIVE"
+    },
+    {
+      "profile_id": "kfm.hash.signature-sha256-dsse.v1",
+      "hash_role": "signature_digest",
+      "purpose": "SIGNED_SUBJECT_IDENTITY",
+      "subject_kind": "DSSE_PAYLOAD_BYTES",
+      "algorithm": "SHA-256",
+      "digest_prefix": "sha256:",
+      "canonicalization_profile": "DSSE-PAYLOAD-BYTES",
+      "included_fields": [
+        "/payload",
+        "/payloadType"
+      ],
+      "excluded_fields": [
+        "/signature_digest",
+        "/signatures"
+      ],
+      "volatile_fields": [],
+      "digest_fields": [
+        "/signature_digest"
+      ],
+      "signature_fields": [
+        "/signatures"
+      ],
+      "unordered_collections": [],
+      "finite_numbers_required": false,
+      "crs_profile": null,
+      "equality_scope": "SAME_PROFILE_ONLY",
+      "comparison_profile_id": "kfm.hash.signature-sha256-dsse.v1",
+      "implementation_state": "SPEC_ONLY",
+      "activation_state": "INACTIVE"
+    },
+    {
+      "profile_id": "kfm.hash.spec-sha256-jcs.v1",
+      "hash_role": "spec_hash",
+      "purpose": "SPECIFICATION_IDENTITY",
+      "subject_kind": "JSON_FIELD_SELECTION",
+      "algorithm": "SHA-256",
+      "digest_prefix": "sha256:",
+      "canonicalization_profile": "RFC8785-JCS",
+      "included_fields": [
+        "/contract_id",
+        "/rules",
+        "/schema_version"
+      ],
+      "excluded_fields": [
+        "/generated_at",
+        "/signature",
+        "/spec_hash"
+      ],
+      "volatile_fields": [
+        "/generated_at"
+      ],
+      "digest_fields": [
+        "/spec_hash"
+      ],
+      "signature_fields": [
+        "/signature"
+      ],
+      "unordered_collections": [
+        {
+          "field": "/rules",
+          "ordering_rule": "STABLE_ID_UTF8_LEXICOGRAPHIC"
+        }
+      ],
+      "finite_numbers_required": true,
+      "crs_profile": null,
+      "equality_scope": "SAME_PROFILE_ONLY",
+      "comparison_profile_id": "kfm.hash.spec-sha256-jcs.v1",
+      "implementation_state": "EXECUTABLE",
+      "activation_state": "BASELINE"
+    }
+  ],
+  "purpose_gaps": [
+    {
+      "purpose": "NORMALIZED_GEOMETRY_IDENTITY",
+      "status": "HOLD_NO_PROFILE",
+      "profile_id": null,
+      "required_controls": [
+        "CRS_PROFILE",
+        "FINITE_COORDINATES",
+        "GEOMETRY_NORMALIZATION"
+      ],
+      "reason": "The readiness matrix has no normalized-geometry profile; CRS, coordinate, and normalization rules require a later decision."
+    },
+    {
+      "purpose": "RECEIPT_PAYLOAD_IDENTITY",
+      "status": "HOLD_NO_PROFILE",
+      "profile_id": null,
+      "required_controls": [
+        "PAYLOAD_SUBJECT_SELECTION",
+        "SIGNATURE_EXCLUSION",
+        "VOLATILE_FIELD_EXCLUSION"
+      ],
+      "reason": "The readiness matrix has no receipt-payload profile; payload selection and recursive-field exclusions require a later decision."
+    }
+  ],
+  "authority_effects": {
+    "proves_truth": false,
+    "establishes_authority": false,
+    "admits_source": false,
+    "closes_evidence": false,
+    "approves_policy": false,
+    "authorizes_release": false,
+    "authorizes_publication": false
+  },
+  "spec_hash": "sha256:98f56d1153f86c23f93dcc898d32f1b96c9b02ebc03678ebb1843c7a6e7af316"
+}

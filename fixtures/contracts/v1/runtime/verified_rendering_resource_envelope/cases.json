@@ -1,0 +1,108 @@
+{
+  "base": {
+    "object_type": "VerifiedRenderingResourceEnvelopeCandidate",
+    "schema_version": "1.0.0",
+    "profile": "kfm.verified-rendering-resource-envelope.fixture.v1",
+    "envelope_id": "",
+    "spec_hash": "",
+    "assessed_at": "2026-08-09T23:30:00Z",
+    "release_binding": {
+      "release_id": "kfm:release:synthetic-public-v2",
+      "artifact_ref": "kfm:artifact:synthetic-pmtiles-v2",
+      "expected_artifact_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "declared_artifact_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "proof_ref": "kfm:proof:synthetic-pmtiles-v2",
+      "signer_profile_ref": "kfm:signer-profile:synthetic-release-v1",
+      "verifier_profile_ref": "kfm:verifier-profile:synthetic-browser-v1",
+      "renderer_profile_ref": "kfm:renderer-profile:maplibre-gl-js-v1"
+    },
+    "request": {"fallback_mode": "NONE", "cancellation_requested": false},
+    "budgets": {
+      "fetch_bytes": 2097152,
+      "hash_chunk_bytes": 524288,
+      "decode_bytes": 2097152,
+      "heap_bytes": 268435456,
+      "cpu_ms": 5000,
+      "queue_depth": 8,
+      "concurrency": 2
+    },
+    "observation": {
+      "artifact_bytes": 1048576,
+      "fetched_bytes": 1048576,
+      "hashed_bytes": 1048576,
+      "decoded_bytes": 1048576,
+      "peak_heap_bytes": 134217728,
+      "cpu_ms": 2000,
+      "max_queue_depth": 2,
+      "max_concurrency": 1,
+      "hash_chunks": [
+        {"chunk_index": 0, "bytes_declared": 524288},
+        {"chunk_index": 1, "bytes_declared": 524288}
+      ]
+    },
+    "worker_messages": [
+      {"sequence": 1, "message_type": "QUEUED", "result": "PASS"},
+      {"sequence": 2, "message_type": "FETCH_START", "result": "PASS"},
+      {"sequence": 3, "message_type": "FETCH_COMPLETE", "result": "PASS"},
+      {"sequence": 4, "message_type": "HASH_COMPLETE", "result": "PASS"},
+      {"sequence": 5, "message_type": "PROOF_CHECK", "result": "PASS"},
+      {"sequence": 6, "message_type": "SIGNER_CHECK", "result": "PASS"},
+      {"sequence": 7, "message_type": "VERIFY_COMPLETE", "result": "PASS"},
+      {"sequence": 8, "message_type": "DECODE_START", "result": "PASS"},
+      {"sequence": 9, "message_type": "RENDER_READY", "result": "PASS"}
+    ],
+    "faults": {"digest_mismatch": false, "truncated_input": false, "replay_detected": false, "timed_out": false, "worker_failed": false},
+    "rendering_assessment": {
+      "rendering_state": "READY_FOR_SEPARATE_EXECUTION",
+      "finding_codes": [],
+      "render_allowed": false,
+      "unverified_content_visible": false,
+      "cryptographic_verification_performed": false,
+      "separate_runtime_integration_required": true
+    },
+    "governance": {
+      "execution_mode": "FIXTURE_ONLY",
+      "network_attempted": false,
+      "artifact_bytes_read": false,
+      "hashing_performed": false,
+      "proof_parsed": false,
+      "signature_verified": false,
+      "signer_authenticated": false,
+      "trust_material_loaded": false,
+      "decode_performed": false,
+      "render_performed": false,
+      "renderer_selected": false,
+      "evidence_resolved": false,
+      "policy_evaluated": false,
+      "review_approved": false,
+      "release_authorized": false,
+      "publication_authorized": false,
+      "public_use_allowed": false
+    }
+  },
+  "cases": [
+    {"case_id": "ready", "mutations": [], "recompute_assessment": true, "expected_status": "PASS", "expected_rendering_state": "READY_FOR_SEPARATE_EXECUTION", "expected_findings": []},
+    {"case_id": "degraded-lower-detail", "mutations": [{"path": "/request/fallback_mode", "value": "LOWER_DETAIL"}], "recompute_assessment": true, "expected_status": "PASS", "expected_rendering_state": "DEGRADED", "expected_findings": []},
+    {"case_id": "degraded-evidence-summary", "mutations": [{"path": "/request/fallback_mode", "value": "EVIDENCE_SUMMARY_ONLY"}], "recompute_assessment": true, "expected_status": "PASS", "expected_rendering_state": "DEGRADED", "expected_findings": []},
+    {"case_id": "blocked-digest-binding", "mutations": [{"path": "/release_binding/declared_artifact_digest", "value": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"}], "recompute_assessment": true, "expected_status": "PASS", "expected_rendering_state": "BLOCKED", "expected_findings": []},
+    {"case_id": "blocked-corruption", "mutations": [{"path": "/faults/digest_mismatch", "value": true}], "recompute_assessment": true, "expected_status": "PASS", "expected_rendering_state": "BLOCKED", "expected_findings": []},
+    {"case_id": "blocked-truncation", "mutations": [{"path": "/faults/truncated_input", "value": true}], "recompute_assessment": true, "expected_status": "PASS", "expected_rendering_state": "BLOCKED", "expected_findings": []},
+    {"case_id": "blocked-chunk-accounting", "mutations": [{"path": "/observation/hashed_bytes", "value": 1000000}], "recompute_assessment": true, "expected_status": "PASS", "expected_rendering_state": "BLOCKED", "expected_findings": []},
+    {"case_id": "blocked-replay", "mutations": [{"path": "/faults/replay_detected", "value": true}], "recompute_assessment": true, "expected_status": "PASS", "expected_rendering_state": "BLOCKED", "expected_findings": []},
+    {"case_id": "blocked-timeout", "mutations": [{"path": "/faults/timed_out", "value": true}], "recompute_assessment": true, "expected_status": "PASS", "expected_rendering_state": "BLOCKED", "expected_findings": []},
+    {"case_id": "blocked-heap-budget", "mutations": [{"path": "/observation/peak_heap_bytes", "value": 300000000}], "recompute_assessment": true, "expected_status": "PASS", "expected_rendering_state": "BLOCKED", "expected_findings": []},
+    {"case_id": "blocked-hash-chunk-budget", "mutations": [{"path": "/observation/hash_chunks", "value": [{"chunk_index": 0, "bytes_declared": 600000}, {"chunk_index": 1, "bytes_declared": 448576}]}], "recompute_assessment": true, "expected_status": "PASS", "expected_rendering_state": "BLOCKED", "expected_findings": []},
+    {"case_id": "blocked-verification-declaration", "mutations": [{"path": "/worker_messages/6/result", "value": "FAIL"}], "recompute_assessment": true, "expected_status": "PASS", "expected_rendering_state": "BLOCKED", "expected_findings": []},
+    {"case_id": "blocked-verify-after-decode", "mutations": [{"path": "/worker_messages/6/message_type", "value": "DECODE_START"}, {"path": "/worker_messages/7/message_type", "value": "VERIFY_COMPLETE"}], "recompute_assessment": true, "expected_status": "PASS", "expected_rendering_state": "BLOCKED", "expected_findings": []},
+    {"case_id": "cancelled", "mutations": [{"path": "/request/cancellation_requested", "value": true}, {"path": "/worker_messages/8/message_type", "value": "CANCELLED"}, {"path": "/worker_messages/8/result", "value": "NOT_RUN"}], "recompute_assessment": true, "expected_status": "PASS", "expected_rendering_state": "CANCELLED", "expected_findings": []},
+    {"case_id": "worker-error", "mutations": [{"path": "/faults/worker_failed", "value": true}, {"path": "/worker_messages/8/message_type", "value": "WORKER_FAILED"}, {"path": "/worker_messages/8/result", "value": "FAIL"}], "recompute_assessment": true, "expected_status": "PASS", "expected_rendering_state": "ERROR", "expected_findings": []},
+    {"case_id": "deny-report-mismatch", "mutations": [{"path": "/request/fallback_mode", "value": "LOWER_DETAIL"}], "expected_status": "DENY", "expected_rendering_state": "DEGRADED", "expected_findings": [{"code": "RENDER_ENVELOPE_REPORT_MISMATCH", "path": "/rendering_assessment"}]},
+    {"case_id": "deny-spec-hash", "mutations": [], "recompute_assessment": true, "spec_hash_override": "sha256:0000000000000000000000000000000000000000000000000000000000000000", "expected_status": "DENY", "expected_rendering_state": null, "expected_findings": [{"code": "RENDER_ENVELOPE_SPEC_HASH_MISMATCH", "path": "/spec_hash"}]},
+    {"case_id": "deny-envelope-id", "mutations": [], "recompute_assessment": true, "envelope_id_override": "kfm:render-envelope:000000000000000000000000", "expected_status": "DENY", "expected_rendering_state": null, "expected_findings": [{"code": "RENDER_ENVELOPE_ID_MISMATCH", "path": "/envelope_id"}]},
+    {"case_id": "deny-trace-sequence", "mutations": [{"path": "/worker_messages/4/sequence", "value": 6}], "recompute_assessment": true, "expected_status": "DENY", "expected_rendering_state": null, "expected_findings": [{"code": "RENDER_ENVELOPE_TRACE_NOT_CANONICAL", "path": "/worker_messages"}]},
+    {"case_id": "deny-chunk-index", "mutations": [{"path": "/observation/hash_chunks/1/chunk_index", "value": 2}], "recompute_assessment": true, "expected_status": "DENY", "expected_rendering_state": null, "expected_findings": [{"code": "RENDER_ENVELOPE_CHUNKS_NOT_CANONICAL", "path": "/observation/hash_chunks"}]},
+    {"case_id": "deny-cancellation-binding", "mutations": [{"path": "/request/cancellation_requested", "value": true}], "recompute_assessment": true, "expected_status": "DENY", "expected_rendering_state": null, "expected_findings": [{"code": "RENDER_ENVELOPE_CANCELLATION_BINDING_INVALID", "path": "/request/cancellation_requested"}]},
+    {"case_id": "deny-worker-failure-binding", "mutations": [{"path": "/faults/worker_failed", "value": true}], "recompute_assessment": true, "expected_status": "DENY", "expected_rendering_state": null, "expected_findings": [{"code": "RENDER_ENVELOPE_WORKER_FAILURE_BINDING_INVALID", "path": "/faults/worker_failed"}]},
+    {"case_id": "deny-governance-effect", "mutations": [{"path": "/governance/render_performed", "value": true}], "recompute_assessment": true, "expected_status": "DENY", "expected_rendering_state": null, "expected_findings": [{"code": "RENDER_ENVELOPE_SCHEMA_INVALID", "path": "/governance/render_performed"}]}
+  ]
+}

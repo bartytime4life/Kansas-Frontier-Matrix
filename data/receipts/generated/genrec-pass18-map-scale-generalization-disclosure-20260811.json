@@ -1,0 +1,77 @@
+{
+  "receipt_id": "genrec-pass18-map-scale-generalization-disclosure-20260811",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/map-scale-generalization-disclosure.yml",
+    "contracts/data/map_scale_generalization_disclosure.md",
+    "docs/intake/exploratory/pass-18-map-scale-generalization-disclosure-source-map.md",
+    "fixtures/contracts/v1/data/map_scale_generalization_disclosure/cases.json",
+    "schemas/contracts/v1/data/map_scale_generalization_disclosure.schema.json",
+    "tests/validators/test_validate_map_scale_generalization_disclosure.py",
+    "tools/validators/data/validate_map_scale_generalization_disclosure.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/map-scale-generalization-disclosure.yml": "sha256:b04cf64f3ae6ce32fb3cc8e864744df35d3501ed1745dfd7151545adcc812ce5",
+    "contracts/data/map_scale_generalization_disclosure.md": "sha256:02a951af17b53ec28fe839fb62e00c47ebc9ec008b456386f05d487dd8c97ae8",
+    "docs/intake/exploratory/pass-18-map-scale-generalization-disclosure-source-map.md": "sha256:38692d80246b3d45f4b6f13f1244e36b0e7634bcfeaee08b8df226f6e0f00932",
+    "fixtures/contracts/v1/data/map_scale_generalization_disclosure/cases.json": "sha256:5f26977834299801cb6baf549e6d117a8849a101776e948fb8bf45b795abfa99",
+    "schemas/contracts/v1/data/map_scale_generalization_disclosure.schema.json": "sha256:1a53cab3207f267f329cba7106826f2ac84df67475111f3063a74f50a2b2c7cb",
+    "tests/validators/test_validate_map_scale_generalization_disclosure.py": "sha256:dfa3c007f60fc3e5350c8b9610e8be8327c423a0158d335dbf6ba175e1b5dbaf",
+    "tools/validators/data/validate_map_scale_generalization_disclosure.py": "sha256:88203ce31919d7c1c2da11451eacc3b2b41d9984edd2a3b28a2a2e5f7f8e2f16"
+  },
+  "model_identity": {"provider": "OpenAI", "model": "GPT-5", "version": "2026-08-11"},
+  "prompt_or_contract": "sha256:02a951af17b53ec28fe839fb62e00c47ebc9ec008b456386f05d487dd8c97ae8",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": ["Google Drive connected-corpus discovery", "GitHub connected repository inspection and publication", "local PDF rendering and deterministic validation"]
+  },
+  "inputs": {
+    "evidence_hashes": ["sha256:efc0d159761581b5ae043c607dfa28bbc58b3ca5423c9d18a659e650271d73b9"],
+    "attached_docs": ["KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf"],
+    "evidence_refs": [
+      "attachment://KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#physical-page=53&printed-page=50&card=KFM-P18-INV-476",
+      "gdrive://1ww-h3abQkxXeBvSxO5YV6_yvsZ9Wn1P5#title=KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf",
+      "gdrive://1sdiLNDLFr2cVD3Q8h3ZvHO4D96WLJ6V7vf5neNzEyTM#title=Kansas-Frontier-Matrix-Connected-Dots-Architecture-Brief",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/90deefee3c30dd5878e704cdfc621f89f1edf1f0/contracts/data/layer_manifest.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/90deefee3c30dd5878e704cdfc621f89f1edf1f0/docs/doctrine/directory-rules.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/map-scale-generalization-disclosure.yml": "CONFIRMED",
+    "contracts/data/map_scale_generalization_disclosure.md": "PROPOSED",
+    "docs/intake/exploratory/pass-18-map-scale-generalization-disclosure-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/data/map_scale_generalization_disclosure/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/data/map_scale_generalization_disclosure.schema.json": "PROPOSED",
+    "tests/validators/test_validate_map_scale_generalization_disclosure.py": "CONFIRMED",
+    "tools/validators/data/validate_map_scale_generalization_disclosure.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {"gate": "source-page-visual-review", "outcome": "PASS", "reason": "Physical page 53 / printed page 50 was rendered and visually verified."},
+    {"gate": "python-syntax-compilation", "outcome": "PASS"},
+    {"gate": "draft-2020-12-schema-meta-validation", "outcome": "PASS"},
+    {"gate": "workflow-yaml-parse", "outcome": "PASS"},
+    {"gate": "focused-unittest-suite", "outcome": "PASS", "reason": "Eight deterministic map-scale disclosure tests passed."},
+    {"gate": "exact-fixture-replay", "outcome": "PASS", "reason": "Sixteen exact PASS, ABSTAIN, DENY, and ERROR cases matched reviewed outcomes and codes."},
+    {"gate": "no-network-boundary", "outcome": "PASS"},
+    {"gate": "documentation-metadata-and-link-qa", "outcome": "PASS", "reason": "Both changed Markdown files passed explicit no-network metadata and local-link checks; two missing registry entries were emitted as review-only warnings."},
+    {"gate": "adjacent-validator-suite", "outcome": "PASS", "reason": "Twenty-nine cartographic omission, layer legend, LayerManifest, and representation-fitness tests passed."},
+    {"gate": "repository-wide-validation", "outcome": "PASS", "reason": "Eight aggregate validators, 426 schema/contract tests, and 29 subtests passed; the validator registry reported REGISTRY_VALID."},
+    {"gate": "hosted-exact-head-ci", "outcome": "SKIPPED", "reason": "Requires the pushed pull-request head."},
+    {"gate": "human-review", "outcome": "SKIPPED", "reason": "Pending on the draft pull request."}
+  ],
+  "policy_decisions": ["docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"],
+  "citations": [
+    {"id": "pass18-map-scale-generalization-card", "validated": true, "evidence_ref": "attachment://KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf#physical-page=53&printed-page=50&card=KFM-P18-INV-476"},
+    {"id": "drive-connected-dots-architecture", "validated": true, "evidence_ref": "gdrive://1sdiLNDLFr2cVD3Q8h3ZvHO4D96WLJ6V7vf5neNzEyTM#title=Kansas-Frontier-Matrix-Connected-Dots-Architecture-Brief"},
+    {"id": "accepted-directory-rules", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/90deefee3c30dd5878e704cdfc621f89f1edf1f0/docs/doctrine/directory-rules.md"}
+  ],
+  "human_review": {"reviewer_ids": [], "state": "pending", "timestamp": null},
+  "override_record": null,
+  "created_at": "2026-08-11T05:28:00Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT GitHub and Google Drive connectors",
+  "links": {"pr_number": null, "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md", "drift_register_entry": null},
+  "notes": "Additive, inactive, fixture-only MapScaleGeneralizationDisclosureCandidate packet. It validates declared scale/zoom ranges, transform-receipt binding, bounded precision posture, visible caveats, and review references without inspecting geometry, resolving references, altering or rendering a layer, deciding policy or review, promoting, releasing, deploying, publishing, or authorizing public use."
+}

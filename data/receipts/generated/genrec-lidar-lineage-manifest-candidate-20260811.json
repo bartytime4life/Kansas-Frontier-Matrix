@@ -1,0 +1,155 @@
+{
+  "receipt_id": "genrec-lidar-lineage-manifest-candidate-20260811",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/lidar-lineage-manifest-candidate.yml",
+    "contracts/data/lidar_lineage_manifest_candidate.md",
+    "docs/intake/exploratory/lidar-lineage-manifest-candidate-source-map.md",
+    "fixtures/contracts/v1/data/lidar_lineage_manifest_candidate/cases.json",
+    "schemas/contracts/v1/data/lidar_lineage_manifest_candidate.schema.json",
+    "tests/validators/data/test_lidar_lineage_manifest_candidate.py",
+    "tools/validators/data/validate_lidar_lineage_manifest_candidate.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/lidar-lineage-manifest-candidate.yml": "sha256:f34b755be69825a1907ff3de1f40d5793b15e8e9e91f6eeec53b996de06813d0",
+    "contracts/data/lidar_lineage_manifest_candidate.md": "sha256:8938be31d8f2a89b6f6809ac8fdfb7c8e697ec92ee95f30adb16ec08a44895be",
+    "docs/intake/exploratory/lidar-lineage-manifest-candidate-source-map.md": "sha256:0e9023ea3cfdcb98984ae273deb3f22669aab979bde6fa9fb46921cba0a16f27",
+    "fixtures/contracts/v1/data/lidar_lineage_manifest_candidate/cases.json": "sha256:dbddfa909896f37384a69aaf60e012c882b7c6e04a32f73d2d664e71ae1bd6b0",
+    "schemas/contracts/v1/data/lidar_lineage_manifest_candidate.schema.json": "sha256:68a0fcb942b56ec37d83d21b4b6d05a54959dc49fcdd82c1e5606e5aae1677f8",
+    "tests/validators/data/test_lidar_lineage_manifest_candidate.py": "sha256:bedea9876447861df065edac9e4f8d0b8e6ea753f6af41314558df7883a5e19b",
+    "tools/validators/data/validate_lidar_lineage_manifest_candidate.py": "sha256:df5503f9a5d19ae7a22e60890300f71a87fe01ef2347f03f27e20e961d897684"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-11"
+  },
+  "prompt_or_contract": "sha256:8938be31d8f2a89b6f6809ac8fdfb7c8e697ec92ee95f30adb16ec08a44895be",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector corpus discovery",
+      "GitHub connector repository inspection and mutation",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:599de1b2814ae842e34afd8f4f6be01cc4739145e331761e270f4923d8678a19",
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e"
+    ],
+    "attached_docs": [
+      "KFM_Full_Atlas_seed_cards"
+    ],
+    "evidence_refs": [
+      "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho#LiDAR-Lineage-Manifest",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/c4cb046829f72afd07e39d167c781fb7435a9ac4/docs/architecture/planetary-3d.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/c4cb046829f72afd07e39d167c781fb7435a9ac4/docs/sources/catalog/usgs/3dep-elevation.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/c4cb046829f72afd07e39d167c781fb7435a9ac4/connectors/usgs/3dep/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/c4cb046829f72afd07e39d167c781fb7435a9ac4/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/lidar-lineage-manifest-candidate.yml": "CONFIRMED",
+    "contracts/data/lidar_lineage_manifest_candidate.md": "PROPOSED",
+    "docs/intake/exploratory/lidar-lineage-manifest-candidate-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/data/lidar_lineage_manifest_candidate/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/data/lidar_lineage_manifest_candidate.schema.json": "PROPOSED",
+    "tests/validators/data/test_lidar_lineage_manifest_candidate.py": "CONFIRMED",
+    "tools/validators/data/validate_lidar_lineage_manifest_candidate.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "python-syntax-compilation",
+      "outcome": "PASS",
+      "reason": "Validator and focused test modules compiled successfully in the isolated authoring packet."
+    },
+    {
+      "gate": "draft-2020-12-schema-meta-validation",
+      "outcome": "PASS",
+      "reason": "The closed candidate schema passed Draft 2020-12 meta-validation."
+    },
+    {
+      "gate": "focused-unittest-suite",
+      "outcome": "PASS",
+      "reason": "8 deterministic focused tests passed in the isolated authoring packet."
+    },
+    {
+      "gate": "exact-fixture-replay",
+      "outcome": "PASS",
+      "reason": "14 exact synthetic cases matched their finite outcomes and findings."
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS",
+      "reason": "The dedicated workflow parsed as YAML and remains read-only with no persisted checkout credentials."
+    },
+    {
+      "gate": "no-network-boundary",
+      "outcome": "PASS",
+      "reason": "Focused tests deny socket creation and the candidate validator uses local repository evidence only."
+    },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS",
+      "reason": "All listed artifact SHA-256 values were recomputed after final local edits; the receipt does not bind its own bytes."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed draft pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "full-atlas-lidar-lineage-manifest-proposal",
+      "validated": true,
+      "evidence_ref": "gdrive://1whGonKzHVBe5FOU5ovDBakNU4Nf-30tQr09R_UNeBho#LiDAR-Lineage-Manifest"
+    },
+    {
+      "id": "repository-planetary-3d-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/c4cb046829f72afd07e39d167c781fb7435a9ac4/docs/architecture/planetary-3d.md"
+    },
+    {
+      "id": "repository-usgs-3dep-source-profile",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/c4cb046829f72afd07e39d167c781fb7435a9ac4/docs/sources/catalog/usgs/3dep-elevation.md"
+    },
+    {
+      "id": "repository-usgs-3dep-connector-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/c4cb046829f72afd07e39d167c781fb7435a9ac4/connectors/usgs/3dep/README.md"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/c4cb046829f72afd07e39d167c781fb7435a9ac4/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-11T20:25:08Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT GitHub and Google Drive connectors",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only LidarLineageManifestCandidate packet derived from the Full Atlas LiDAR lineage proposal and reconciled against current 3DEP source/connector documentation and planetary-3D architecture. It preserves acquisition, classification, vertical reference, derived-carrier, evidence, and public-safety declarations without fetching bytes, activating a source, executing a transform, validating LAS/LAZ/COPC/COG/3D Tiles, deciding sensitivity, releasing, deploying, publishing, or authorizing public use."
+}

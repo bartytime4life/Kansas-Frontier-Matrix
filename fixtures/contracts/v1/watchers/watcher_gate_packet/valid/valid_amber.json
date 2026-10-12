@@ -1,0 +1,43 @@
+{
+  "object_type": "WatcherGatePacket",
+  "schema_version": "1.0.0",
+  "packet_id": "watcher-gate:synthetic-amber-20260805",
+  "watcher_id": "kfm://watcher/synthetic/default",
+  "spec_hash": "sha256:845afb9de5cc02df9c93fc23725e5f0abd555a7da14cbf62cba6847507683315",
+  "profile": {
+    "profile_id": "kfm://watcher-gate-profile/default-v1",
+    "profile_version": "1.0.0",
+    "spec_hash": "sha256:5425aabbc7fefa74e9535785f80aaf2a378bdefb50bfc11957fc3ae7984b2cf6"
+  },
+  "prefilter": {
+    "items_found": 8,
+    "asset_missing_count": 0,
+    "missing_etag": true,
+    "median_cloud_percent": 18.0
+  },
+  "artifacts": {
+    "prefilter_report_ref": "fixture://watcher-gate/prefilter-report",
+    "feature_vector_ref": "fixture://watcher-gate/feature-vector",
+    "scorecard_ref": "fixture://watcher-gate/scorecard",
+    "policy_report_ref": "fixture://watcher-gate/policy-report",
+    "run_receipt_ref": "fixture://watcher-gate/run-receipt"
+  },
+  "score": 76,
+  "decision": "AMBER",
+  "process_exit_code": 0,
+  "reason_codes": [
+    "MISSING_ETAG",
+    "SCORE_AMBER"
+  ],
+  "obligations": [
+    "ROUTE_STEWARD_REVIEW"
+  ],
+  "assessed_at": "2026-08-05T22:00:00Z",
+  "governance": {
+    "source_activated": false,
+    "policy_evaluated": false,
+    "promotion_authorized": false,
+    "public_use_allowed": false,
+    "release_ref": null
+  }
+}

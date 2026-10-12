@@ -1,0 +1,127 @@
+{
+  "receipt_id": "genrec-codeowners-510ee7f3",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/CODEOWNERS"
+  ],
+  "artifact_hashes": {
+    ".github/CODEOWNERS": "sha256:510ee7f3aea7610c853e429bc02a9dec32b64eee970115be7dd4df1c86cc2dc5"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-17"
+  },
+  "prompt_or_contract": "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "repository evidence inspection",
+      "official GitHub CODEOWNERS documentation",
+      "repository validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "Pasted text(40).txt — KFM GitHub Repository Documentation Implementation Agent v3.1"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/01bbf4477d54ba113563c37e6cb431a8809d5b75",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/01bbf4477d54ba113563c37e6cb431a8809d5b75/.github/CODEOWNERS",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/01bbf4477d54ba113563c37e6cb431a8809d5b75/.github/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/01bbf4477d54ba113563c37e6cb431a8809d5b75/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/01bbf4477d54ba113563c37e6cb431a8809d5b75/docs/governance/REVIEW_DUTIES.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/01bbf4477d54ba113563c37e6cb431a8809d5b75/contracts/governance/steward_assignment.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/01bbf4477d54ba113563c37e6cb431a8809d5b75/docs/adr/ADR-0024-steward-separation-of-duties-for-release.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/01bbf4477d54ba113563c37e6cb431a8809d5b75/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/1731229a2a8aad92b8a573acf4bfe52e63475751"
+    ]
+  },
+  "truth_labels": {
+    ".github/CODEOWNERS": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-authority-preflight",
+      "outcome": "PASS",
+      "reason": "Verified repository identity, public visibility, default branch, target path, immutable base commit, and authenticated repository-admin permission for @bartytime4life."
+    },
+    {
+      "gate": "owner-identity-and-access",
+      "outcome": "PASS",
+      "reason": "The only executable owner in the replacement is @bartytime4life, whose admin permission was verified through the GitHub connector. Unverified placeholder teams were removed from executable rules."
+    },
+    {
+      "gate": "codeowners-syntax-and-order",
+      "outcome": "PASS",
+      "reason": "Validated 36 non-comment rules for pattern-plus-owner structure, rejected unsupported negation/range syntax, confirmed a final newline, and kept the file below GitHub's size limit."
+    },
+    {
+      "gate": "governance-authority-boundary",
+      "outcome": "PASS",
+      "reason": "The file states that CODEOWNERS routes review requests but does not replace StewardshipAssignment, ReviewRecord, policy, release approval, publication authority, or separation-of-duties controls."
+    },
+    {
+      "gate": "critical-root-and-self-ownership",
+      "outcome": "PASS",
+      "reason": "The default route covers the repository; explicit rules cover .github/CODEOWNERS, governance/trust roots, public delivery boundaries, source/pipeline lanes, and sensitive-domain documentation."
+    },
+    {
+      "gate": "remote-readback-and-hash",
+      "outcome": "PASS",
+      "reason": "The GitHub contents API returned blob SHA dd2a84aa514d8ecd9208bc347f90f9a2ed37dd61, matching the computed Git blob SHA; SHA-256 recomputed as 510ee7f3aea7610c853e429bc02a9dec32b64eee970115be7dd4df1c86cc2dc5."
+    },
+    {
+      "gate": "branch-protection-and-independent-review",
+      "outcome": "SKIPPED",
+      "reason": "Branch protection, rulesets, required-code-owner review, and independent author/approver enforcement were not changed and remain NEEDS VERIFICATION."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "current-codeowners-placeholder",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/01bbf4477d54ba113563c37e6cb431a8809d5b75/.github/CODEOWNERS"
+    },
+    {
+      "id": "verified-repository-admin-owner",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/permissions/bartytime4life"
+    },
+    {
+      "id": "github-codeowners-owner-access-and-self-protection",
+      "validated": true,
+      "evidence_ref": "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners"
+    },
+    {
+      "id": "kfm-github-root-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/01bbf4477d54ba113563c37e6cb431a8809d5b75/.github/README.md"
+    },
+    {
+      "id": "stewardship-not-codeowners",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/01bbf4477d54ba113563c37e6cb431a8809d5b75/contracts/governance/steward_assignment.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-17T16:44:49Z",
+  "emitter": "openai/gpt-5.6-thinking",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored CODEOWNERS correction on a scoped review branch. The file replaces unverified placeholder team references with one verified repository-admin identity and documents the current single-owner limitation. Human review remains pending. This receipt is provenance evidence, not proof that branch protection, rulesets, required code-owner approval, CODEOWNERS error reporting, team staffing, or separation-of-duties enforcement is active."
+}

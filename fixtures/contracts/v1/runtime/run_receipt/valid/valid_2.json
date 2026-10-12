@@ -1,0 +1,19 @@
+{
+  "run_id": "run2",
+  "stage": "publish",
+  "inputs": [
+    "in2"
+  ],
+  "outputs": [
+    "out2"
+  ],
+  "code_ref": "git:def",
+  "spec_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "source_descriptor_refs": [
+    "src2"
+  ],
+  "validation_refs": [
+    "val2"
+  ],
+  "outcome": "PARTIAL"
+}

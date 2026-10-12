@@ -1,0 +1,272 @@
+{
+  "$id": "https://schemas.kfm.local/contracts/v1/governance/atlas_card_delta_assessment.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Fixture-only Atlas-card delta declaration. Shape conformance grants no mutation, truth, review, release, publication, or public-use authority.",
+  "$defs": {
+    "authorityFamily": {
+      "enum": [
+        "apps/",
+        "configs/",
+        "connectors/",
+        "contracts/",
+        "control_plane/",
+        "data/",
+        "docs/",
+        "examples/",
+        "fixtures/",
+        "infra/",
+        "migrations/",
+        "packages/",
+        "pipeline_specs/",
+        "pipelines/",
+        "policy/",
+        "release/",
+        "runtime/",
+        "schemas/",
+        "scripts/",
+        "tests/",
+        "tools/"
+      ],
+      "type": "string"
+    },
+    "card": {
+      "additionalProperties": false,
+      "properties": {
+        "candidate_authority_families": {
+          "items": { "$ref": "#/$defs/authorityFamily" },
+          "maxItems": 12,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "dependency_ids": {
+          "items": {
+            "pattern": "^KFM-[A-Z0-9][A-Z0-9._-]{2,95}$",
+            "type": "string"
+          },
+          "maxItems": 64,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "evidence_refs": {
+          "items": {
+            "maxLength": 512,
+            "pattern": "^[A-Za-z][A-Za-z0-9+.-]*://[^\\s]+$",
+            "type": "string"
+          },
+          "maxItems": 64,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "normalized_statement": {
+          "maxLength": 4000,
+          "minLength": 1,
+          "type": "string"
+        },
+        "spec_hash": {
+          "pattern": "^sha256:[a-f0-9]{64}$",
+          "type": "string"
+        },
+        "stable_id": {
+          "pattern": "^KFM-[A-Z0-9][A-Z0-9._-]{2,95}$",
+          "type": "string"
+        },
+        "truth_label": {
+          "enum": [
+            "CONFIRMED",
+            "PROPOSED",
+            "UNKNOWN",
+            "NEEDS_VERIFICATION",
+            "CONFLICTED",
+            "LINEAGE"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "stable_id",
+        "spec_hash",
+        "truth_label",
+        "normalized_statement",
+        "evidence_refs",
+        "dependency_ids",
+        "candidate_authority_families"
+      ],
+      "type": "object"
+    },
+    "nullableCard": {
+      "oneOf": [
+        { "$ref": "#/$defs/card" },
+        { "type": "null" }
+      ]
+    },
+    "nullableTruthLabel": {
+      "oneOf": [
+        {
+          "enum": [
+            "CONFIRMED",
+            "PROPOSED",
+            "UNKNOWN",
+            "NEEDS_VERIFICATION",
+            "CONFLICTED",
+            "LINEAGE"
+          ],
+          "type": "string"
+        },
+        { "type": "null" }
+      ]
+    },
+    "refList": {
+      "items": {
+        "maxLength": 512,
+        "pattern": "^[A-Za-z][A-Za-z0-9+.-]*://[^\\s]+$",
+        "type": "string"
+      },
+      "maxItems": 64,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "idList": {
+      "items": {
+        "pattern": "^KFM-[A-Z0-9][A-Z0-9._-]{2,95}$",
+        "type": "string"
+      },
+      "maxItems": 64,
+      "type": "array",
+      "uniqueItems": true
+    }
+  },
+  "properties": {
+    "authority_effects": {
+      "additionalProperties": false,
+      "properties": {
+        "approves_review": { "type": "boolean" },
+        "authorizes_public_use": { "type": "boolean" },
+        "authorizes_publication": { "type": "boolean" },
+        "authorizes_release": { "type": "boolean" },
+        "mutates_atlas": { "type": "boolean" },
+        "promotes_truth": { "type": "boolean" }
+      },
+      "required": [
+        "mutates_atlas",
+        "promotes_truth",
+        "approves_review",
+        "authorizes_release",
+        "authorizes_publication",
+        "authorizes_public_use"
+      ],
+      "type": "object"
+    },
+    "before": { "$ref": "#/$defs/nullableCard" },
+    "after": { "$ref": "#/$defs/nullableCard" },
+    "candidate_id": {
+      "pattern": "^atlas-delta-[a-z0-9][a-z0-9-]{2,95}$",
+      "type": "string"
+    },
+    "declared_delta": {
+      "additionalProperties": false,
+      "properties": {
+        "candidate_authority_families_added": {
+          "items": { "$ref": "#/$defs/authorityFamily" },
+          "maxItems": 12,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "candidate_authority_families_removed": {
+          "items": { "$ref": "#/$defs/authorityFamily" },
+          "maxItems": 12,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "changed_fields": {
+          "items": {
+            "enum": [
+              "candidate_authority_families",
+              "dependency_ids",
+              "evidence_refs",
+              "normalized_statement",
+              "spec_hash",
+              "stable_id",
+              "truth_label"
+            ]
+          },
+          "maxItems": 7,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "dependency_ids_added": { "$ref": "#/$defs/idList" },
+        "dependency_ids_removed": { "$ref": "#/$defs/idList" },
+        "evidence_refs_added": { "$ref": "#/$defs/refList" },
+        "evidence_refs_removed": { "$ref": "#/$defs/refList" },
+        "transition": {
+          "enum": ["ADDED", "REMOVED", "MODIFIED", "UNCHANGED"],
+          "type": "string"
+        },
+        "truth_transition": {
+          "additionalProperties": false,
+          "properties": {
+            "from": { "$ref": "#/$defs/nullableTruthLabel" },
+            "to": { "$ref": "#/$defs/nullableTruthLabel" }
+          },
+          "required": ["from", "to"],
+          "type": "object"
+        }
+      },
+      "required": [
+        "transition",
+        "changed_fields",
+        "evidence_refs_added",
+        "evidence_refs_removed",
+        "dependency_ids_added",
+        "dependency_ids_removed",
+        "candidate_authority_families_added",
+        "candidate_authority_families_removed",
+        "truth_transition"
+      ],
+      "type": "object"
+    },
+    "non_effects": {
+      "const": [
+        "does_not_mutate_atlas_cards_or_registries",
+        "does_not_resolve_evidence_or_decide_truth",
+        "does_not_approve_review_merge_or_promotion",
+        "does_not_authorize_release_publication_or_public_use",
+        "does_not_create_a_visualizer_or_public_interface"
+      ]
+    },
+    "profile": {
+      "const": "kfm.governance.atlas-card-delta-assessment-candidate.v1"
+    },
+    "profile_status": {
+      "const": "PROPOSED_FIXTURE_ONLY"
+    },
+    "schema_version": { "const": "1.0.0" },
+    "source_errors": {
+      "items": {
+        "enum": [
+          "BEFORE_SNAPSHOT_UNREADABLE",
+          "AFTER_SNAPSHOT_UNREADABLE",
+          "SNAPSHOT_TRUNCATED",
+          "UPSTREAM_TIMEOUT"
+        ]
+      },
+      "maxItems": 8,
+      "type": "array",
+      "uniqueItems": true
+    }
+  },
+  "required": [
+    "schema_version",
+    "profile",
+    "profile_status",
+    "candidate_id",
+    "before",
+    "after",
+    "declared_delta",
+    "source_errors",
+    "authority_effects",
+    "non_effects"
+  ],
+  "title": "AtlasCardDeltaAssessmentCandidate",
+  "type": "object"
+}

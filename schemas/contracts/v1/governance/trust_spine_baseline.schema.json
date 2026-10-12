@@ -1,0 +1,604 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/governance/trust_spine_baseline.schema.json",
+  "title": "KFM Trust Spine Authority Baseline",
+  "description": "Pinned, non-authoritative evidence projection of repository authority, control-plane coverage, trust-object coverage, validation observations, overlap, and unresolved work.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "snapshot_id",
+    "repository",
+    "projection_status",
+    "implementation_status",
+    "authority_mode",
+    "observed_at",
+    "base",
+    "authority_snapshot",
+    "repository_roots",
+    "control_plane_projections",
+    "trust_object_catalog",
+    "validation_observations",
+    "overlap",
+    "unresolved_items",
+    "non_effects",
+    "correction"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "snapshot_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]{15,127}$"
+    },
+    "repository": {
+      "const": "bartytime4life/Kansas-Frontier-Matrix"
+    },
+    "projection_status": {
+      "const": "PROPOSED"
+    },
+    "implementation_status": {
+      "const": "PARTIAL"
+    },
+    "authority_mode": {
+      "const": "evidence_projection_only"
+    },
+    "observed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "base": {
+      "$ref": "#/$defs/base"
+    },
+    "authority_snapshot": {
+      "$ref": "#/$defs/authoritySnapshot"
+    },
+    "repository_roots": {
+      "$ref": "#/$defs/repositoryRoots"
+    },
+    "control_plane_projections": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 128,
+      "items": {
+        "$ref": "#/$defs/projection"
+      }
+    },
+    "trust_object_catalog": {
+      "$ref": "#/$defs/trustObjectCatalog"
+    },
+    "validation_observations": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 128,
+      "items": {
+        "$ref": "#/$defs/validationObservation"
+      }
+    },
+    "overlap": {
+      "$ref": "#/$defs/overlap"
+    },
+    "unresolved_items": {
+      "$ref": "#/$defs/tokens",
+      "minItems": 1
+    },
+    "non_effects": {
+      "$ref": "#/$defs/tokens",
+      "minItems": 6
+    },
+    "correction": {
+      "$ref": "#/$defs/correction"
+    }
+  },
+  "$defs": {
+    "sha": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{40}$"
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "path": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512,
+      "pattern": "^[^\\\\/][^\\\\]*$"
+    },
+    "token": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]{2,160}$"
+    },
+    "tokens": {
+      "type": "array",
+      "maxItems": 256,
+      "items": {
+        "$ref": "#/$defs/token"
+      },
+      "uniqueItems": true
+    },
+    "implementationStatus": {
+      "type": "string",
+      "enum": [
+        "IMPLEMENTED",
+        "PARTIAL",
+        "ABSENT",
+        "SUPERSEDED",
+        "CONFLICTED",
+        "DEPRECATED",
+        "NOT_INSPECTED"
+      ]
+    },
+    "validationState": {
+      "type": "string",
+      "enum": [
+        "PASS",
+        "FAIL",
+        "NOT_RUN",
+        "SKIPPED",
+        "HOLD",
+        "UNKNOWN"
+      ]
+    },
+    "base": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "branch",
+        "sha",
+        "milestone_number",
+        "milestone_id",
+        "milestone_title",
+        "open_pull_requests"
+      ],
+      "properties": {
+        "branch": {
+          "const": "main"
+        },
+        "sha": {
+          "$ref": "#/$defs/sha"
+        },
+        "milestone_number": {
+          "const": 1
+        },
+        "milestone_id": {
+          "const": "KFM-MS-MRTS-001"
+        },
+        "milestone_title": {
+          "const": "Machine-Readable Control Plane & Trust Spine v1"
+        },
+        "open_pull_requests": {
+          "$ref": "#/$defs/issueNumbers"
+        }
+      }
+    },
+    "pathDigest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "sha256"
+      ],
+      "properties": {
+        "path": {
+          "$ref": "#/$defs/path"
+        },
+        "sha256": {
+          "$ref": "#/$defs/digest"
+        }
+      }
+    },
+    "directoryRules": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "version",
+        "path",
+        "sha256",
+        "decision_ref",
+        "implementation_status"
+      ],
+      "properties": {
+        "id": {
+          "const": "kfm://doctrine/directory-governance/v2"
+        },
+        "version": {
+          "const": "2.0.0-draft.1"
+        },
+        "path": {
+          "$ref": "#/$defs/path"
+        },
+        "sha256": {
+          "$ref": "#/$defs/digest"
+        },
+        "decision_ref": {
+          "const": "ADR-0029"
+        },
+        "implementation_status": {
+          "const": "IMPLEMENTED"
+        }
+      }
+    },
+    "acceptedAdr": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "path",
+        "sha256",
+        "relevant_to_milestone",
+        "implementation_status"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^ADR-[0-9]{4}$"
+        },
+        "path": {
+          "$ref": "#/$defs/path"
+        },
+        "sha256": {
+          "$ref": "#/$defs/digest"
+        },
+        "relevant_to_milestone": {
+          "type": "boolean"
+        },
+        "implementation_status": {
+          "$ref": "#/$defs/implementationStatus"
+        }
+      }
+    },
+    "authorityCandidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "path",
+        "status"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^ADR-[0-9]{4}$"
+        },
+        "path": {
+          "$ref": "#/$defs/path"
+        },
+        "status": {
+          "const": "PROPOSED"
+        }
+      }
+    },
+    "authoritySnapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "directory_rules",
+        "accepted_adrs",
+        "accepted_adr_count",
+        "accepted_relevant_adr_count",
+        "unresolved_authority_candidates"
+      ],
+      "properties": {
+        "directory_rules": {
+          "$ref": "#/$defs/directoryRules"
+        },
+        "accepted_adrs": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 128,
+          "items": {
+            "$ref": "#/$defs/acceptedAdr"
+          }
+        },
+        "accepted_adr_count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10000
+        },
+        "accepted_relevant_adr_count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10000
+        },
+        "unresolved_authority_candidates": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 128,
+          "items": {
+            "$ref": "#/$defs/authorityCandidate"
+          }
+        }
+      }
+    },
+    "rootClasses": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": {
+        "enum": [
+          "canonical",
+          "compatibility",
+          "conditional",
+          "deprecated",
+          "platform",
+          "retired"
+        ]
+      },
+      "additionalProperties": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 10000
+      }
+    },
+    "repositoryRoots": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "registry_path",
+        "sha256",
+        "declared_count",
+        "observed_present_count",
+        "classes",
+        "implementation_status",
+        "unresolved_items"
+      ],
+      "properties": {
+        "registry_path": {
+          "$ref": "#/$defs/path"
+        },
+        "sha256": {
+          "$ref": "#/$defs/digest"
+        },
+        "declared_count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10000
+        },
+        "observed_present_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000
+        },
+        "classes": {
+          "$ref": "#/$defs/rootClasses"
+        },
+        "implementation_status": {
+          "$ref": "#/$defs/implementationStatus"
+        },
+        "unresolved_items": {
+          "$ref": "#/$defs/tokens"
+        }
+      }
+    },
+    "projection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "path",
+        "sha256",
+        "implementation_status",
+        "validation_state"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/token"
+        },
+        "path": {
+          "$ref": "#/$defs/path"
+        },
+        "sha256": {
+          "$ref": "#/$defs/digest"
+        },
+        "implementation_status": {
+          "$ref": "#/$defs/implementationStatus"
+        },
+        "validation_state": {
+          "$ref": "#/$defs/validationState"
+        }
+      }
+    },
+    "trustObjectCatalog": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "registry_path",
+        "sha256",
+        "implementation_status",
+        "required_family_count",
+        "registered_required_count",
+        "other_registered_count",
+        "registered_required_families",
+        "unregistered_required_families",
+        "other_registered_families"
+      ],
+      "properties": {
+        "registry_path": {
+          "$ref": "#/$defs/path"
+        },
+        "sha256": {
+          "$ref": "#/$defs/digest"
+        },
+        "implementation_status": {
+          "const": "PARTIAL"
+        },
+        "required_family_count": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10000
+        },
+        "registered_required_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000
+        },
+        "other_registered_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000
+        },
+        "registered_required_families": {
+          "$ref": "#/$defs/tokens"
+        },
+        "unregistered_required_families": {
+          "$ref": "#/$defs/tokens",
+          "minItems": 1
+        },
+        "other_registered_families": {
+          "$ref": "#/$defs/tokens"
+        }
+      }
+    },
+    "findingCounts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "baselined_warning",
+        "fail_invariant",
+        "fail_new_drift",
+        "finding",
+        "stale_fingerprint"
+      ],
+      "properties": {
+        "baselined_warning": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "fail_invariant": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "fail_new_drift": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "finding": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "stale_fingerprint": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "validationObservation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "command",
+        "run_state",
+        "outcome",
+        "implementation_status",
+        "scope"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/token"
+        },
+        "command": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1024
+        },
+        "run_state": {
+          "type": "string",
+          "enum": [
+            "EXECUTED",
+            "NOT_RUN",
+            "SKIPPED"
+          ]
+        },
+        "outcome": {
+          "$ref": "#/$defs/validationState"
+        },
+        "implementation_status": {
+          "$ref": "#/$defs/implementationStatus"
+        },
+        "scope": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1024
+        },
+        "finding_counts": {
+          "$ref": "#/$defs/findingCounts"
+        },
+        "output_sha256": {
+          "$ref": "#/$defs/digest"
+        }
+      }
+    },
+    "issueNumbers": {
+      "type": "array",
+      "maxItems": 1000,
+      "items": {
+        "type": "integer",
+        "minimum": 1
+      },
+      "uniqueItems": true
+    },
+    "overlap": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "open_pull_requests",
+        "milestone_issue_numbers",
+        "related_issue_numbers",
+        "implementation_status"
+      ],
+      "properties": {
+        "open_pull_requests": {
+          "$ref": "#/$defs/issueNumbers"
+        },
+        "milestone_issue_numbers": {
+          "$ref": "#/$defs/issueNumbers",
+          "minItems": 1
+        },
+        "related_issue_numbers": {
+          "$ref": "#/$defs/issueNumbers"
+        },
+        "implementation_status": {
+          "$ref": "#/$defs/implementationStatus"
+        }
+      }
+    },
+    "correction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "method",
+        "rollback_target",
+        "history"
+      ],
+      "properties": {
+        "method": {
+          "const": "same_path_forward_fix_or_git_revert"
+        },
+        "rollback_target": {
+          "type": "string",
+          "pattern": "^git:[a-f0-9]{40}$"
+        },
+        "history": {
+          "const": "append_only_receipts"
+        }
+      }
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED",
+    "authority": "evidence_projection_shape_only",
+    "contract": "contracts/governance/trust_spine_baseline.md",
+    "instance": "control_plane/trust_spine_baseline.yaml",
+    "validator": "tools/validators/control_plane/validate_trust_spine_baseline.py",
+    "fixtures_root": "fixtures/contracts/v1/governance/trust_spine_baseline/",
+    "tests": "tests/validators/test_validate_trust_spine_baseline.py",
+    "non_effects": [
+      "does_not_create_authority",
+      "does_not_activate_sources",
+      "does_not_release_deploy_promote_or_publish"
+    ]
+  }
+}

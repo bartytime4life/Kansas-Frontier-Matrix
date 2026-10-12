@@ -1,0 +1,119 @@
+{
+  "receipt_id": "genrec-pmidx-created-date-repair-20260809",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/standards/pmtiles/PMIDX_SPEC_V1.md"
+  ],
+  "artifact_hashes": {
+    "docs/standards/pmtiles/PMIDX_SPEC_V1.md": "sha256:e341d94fd5c378e0e365397b43f5de59c2b20006a175b8c9bfae1d227365b130"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-09"
+  },
+  "prompt_or_contract": "sha256:49eca5abe50ca30b92654dabe0272d199e68f0d9a33941783f1322a7328f1640",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector workflow inspection",
+      "local Git history inspection",
+      "local deterministic documentation validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:49eca5abe50ca30b92654dabe0272d199e68f0d9a33941783f1322a7328f1640",
+      "sha256:f66a3d71738ae9271bb796a426718cfc2f525e567842b30841c0f71984e2a58b"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "github-actions://bartytime4life/Kansas-Frontier-Matrix/runs/31336567611/jobs/93303292707",
+      "repo:docs/standards/pmtiles/PMIDX_SPEC_V1.md@05d7f7341072eb9e7d79598c738c1c7bff7f5a49",
+      "repo:docs/standards/pmtiles/PMIDX_SPEC_V1.md@6947a2cbae6e02ce0bacedc74353f8dc3b430774",
+      "repo:tools/validators/docs/stale-scan/check_stale_docs.py@6947a2cbae6e02ce0bacedc74353f8dc3b430774",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@6947a2cbae6e02ce0bacedc74353f8dc3b430774"
+    ]
+  },
+  "truth_labels": {
+    "docs/standards/pmtiles/PMIDX_SPEC_V1.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "exact-pr2370-stale-scan-reproduction",
+      "outcome": "PASS",
+      "reason": "Reproduced the hosted failure as one current CREATED_DATE_INVALID finding on PMIDX_SPEC_V1.md; 28 unrelated findings remained historical warnings."
+    },
+    {
+      "gate": "earliest-repository-history-date",
+      "outcome": "PASS",
+      "reason": "Git history identifies 2026-05-19 as this path's earliest repository date at commit 05d7f7341072eb9e7d79598c738c1c7bff7f5a49."
+    },
+    {
+      "gate": "targeted-document-freshness-scan",
+      "outcome": "PASS",
+      "reason": "The repaired document produced zero current, failure, warning, or informational findings under the advisory profile."
+    },
+    {
+      "gate": "metadata-block-validation",
+      "outcome": "PASS",
+      "reason": "The metadata block is valid with zero failures; one pre-existing unrecognized truth_posture warning remains outside this repair."
+    },
+    {
+      "gate": "markdown-link-check",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS",
+      "reason": "Repository-native validation binds the repaired Markdown artifact to its final SHA-256 bytes."
+    },
+    {
+      "gate": "hosted-exact-head-workflow",
+      "outcome": "SKIPPED",
+      "reason": "Pending draft pull request creation."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "PR-2370-DOCS-STALE-SCAN",
+      "validated": true,
+      "evidence_ref": "github-actions://bartytime4life/Kansas-Frontier-Matrix/runs/31336567611/jobs/93303292707"
+    },
+    {
+      "id": "PMIDX-PATH-FIRST-COMMIT",
+      "validated": true,
+      "evidence_ref": "repo:docs/standards/pmtiles/PMIDX_SPEC_V1.md@05d7f7341072eb9e7d79598c738c1c7bff7f5a49"
+    },
+    {
+      "id": "ADR-0029@6947a2c",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@6947a2cbae6e02ce0bacedc74353f8dc3b430774"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-09T12:00:00Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Documentation-only repair for the CREATED_DATE_INVALID stale-scan failure observed on PR #2370. The ISO date records the path's earliest repository-history date and explicitly does not claim knowledge of pre-repository authorship. No PMIDX algorithm, validator, fixture, workflow, policy, release, deployment, publication, or public-use authority changes."
+}

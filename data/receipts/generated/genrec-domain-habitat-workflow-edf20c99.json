@@ -1,0 +1,73 @@
+{
+  "receipt_id": "genrec-domain-habitat-workflow-edf20c99",
+  "contract_version": "3.0.0",
+  "receipt_type": "GenerationReceipt",
+  "status": "PROPOSED",
+  "generated_at": "2026-07-18T00:00:00-05:00",
+  "repository": "bartytime4life/Kansas-Frontier-Matrix",
+  "base_commit": "0c28949d97cc718bd25b9cfa2a6470d46dc67f8d",
+  "branch": "agent/domain-habitat-workflow-20260718",
+  "target_path": ".github/workflows/domain-habitat.yml",
+  "previous_blob": "5fbc81145fe0c85026c9235dc5c5c79c72d17e6c",
+  "new_blob": "edf20c9916d880aab833e6acf23799b633c4d1af",
+  "truth_labels": {
+    "confirmed": [
+      "The prior validate-habitat, build-proof-habitat, and publish-dry-run-habitat jobs only executed TODO echo commands.",
+      "Baseline workflow run 29651765936 completed successfully without Habitat validation, proof construction, or release dry-run execution.",
+      "A sampled Habitat test module contains only a PROPOSED placeholder docstring.",
+      "The Habitat test index describes executable tests, validators, policy runtime, release integration, CI coverage, and pass rates as unverified.",
+      "The per-domain and broad Habitat validator indexes record executable behavior as unverified and README-backed.",
+      "The Habitat proof lane records implementation depth as UNKNOWN.",
+      "The Habitat candidate lane is pre-publication and states that a candidate is not a release.",
+      "Workflow name domain-habitat and all three job ids are preserved."
+    ],
+    "proposed": [
+      "Explicit fail-closed readiness holds are the safest current CI behavior until accepted executable Habitat lanes exist.",
+      "AST-based test detection and executable-body detection are appropriate graduation signals for the current scaffold maturity."
+    ],
+    "needs_verification": [
+      "Final-head GitHub Actions conclusions.",
+      "Accepted Habitat validator ownership and deterministic no-network suite.",
+      "Accepted machine policy and sensitivity topology for join-induced and derivation-induced Habitat risk.",
+      "Concrete EvidenceBundle and proof producer contracts, schemas, synthetic fixtures, sensitive-join controls, access controls, manifests, and receipts.",
+      "Accepted Habitat candidate, release dry-run, public-safe geometry, correction, withdrawal, and rollback contracts.",
+      "Branch-protection dependencies, independent review ownership, and immutable action pinning."
+    ]
+  },
+  "changes": [
+    "Added workflow_dispatch, contents: read permission, concurrency cancellation, deterministic Python setup, and job timeouts.",
+    "Disabled persisted checkout credentials.",
+    "Converted all three TODO-only jobs into explicit WORKFLOW_SKIPPED_EXPLICIT and WORKFLOW_HOLD readiness checks.",
+    "Added required-boundary checks across Habitat docs, contracts, schemas, fixtures, policy, tests, validators, source registry, quarantine, proofs, release candidates, and published lanes.",
+    "Added AST-based detection for newly executable Habitat tests.",
+    "Added executable-body detection across Habitat and Habitat-Fauna validator lanes without treating README or fixture inventories as code.",
+    "Added fail-closed graduation checks for validators, proof artifacts or producers, candidate records, Make targets, and changed release posture.",
+    "Added bounded summaries preserving species-authority, model-role, sensitive-join, geoprivacy, evidence, policy, correction, withdrawal, and rollback boundaries."
+  ],
+  "authority_boundary": "A green held result is repository-readiness evidence only. It is not Habitat validation, species-presence confirmation, regulatory or legal determination, geoprivacy approval, EvidenceBundle resolution, proof construction, lifecycle promotion, release approval, restoration or stewardship decision authority, or publication authority.",
+  "directory_rules_basis": [
+    ".github/workflows remains the existing CI orchestration location.",
+    "tests and fixtures remain the test and bounded test-data roots.",
+    "tools remains the validator and helper root.",
+    "data/registry remains the source-registry root.",
+    "data/quarantine remains the fail-closed holding root.",
+    "data/proofs remains the proof-support root.",
+    "release remains the release-decision root.",
+    "data/published remains the released-payload root.",
+    "data/receipts/generated remains the existing generated process-memory lane."
+  ],
+  "validation": {
+    "workflow_and_job_identities_preserved": "PASS",
+    "remote_git_blob": "edf20c9916d880aab833e6acf23799b633c4d1af",
+    "exact_changed_paths": [
+      ".github/workflows/domain-habitat.yml",
+      "data/receipts/generated/genrec-domain-habitat-workflow-edf20c99.json"
+    ],
+    "final_head_ci": "PENDING",
+    "human_review": "PENDING"
+  },
+  "rollback": {
+    "strategy": "Close the pull request without merge or revert the receipt commit and workflow commit in reverse order.",
+    "restores_blob": "5fbc81145fe0c85026c9235dc5c5c79c72d17e6c"
+  }
+}

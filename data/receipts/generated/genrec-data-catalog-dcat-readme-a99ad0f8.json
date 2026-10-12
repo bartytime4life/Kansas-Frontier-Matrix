@@ -1,0 +1,149 @@
+{
+  "receipt_id": "genrec-data-catalog-dcat-readme-a99ad0f8",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "data/catalog/dcat/README.md"
+  ],
+  "artifact_hashes": {
+    "data/catalog/dcat/README.md": "sha256:a99ad0f8dd29df039ce06100f638756d8f1fc02b3cfe7e4bddb505ec669139e1"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-07-22-session"
+  },
+  "prompt_or_contract": "sha256:2509aad3184af800f8037a93cfe122d9d2281ee64fa4dbef658d04a81f88dc1b",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "container",
+      "PDF inspection"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "Directory Rules.pdf",
+      "Unified Implementation Architecture Build Manual.md"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0/data/catalog/dcat/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0/data/catalog/dcat/flora/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0/data/catalog/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0/docs/standards/DCAT.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0/docs/adr/ADR-0011-receipts-vs-proofs-vs-manifests-vs-catalog-separation.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0/docs/adr/ADR-0022-catalog-matrix--stac-+-dcat-+-prov-must-agree.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0/contracts/data/catalog_matrix.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0/schemas/contracts/v1/data/catalog_matrix.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0/tools/validators/validate_catalog_matrix.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0/tools/validators/catalog/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0/tools/validators/catalog_closure/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0/policy/data/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0/.github/PULL_REQUEST_TEMPLATE.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0/.github/workflows/validator-suite.yml"
+    ]
+  },
+  "truth_labels": {
+    "data/catalog/dcat/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-drift-preflight",
+      "outcome": "PASS",
+      "reason": "Pinned current main; re-read the unchanged target blob; checked the merged Flora guide, parent/sibling lanes, relevant contracts/schemas/validators/policy, duplicate pull-request state, and the current pull-request validator workflow."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "The revision remains in the confirmed DCAT catalog sublane and preserves separate source, evidence, receipt, proof, schema, policy, release, published-artifact, validator, and public-interface responsibilities."
+    },
+    {
+      "gate": "authority-and-truth-labels",
+      "outcome": "PASS",
+      "reason": "The DCAT profile and both relevant ADRs remain draft/proposed; the CatalogMatrix schema and validator are described as placeholders; executable validation, closure, release linkage, and public serving remain NEEDS VERIFICATION."
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "One H1, ordered Directory Rules folder sections, unique headings, balanced metadata and Mermaid fences, quick navigation, tables, validation, review, ADR, last-reviewed, and rollback material were checked."
+    },
+    {
+      "gate": "relative-link-readback",
+      "outcome": "PASS",
+      "reason": "Every repository-relative path linked by the README was resolved at the pinned base commit."
+    },
+    {
+      "gate": "sensitive-content-and-secret-review",
+      "outcome": "PASS",
+      "reason": "No credentials, private endpoint, exact sensitive location, restricted payload, living-person record, or reconstructive dataset join was introduced."
+    },
+    {
+      "gate": "receipt-shape-and-hash-linkage",
+      "outcome": "PASS",
+      "reason": "Receipt JSON syntax, generated-receipt schema conformance, required fields, and the README SHA-256 linkage were checked against the authored bytes."
+    },
+    {
+      "gate": "runtime-and-release-tests",
+      "outcome": "SKIPPED",
+      "reason": "Documentation-only API change; no DCAT payload, schema, validator, policy implementation, workflow, release, public route, or runtime behavior changed. Repository CI remains the draft PR's observation surface."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "EV-01",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0"
+    },
+    {
+      "id": "EV-02",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0/data/catalog/dcat/README.md"
+    },
+    {
+      "id": "EV-03",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0/docs/standards/DCAT.md"
+    },
+    {
+      "id": "EV-04",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "EV-05",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0/docs/adr/ADR-0022-catalog-matrix--stac-+-dcat-+-prov-must-agree.md"
+    },
+    {
+      "id": "EV-06",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0/schemas/contracts/v1/data/catalog_matrix.schema.json"
+    },
+    {
+      "id": "EV-07",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/d24c7bf9ee89c9bb3bd2cd14e0e60b1de6314bc0/tools/validators/validate_catalog_matrix.py"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-22T21:45:45Z",
+  "emitter": "OpenAI Codex / GPT-5",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Documentation-only update. This receipt records authorship and validation process memory; it does not accept ADR-0011 or ADR-0022, define a DCAT profile, create a catalog payload or CatalogMatrix, prove closure, authorize publication, or satisfy human review."
+}

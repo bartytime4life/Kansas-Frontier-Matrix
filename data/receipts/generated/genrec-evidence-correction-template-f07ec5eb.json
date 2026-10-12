@@ -1,0 +1,133 @@
+{
+  "receipt_id": "genrec-evidence-correction-template-f07ec5eb",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/ISSUE_TEMPLATE/evidence_correction.md"
+  ],
+  "artifact_hashes": {
+    ".github/ISSUE_TEMPLATE/evidence_correction.md": "sha256:f07ec5eb8cfa3c118eb641bd5a3ce51cedabc93ebef00205a64f85bd1edaabd5"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-17"
+  },
+  "prompt_or_contract": "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "repository evidence inspection",
+      "Markdown issue-template validation",
+      "generated receipt validation",
+      "remote repository verification"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM GitHub Repository Documentation Implementation Agent v3.1"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/1f6b4f867091f819969360f7d5187fcb41e39604",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/1f6b4f867091f819969360f7d5187fcb41e39604/.github/ISSUE_TEMPLATE/evidence_correction.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/1f6b4f867091f819969360f7d5187fcb41e39604/.github/ISSUE_TEMPLATE/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/1f6b4f867091f819969360f7d5187fcb41e39604/SECURITY.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/1f6b4f867091f819969360f7d5187fcb41e39604/.github/CODEOWNERS",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/1f6b4f867091f819969360f7d5187fcb41e39604/contracts/correction/correction_notice.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/1f6b4f867091f819969360f7d5187fcb41e39604/docs/runbooks/EVIDENCE_CORRECTION.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/1f6b4f867091f819969360f7d5187fcb41e39604/release/correction_notices/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/1f6b4f867091f819969360f7d5187fcb41e39604/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/17218a285e6d55f0bc51724e6812bfdf3dbcb13a"
+    ]
+  },
+  "truth_labels": {
+    ".github/ISSUE_TEMPLATE/evidence_correction.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-base-preflight",
+      "outcome": "PASS",
+      "reason": "Verified repository identity and admin permission, default-branch base 1f6b4f867091f819969360f7d5187fcb41e39604, target file and blob, issue-intake authority boundary, correction contract and runbook, release-notice lane, security routing, CODEOWNERS, receipt schema, and absence of overlapping open work."
+    },
+    {
+      "gate": "no-loss-and-correction-model-alignment",
+      "outcome": "PASS",
+      "reason": "Preserved the original affected claim/release, problem, supporting evidence, and correction-lineage obligations while adding stale-versus-wrong classification, EvidenceRef-to-EvidenceBundle resolution, source-role review, containment, derivative impact, review duties, validation, and governed correction outcomes."
+    },
+    {
+      "gate": "markdown-front-matter-and-structure",
+      "outcome": "PASS",
+      "reason": "Parsed front matter with name/about/title/labels/assignees, verified balanced comments and code fences, final newline, ordered section inventory, empty unverified labels, and assignment to verified repository owner bartytime4life."
+    },
+    {
+      "gate": "security-and-public-intake-boundary",
+      "outcome": "PASS",
+      "reason": "The template routes security-sensitive material to SECURITY.md, requires public-safe evidence pointers and generalized locations, prohibits restricted payloads, and distinguishes issue intake from correction, policy, release, supersession, withdrawal, and rollback authority."
+    },
+    {
+      "gate": "correction-lineage-and-acceptance",
+      "outcome": "PASS",
+      "reason": "The final template preserves prior release inspectability, requires evidence support or abstention/denial, records derivative closure, separates correction notices from release state, names rollback targets, and uses finite acceptance outcomes."
+    },
+    {
+      "gate": "artifact-hash-and-remote-readback",
+      "outcome": "PASS",
+      "reason": "Computed SHA-256 f07ec5eb8cfa3c118eb641bd5a3ce51cedabc93ebef00205a64f85bd1edaabd5 and Git blob SHA 04799f74ce0c234c1f8b839184b14410140459ea; GitHub returned the same blob SHA after the update."
+    },
+    {
+      "gate": "issue-chooser-render-and-platform-settings",
+      "outcome": "SKIPPED",
+      "reason": "The template is not yet on the default branch. Issue chooser rendering, project automation, repository issue settings, and required-review enforcement remain NEEDS VERIFICATION after merge."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "current-evidence-correction-template",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/1f6b4f867091f819969360f7d5187fcb41e39604/.github/ISSUE_TEMPLATE/evidence_correction.md"
+    },
+    {
+      "id": "issue-intake-authority-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/1f6b4f867091f819969360f7d5187fcb41e39604/.github/ISSUE_TEMPLATE/README.md"
+    },
+    {
+      "id": "correction-notice-contract",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/1f6b4f867091f819969360f7d5187fcb41e39604/contracts/correction/correction_notice.md"
+    },
+    {
+      "id": "evidence-correction-runbook",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/1f6b4f867091f819969360f7d5187fcb41e39604/docs/runbooks/EVIDENCE_CORRECTION.md"
+    },
+    {
+      "id": "release-correction-notice-lane",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/1f6b4f867091f819969360f7d5187fcb41e39604/release/correction_notices/README.md"
+    },
+    {
+      "id": "private-first-security-routing",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/1f6b4f867091f819969360f7d5187fcb41e39604/SECURITY.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-17T17:30:56Z",
+  "emitter": "openai/gpt-5.6-thinking",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored revision of the public evidence-correction issue template on a scoped review branch. The artifact structures intake and triage only. It does not confirm that a published object is wrong, create a CorrectionNotice, approve policy, change release state, issue a supersession or withdrawal, authorize rollback, or complete correction. Human review remains pending."
+}

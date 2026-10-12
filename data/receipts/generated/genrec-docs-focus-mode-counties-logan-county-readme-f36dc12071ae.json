@@ -1,0 +1,134 @@
+{
+  "receipt_id": "genrec-docs-focus-mode-counties-logan-county-readme-f36dc12071ae",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/focus-mode/counties/logan_county/README.md"
+  ],
+  "artifact_hashes": {
+    "docs/focus-mode/counties/logan_county/README.md": "sha256:2a22e1d24be0e4703790f6b003e9547a61001801123fdbdcedb52c7953eaafaf"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Sol",
+    "version": "exact serving revision not exposed"
+  },
+  "prompt_or_contract": "sha256:ea26f6fc68203bbb00669cb51a94b8b57ce54de591cccbec2b57a73ce8a649ac",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "bounded current-repository inspection",
+      "repository-only source comparison",
+      "remote blob verification"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:ea26f6fc68203bbb00669cb51a94b8b57ce54de591cccbec2b57a73ce8a649ac",
+      "sha256:2a22e1d24be0e4703790f6b003e9547a61001801123fdbdcedb52c7953eaafaf"
+    ],
+    "attached_docs": [],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/d5b2d6e74f939d38a426207f2afb7653f005ea3b",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d5b2d6e74f939d38a426207f2afb7653f005ea3b/docs/focus-mode/counties/logan_county/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d5b2d6e74f939d38a426207f2afb7653f005ea3b/docs/focus-mode/counties/logan_county/logan_county_focus_mode_build_plan.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d5b2d6e74f939d38a426207f2afb7653f005ea3b/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d5b2d6e74f939d38a426207f2afb7653f005ea3b/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/d5b2d6e74f939d38a426207f2afb7653f005ea3b/docs/focus-mode/counties/COUNTY_INDEX.md"
+    ]
+  },
+  "truth_labels": {
+    "docs/focus-mode/counties/logan_county/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main-target-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Pinned main at d5b2d6e74f939d38a426207f2afb7653f005ea3b; confirmed the target README was one byte, inspected the sibling Logan build plan, and found no open Logan README PR or matching task branch before branch creation."
+    },
+    {
+      "gate": "same-path-placement-and-directory-authority",
+      "outcome": "PASS",
+      "reason": "The tracked README remains under docs/focus-mode/counties/logan_county/. ADR-0029 is accepted and adopts Directory Rules v2 at docs/doctrine/directory-rules.md; no move, rename, parallel Focus tree, or authority-root change is made."
+    },
+    {
+      "gate": "one-byte-placeholder-replacement",
+      "outcome": "PASS",
+      "reason": "The prior target blob was exactly one newline. The replacement provides a complete documentation boundary for fragile geoheritage, paleontology, ecology, groundwater, property/access, roads, emergency, evidence, review, correction, and rollback."
+    },
+    {
+      "gate": "linked-build-plan-reconciliation",
+      "outcome": "PASS",
+      "reason": "The Logan build plan was left byte-unchanged. Its repository-unknown statements are narrowed only for path/file presence; external source claims and all implementation designs remain proposed or need verification."
+    },
+    {
+      "gate": "fragile-geoheritage-and-paleontology-boundary",
+      "outcome": "PASS",
+      "reason": "The README exposes no fossil target coordinates, collecting guidance, off-trail route, erosion-sensitive location, or high-resolution resource detail and explicitly requires denial/generalization where harmful precision would result."
+    },
+    {
+      "gate": "ecology-water-property-and-current-safety-boundary",
+      "outcome": "PASS",
+      "reason": "The README makes no sensitive-species, private-well, water-right, lawful-use, property, mineral, access, road-condition, trail-condition, emergency, environmental-health, or visitor-safety determination."
+    },
+    {
+      "gate": "county-index-staleness-disclosure",
+      "outcome": "PASS",
+      "reason": "The current county index's Logan README_1_BYTE finding is disclosed as becoming stale after this leaf change; a partial index edit is intentionally deferred to a current-main full-index recomputation."
+    },
+    {
+      "gate": "artifact-byte-and-hash-closure",
+      "outcome": "PASS",
+      "reason": "The final README is bound by SHA-256 2a22e1d24be0e4703790f6b003e9547a61001801123fdbdcedb52c7953eaafaf and remote Git blob f36dc12071aed9aecd32c3e336fb7fddd8f32323."
+    },
+    {
+      "gate": "external-source-refresh",
+      "outcome": "SKIPPED",
+      "reason": "The sibling plan's external source observations were not rechecked; all external scientific, access, rights, road, emergency, hydrologic, and currentness claims remain NEEDS VERIFICATION."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending; repository routing is not paleontology, ecology, groundwater, rights, sensitivity, release, or publication approval."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "current-user-implementation-request",
+      "validated": true,
+      "evidence_ref": "sha256:ea26f6fc68203bbb00669cb51a94b8b57ce54de591cccbec2b57a73ce8a649ac"
+    },
+    {
+      "id": "pinned-current-main",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/d5b2d6e74f939d38a426207f2afb7653f005ea3b"
+    },
+    {
+      "id": "prior-one-byte-target",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/d5b2d6e74f939d38a426207f2afb7653f005ea3b/docs/focus-mode/counties/logan_county/README.md"
+    },
+    {
+      "id": "logan-build-plan",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/d5b2d6e74f939d38a426207f2afb7653f005ea3b/docs/focus-mode/counties/logan_county/logan_county_focus_mode_build_plan.md"
+    },
+    {
+      "id": "accepted-directory-rules-decision",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/d5b2d6e74f939d38a426207f2afb7653f005ea3b/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-08-22T02:15:00Z",
+  "emitter": "OpenAI GPT-5.6 Sol",
+  "notes": "Documentation-only same-path update plus provenance receipt. The Logan build plan, county index, contracts, schemas, policy, validators, workflows, lifecycle data, release state, deployment state, and publication state remain unchanged."
+}

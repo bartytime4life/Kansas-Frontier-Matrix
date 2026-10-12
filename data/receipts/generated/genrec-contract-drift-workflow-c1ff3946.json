@@ -1,0 +1,51 @@
+{
+  "receipt_id": "genrec-contract-drift-workflow-c1ff3946",
+  "contract_version": "3.0.0",
+  "receipt_type": "generated_change_receipt",
+  "status": "PROPOSED",
+  "generated_at": "2026-07-18T00:00:00-05:00",
+  "repository": "bartytime4life/Kansas-Frontier-Matrix",
+  "base_commit": "9645e3e21476f8bcf92df95ae09ad442a8088a3a",
+  "branch": "agent/contract-drift-workflow-20260718",
+  "target_path": ".github/workflows/contract-drift.yml",
+  "previous_blob": "1b3c8ce54811e24f8aea658df81c4961ede0e101",
+  "new_blob": "259a4c22639f5b8fc89425ed501bb7795a26a596",
+  "sha256": "c1ff39468285a20ae96ec50b133b33443339c650337a64bb6e8fd46c9648366c",
+  "truth_labels": {
+    "confirmed": [
+      "Prior workflow only checked out the repository and echoed a TODO message.",
+      "Makefile test target runs pytest over tests/schemas and tests/contracts.",
+      "Workflow and job identities are preserved."
+    ],
+    "proposed": [
+      "The selected repository-owned tests are the current executable contract/schema consistency gate."
+    ],
+    "needs_verification": [
+      "Final-head GitHub Actions conclusion.",
+      "Complete semantic coverage between Markdown contracts and machine schemas.",
+      "Branch-protection dependencies and reviewer ownership.",
+      "Immutable action pinning."
+    ]
+  },
+  "validation": {
+    "workflow_identity": "PASS",
+    "job_identity": "PASS",
+    "least_privilege": "PASS",
+    "persisted_credentials_disabled": "PASS",
+    "strict_pytest_command": "PASS",
+    "remote_blob_readback": "PASS",
+    "final_head_ci": "PENDING",
+    "human_review": "PENDING"
+  },
+  "authority_boundary": [
+    "No release or publication authority.",
+    "No policy approval.",
+    "No lifecycle promotion.",
+    "No source admission.",
+    "No claim of complete contract/schema semantic equivalence."
+  ],
+  "rollback": {
+    "restore_blob": "1b3c8ce54811e24f8aea658df81c4961ede0e101",
+    "remove_receipt": true
+  }
+}

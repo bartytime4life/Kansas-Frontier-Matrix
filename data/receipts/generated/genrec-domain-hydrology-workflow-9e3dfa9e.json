@@ -1,0 +1,80 @@
+{
+  "receipt_id": "genrec-domain-hydrology-workflow-9e3dfa9e",
+  "contract_version": "3.0.0",
+  "receipt_type": "GenerationReceipt",
+  "status": "PROPOSED",
+  "generated_at": "2026-07-18T00:00:00-05:00",
+  "repository": "bartytime4life/Kansas-Frontier-Matrix",
+  "base_commit": "2bde43821a398aff1fa1a862e6d7f61e7d68e6c9",
+  "branch": "agent/domain-hydrology-workflow-20260718",
+  "target_path": ".github/workflows/domain-hydrology.yml",
+  "previous_blob": "b54f7dbd425da657176a05f828c5ebeb952a2077",
+  "new_blob": "ae95407e2a026115e7ab37019f3a57d622ce7514",
+  "sha256": "9e3dfa9e1581ef23932ba827b5050213d6601a2e717af7d069515627aeb840f8",
+  "truth_labels": {
+    "confirmed": [
+      "The prior validate-hydrology, build-proof-hydrology, and publish-dry-run-hydrology jobs only executed TODO echo commands.",
+      "Baseline workflow run 29652651087 completed successfully without Hydrology validation, proof construction, or release dry-run execution.",
+      "Sampled Hydrology test modules contain only PROPOSED placeholder docstrings.",
+      "The per-domain, full-name, and shorthand Hydrology validator indexes record executable behavior and CI wiring as unverified.",
+      "The inspected check_crosswalk.py validator file contains only a PROPOSED placeholder docstring.",
+      "Inspected Hydrology source-descriptor and pipeline-spec YAML files are explicitly PROPOSED placeholder material.",
+      "The Hydrology proof lane records implementation depth as UNKNOWN, and the dedicated hydrology-proof-slice workflow remains TODO-only.",
+      "The Hydrology release-candidate lane is pre-publication and states that a candidate is not a release.",
+      "Workflow name domain-hydrology and all three job ids are preserved."
+    ],
+    "proposed": [
+      "Bounded static readiness checks plus explicit proof and release holds are the safest current CI behavior until accepted executable Hydrology lanes exist.",
+      "AST-based test detection, executable-body detection, selected fixture parsing, and placeholder-posture checks are appropriate graduation signals for the current scaffold maturity."
+    ],
+    "needs_verification": [
+      "Final-head GitHub Actions conclusions.",
+      "Accepted Hydrology validator ownership and deterministic no-network suite.",
+      "Accepted SourceDescriptor and pipeline-spec schemas, semantic validators, policy bindings, and admission state.",
+      "Concrete EvidenceBundle and proof producer contracts, schemas, fixtures, access controls, manifests, and receipts.",
+      "Accepted Hydrology candidate, release dry-run, time-validity, stale-state, correction, withdrawal, and rollback contracts.",
+      "Branch-protection dependencies, independent review ownership, and immutable action pinning."
+    ]
+  },
+  "changes": [
+    "Added workflow_dispatch, contents: read permission, concurrency cancellation, deterministic Python setup, and job timeouts.",
+    "Disabled persisted checkout credentials.",
+    "Converted the validation TODO into a bounded static readiness check with an explicit WORKFLOW_HOLD outcome.",
+    "Added required-boundary checks across Hydrology doctrine, ADRs, contracts, schemas, fixtures, policy, tests, validators, source registry, proofs, release candidates, and published lanes.",
+    "Added AST-based detection for newly executable Hydrology tests.",
+    "Added parsing checks for selected valid Hydrology JSON fixtures.",
+    "Added posture and path checks for inspected PROPOSED Hydrology source-descriptor and pipeline-spec YAML files.",
+    "Added executable-body detection across per-domain, full-name, shorthand, flood-context, Hydrology/Hazards, and Atmosphere/Hydrology validator lanes.",
+    "Converted proof and release TODO jobs into explicit WORKFLOW_SKIPPED_EXPLICIT and WORKFLOW_HOLD readiness checks.",
+    "Restricted proof-implementation discovery to executable responsibility roots so placeholder test filenames do not trigger false graduation.",
+    "Added fail-closed graduation checks for proof-slice changes, proof artifacts or producers, candidate records, Make targets, and changed release posture.",
+    "Added bounded summaries preserving source-role, NFHL/regulatory-context, freshness, public-safety, evidence, policy, correction, withdrawal, and rollback boundaries."
+  ],
+  "authority_boundary": "A green held result is repository-readiness evidence only. It is not Hydrology truth validation, source admission, flood-warning or emergency authority, engineering or regulatory determination, EvidenceBundle resolution, proof construction, lifecycle promotion, release approval, or publication authority.",
+  "directory_rules_basis": [
+    ".github/workflows remains the existing CI orchestration location.",
+    "tests and fixtures remain the enforceability and bounded synthetic-input roots.",
+    "tools remains the validator and helper root.",
+    "pipeline_specs remains the declarative pipeline-spec root.",
+    "data/registry remains the source-admission and registry root.",
+    "data/proofs remains the proof-support root.",
+    "release remains the release-decision root.",
+    "data/published remains the released-payload root.",
+    "data/receipts/generated remains the existing generated process-memory lane."
+  ],
+  "validation": {
+    "workflow_yaml_parse": "PASS",
+    "workflow_and_job_identities_preserved": "PASS",
+    "selected_fixture_parse_and_runtime_checks": "PENDING_FINAL_HEAD_CI",
+    "exact_changed_paths": [
+      ".github/workflows/domain-hydrology.yml",
+      "data/receipts/generated/genrec-domain-hydrology-workflow-9e3dfa9e.json"
+    ],
+    "final_head_ci": "PENDING",
+    "human_review": "PENDING"
+  },
+  "rollback": {
+    "strategy": "Close the pull request without merge or revert the receipt commit and workflow commit in reverse order.",
+    "restores_blob": "b54f7dbd425da657176a05f828c5ebeb952a2077"
+  }
+}

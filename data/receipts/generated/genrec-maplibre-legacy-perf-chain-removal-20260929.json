@@ -1,0 +1,160 @@
+{
+  "receipt_id": "genrec-maplibre-legacy-perf-chain-removal-20260929",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/maplibre-perf-governance.yml",
+    "CONTRIBUTING.md",
+    "Makefile",
+    "README.md",
+    "artifacts/qa/reports/render-smoke/README.md",
+    "artifacts/qa/reports/visual-diff/README.md",
+    "configs/maplibre/README.md",
+    "control_plane/repository_governance_parity.yaml",
+    "docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md",
+    "docs/adr/ADR-0009-hydrology-is-the-first-proof-bearing-lane.md",
+    "docs/architecture/maplibre-master.md",
+    "docs/architecture/maplibre.md",
+    "docs/quality/README.md",
+    "docs/quality/maplibre-perf-governance.md",
+    "docs/wiki/Development-and-Validation.md",
+    "fixtures/slim/README.md",
+    "package.json",
+    "packages/maplibre/README.md",
+    "packages/maplibre/src/README.md",
+    "pnpm-lock.yaml",
+    "schemas/maplibre/README.md",
+    "scripts/README.md",
+    "tests/README.md",
+    "tests/domains/fauna/a11y/README.md",
+    "tests/maplibre/README.md",
+    "tests/maplibre/test_legacy_perf_harness_retirement.py",
+    "tests/validators/directory_governance/test_validate_repository_governance_parity.py",
+    "tools/validators/directory_governance/repository_topology_baseline.json"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/maplibre-perf-governance.yml": "sha256:1a9124b5a0730621fb28927e3d7d5e0b853e8d08b7be2f0b01d68052b5bc4034",
+    "CONTRIBUTING.md": "sha256:0a4c01e67e620132d121df8b33717e4c1dade472293cdff1eee0bb806dee690a",
+    "Makefile": "sha256:9ab252f1d544fa0cc14d4e0bfbcb4f9042fcc8b3d988c456aaf2cf9830665b1a",
+    "README.md": "sha256:a10b84787e1c29009f45541069105847ce7073b78cb75db8f36f8aaaa7d89ddb",
+    "artifacts/qa/reports/render-smoke/README.md": "sha256:6181ed574bbbedbadacb7a0b4df0f1e2036fba5bb13b2d94c976b028917e3293",
+    "artifacts/qa/reports/visual-diff/README.md": "sha256:4cf64685e5d4640e5996a4efec94ca32dfdd0b95cc86a8921dc6fd74770c96a6",
+    "configs/maplibre/README.md": "sha256:0b5dff4a9ce81f0f11d08edb20f03da07bca8ffbdbe484dc6690c47c048ad28d",
+    "control_plane/repository_governance_parity.yaml": "sha256:df10b191c8dfee0daa0fa9ab099b997333a2f2c04090491d8178dba3eda20e53",
+    "docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md": "sha256:1ffd2322271cefeeaeec937f57517657d6c52e7f6c18af4ae6525670f93764b0",
+    "docs/adr/ADR-0009-hydrology-is-the-first-proof-bearing-lane.md": "sha256:a5e40e980564f1d363cb22dd97307f7b67e436521d1b761681252e2e3aeb7f31",
+    "docs/architecture/maplibre-master.md": "sha256:2f6b49a0177e313b9be73a44a7885d639a95051e9da4242df2495502a5cc7c1c",
+    "docs/architecture/maplibre.md": "sha256:683be3e97846b10fceb07f57e7053a145492d1630519c9b4d01e5a18b9969be0",
+    "docs/quality/README.md": "sha256:eba37fe6d21309cce97e95bdf1688663e0950cd690588322200c7e4d53e9fa41",
+    "docs/quality/maplibre-perf-governance.md": "sha256:4e00963b0ff3888a33615ef86727797e797c04ec5001c6e1cdd590f40d75c19c",
+    "docs/wiki/Development-and-Validation.md": "sha256:adc64905cf39f048040c914178e90917bace0586e1263ef5ac486c138200ea70",
+    "fixtures/slim/README.md": "sha256:d87b05d177ad63510a68ee1ccb98e117c3ab75325108064258fbc5c864286920",
+    "package.json": "sha256:41672c694b7df5dcd4e0d411042334d5b9b53b43dc7257bc0927800573243254",
+    "packages/maplibre/README.md": "sha256:a1780da20e2df62f88871888576aca67941a6699f98b7835e5b3b88702246964",
+    "packages/maplibre/src/README.md": "sha256:881fe2064bea4b81eb019a5738c9bb0cad76afe1846e24c3a7af58db26b17eba",
+    "pnpm-lock.yaml": "sha256:92f9848711c2e0fc767dc32c6a6eee648a8b68bb4f996996eca73e0e9189f25c",
+    "schemas/maplibre/README.md": "sha256:2143c240b61719cad99388bde417db2a973d042ba2b8cda7d8821ac6120b204d",
+    "scripts/README.md": "sha256:a052fab17c27860d0213b343d4660ba0ae283664bf0fb0719badbdc032e01df3",
+    "tests/README.md": "sha256:4b87336c47ff7c6fa875d6481f90883ba8ee3206248cfe6250d038febd9a4c5c",
+    "tests/domains/fauna/a11y/README.md": "sha256:742f00b10e24df1c38955ac528d6a079b8d715d573fe64433ba2b6aab471e31e",
+    "tests/maplibre/README.md": "sha256:afdbfce3c7ed62b35d31b514501fd1eff29b4e9220c11b4d87c62c6ebed8cfa2",
+    "tests/maplibre/test_legacy_perf_harness_retirement.py": "sha256:8a29bad0ba287e5665a445ff18d2618fac58b123cc904e73aff2ce8e5afc341b",
+    "tests/validators/directory_governance/test_validate_repository_governance_parity.py": "sha256:7aa6627d0ed0f892e72d7a9de3e1132ea3d1fcc39896a90e0d0d0b1b29241d7c",
+    "tools/validators/directory_governance/repository_topology_baseline.json": "sha256:b6635ed5dd19fb027ecbd94c6630b7115b91385594fa699f825a7620c8c2a257"
+  },
+  "model_identity": {
+    "provider": "Anthropic",
+    "model": "Claude Code session (model identifier withheld by session policy)",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/16393e2c0ab944dbce3a9a643b1b754052b15e99",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/pull/4791"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/maplibre-perf-governance.yml": "CONFIRMED",
+    "CONTRIBUTING.md": "CONFIRMED",
+    "Makefile": "CONFIRMED",
+    "README.md": "CONFIRMED",
+    "artifacts/qa/reports/render-smoke/README.md": "CONFIRMED",
+    "artifacts/qa/reports/visual-diff/README.md": "CONFIRMED",
+    "configs/maplibre/README.md": "CONFIRMED",
+    "control_plane/repository_governance_parity.yaml": "CONFIRMED",
+    "docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md": "CONFIRMED",
+    "docs/adr/ADR-0009-hydrology-is-the-first-proof-bearing-lane.md": "CONFIRMED",
+    "docs/architecture/maplibre-master.md": "CONFIRMED",
+    "docs/architecture/maplibre.md": "CONFIRMED",
+    "docs/quality/README.md": "CONFIRMED",
+    "docs/quality/maplibre-perf-governance.md": "CONFIRMED",
+    "docs/wiki/Development-and-Validation.md": "CONFIRMED",
+    "fixtures/slim/README.md": "CONFIRMED",
+    "package.json": "CONFIRMED",
+    "packages/maplibre/README.md": "CONFIRMED",
+    "packages/maplibre/src/README.md": "CONFIRMED",
+    "pnpm-lock.yaml": "CONFIRMED",
+    "schemas/maplibre/README.md": "CONFIRMED",
+    "scripts/README.md": "CONFIRMED",
+    "tests/README.md": "CONFIRMED",
+    "tests/domains/fauna/a11y/README.md": "CONFIRMED",
+    "tests/maplibre/README.md": "CONFIRMED",
+    "tests/maplibre/test_legacy_perf_harness_retirement.py": "CONFIRMED",
+    "tests/validators/directory_governance/test_validate_repository_governance_parity.py": "CONFIRMED",
+    "tools/validators/directory_governance/repository_topology_baseline.json": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "MapLibre workflow steps replayed locally",
+      "outcome": "PASS",
+      "reason": "All steps of maplibre-perf-governance.yml exit 0 after the removal; tests/maplibre passes (96)."
+    },
+    {
+      "gate": "Lockfile regeneration",
+      "outcome": "PASS",
+      "reason": "pnpm 11.17.0 install --lockfile-only removed only pixelmatch, pngjs, playwright and playwright-core; supply-chain policy check passed."
+    },
+    {
+      "gate": "Documentation checks",
+      "outcome": "PASS",
+      "reason": "check_links.py on every changed Markdown file passes; document-graph and meta-block checks on the PR diff exit 0 after removing stale related targets and a duplicate placeholder doc_id."
+    },
+    {
+      "gate": "Repository guardrails",
+      "outcome": "PASS",
+      "reason": "workflow-security, repository-topology, repository-governance-parity, docs-critical-structure, root registry and scaffold_inventory --check pass. One stale topology baseline entry (duplicate kfm://doc/NEEDS_VERIFICATION doc_id) was removed and the parity profile count shrank 122 -> 121."
+    },
+    {
+      "gate": "Hosted CI and independent review",
+      "outcome": "SKIPPED",
+      "reason": "Read after push."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pinned-base",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/16393e2c0ab944dbce3a9a643b1b754052b15e99"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-09-29T04:39:33Z",
+  "emitter": "Claude Code repository-authoring session",
+  "links": {
+    "pr_number": 4791,
+    "adr_link": "docs/adr/ADR-0006-maplibre-boundary--only-maplibreadapter-imports-maplibre.md"
+  },
+  "notes": "Removes, at the repository owner's direction, the retired standalone MapLibre performance harness and everything only it used: 28 deleted files (schemas/maplibre/perf-correction-notice.schema.json, schemas/maplibre/perf-failure-bundle.schema.json, schemas/maplibre/perf-proof-pack.schema.json, schemas/maplibre/perf-receipt.schema.json, schemas/maplibre/perf-release-manifest.schema.json, schemas/maplibre/perf-rollback-plan.schema.json, schemas/maplibre/render-diff-report.schema.json, scripts/attest-maplibre-perf.mjs, scripts/build-maplibre-perf-correction-and-rollback.mjs, scripts/build-maplibre-perf-failure-bundle.mjs, scripts/build-maplibre-perf-proof-pack.mjs, scripts/build-maplibre-perf-release-manifest.mjs, scripts/build-maplibre-render-diff.mjs, scripts/maplibre-smoke-perf.mjs, tools/validators/maplibre/validate_perf_correction_notice.py, tools/validators/maplibre/validate_perf_failure_bundle.py, tools/validators/maplibre/validate_perf_governance.py, tools/validators/maplibre/validate_perf_proof_pack.py, tools/validators/maplibre/validate_perf_receipt.py, tools/validators/maplibre/validate_perf_release_manifest.py, tools/validators/maplibre/validate_perf_rollback_plan.py, tools/validators/maplibre/validate_render_diff_report.py, tools/validators/maplibre/verify_perf_artifact_hashes.py, tools/validators/maplibre/verify_perf_manifest_coverage.py, tools/validators/maplibre/verify_perf_metrics_from_frames.py, tools/validators/maplibre/verify_perf_subject_links.py, tools/validators/maplibre/verify_perf_thresholds.py, tools/validators/maplibre/verify_render_diff_coverage.py), the root maplibre:* npm scripts, the make maplibre-* targets, and the root QA devDependencies. The closed performance envelope, its validator, and the acquisition/source-metadata/v6-readiness lanes are unchanged."
+}

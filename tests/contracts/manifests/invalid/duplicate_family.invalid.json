@@ -1,0 +1,18 @@
+{
+  "kind": "ContractFixtureManifest",
+  "manifest_version": "1.0.0",
+  "wave": "wave-01-core",
+  "description": "Exact negative: one family identifier is declared twice.",
+  "families": [
+    {
+      "family": "decision-envelope",
+      "schema_path": "schemas/contracts/v1/runtime/decision_envelope.schema.json",
+      "fixture_root": "fixtures/contracts/v1/runtime/decision_envelope"
+    },
+    {
+      "family": "decision-envelope",
+      "schema_path": "schemas/contracts/v1/runtime/runtime_response_envelope.schema.json",
+      "fixture_root": "fixtures/contracts/v1/runtime/runtime_response_envelope"
+    }
+  ]
+}

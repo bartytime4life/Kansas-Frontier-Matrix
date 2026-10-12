@@ -1,0 +1,98 @@
+{
+  "receipt_id": "genrec-kfm-hazard-design-metadata-20260923",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/architecture/ui/firemap-inspired-hazard-workspace.md",
+    "docs/runbooks/explorer-context-feed-repair.md"
+  ],
+  "artifact_hashes": {
+    "docs/architecture/ui/firemap-inspired-hazard-workspace.md": "sha256:5be7f49beffe29f9369cc3dd155741063f681660dc18e9768c7f2136edf2b193",
+    "docs/runbooks/explorer-context-feed-repair.md": "sha256:56a5501aecd920ec8ed4a2288bb2025e6bb7528c40470e1f232f0a75951daa72"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-6 Astra Pro",
+    "version": "Runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:03a16be1f3fe159c4d15ec77dffb33a35942b052d67ef64974a5875c0809b28f",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Firemap_Inspired_Hazard_Workspace_2026-09-22.md",
+      "REPAIR_HANDOFF.md",
+      "KFM_Explorer_Feed_Repair_Candidate_2026-09-22.zip"
+    ],
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/0305c98702cb7b48dfaa9598b3625cb027860855",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/c4e5ebe54cba9d7ca9bbee108b442bdf68763f58",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4418#issuecomment-5748226637",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/b9f1d87bafa282284c7c53257d95f72e46d61bc3",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/b9f1d87bafa282284c7c53257d95f72e46d61bc3/data/receipts/generated/genrec-kfm-hazard-design-20260922.json"
+    ]
+  },
+  "truth_labels": {
+    "docs/architecture/ui/firemap-inspired-hazard-workspace.md": "PROPOSED",
+    "docs/runbooks/explorer-context-feed-repair.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "Metadata required-field and bounded-profile projection",
+      "outcome": "PASS",
+      "reason": "2 changed documents include responsibility and scalar lineage fields; owner, identity, root, date and whitespace checks pass. Compared with inspected native profile; full native entrypoint not run locally."
+    },
+    {
+      "gate": "Artifact SHA-256 and unchanged source verification",
+      "outcome": "PASS",
+      "reason": "Current artifact hashes recomputed; original receipt retained byte-for-byte at its original-head scope. No executable file changed by this correction."
+    },
+    {
+      "gate": "Original-head hosted documentation metadata check",
+      "outcome": "FAIL",
+      "reason": "PR #4666 initial-head CI exposed missing responsibility metadata; this correction adds it without changing any validator."
+    },
+    {
+      "gate": "Final-head hosted CI and independent review",
+      "outcome": "SKIPPED",
+      "reason": "Must read back after delivery of this correction; prior-head results are not transferred."
+    },
+    {
+      "gate": "Live route/provider/browser/WebGL acceptance",
+      "outcome": "SKIPPED",
+      "reason": "No live caller, active-Site source, provider operation, Site mutation or deployment in this change."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "exact-main",
+      "validated": true,
+      "evidence_ref": "https://github.com/bartytime4life/Kansas-Frontier-Matrix/tree/0305c98702cb7b48dfaa9598b3625cb027860855"
+    },
+    {
+      "id": "usgs-nodata-contract",
+      "validated": true,
+      "evidence_ref": "https://earthquake.usgs.gov/fdsnws/event/1/"
+    },
+    {
+      "id": "firemap-reference",
+      "validated": true,
+      "evidence_ref": "https://www.firemap.live/"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "created_at": "2026-09-23T00:31:38Z",
+  "emitter": "ChatGPT repository-authoring session",
+  "links": {
+    "pr_number": 4666,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  },
+  "notes": "Metadata-only successor to data/receipts/generated/genrec-kfm-hazard-design-20260922.json at b9f1d87bafa282284c7c53257d95f72e46d61bc3. Original receipt is retained unchanged and binds only its original-head artifacts; use this successor for current document hashes. Corrects responsibility and flattens lineage metadata; proposal and live-integration holds unchanged. No validator, baseline, package, workflow, source, main, Site, ready, merge, release, deployment or publication change. Human review remains pending."
+}

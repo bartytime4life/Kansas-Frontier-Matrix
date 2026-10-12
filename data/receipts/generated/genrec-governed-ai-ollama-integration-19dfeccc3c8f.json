@@ -1,0 +1,190 @@
+{
+  "receipt_id": "genrec-governed-ai-ollama-integration-19dfeccc3c8f",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/architecture/governed-ai/OLLAMA_INTEGRATION.md"
+  ],
+  "artifact_hashes": {
+    "docs/architecture/governed-ai/OLLAMA_INTEGRATION.md": "sha256:19dfeccc3c8f8bed262fa59af3b771ea243e9f0ff05aa05ca37639d384deee68"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-20"
+  },
+  "prompt_or_contract": "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector (read/write feature branch and draft-PR action surface)",
+      "attached-file search",
+      "local deterministic Markdown, metadata, anchor, fence, JSON, table, hash, and receipt validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb"
+    ],
+    "attached_docs": [
+      "KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0"
+    ],
+    "evidence_refs": [
+      "repo:commit/4592507a4698a08b74bf154d1249e2ce0bf1592a",
+      "repo:commit/7dd2e950225abbb409df0de6b7a17bd1198d0ced",
+      "repo:branch/docs-modernize-ollama-integration-20260820",
+      "repo:docs/architecture/governed-ai/OLLAMA_INTEGRATION.md@4592507a4698a08b74bf154d1249e2ce0bf1592a#blob=39cd49270781d9d5237d98264ccd3502e28f6790",
+      "repo:docs/architecture/governed-ai/OLLAMA_INTEGRATION.md@7dd2e950225abbb409df0de6b7a17bd1198d0ced#blob=1a2c8445d8ad87ca1a012d8f284c38d907cd7c71",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@4592507a4698a08b74bf154d1249e2ce0bf1592a#blob=a4de0d7a96b78da59cfc499d1025e1508afd8dd9",
+      "repo:docs/doctrine/directory-rules.md@4592507a4698a08b74bf154d1249e2ce0bf1592a#blob=fd49a0b83e55cef52c1124281f093e263526898d",
+      "repo:docs/adr/ADR-0008-ollama-subordinate-to-governed-api.md@4592507a4698a08b74bf154d1249e2ce0bf1592a#blob=7eeae617986d053699da66c0f5cd0df063902ef7",
+      "repo:docs/architecture/governed-ai/ADAPTER_CONTRACT.md@4592507a4698a08b74bf154d1249e2ce0bf1592a",
+      "repo:docs/architecture/governed-ai/AI_RECEIPTS.md@4592507a4698a08b74bf154d1249e2ce0bf1592a",
+      "repo:runtime/ollama/README.md@4592507a4698a08b74bf154d1249e2ce0bf1592a#blob=b0708364fa002760383882f18843e31c6c4209c7",
+      "repo:runtime/model_adapters/OllamaAdapter.py@4592507a4698a08b74bf154d1249e2ce0bf1592a#blob=1769a719d6a6df53e001abbc4c67ad486ab5c944",
+      "repo:runtime/model_adapters/MockAdapter.py@4592507a4698a08b74bf154d1249e2ce0bf1592a#blob=04d37e59b14c9e3b85126cb3380b6221b44e26d1",
+      "repo:apps/governed-api/src/ai/README.md@4592507a4698a08b74bf154d1249e2ce0bf1592a",
+      "repo:schemas/contracts/v1/runtime/ai_receipt.schema.json@4592507a4698a08b74bf154d1249e2ce0bf1592a#blob=2e0bebdb3a38acbc3c58a919db46970c6e829b4a",
+      "repo:schemas/contracts/v1/runtime/runtime_response_envelope.schema.json@4592507a4698a08b74bf154d1249e2ce0bf1592a#blob=8b86e7db8b18b65a56a4e639dfc54e1b2db93155",
+      "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@4592507a4698a08b74bf154d1249e2ce0bf1592a#blob=fba21ed27ebccf1362fe397fe0c3ebd85e072685",
+      "repo:.env.example@4592507a4698a08b74bf154d1249e2ce0bf1592a#blob=5af73215557f4af432157409ff89ab17088d0953",
+      "repo:.github/CODEOWNERS@4592507a4698a08b74bf154d1249e2ce0bf1592a",
+      "repo:pull/3159",
+      "attachment:KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0"
+    ]
+  },
+  "truth_labels": {
+    "docs/architecture/governed-ai/OLLAMA_INTEGRATION.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main-target-and-overlap-inspection",
+      "outcome": "PASS",
+      "reason": "Pinned main at 4592507a4698a08b74bf154d1249e2ce0bf1592a, confirmed prior target blob 39cd49270781d9d5237d98264ccd3502e28f6790 before writing, and found no matching open pull request or competing task branch for the exact target."
+    },
+    {
+      "gate": "directory-rules-and-authority-boundary",
+      "outcome": "PASS",
+      "reason": "Accepted ADR-0029 and Directory Rules v2 support same-path PLACE under docs/architecture/governed-ai/ while runtime, contracts, schemas, policy, receipts, release, correction, and rollback remain separate authorities."
+    },
+    {
+      "gate": "repository-current-ollama-reconciliation",
+      "outcome": "PASS",
+      "reason": "The revision records runtime/ollama as documentation-only, OllamaAdapter.py as a one-line placeholder, MockAdapter.py as the bounded deterministic no-I/O proof, mock as the public environment default, and the Governed API AI lane as scaffold-only."
+    },
+    {
+      "gate": "adapter-trust-membrane-and-live-binding-boundary",
+      "outcome": "PASS",
+      "reason": "The document keeps Ollama provider-specific and subordinate to provider-neutral orchestration and the Governed API, denies direct public-client/model traffic, and labels provider/model admission and live composition as deferred rather than implemented."
+    },
+    {
+      "gate": "finite-envelope-and-ai-receipt-alignment",
+      "outcome": "PASS",
+      "reason": "The document uses exactly ANSWER, ABSTAIN, DENY, and ERROR for the public runtime envelope, reproduces the exact closed nine-field AIReceipt profile, and keeps Ollama-specific metadata outside that schema pending governed contract evolution."
+    },
+    {
+      "gate": "markdown-source-metadata-anchor-link-and-table-check",
+      "outcome": "PASS",
+      "reason": "Verified 56,165 UTF-8 bytes, 902 lines, one H1, 62 Markdown headings, six explicit compatibility anchors, 12 balanced fenced blocks, one parseable JSON example, 15 structurally consistent Markdown tables, 24 unique repository-relative destinations, no tabs or trailing whitespace, and a final newline."
+    },
+    {
+      "gate": "remote-artifact-hash-binding",
+      "outcome": "PASS",
+      "reason": "Remote branch blob 1a2c8445d8ad87ca1a012d8f284c38d907cd7c71 matches the locally computed Git blob; final document SHA-256 is 19dfeccc3c8f8bed262fa59af3b771ea243e9f0ff05aa05ca37639d384deee68."
+    },
+    {
+      "gate": "generated-receipt-shape",
+      "outcome": "PASS",
+      "reason": "This receipt was checked against the current GENERATED_RECEIPT required fields, enums, hash patterns, artifact path/hash closure, pending-review state, timestamp shape, and additional-property constraints."
+    },
+    {
+      "gate": "runtime-and-publication-non-effects",
+      "outcome": "PASS",
+      "reason": "The slice changes documentation and provenance only; it does not accept ADRs, modify contracts/schemas/policy/runtime/routes, admit a provider/model, activate a source, release, deploy, publish, merge, or change repository settings."
+    },
+    {
+      "gate": "repository-native-documentation-tests",
+      "outcome": "SKIPPED",
+      "reason": "No mounted repository dependency environment was available; current-repository connector reads, deterministic source checks, branch comparison, and remote blob binding were completed instead."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "GitHub Actions are expected to run after this final receipt commit; exact-head hosted conclusions were pending when the receipt was emitted."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending; this receipt provides no merge, release, deployment, publication, ADR acceptance, provider/model admission, or repository-setting authority."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "authoring-main",
+      "validated": true,
+      "evidence_ref": "repo:commit/4592507a4698a08b74bf154d1249e2ce0bf1592a"
+    },
+    {
+      "id": "accepted-directory-rules",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@4592507a4698a08b74bf154d1249e2ce0bf1592a"
+    },
+    {
+      "id": "proposed-ollama-boundary-decision",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0008-ollama-subordinate-to-governed-api.md@4592507a4698a08b74bf154d1249e2ce0bf1592a"
+    },
+    {
+      "id": "provider-specific-runtime-lane",
+      "validated": true,
+      "evidence_ref": "repo:runtime/ollama/README.md@4592507a4698a08b74bf154d1249e2ce0bf1592a"
+    },
+    {
+      "id": "ollama-adapter-placeholder",
+      "validated": true,
+      "evidence_ref": "repo:runtime/model_adapters/OllamaAdapter.py@4592507a4698a08b74bf154d1249e2ce0bf1592a"
+    },
+    {
+      "id": "bounded-mock-adapter",
+      "validated": true,
+      "evidence_ref": "repo:runtime/model_adapters/MockAdapter.py@4592507a4698a08b74bf154d1249e2ce0bf1592a"
+    },
+    {
+      "id": "current-runtime-envelope-profile",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/runtime/runtime_response_envelope.schema.json@4592507a4698a08b74bf154d1249e2ce0bf1592a"
+    },
+    {
+      "id": "current-ai-receipt-profile",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/runtime/ai_receipt.schema.json@4592507a4698a08b74bf154d1249e2ce0bf1592a"
+    },
+    {
+      "id": "safe-public-environment-example",
+      "validated": true,
+      "evidence_ref": "repo:.env.example@4592507a4698a08b74bf154d1249e2ce0bf1592a"
+    },
+    {
+      "id": "implementation-contract",
+      "validated": true,
+      "evidence_ref": "attachment:KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-20T17:01:23Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": 3159,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Same-path documentation modernization. It replaces no-repository and speculative implementation claims with pinned current evidence, preserves the Governed API trust membrane, exact finite response vocabulary, current closed AIReceipt profile, provider-neutral adapter boundary, synthetic mock-first proof, fail-closed behavior, security posture, correction, and rollback. It changes no semantic contract, machine schema, policy, validator, fixture, test, workflow, runtime, route, provider/model admission, source activation, release, deployment, publication, merge state, or repository setting."
+}

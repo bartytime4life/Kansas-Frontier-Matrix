@@ -1,0 +1,52 @@
+{
+  "receipt_id": "genrec-release-candidate-agriculture-county-year-panel-v0-18719975",
+  "contract_version": "3.0.0",
+  "receipt_type": "GenerationReceipt",
+  "status": "PROPOSED",
+  "generated_at": "2026-07-18T10:49:37-05:00",
+  "repository": "bartytime4life/Kansas-Frontier-Matrix",
+  "base_commit": "e0cf911663e5dd37d72a90ea549923ed3a8bc31d",
+  "branch": "agent/agriculture-county-year-panel-candidate-readme-20260718",
+  "target_path": "release/candidates/agriculture/county_year_panel_v0/README.md",
+  "previous_blob": "0ecabb6ddc5616aa08dfe2101fa2775d4f2d42ca",
+  "new_blob": "e0448e2e641b7dee091d26f0850519c34edba052",
+  "sha256": "18719975adcb7cb1b40a928158193a80928f6a6eb5733cca2577322121b5a425",
+  "truth_labels": {
+    "confirmed": [
+      "The candidate README existed at the pinned base and was updated in place.",
+      "The bounded search established the candidate README but no other county_year_panel_v0 candidate file.",
+      "Direct probes did not find candidate or shared-lane instances of the planned ReleaseManifest, PromotionDecision, or RollbackCard at the checked paths.",
+      "The exact county-year pipeline specification was not found at the checked path.",
+      "QuickStats source and pipeline-spec records are PROPOSED placeholders.",
+      "The AggregationReceipt and ReleaseManifest schemas are permissive scaffolds.",
+      "The cited NASS test files are docstring-only placeholders and the direct release-test lane is README-only in its bounded inventory.",
+      "The domain-agriculture workflow is a read-only readiness-hold workflow and release-dry-run remains a TODO-only scaffold."
+    ],
+    "proposed": [
+      "The candidate should be treated as a county-by-year aggregate Agriculture panel only after its artifact, field contract, source set, evidence, aggregation, policy, validation, review, and release handoff are established."
+    ],
+    "needs_verification": [
+      "Candidate artifact, digest, fields, keys, units, counties, years, geography version, and time semantics.",
+      "Admitted sources, rights, source roles, query or snapshot identity, and EvidenceBundle closure.",
+      "Typed candidate schema, aggregation profile, AggregationReceipt validator, fixtures, and executable tests.",
+      "Executable Agriculture policy, public-boundary tests, release topology, PromotionDecision, ReleaseManifest, correction consumers, and rollback target.",
+      "Independent stewardship assignments, branch protection, required checks, and the domain-agriculture placeholder-detection behavior."
+    ]
+  },
+  "changes": [
+    "Replaced the candidate shell with a repository-grounded blocked-candidate dossier.",
+    "Preserved the compatibility marker and BLOCKED_FOR_EVIDENCE_AND_VALIDATION decision.",
+    "Separated candidate review authority from shared manifest, promotion, rollback, data, schema, contract, policy, and publication lanes.",
+    "Recorded missing candidate machine instances, placeholder source/spec/schema/test maturity, and current workflow posture.",
+    "Added source-role, rights, aggregation, sensitivity, evidence, validation, review, release-handoff, correction, and rollback requirements.",
+    "Added finite holds, evidence ledger, open verification, and documentation rollback."
+  ],
+  "authority_boundary": "This receipt records an AI-authored documentation revision. It is not candidate evidence, source admission, a PolicyDecision, ValidationReport, ReleaseManifest, PromotionDecision, RollbackCard, steward approval, release approval, publication authority, or proof of runtime behavior.",
+  "rollback": {
+    "strategy": "Close the draft pull request before merge, or revert the generated-receipt commit and README commit in reverse order after merge.",
+    "restores_blob": "0ecabb6ddc5616aa08dfe2101fa2775d4f2d42ca"
+  },
+  "human_review": {
+    "state": "pending"
+  }
+}

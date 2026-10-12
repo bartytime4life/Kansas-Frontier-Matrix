@@ -1,0 +1,12 @@
+{
+  "record_id": "soil-fixture-invalid-containers",
+  "support_type": "station_observation",
+  "source_descriptor_ref": "source:synthetic-soil-station",
+  "evidence_refs": {
+    "ref": "evidence:synthetic-soil-reading"
+  },
+  "spatial_support": [],
+  "depth_interval_cm": "10-20",
+  "measurement": null,
+  "governance": "fixture_only"
+}

@@ -1,0 +1,177 @@
+{
+  "receipt_id": "genrec-architecture-adr0001-link-repair-20260728",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/architecture/README.md",
+    "docs/architecture/contract-schema-policy-split.md",
+    "docs/architecture/domain-placement-law.md",
+    "docs/architecture/evidence-drawer.md",
+    "docs/architecture/evidence-identity.md",
+    "docs/architecture/governed-ai.md",
+    "docs/architecture/hazards-trust-membrane.md",
+    "docs/architecture/identity-and-spec-hash.md",
+    "docs/architecture/publication/README.md",
+    "docs/architecture/story/CONTINUITY.md",
+    "docs/architecture/ui/LAYERING.md"
+  ],
+  "artifact_hashes": {
+    "docs/architecture/README.md": "sha256:d57b78eaab9bb2ec6f597b9d7ff56c7aca92c7e11a144393a81a2e9661d2ebab",
+    "docs/architecture/contract-schema-policy-split.md": "sha256:a75d0df7fab56fbac47456b7e7c2c08425b91ec0ddfa0486f947f9f298c32feb",
+    "docs/architecture/domain-placement-law.md": "sha256:ceb10d8a95afcf53c87e8bb2cf1b33487d683ed899a4f7a8705f7918550ae04a",
+    "docs/architecture/evidence-drawer.md": "sha256:346eca81509ff4944677043d5cf53ad8e419fba6d07742e3ff2338f4329cae7d",
+    "docs/architecture/evidence-identity.md": "sha256:07dd87dab33e3ee0c07be4192c100c4fec9f3e5b7e7eba7b0ac460000532c530",
+    "docs/architecture/governed-ai.md": "sha256:97db95df943f037a40eb7dbf9c934b0fc01a147620e93be96c9ed63371b15bbc",
+    "docs/architecture/hazards-trust-membrane.md": "sha256:468201debb70c1c03389ecba3bda581186310b4e04296ef6ced288972ac579f3",
+    "docs/architecture/identity-and-spec-hash.md": "sha256:8938f8784e376865110fd8b6a53676eafb46a71b247af13e535b6beb0c385390",
+    "docs/architecture/publication/README.md": "sha256:e7be42aa2a125a3227704b215c816c35bab321f722fd7546705560418e658ebf",
+    "docs/architecture/story/CONTINUITY.md": "sha256:0a5185013dcbcd6b5281201c2bbfd4a600a3fb0c1692793f3d384357eeaa15d5",
+    "docs/architecture/ui/LAYERING.md": "sha256:99d64643ccd207be5144834a2442889f262807cca23d165c3b21ce04c72b4860"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex",
+    "version": "GPT-5"
+  },
+  "prompt_or_contract": "sha256:6e6845451ffdf4e62b023790a71f37489b1ac41ddbfc3d959281ebd556763848",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local repository inspection",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:3159ee37d25a897bf2525fd7dafbc6ca28ee74594a3b52a9c0a01fa30aed777b",
+      "sha256:4a4ee513c1d91bf116efa69f9e5f7dca093e787bd5e3e228790756e5faf7a9c8",
+      "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+      "sha256:425e998e5584a7e400e99c963aba019b33ff685f9fa26b5b474d8758a3160b2a"
+    ],
+    "attached_docs": [
+      "Kansas Frontier Matrix Repository Completion Agent v2"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/a91b4f19a6e394a834d1934e67197bd034445e83",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/a91b4f19a6e394a834d1934e67197bd034445e83/docs/adr/INDEX.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/a91b4f19a6e394a834d1934e67197bd034445e83/docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/a91b4f19a6e394a834d1934e67197bd034445e83/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/a91b4f19a6e394a834d1934e67197bd034445e83/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/a91b4f19a6e394a834d1934e67197bd034445e83/CONTRIBUTING.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/a91b4f19a6e394a834d1934e67197bd034445e83/.github/CODEOWNERS",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/a91b4f19a6e394a834d1934e67197bd034445e83/.github/PULL_REQUEST_TEMPLATE.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/a91b4f19a6e394a834d1934e67197bd034445e83/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    ]
+  },
+  "truth_labels": {
+    "docs/architecture/README.md": "CONFIRMED",
+    "docs/architecture/contract-schema-policy-split.md": "CONFIRMED",
+    "docs/architecture/domain-placement-law.md": "CONFIRMED",
+    "docs/architecture/evidence-drawer.md": "CONFIRMED",
+    "docs/architecture/evidence-identity.md": "CONFIRMED",
+    "docs/architecture/governed-ai.md": "CONFIRMED",
+    "docs/architecture/hazards-trust-membrane.md": "CONFIRMED",
+    "docs/architecture/identity-and-spec-hash.md": "CONFIRMED",
+    "docs/architecture/publication/README.md": "CONFIRMED",
+    "docs/architecture/story/CONTINUITY.md": "CONFIRMED",
+    "docs/architecture/ui/LAYERING.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-authority-preflight",
+      "outcome": "PASS",
+      "reason": "Repository identity, clean base SHA, default branch, merge base, remotes, instruction chain, accepted ADR-0029, exact Directory Rules digest, ADR-0001 status, manifests, workflows, tests, and open-pull-request overlap were inspected before mutation."
+    },
+    {
+      "gate": "whole-repository-inbound-link-classification",
+      "outcome": "PASS",
+      "reason": "The obsolete ADR-0001 filename was classified across 218 tracked files, 384 lines, and 500 occurrences. Current navigation was separated from locked compatibility text, fenced trees, lineage material, and historical direct-probe Not Found evidence before the architecture slice was selected."
+    },
+    {
+      "gate": "candidate-admission-and-isolation",
+      "outcome": "PASS",
+      "reason": "The architecture slice contains 11 editable documents and 33 stale filename occurrences, including 14 broken Markdown link destinations. It is a deterministic, documentation-only, non-overlapping Grade A dependency repair within the recorded change budget."
+    },
+    {
+      "gate": "directory-placement",
+      "outcome": "PASS",
+      "reason": "All edited documents remain under the established docs/architecture explanatory responsibility root. The companion receipt uses the established data/receipts/generated process-memory family. No path was moved, renamed, deleted, or promoted into a parallel authority."
+    },
+    {
+      "gate": "architecture-adr0001-link-and-status-check",
+      "outcome": "PASS",
+      "reason": "All 33 obsolete filename occurrences were removed from the 11 editable architecture documents; 14 resulting Markdown links resolve to the tracked ADR; the ADR metadata remains status proposed; document H1 counts, fence counts, and final newlines are preserved; the two legacy occurrences in the read-only Directory Rules compatibility body remain untouched."
+    },
+    {
+      "gate": "repository-native-baseline-and-post-change",
+      "outcome": "PASS",
+      "reason": "The documented temporary virtual environment ran make validate successfully before and after the change: every expected valid fixture passed, every expected invalid fixture failed for its named reason, and 133 schema/contract tests passed."
+    },
+    {
+      "gate": "full-repository-pytest",
+      "outcome": "PASS",
+      "reason": "The documented temporary virtual environment ran the full suite successfully before and after the change: 279 tests and 51 subtests passed."
+    },
+    {
+      "gate": "generated-receipt-schema-and-hash-closure",
+      "outcome": "PASS",
+      "reason": "Draft 2020-12 validation with format checking passed; artifact_paths exactly matched artifact_hashes; every final architecture-document SHA-256 and the frozen change-packet SHA-256 were recomputed successfully."
+    },
+    {
+      "gate": "workflow-trigger-threat-preflight",
+      "outcome": "PASS",
+      "reason": "Pull-request workflows were inspected for trigger and privilege posture. This packet changes documentation and a process-memory receipt only; it does not add production deployment, publication, live connector, credential, or privileged workflow behavior."
+    },
+    {
+      "gate": "security-rights-and-sensitive-content",
+      "outcome": "PASS",
+      "reason": "The packet contains no credential, restricted source payload, personal data, exact sensitive location, rights decision, policy rule, release record, deployment, publication action, or production access."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending and is not authored by the agent."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "tracked-adr0001-record",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/a91b4f19a6e394a834d1934e67197bd034445e83/docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md"
+    },
+    {
+      "id": "accepted-directory-rules-adoption",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/a91b4f19a6e394a834d1934e67197bd034445e83/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "accepted-directory-rules-bytes",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/a91b4f19a6e394a834d1934e67197bd034445e83/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "generated-receipt-machine-shape",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/a91b4f19a6e394a834d1934e67197bd034445e83/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-29T02:01:37Z",
+  "emitter": "openai/codex-gpt-5",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0001-schema-home--schemas-contracts-v1-is-canonical.md",
+    "drift_register_entry": null
+  },
+  "notes": "AI-assisted documentation-only repair of the current docs/architecture ADR-0001 navigation slice. ADR-0001 remains proposed. Historical Not Found observations, atlases, immutable process records, all other roots, and the accepted Directory Rules read-only compatibility body remain unchanged. This receipt records process provenance only and is not human approval, factual proof, policy permission, release authority, or publication authority."
+}

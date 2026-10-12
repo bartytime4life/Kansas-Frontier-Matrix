@@ -1,0 +1,154 @@
+{
+  "artifact_hashes": {
+    "docs/wiki/Data-Lifecycle.md": "sha256:86741ce0e0c35080ed19669e52b5a9ba03ad2e1a0130c0aed81bd1919e73dd18"
+  },
+  "artifact_paths": [
+    "docs/wiki/Data-Lifecycle.md"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "repo:docs/wiki/Data-Lifecycle.md@13f1a8e9bfbad807ab9131bd7c2972ed61a95918",
+      "id": "KFM-wiki-data-lifecycle-base",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/wiki/README.md@13f1a8e9bfbad807ab9131bd7c2972ed61a95918",
+      "id": "KFM-wiki-source-contract",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/doctrine/lifecycle-law.md@13f1a8e9bfbad807ab9131bd7c2972ed61a95918",
+      "id": "KFM-lifecycle-law",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:data/README.md@13f1a8e9bfbad807ab9131bd7c2972ed61a95918",
+      "id": "KFM-data-root-contract",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:release/README.md@13f1a8e9bfbad807ab9131bd7c2972ed61a95918",
+      "id": "KFM-release-root-contract",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md@13f1a8e9bfbad807ab9131bd7c2972ed61a95918",
+      "id": "KFM-directory-rules-v2",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@13f1a8e9bfbad807ab9131bd7c2972ed61a95918",
+      "id": "ADR-0029",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@13f1a8e9bfbad807ab9131bd7c2972ed61a95918",
+      "id": "KFM-generated-receipt-schema",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-15T04:35:02Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [
+      "Kansas_Frontier_Matrix_Pipeline_Living_Implementation_Manual_v0.3.pdf",
+      "KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf",
+      "Kansas Frontier Matrix — Connected-Dots Architecture Brief.md",
+      "KFM_Briefing_to_System_Integration_Architecture.docx"
+    ],
+    "evidence_refs": [
+      "repo:docs/wiki/Data-Lifecycle.md@13f1a8e9bfbad807ab9131bd7c2972ed61a95918",
+      "repo:docs/wiki/README.md@13f1a8e9bfbad807ab9131bd7c2972ed61a95918",
+      "repo:docs/wiki/Home.md@13f1a8e9bfbad807ab9131bd7c2972ed61a95918",
+      "repo:docs/doctrine/lifecycle-law.md@13f1a8e9bfbad807ab9131bd7c2972ed61a95918",
+      "repo:data/README.md@13f1a8e9bfbad807ab9131bd7c2972ed61a95918",
+      "repo:release/README.md@13f1a8e9bfbad807ab9131bd7c2972ed61a95918",
+      "repo:data@13f1a8e9bfbad807ab9131bd7c2972ed61a95918",
+      "repo:docs/doctrine/directory-rules.md@13f1a8e9bfbad807ab9131bd7c2972ed61a95918",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@13f1a8e9bfbad807ab9131bd7c2972ed61a95918",
+      "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@13f1a8e9bfbad807ab9131bd7c2972ed61a95918",
+      "user-request:sha256:4b6d7e1d7e99b4c51776d66b3cfa3a0f3429624b35763265f503382773ff309d"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "GPT-5.6 Pro",
+    "provider": "OpenAI",
+    "version": "2026-08-14"
+  },
+  "notes": "Authoring provenance for the in-place modernization of docs/wiki/Data-Lifecycle.md. The revision preserves the page identity and established Stages, Accountability lanes, Transition rule, Public-client rule, Watchers and connectors, Example: safe update, and Canonical references anchors while adding a polished reader path, lifecycle map, stage-versus-path distinction, accountability/release authority split, transition packet, finite outcomes, public trust membrane, correction/withdrawal/rollback/recompile behavior, negative-path examples, review checklist, and current repository evidence boundary. Pre-RAW is presented as a governed stage rather than an assumed direct folder. Query-save-recompile remains review-bound and non-publishing. No native-wiki initialization, synchronization, source activation, data movement, lifecycle transition, release, deployment, publication, or repository-settings change occurred. The receipt excludes itself from artifact hashes. Base main was 13f1a8e9bfbad807ab9131bd7c2972ed61a95918.",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local deterministic Markdown validation"
+    ],
+    "top_p": null
+  },
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "prompt_or_contract": "sha256:4b6d7e1d7e99b4c51776d66b3cfa3a0f3429624b35763265f503382773ff309d",
+  "receipt_id": "genrec-wiki-data-lifecycle-86741ce0e0c3",
+  "truth_labels": {
+    "docs/wiki/Data-Lifecycle.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "target-authority-and-overlap-inspection",
+      "outcome": "PASS",
+      "reason": "Current main, complete target, wiki source contract, accepted ADR-0029, adopted Directory Rules, lifecycle doctrine, current data/release boundaries, data tree, and open-PR overlap were inspected before mutation."
+    },
+    {
+      "gate": "lifecycle-vocabulary-and-authority-boundary",
+      "outcome": "PASS",
+      "reason": "The page preserves the canonical Pre-RAW through PUBLISHED sequence, separates stages from paths, separates data instances from release decisions, and keeps receipts, proofs, catalogs, triplets, reviews, and carriers distinct."
+    },
+    {
+      "gate": "one-h1-and-markdown-structure",
+      "outcome": "PASS",
+      "reason": "The final source has one Markdown H1, balanced fenced blocks, balanced authored HTML, no trailing whitespace, and a final newline."
+    },
+    {
+      "gate": "internal-wiki-link-closure",
+      "outcome": "PASS",
+      "reason": "Every relative Markdown and HTML page link targets a verified page in the current docs/wiki source set."
+    },
+    {
+      "gate": "stable-page-identity-and-anchors",
+      "outcome": "PASS",
+      "reason": "The page_id, source path, and established Stages, Accountability lanes, Transition rule, Public-client rule, Watchers and connectors, Example: safe update, and Canonical references headings remain."
+    },
+    {
+      "gate": "public-safety-and-no-direct-internal-path",
+      "outcome": "PASS",
+      "reason": "The page requires public-safe transformation before delivery and preserves the denial of normal public access to internal lifecycle, proof, registry, and model stores."
+    },
+    {
+      "gate": "generated-receipt-repository-validator",
+      "outcome": "SKIPPED",
+      "reason": "No mounted checkout is available; the repository-owned validator and exact artifact-integrity check remain for hosted or maintainer execution after this receipt is committed."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Pending draft pull-request creation and hosted check scheduling."
+    },
+    {
+      "gate": "native-wiki-readback",
+      "outcome": "SKIPPED",
+      "reason": "Native-wiki synchronization is a separate reviewed public documentation action and is outside this source-only change."
+    }
+  ]
+}

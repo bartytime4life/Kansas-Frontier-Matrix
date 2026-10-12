@@ -1,0 +1,8 @@
+{
+  "status": "PROPOSED",
+  "source_doc": "docs/domains/atmosphere/MISSING_OR_PLANNED_FILES.md",
+  "path": "fixtures/domains/atmosphere/sources/SourceDescriptor.no_network.json",
+  "notes": [
+    "Placeholder created from docs/domains markdown inventory."
+  ]
+}

@@ -1,0 +1,301 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kansasfrontiermatrix.org/schemas/contracts/v1/evidence/agriculture_observation.schema.json",
+  "title": "AgricultureObservation fixture profile",
+  "description": "One fixture-only aggregate agricultural measure for one version-bound Kansas county and calendar year.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "profile",
+    "observation_id",
+    "subject",
+    "temporal",
+    "measure",
+    "suppression",
+    "source",
+    "lineage",
+    "disclosure",
+    "governance",
+    "spec_hash"
+  ],
+  "properties": {
+    "object_type": { "const": "AgricultureObservation" },
+    "profile": { "const": "kfm.agriculture-observation.fixture.v1" },
+    "observation_id": {
+      "type": "string",
+      "pattern": "^kfm:agriculture-observation:[0-9a-f]{24}$"
+    },
+    "subject": { "$ref": "#/$defs/subject" },
+    "temporal": { "$ref": "#/$defs/temporal" },
+    "measure": { "$ref": "#/$defs/measure" },
+    "suppression": { "$ref": "#/$defs/suppression" },
+    "source": { "$ref": "#/$defs/source" },
+    "lineage": { "$ref": "#/$defs/lineage" },
+    "disclosure": { "$ref": "#/$defs/disclosure" },
+    "governance": { "$ref": "#/$defs/governance" },
+    "spec_hash": { "$ref": "#/$defs/sha256" }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "digest_ref": {
+      "type": "string",
+      "pattern": "^kfm://[a-z0-9][a-z0-9._/-]*@sha256:[0-9a-f]{64}$"
+    },
+    "nullable_digest_ref": {
+      "oneOf": [
+        { "$ref": "#/$defs/digest_ref" },
+        { "type": "null" }
+      ]
+    },
+    "subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "geography_version_ref",
+        "geography_version_profile",
+        "geography_feature_key",
+        "unit_level",
+        "jurisdiction_code",
+        "identity_scope"
+      ],
+      "properties": {
+        "geography_version_ref": { "$ref": "#/$defs/digest_ref" },
+        "geography_version_profile": { "const": "kfm.geography-version.fixture.v1" },
+        "geography_feature_key": {
+          "type": "string",
+          "pattern": "^[0-9]{5}$"
+        },
+        "unit_level": { "const": "COUNTY" },
+        "jurisdiction_code": { "const": "US-KS" },
+        "identity_scope": { "const": "VERSION_LOCAL" }
+      }
+    },
+    "temporal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reference_period_kind",
+        "reference_year",
+        "reference_period_start",
+        "reference_period_end",
+        "source_released_at",
+        "retrieved_at",
+        "corrected_at"
+      ],
+      "properties": {
+        "reference_period_kind": { "const": "CALENDAR_YEAR" },
+        "reference_year": { "type": "integer", "minimum": 1800, "maximum": 2200 },
+        "reference_period_start": { "type": "string", "format": "date" },
+        "reference_period_end": { "type": "string", "format": "date" },
+        "source_released_at": { "type": "string", "format": "date-time" },
+        "retrieved_at": { "type": "string", "format": "date-time" },
+        "corrected_at": {
+          "oneOf": [
+            { "type": "string", "format": "date-time" },
+            { "type": "null" }
+          ]
+        }
+      }
+    },
+    "measure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "measure_key",
+        "measure_family",
+        "unit",
+        "source_unit_ref",
+        "result_state",
+        "value",
+        "missing_reason",
+        "price_basis",
+        "price_year",
+        "classification_scope",
+        "classification_kind",
+        "classification_scheme_ref",
+        "classification_code"
+      ],
+      "properties": {
+        "measure_key": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]{2,63}$"
+        },
+        "measure_family": {
+          "enum": [
+            "FARM_COUNT",
+            "LAND_IN_FARMS",
+            "HARVESTED_CROPLAND",
+            "IMPROVED_ACRES",
+            "MARKET_VALUE_SALES",
+            "CROP_PRODUCTION",
+            "LIVESTOCK_INVENTORY"
+          ]
+        },
+        "unit": {
+          "enum": ["COUNT", "ACRES", "USD", "HEAD", "SOURCE_DEFINED"]
+        },
+        "source_unit_ref": { "$ref": "#/$defs/nullable_digest_ref" },
+        "result_state": { "enum": ["OBSERVED", "SUPPRESSED", "MISSING"] },
+        "value": {
+          "oneOf": [
+            { "type": "number", "minimum": 0 },
+            { "type": "null" }
+          ]
+        },
+        "missing_reason": {
+          "enum": [
+            "NOT_APPLICABLE",
+            "SOURCE_SUPPRESSED",
+            "SOURCE_MISSING",
+            "NOT_COLLECTED",
+            "NOT_AVAILABLE"
+          ]
+        },
+        "price_basis": {
+          "enum": ["NOT_APPLICABLE", "CURRENT_DOLLARS", "CONSTANT_DOLLARS"]
+        },
+        "price_year": {
+          "oneOf": [
+            { "type": "integer", "minimum": 1800, "maximum": 2200 },
+            { "type": "null" }
+          ]
+        },
+        "classification_scope": { "enum": ["ALL_AGRICULTURE", "SOURCE_CLASSIFIED"] },
+        "classification_kind": {
+          "enum": [null, "SALES_CLASS", "CROP", "LIVESTOCK"]
+        },
+        "classification_scheme_ref": { "$ref": "#/$defs/nullable_digest_ref" },
+        "classification_code": {
+          "oneOf": [
+            { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,63}$" },
+            { "type": "null" }
+          ]
+        }
+      }
+    },
+    "suppression": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "reason", "method_ref"],
+      "properties": {
+        "status": { "enum": ["NOT_APPLICABLE", "SOURCE_SUPPRESSED"] },
+        "reason": {
+          "oneOf": [
+            { "type": "string", "minLength": 1, "maxLength": 256 },
+            { "type": "null" }
+          ]
+        },
+        "method_ref": { "$ref": "#/$defs/nullable_digest_ref" }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_descriptor_ref",
+        "dataset_version_ref",
+        "source_table_ref",
+        "source_variable_ref",
+        "source_role",
+        "source_state",
+        "evidence_refs",
+        "rights_state",
+        "sensitivity_state"
+      ],
+      "properties": {
+        "source_descriptor_ref": { "$ref": "#/$defs/digest_ref" },
+        "dataset_version_ref": { "$ref": "#/$defs/digest_ref" },
+        "source_table_ref": { "$ref": "#/$defs/digest_ref" },
+        "source_variable_ref": { "$ref": "#/$defs/digest_ref" },
+        "source_role": { "const": "OFFICIAL_AGRICULTURAL_AGGREGATE" },
+        "source_state": { "const": "REFERENCED_NOT_RESOLVED" },
+        "evidence_refs": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/digest_ref" }
+        },
+        "rights_state": { "const": "REFERENCED_NOT_EVALUATED" },
+        "sensitivity_state": { "const": "REFERENCED_NOT_EVALUATED" }
+      }
+    },
+    "lineage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["correction_state", "predecessor_ref", "correction_record_ref"],
+      "properties": {
+        "correction_state": { "enum": ["ORIGINAL", "CORRECTED"] },
+        "predecessor_ref": { "$ref": "#/$defs/nullable_digest_ref" },
+        "correction_record_ref": { "$ref": "#/$defs/nullable_digest_ref" }
+      }
+    },
+    "disclosure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["interpretation_limits"],
+      "properties": {
+        "interpretation_limits": {
+          "type": "array",
+          "minItems": 8,
+          "maxItems": 8,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "AGGREGATE_ONLY",
+              "NO_CAUSAL_CLAIM",
+              "NO_FARM_OR_PRODUCER_INFERENCE",
+              "NO_PUBLICATION_AUTHORITY",
+              "SOURCE_ROLE_PRESERVED",
+              "SUPPRESSION_PRESERVED",
+              "UNIT_AND_CLASSIFICATION_DECLARED",
+              "VERSION_BOUND"
+            ]
+          }
+        }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "execution_mode",
+        "network_attempted",
+        "source_data_accessed",
+        "geography_resolved",
+        "evidence_resolved",
+        "classification_resolved",
+        "farm_or_producer_identified",
+        "rights_evaluated",
+        "sensitivity_evaluated",
+        "policy_evaluated",
+        "review_approved",
+        "promotion_authorized",
+        "release_authorized",
+        "public_use_allowed",
+        "publication_authorized"
+      ],
+      "properties": {
+        "execution_mode": { "const": "FIXTURE_ONLY" },
+        "network_attempted": { "const": false },
+        "source_data_accessed": { "const": false },
+        "geography_resolved": { "const": false },
+        "evidence_resolved": { "const": false },
+        "classification_resolved": { "const": false },
+        "farm_or_producer_identified": { "const": false },
+        "rights_evaluated": { "const": false },
+        "sensitivity_evaluated": { "const": false },
+        "policy_evaluated": { "const": false },
+        "review_approved": { "const": false },
+        "promotion_authorized": { "const": false },
+        "release_authorized": { "const": false },
+        "public_use_allowed": { "const": false },
+        "publication_authorized": { "const": false }
+      }
+    }
+  }
+}

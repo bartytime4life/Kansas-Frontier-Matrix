@@ -1,0 +1,1 @@
+'source_timezone' is a required property

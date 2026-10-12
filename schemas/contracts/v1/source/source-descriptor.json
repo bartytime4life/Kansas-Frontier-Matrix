@@ -1,0 +1,25 @@
+{
+  "status": "PROPOSED",
+  "path": "schemas/contracts/v1/source/source-descriptor.json",
+  "source_docs": [
+    "docs/domains/agriculture/IDENTITY_MODEL.md",
+    "docs/domains/archaeology/SOURCE_REGISTRY.md",
+    "docs/domains/atmosphere/API_CONTRACTS.md",
+    "docs/domains/atmosphere/PRESERVATION_MATRIX.md",
+    "docs/domains/atmosphere/SOURCE_REGISTRY.md",
+    "docs/domains/fauna/SOURCE_REGISTRY.md",
+    "docs/domains/flora/SOURCE_REGISTRY.md",
+    "docs/domains/geology/IDENTITY_MODEL.md",
+    "docs/domains/geology/SOURCE_REGISTRY.md",
+    "docs/domains/habitat/SOURCE_REGISTRY.md",
+    "docs/domains/hazards/SOURCE_REGISTRY.md",
+    "docs/domains/hydrology/IDENTITY_MODEL.md",
+    "docs/domains/hydrology/SOURCE_REGISTRY.md",
+    "docs/domains/people-dna-land/SOURCE_REGISTRY.md",
+    "docs/domains/roads-rail-trade/SOURCE_REGISTRY.md",
+    "docs/domains/settlements-infrastructure/SOURCE_REGISTRY.md"
+  ],
+  "notes": [
+    "Placeholder created from the current docs/domains markdown inventory."
+  ]
+}

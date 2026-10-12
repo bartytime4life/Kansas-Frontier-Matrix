@@ -1,0 +1,484 @@
+{
+  "base_candidate": {
+    "object_type": "LayerLegendDisclosureCandidate",
+    "schema_version": "1.0.0",
+    "profile": "kfm.data.layer-legend-disclosure.fixture.v1",
+    "source_card": "KFM-P18-INV-351",
+    "observed_at": "2026-08-10T00:00:00Z",
+    "layer_manifest_ref": "kfm://layer-manifest/synthetic-legend-layer",
+    "layer_manifest_digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+    "evidence_scope": {
+      "ref": "kfm://evidence-bundle/synthetic-legend-scope",
+      "digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+      "resolution": "RESOLVED"
+    },
+    "legend": {
+      "title": "Synthetic trust-visible legend",
+      "scope_statement": "Legend disclosures for one synthetic candidate layer.",
+      "state": "COMPLETE_FOR_DECLARED_SCOPE",
+      "known_undisclosed_entry_count": 0
+    },
+    "entries": [
+      {
+        "entry_id": "legend.synthetic.direct",
+        "label": "Synthetic direct observation",
+        "symbol_ref": "kfm://style/symbol/synthetic-direct",
+        "feature_class_ref": "kfm://feature-class/synthetic-observation",
+        "evidence_class": "DIRECT",
+        "release_state": "RELEASED",
+        "render_state": "VISIBLE",
+        "sensitivity_transform": "NONE",
+        "uncertainty_cue": "LOW",
+        "details_surface": "EVIDENCE_DRAWER",
+        "evidence_refs": [
+          "kfm://evidence/synthetic-observation"
+        ],
+        "policy_decision_refs": [],
+        "status_refs": [],
+        "correction_refs": []
+      }
+    ],
+    "authority_claims": {
+      "evidence_authority": false,
+      "policy_authority": false,
+      "review_authority": false,
+      "promotion_authority": false,
+      "release_authority": false,
+      "publication_authority": false,
+      "public_use_authority": false
+    }
+  },
+  "cases": [
+    {
+      "name": "pass_released_direct",
+      "patch": {},
+      "expected": {
+        "outcome": "PASS",
+        "codes": []
+      }
+    },
+    {
+      "name": "pass_modeled_with_uncertainty",
+      "patch": {
+        "entries": [
+          {
+            "entry_id": "legend.synthetic.modeled",
+            "label": "Synthetic modeled estimate",
+            "symbol_ref": "kfm://style/symbol/synthetic-modeled",
+            "feature_class_ref": "kfm://feature-class/synthetic-modeled",
+            "evidence_class": "MODELED",
+            "release_state": "RELEASED",
+            "render_state": "VISIBLE",
+            "sensitivity_transform": "NONE",
+            "uncertainty_cue": "HIGH",
+            "details_surface": "EVIDENCE_DRAWER",
+            "evidence_refs": [
+              "kfm://evidence/synthetic-model-lineage"
+            ],
+            "policy_decision_refs": [],
+            "status_refs": [],
+            "correction_refs": []
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "PASS",
+        "codes": []
+      }
+    },
+    {
+      "name": "pass_denied_disabled_with_policy",
+      "patch": {
+        "entries": [
+          {
+            "entry_id": "legend.synthetic.denied",
+            "label": "Sensitive class unavailable",
+            "symbol_ref": "kfm://style/symbol/synthetic-denied",
+            "feature_class_ref": "kfm://feature-class/synthetic-sensitive",
+            "evidence_class": "DIRECT",
+            "release_state": "DENIED",
+            "render_state": "DISABLED",
+            "sensitivity_transform": "WITHHELD",
+            "uncertainty_cue": "NONE",
+            "details_surface": "EVIDENCE_DRAWER",
+            "evidence_refs": [
+              "kfm://evidence/synthetic-sensitive-summary"
+            ],
+            "policy_decision_refs": [
+              "kfm://policy-decision/synthetic-denial"
+            ],
+            "status_refs": [
+              "kfm://status/synthetic-denied"
+            ],
+            "correction_refs": []
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "PASS",
+        "codes": []
+      }
+    },
+    {
+      "name": "abstain_unresolved_evidence",
+      "patch": {
+        "evidence_scope": {
+          "resolution": "UNRESOLVED"
+        }
+      },
+      "expected": {
+        "outcome": "ABSTAIN",
+        "codes": [
+          "EVIDENCE_SCOPE_UNRESOLVED"
+        ]
+      }
+    },
+    {
+      "name": "abstain_incomplete_legend",
+      "patch": {
+        "legend": {
+          "state": "INCOMPLETE",
+          "known_undisclosed_entry_count": 1
+        }
+      },
+      "expected": {
+        "outcome": "ABSTAIN",
+        "codes": [
+          "LEGEND_INCOMPLETE"
+        ]
+      }
+    },
+    {
+      "name": "abstain_unknown_evidence_class",
+      "patch": {
+        "entries": [
+          {
+            "entry_id": "legend.synthetic.direct",
+            "label": "Synthetic direct observation",
+            "symbol_ref": "kfm://style/symbol/synthetic-direct",
+            "feature_class_ref": "kfm://feature-class/synthetic-observation",
+            "evidence_class": "UNKNOWN",
+            "release_state": "RELEASED",
+            "render_state": "VISIBLE",
+            "sensitivity_transform": "NONE",
+            "uncertainty_cue": "LOW",
+            "details_surface": "EVIDENCE_DRAWER",
+            "evidence_refs": [
+              "kfm://evidence/synthetic-observation"
+            ],
+            "policy_decision_refs": [],
+            "status_refs": [],
+            "correction_refs": []
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "ABSTAIN",
+        "codes": [
+          "EVIDENCE_CLASS_UNKNOWN"
+        ]
+      }
+    },
+    {
+      "name": "abstain_unknown_release_state",
+      "patch": {
+        "entries": [
+          {
+            "entry_id": "legend.synthetic.direct",
+            "label": "Synthetic direct observation",
+            "symbol_ref": "kfm://style/symbol/synthetic-direct",
+            "feature_class_ref": "kfm://feature-class/synthetic-observation",
+            "evidence_class": "DIRECT",
+            "release_state": "UNKNOWN",
+            "render_state": "DISABLED",
+            "sensitivity_transform": "NONE",
+            "uncertainty_cue": "LOW",
+            "details_surface": "EVIDENCE_DRAWER",
+            "evidence_refs": [
+              "kfm://evidence/synthetic-observation"
+            ],
+            "policy_decision_refs": [],
+            "status_refs": [],
+            "correction_refs": []
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "ABSTAIN",
+        "codes": [
+          "RELEASE_STATE_UNKNOWN"
+        ]
+      }
+    },
+    {
+      "name": "abstain_unknown_uncertainty",
+      "patch": {
+        "entries": [
+          {
+            "entry_id": "legend.synthetic.direct",
+            "label": "Synthetic direct observation",
+            "symbol_ref": "kfm://style/symbol/synthetic-direct",
+            "feature_class_ref": "kfm://feature-class/synthetic-observation",
+            "evidence_class": "DIRECT",
+            "release_state": "RELEASED",
+            "render_state": "VISIBLE",
+            "sensitivity_transform": "NONE",
+            "uncertainty_cue": "UNKNOWN",
+            "details_surface": "EVIDENCE_DRAWER",
+            "evidence_refs": [
+              "kfm://evidence/synthetic-observation"
+            ],
+            "policy_decision_refs": [],
+            "status_refs": [],
+            "correction_refs": []
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "ABSTAIN",
+        "codes": [
+          "UNCERTAINTY_CUE_UNKNOWN"
+        ]
+      }
+    },
+    {
+      "name": "deny_denied_visible",
+      "patch": {
+        "entries": [
+          {
+            "entry_id": "legend.synthetic.denied",
+            "label": "Sensitive class unavailable",
+            "symbol_ref": "kfm://style/symbol/synthetic-denied",
+            "feature_class_ref": "kfm://feature-class/synthetic-sensitive",
+            "evidence_class": "DIRECT",
+            "release_state": "DENIED",
+            "render_state": "VISIBLE",
+            "sensitivity_transform": "WITHHELD",
+            "uncertainty_cue": "NONE",
+            "details_surface": "EVIDENCE_DRAWER",
+            "evidence_refs": [
+              "kfm://evidence/synthetic-sensitive-summary"
+            ],
+            "policy_decision_refs": [
+              "kfm://policy-decision/synthetic-denial"
+            ],
+            "status_refs": [
+              "kfm://status/synthetic-denied"
+            ],
+            "correction_refs": []
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "DENY",
+        "codes": [
+          "NONRELEASED_ENTRY_VISIBLE",
+          "WITHHELD_ENTRY_VISIBLE"
+        ]
+      }
+    },
+    {
+      "name": "deny_sensitive_without_policy",
+      "patch": {
+        "entries": [
+          {
+            "entry_id": "legend.synthetic.denied",
+            "label": "Sensitive class unavailable",
+            "symbol_ref": "kfm://style/symbol/synthetic-denied",
+            "feature_class_ref": "kfm://feature-class/synthetic-sensitive",
+            "evidence_class": "DIRECT",
+            "release_state": "DENIED",
+            "render_state": "DISABLED",
+            "sensitivity_transform": "WITHHELD",
+            "uncertainty_cue": "NONE",
+            "details_surface": "EVIDENCE_DRAWER",
+            "evidence_refs": [
+              "kfm://evidence/synthetic-sensitive-summary"
+            ],
+            "policy_decision_refs": [],
+            "status_refs": [
+              "kfm://status/synthetic-denied"
+            ],
+            "correction_refs": []
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "DENY",
+        "codes": [
+          "POLICY_REFERENCE_REQUIRED"
+        ]
+      }
+    },
+    {
+      "name": "deny_withheld_visible",
+      "patch": {
+        "entries": [
+          {
+            "entry_id": "legend.synthetic.direct",
+            "label": "Synthetic direct observation",
+            "symbol_ref": "kfm://style/symbol/synthetic-direct",
+            "feature_class_ref": "kfm://feature-class/synthetic-observation",
+            "evidence_class": "DIRECT",
+            "release_state": "RELEASED",
+            "render_state": "VISIBLE",
+            "sensitivity_transform": "WITHHELD",
+            "uncertainty_cue": "LOW",
+            "details_surface": "EVIDENCE_DRAWER",
+            "evidence_refs": [
+              "kfm://evidence/synthetic-observation"
+            ],
+            "policy_decision_refs": [
+              "kfm://policy-decision/withhold"
+            ],
+            "status_refs": [],
+            "correction_refs": []
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "DENY",
+        "codes": [
+          "WITHHELD_ENTRY_VISIBLE"
+        ]
+      }
+    },
+    {
+      "name": "deny_modeled_without_uncertainty",
+      "patch": {
+        "entries": [
+          {
+            "entry_id": "legend.synthetic.modeled",
+            "label": "Synthetic modeled estimate",
+            "symbol_ref": "kfm://style/symbol/synthetic-modeled",
+            "feature_class_ref": "kfm://feature-class/synthetic-modeled",
+            "evidence_class": "MODELED",
+            "release_state": "RELEASED",
+            "render_state": "VISIBLE",
+            "sensitivity_transform": "NONE",
+            "uncertainty_cue": "NONE",
+            "details_surface": "EVIDENCE_DRAWER",
+            "evidence_refs": [
+              "kfm://evidence/synthetic-model-lineage"
+            ],
+            "policy_decision_refs": [],
+            "status_refs": [],
+            "correction_refs": []
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "DENY",
+        "codes": [
+          "INTERPRETIVE_UNCERTAINTY_REQUIRED"
+        ]
+      }
+    },
+    {
+      "name": "deny_stale_without_status",
+      "patch": {
+        "entries": [
+          {
+            "entry_id": "legend.synthetic.direct",
+            "label": "Synthetic direct observation",
+            "symbol_ref": "kfm://style/symbol/synthetic-direct",
+            "feature_class_ref": "kfm://feature-class/synthetic-observation",
+            "evidence_class": "DIRECT",
+            "release_state": "STALE",
+            "render_state": "VISIBLE",
+            "sensitivity_transform": "NONE",
+            "uncertainty_cue": "LOW",
+            "details_surface": "EVIDENCE_DRAWER",
+            "evidence_refs": [
+              "kfm://evidence/synthetic-observation"
+            ],
+            "policy_decision_refs": [],
+            "status_refs": [],
+            "correction_refs": []
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "DENY",
+        "codes": [
+          "STATUS_REFERENCE_REQUIRED"
+        ]
+      }
+    },
+    {
+      "name": "deny_complete_with_known_gap",
+      "patch": {
+        "legend": {
+          "known_undisclosed_entry_count": 1
+        }
+      },
+      "expected": {
+        "outcome": "DENY",
+        "codes": [
+          "COMPLETENESS_CLAIM_INCOHERENT"
+        ]
+      }
+    },
+    {
+      "name": "deny_noncanonical_entries",
+      "patch": {
+        "entries": [
+          {
+            "entry_id": "legend.z",
+            "label": "Synthetic direct observation",
+            "symbol_ref": "kfm://style/symbol/synthetic-direct",
+            "feature_class_ref": "kfm://feature-class/synthetic-observation",
+            "evidence_class": "DIRECT",
+            "release_state": "RELEASED",
+            "render_state": "VISIBLE",
+            "sensitivity_transform": "NONE",
+            "uncertainty_cue": "LOW",
+            "details_surface": "EVIDENCE_DRAWER",
+            "evidence_refs": [
+              "kfm://evidence/synthetic-observation"
+            ],
+            "policy_decision_refs": [],
+            "status_refs": [],
+            "correction_refs": []
+          },
+          {
+            "entry_id": "legend.a",
+            "label": "Synthetic modeled estimate",
+            "symbol_ref": "kfm://style/symbol/synthetic-modeled",
+            "feature_class_ref": "kfm://feature-class/synthetic-modeled",
+            "evidence_class": "MODELED",
+            "release_state": "RELEASED",
+            "render_state": "VISIBLE",
+            "sensitivity_transform": "NONE",
+            "uncertainty_cue": "HIGH",
+            "details_surface": "EVIDENCE_DRAWER",
+            "evidence_refs": [
+              "kfm://evidence/synthetic-model-lineage"
+            ],
+            "policy_decision_refs": [],
+            "status_refs": [],
+            "correction_refs": []
+          }
+        ]
+      },
+      "expected": {
+        "outcome": "DENY",
+        "codes": [
+          "ENTRIES_NOT_CANONICAL"
+        ]
+      }
+    },
+    {
+      "name": "error_unknown_field",
+      "patch": {
+        "unexpected_field": "blocked"
+      },
+      "expected": {
+        "outcome": "ERROR",
+        "codes": [
+          "SCHEMA_INVALID"
+        ]
+      }
+    }
+  ]
+}

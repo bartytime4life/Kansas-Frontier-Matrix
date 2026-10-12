@@ -1,0 +1,62 @@
+{
+  "object_type": "DatasetVersion",
+  "schema_version": "1.0.0",
+  "id": "kfm:dataset-version:sha256:6328f48861cd5dc40b685ead474b5eb41aa06da968b91a9c74850e22f4476ec6",
+  "identity_profile": "kfm-dataset-version-id-v1",
+  "dataset_id": "dataset:kansas-mesonet:soil-moisture",
+  "version_label": "public-safe-2026-08-14T23:10:00Z",
+  "representation_kind": "published_version",
+  "source_ref": "source:kansas-mesonet",
+  "source_role_ref": "source-role:primary-observation",
+  "content_digest": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+  "spec_hash": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+  "temporal": {
+    "source_published_at": null,
+    "retrieved_at": "2026-08-14T23:00:00Z",
+    "ingested_at": "2026-08-14T23:10:00Z",
+    "effective_window": null
+  },
+  "lifecycle_stage": "PUBLISHED",
+  "rights": {
+    "state": "ALLOWED",
+    "decision_ref": "rights-decision:kansas-mesonet:fixture-only",
+    "obligations": [
+      "attribution:kansas-mesonet"
+    ]
+  },
+  "sensitivity": {
+    "state": "PUBLIC_SAFE",
+    "decision_ref": "sensitivity-decision:kansas-mesonet:fixture-only",
+    "transform_refs": []
+  },
+  "provenance": {
+    "evidence_refs": [
+      "evidence-bundle:soil-moisture:fixture-v1"
+    ],
+    "validation_refs": [
+      "validation-report:soil-moisture:fixture-v1"
+    ],
+    "run_receipt_refs": [
+      "run-receipt:fixture:soil-moisture-release-build"
+    ],
+    "input_version_refs": [
+      "kfm:dataset-version:sha256:956c044982eab585ecb345ca7953f0554fff8805f9f6da104039530fe5294f3a"
+    ]
+  },
+  "lineage": {
+    "previous_version_ref": "kfm:dataset-version:sha256:956c044982eab585ecb345ca7953f0554fff8805f9f6da104039530fe5294f3a",
+    "supersedes": [],
+    "superseded_by": null,
+    "correction_refs": [],
+    "rollback_target": "kfm:dataset-version:sha256:956c044982eab585ecb345ca7953f0554fff8805f9f6da104039530fe5294f3a"
+  },
+  "release_ref": "release-manifest:soil-moisture:fixture-v1",
+  "governance": {
+    "authority_created": false,
+    "evidence_closure_claimed": false,
+    "policy_decision_created": false,
+    "release_authority_created": false,
+    "publication_authority_created": false,
+    "public_use_authority_created": false
+  }
+}

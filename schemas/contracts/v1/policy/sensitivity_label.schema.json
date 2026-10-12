@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/policy/sensitivity_label.schema.json",
+  "title": "sensitivity_label",
+  "type": "object",
+  "description": "KFM contract for sensitivity_label.",
+  "x-kfm": {
+    "contract_doc": "contracts/policy/sensitivity_label.md",
+    "fixtures_root": "fixtures/contracts/v1/policy/sensitivity_label/",
+    "validator": "tools/validators/validate_sensitivity_label.py",
+    "policy": "policy/policy/",
+    "status": "PROPOSED"
+  },
+  "properties": {
+    "level": {
+      "type": "string",
+      "enum": [
+        "public",
+        "generalized",
+        "restricted",
+        "quarantine"
+      ]
+    },
+    "reason": {
+      "type": "string"
+    },
+    "applied_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "level",
+    "reason",
+    "applied_at"
+  ],
+  "additionalProperties": false
+}

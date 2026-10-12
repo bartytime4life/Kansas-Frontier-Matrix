@@ -1,0 +1,12 @@
+{
+  "id": "BAD",
+  "source_id": "src1",
+  "run_id": "run1",
+  "started_at": "2026-05-09T00:00:00Z",
+  "finished_at": "2026-05-09T00:10:00Z",
+  "outcome": "SUCCESS",
+  "bytes_in": 12,
+  "digests": {
+    "raw": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  }
+}

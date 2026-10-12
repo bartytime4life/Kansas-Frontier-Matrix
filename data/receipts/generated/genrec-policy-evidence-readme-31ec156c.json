@@ -1,0 +1,162 @@
+{
+  "receipt_id": "genrec-policy-evidence-readme-31ec156c",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "policy/evidence/README.md"
+  ],
+  "artifact_hashes": {
+    "policy/evidence/README.md": "sha256:31ec156caeaf8529dcfb562802cee15ed2180b6a0f9a006032153cd9e96df3dc"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-5)",
+    "version": "2026-07-20"
+  },
+  "prompt_or_contract": "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "repository evidence inspection",
+      "Directory Rules placement preflight",
+      "Markdown and JSON structural validation",
+      "remote branch and diff verification"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "Pasted text(56).txt"
+    ],
+    "evidence_hashes": [
+      "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/policy/evidence/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/docs/architecture/contract-schema-policy-split.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/docs/registers/DRIFT_REGISTER.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/contracts/evidence/evidence_ref.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/contracts/evidence/evidence_bundle.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/schemas/contracts/v1/evidence/evidence_ref.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/schemas/contracts/v1/evidence/evidence_bundle.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/schemas/contracts/v1/policy/policy_decision.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/tools/validators/validate_evidence_ref.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/tools/validators/validate_evidence_bundle.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/tests/schemas/test_common_contracts.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/tests/schemas/test_evidence_ref_validator.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/packages/evidence-resolver/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/.github/workflows/policy-test.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/.github/workflows/evidence-resolver.yml"
+    ]
+  },
+  "truth_labels": {
+    "policy/evidence/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-authority-preflight",
+      "outcome": "PASS",
+      "reason": "Verified public repository identity, default branch, pinned base, target blob, authenticated admin permission, scoped branch, and absence of a matching open pull request."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "The target remains under the canonical singular policy responsibility root; the generated receipt uses the existing data/receipts/generated provenance lane. No parallel contract, schema, evidence, proof, release, or publication authority was created."
+    },
+    {
+      "gate": "repository-evidence-grounding",
+      "outcome": "PASS",
+      "reason": "Inspected the target, parent and sibling policy lanes, evidence contracts and schemas, fixtures, validators, tests, resolver package, PolicyDecision shape, proposed ADRs, drift register, workflow inventory, CODEOWNERS, and pull-request template at the pinned base."
+    },
+    {
+      "gate": "no-loss-and-conflict-disclosure",
+      "outcome": "PASS",
+      "reason": "Replaced only a one-line greenfield stub and surfaced EvidenceBundle naming drift, proposed ADR status, missing evidence policy implementation, and the absent evidence value in the current PolicyDecision policy_family enum."
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "Local checks confirmed 528 lines, one H1, complete KFM Meta Block markers, balanced code fences, no trailing whitespace, grounded relative links, an evidence ledger, open verification register, and rollback section."
+    },
+    {
+      "gate": "workflow-trigger-threat-preflight",
+      "outcome": "PASS",
+      "reason": "Inspected applicable pull-request workflows. Relevant jobs use GitHub-hosted runners and read-only contents permission without secrets, OIDC, deployment, release, or publication authority; major-version rather than immutable action pinning remains visible."
+    },
+    {
+      "gate": "remote-readback-and-diff-scope",
+      "outcome": "PASS",
+      "reason": "Verified branch head 4e982eda2694887f17660c4032ee4666f7cc2d17, exact README byte equality, returned blob a940ded7c4ae299dd5e6a70764c1e7dd7292b9e7, and a one-file base-to-head diff before adding this required receipt."
+    },
+    {
+      "gate": "security-rights-and-sensitivity",
+      "outcome": "PASS",
+      "reason": "The documentation adds no credentials, private source payloads, living-person records, genomic data, or exact sensitive locations and preserves fail-closed treatment without exposing protected examples."
+    },
+    {
+      "gate": "executable-evidence-policy",
+      "outcome": "SKIPPED",
+      "reason": "No accepted evidence-policy rule, resolver implementation, policy bundle, evaluator binding, obligation interpreter, runtime consumer, receipt emitter, or release integration was established or changed."
+    },
+    {
+      "gate": "repository-native-tests",
+      "outcome": "SKIPPED",
+      "reason": "The API-only task had no mounted checkout. Existing pull-request workflows are expected to provide current remote schema, contract, policy-readiness, and resolver-readiness results."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "target-and-policy-placement",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/policy/evidence/README.md"
+    },
+    {
+      "id": "directory-rules-and-authority-split",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/docs/doctrine/directory-rules.md"
+    },
+    {
+      "id": "evidence-contracts-and-schemas",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/contracts/evidence/evidence_ref.md"
+    },
+    {
+      "id": "evidence-validator-and-test-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/tests/schemas/test_evidence_ref_validator.py"
+    },
+    {
+      "id": "policy-decision-shape",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/schemas/contracts/v1/policy/policy_decision.schema.json"
+    },
+    {
+      "id": "resolver-and-policy-workflow-posture",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/2b31ccbd9ba5b3fe6772ea1b0165eca45bdfebb0/.github/workflows/evidence-resolver.yml"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-20T07:44:34Z",
+  "emitter": "openai/codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored repository-grounded README revision on a scoped review branch. This receipt records provenance and validation boundaries, not approval, evidence truth, policy permission, release authority, or publication. The README SHA-256 was computed from the prepared local bytes and remote read-back confirmed exact equality before receipt creation. The change adds documentation and this required provenance receipt only. Human review remains pending."
+}

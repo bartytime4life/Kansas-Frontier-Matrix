@@ -1,0 +1,865 @@
+{
+  "profile": "kfm.frontier-classification.fixture-suite.v1",
+  "description": "Synthetic-only local registry cases. Threshold values exist only in fixture threshold-policy resources and are not copied into FrontierClassification records.",
+  "base": {
+    "generated_at": "2026-08-16T12:00:00Z",
+    "subject": {
+      "synthetic_subject": true,
+      "county_identifier_digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "calendar_year": 2020,
+      "geography_version_ref": "kfm://geography-version/synthetic-county-v1@sha256:1111111111111111111111111111111111111111111111111111111111111111"
+    },
+    "definition": {
+      "combination_rule": "ALL_CRITERIA",
+      "valid_from": "2020-01-01",
+      "valid_to": "2020-12-31"
+    },
+    "criteria": [
+      {
+        "criterion_key": "access_rule",
+        "indicator_definition_ref": "kfm://indicator-definition/synthetic-access@sha256:2222222222222222222222222222222222222222222222222222222222222222",
+        "observation_kind": "ACCESS",
+        "comparison_operator": "GREATER_THAN_OR_EQUAL",
+        "source_role_ref": "kfm://source-role/synthetic-access@sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "expected_source_role": "OFFICIAL_ACCESS_OR_SERVICE_AGGREGATE",
+        "source_role_mirror_state": "MATCH",
+        "observation": {
+          "availability": "AVAILABLE",
+          "lifecycle_state": "CURRENT",
+          "reference_year": 2020,
+          "geography_version_ref": "kfm://geography-version/synthetic-county-v1@sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "geography_alignment": "SAME_VERSION",
+          "geography_crosswalk_ref": null,
+          "crosswalk_state": "NOT_APPLICABLE",
+          "result_state": "OBSERVED",
+          "value": 42.5,
+          "correction_state": "ORIGINAL",
+          "accepted_current_lineage": true
+        },
+        "uncertainty": {
+          "ref": "kfm://uncertainty/access/synthetic-2020@sha256:8888888888888888888888888888888888888888888888888888888888888888",
+          "state": "ADMITTED",
+          "lower": 40.0,
+          "upper": 45.0,
+          "maximum_width": 10.0
+        },
+        "evidence": {
+          "ref": "kfm://evidence-ref/access/synthetic-2020@sha256:6666666666666666666666666666666666666666666666666666666666666666",
+          "state": "VERIFIED",
+          "bundle_id": "bundle:frontier:access:synthetic-2020",
+          "bundle_state": "MATCH"
+        },
+        "threshold_policy": {
+          "ref": "kfm://policy/threshold/synthetic-access@sha256:4444444444444444444444444444444444444444444444444444444444444444",
+          "state": "ADMITTED",
+          "indicator_definition_ref": "kfm://indicator-definition/synthetic-access@sha256:2222222222222222222222222222222222222222222222222222222222222222",
+          "comparison_operator": "GREATER_THAN_OR_EQUAL",
+          "value": 30.0,
+          "valid_from": "2020-01-01",
+          "valid_to": "2020-12-31"
+        }
+      },
+      {
+        "criterion_key": "population_rule",
+        "indicator_definition_ref": "kfm://indicator-definition/synthetic-population@sha256:3333333333333333333333333333333333333333333333333333333333333333",
+        "observation_kind": "POPULATION",
+        "comparison_operator": "LESS_THAN_OR_EQUAL",
+        "source_role_ref": "kfm://source-role/synthetic-population@sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "expected_source_role": "OFFICIAL_STATISTICAL_AGGREGATE",
+        "source_role_mirror_state": "MATCH",
+        "observation": {
+          "availability": "AVAILABLE",
+          "lifecycle_state": "CURRENT",
+          "reference_year": 2020,
+          "geography_version_ref": "kfm://geography-version/synthetic-county-v1@sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "geography_alignment": "SAME_VERSION",
+          "geography_crosswalk_ref": null,
+          "crosswalk_state": "NOT_APPLICABLE",
+          "result_state": "OBSERVED",
+          "value": 8000,
+          "correction_state": "ORIGINAL",
+          "accepted_current_lineage": true
+        },
+        "uncertainty": {
+          "ref": "kfm://uncertainty/population/synthetic-2020@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "state": "ADMITTED",
+          "lower": 7900.0,
+          "upper": 8100.0,
+          "maximum_width": 500.0
+        },
+        "evidence": {
+          "ref": "kfm://evidence-ref/population/synthetic-2020@sha256:7777777777777777777777777777777777777777777777777777777777777777",
+          "state": "VERIFIED",
+          "bundle_id": "bundle:frontier:population:synthetic-2020",
+          "bundle_state": "MATCH"
+        },
+        "threshold_policy": {
+          "ref": "kfm://policy/threshold/synthetic-population@sha256:5555555555555555555555555555555555555555555555555555555555555555",
+          "state": "ADMITTED",
+          "indicator_definition_ref": "kfm://indicator-definition/synthetic-population@sha256:3333333333333333333333333333333333333333333333333333333333333333",
+          "comparison_operator": "LESS_THAN_OR_EQUAL",
+          "value": 10000.0,
+          "valid_from": "2020-01-01",
+          "valid_to": "2020-12-31"
+        }
+      }
+    ],
+    "lineage": {
+      "state": "ORIGINAL",
+      "supersedes_assessment_ref": null,
+      "correction_record_ref": null,
+      "corrected_input_refs": []
+    }
+  },
+  "cases": [
+    {
+      "case_id": "all_criteria_frontier",
+      "scenario_mutations": [],
+      "candidate_mutations": [],
+      "reseal_candidate": false,
+      "expected_validation_outcome": "PASS",
+      "expected_findings": [],
+      "expected_classification": "FRONTIER",
+      "expected_classification_reasons": [
+        "ALL_CRITERIA_SATISFIED"
+      ]
+    },
+    {
+      "case_id": "all_criteria_not_frontier",
+      "scenario_mutations": [
+        {
+          "path": "/criteria/0/observation/value",
+          "value": 20.0
+        },
+        {
+          "path": "/criteria/0/uncertainty/lower",
+          "value": 19.0
+        },
+        {
+          "path": "/criteria/0/uncertainty/upper",
+          "value": 21.0
+        }
+      ],
+      "candidate_mutations": [],
+      "reseal_candidate": false,
+      "expected_validation_outcome": "PASS",
+      "expected_findings": [],
+      "expected_classification": "NOT_FRONTIER",
+      "expected_classification_reasons": [
+        "ALL_CRITERIA_RULE_NOT_SATISFIED"
+      ]
+    },
+    {
+      "case_id": "any_criterion_frontier",
+      "scenario_mutations": [
+        {
+          "path": "/definition/combination_rule",
+          "value": "ANY_CRITERION"
+        },
+        {
+          "path": "/criteria/0/observation/value",
+          "value": 20.0
+        },
+        {
+          "path": "/criteria/0/uncertainty/lower",
+          "value": 19.0
+        },
+        {
+          "path": "/criteria/0/uncertainty/upper",
+          "value": 21.0
+        }
+      ],
+      "candidate_mutations": [],
+      "reseal_candidate": false,
+      "expected_validation_outcome": "PASS",
+      "expected_findings": [],
+      "expected_classification": "FRONTIER",
+      "expected_classification_reasons": [
+        "ANY_CRITERION_SATISFIED"
+      ]
+    },
+    {
+      "case_id": "any_criterion_not_frontier",
+      "scenario_mutations": [
+        {
+          "path": "/definition/combination_rule",
+          "value": "ANY_CRITERION"
+        },
+        {
+          "path": "/criteria/0/observation/value",
+          "value": 20.0
+        },
+        {
+          "path": "/criteria/0/uncertainty/lower",
+          "value": 19.0
+        },
+        {
+          "path": "/criteria/0/uncertainty/upper",
+          "value": 21.0
+        },
+        {
+          "path": "/criteria/1/observation/value",
+          "value": 12000
+        },
+        {
+          "path": "/criteria/1/uncertainty/lower",
+          "value": 11900.0
+        },
+        {
+          "path": "/criteria/1/uncertainty/upper",
+          "value": 12100.0
+        }
+      ],
+      "candidate_mutations": [],
+      "reseal_candidate": false,
+      "expected_validation_outcome": "PASS",
+      "expected_findings": [],
+      "expected_classification": "NOT_FRONTIER",
+      "expected_classification_reasons": [
+        "NO_CRITERION_SATISFIED"
+      ]
+    },
+    {
+      "case_id": "same_version_geography_alignment",
+      "scenario_mutations": [],
+      "candidate_mutations": [],
+      "reseal_candidate": false,
+      "expected_validation_outcome": "PASS",
+      "expected_findings": [],
+      "expected_classification": "FRONTIER"
+    },
+    {
+      "case_id": "admitted_crosswalk_alignment",
+      "scenario_mutations": [
+        {
+          "path": "/criteria/0/observation/geography_version_ref",
+          "value": "kfm://geography-version/synthetic-county-v0@sha256:9999999999999999999999999999999999999999999999999999999999999999"
+        },
+        {
+          "path": "/criteria/0/observation/geography_alignment",
+          "value": "CROSSWALK_REFERENCED"
+        },
+        {
+          "path": "/criteria/0/observation/geography_crosswalk_ref",
+          "value": "kfm://geography-crosswalk/synthetic-v0-v1@sha256:9898989898989898989898989898989898989898989898989898989898989898"
+        },
+        {
+          "path": "/criteria/0/observation/crosswalk_state",
+          "value": "ADMITTED"
+        }
+      ],
+      "candidate_mutations": [],
+      "reseal_candidate": false,
+      "expected_validation_outcome": "PASS",
+      "expected_findings": [],
+      "expected_classification": "FRONTIER"
+    },
+    {
+      "case_id": "missing_observation_unclassified",
+      "scenario_mutations": [
+        {
+          "path": "/criteria/0/observation/availability",
+          "value": "MISSING"
+        },
+        {
+          "path": "/criteria/0/observation/lifecycle_state",
+          "value": "MISSING"
+        },
+        {
+          "path": "/criteria/0/observation/result_state",
+          "value": "MISSING"
+        },
+        {
+          "path": "/criteria/0/observation/value",
+          "value": null
+        },
+        {
+          "path": "/criteria/0/uncertainty/state",
+          "value": "MISSING"
+        },
+        {
+          "path": "/criteria/0/evidence/state",
+          "value": "MISSING"
+        }
+      ],
+      "candidate_mutations": [],
+      "reseal_candidate": false,
+      "expected_validation_outcome": "PASS",
+      "expected_findings": [],
+      "expected_classification": "UNCLASSIFIED",
+      "expected_classification_reasons": [
+        "CRITERION_SUPPORT_INDETERMINATE"
+      ]
+    },
+    {
+      "case_id": "suppressed_observation_unclassified",
+      "scenario_mutations": [
+        {
+          "path": "/criteria/1/observation/availability",
+          "value": "SUPPRESSED"
+        },
+        {
+          "path": "/criteria/1/observation/lifecycle_state",
+          "value": "SUPPRESSED"
+        },
+        {
+          "path": "/criteria/1/observation/result_state",
+          "value": "SUPPRESSED"
+        },
+        {
+          "path": "/criteria/1/observation/value",
+          "value": null
+        },
+        {
+          "path": "/criteria/1/uncertainty/state",
+          "value": "MISSING"
+        }
+      ],
+      "candidate_mutations": [],
+      "reseal_candidate": false,
+      "expected_validation_outcome": "PASS",
+      "expected_findings": [],
+      "expected_classification": "UNCLASSIFIED",
+      "expected_classification_reasons": [
+        "CRITERION_SUPPORT_INDETERMINATE"
+      ]
+    },
+    {
+      "case_id": "unresolved_geography_unclassified",
+      "scenario_mutations": [
+        {
+          "path": "/criteria/0/observation/geography_version_ref",
+          "value": "kfm://geography-version/synthetic-county-v0@sha256:9999999999999999999999999999999999999999999999999999999999999999"
+        },
+        {
+          "path": "/criteria/0/observation/geography_alignment",
+          "value": "UNRESOLVED"
+        },
+        {
+          "path": "/criteria/0/observation/availability",
+          "value": "MISSING"
+        },
+        {
+          "path": "/criteria/0/observation/lifecycle_state",
+          "value": "MISSING"
+        },
+        {
+          "path": "/criteria/0/observation/result_state",
+          "value": "MISSING"
+        },
+        {
+          "path": "/criteria/0/observation/value",
+          "value": null
+        },
+        {
+          "path": "/criteria/0/uncertainty/state",
+          "value": "MISSING"
+        },
+        {
+          "path": "/criteria/0/evidence/state",
+          "value": "MISSING"
+        }
+      ],
+      "candidate_mutations": [],
+      "reseal_candidate": false,
+      "expected_validation_outcome": "PASS",
+      "expected_findings": [],
+      "expected_classification": "UNCLASSIFIED"
+    },
+    {
+      "case_id": "missing_crosswalk_unclassified",
+      "scenario_mutations": [
+        {
+          "path": "/criteria/0/observation/geography_version_ref",
+          "value": "kfm://geography-version/synthetic-county-v0@sha256:9999999999999999999999999999999999999999999999999999999999999999"
+        },
+        {
+          "path": "/criteria/0/observation/geography_alignment",
+          "value": "CROSSWALK_REFERENCED"
+        },
+        {
+          "path": "/criteria/0/observation/geography_crosswalk_ref",
+          "value": "kfm://geography-crosswalk/synthetic-v0-v1@sha256:9898989898989898989898989898989898989898989898989898989898989898"
+        },
+        {
+          "path": "/criteria/0/observation/crosswalk_state",
+          "value": "MISSING"
+        }
+      ],
+      "candidate_mutations": [],
+      "reseal_candidate": false,
+      "expected_validation_outcome": "PASS",
+      "expected_findings": [],
+      "expected_classification": "UNCLASSIFIED"
+    },
+    {
+      "case_id": "observation_year_mismatch_unclassified",
+      "scenario_mutations": [
+        {
+          "path": "/criteria/0/observation/reference_year",
+          "value": 2019
+        }
+      ],
+      "candidate_mutations": [],
+      "reseal_candidate": false,
+      "expected_validation_outcome": "PASS",
+      "expected_findings": [],
+      "expected_classification": "UNCLASSIFIED"
+    },
+    {
+      "case_id": "definition_interval_mismatch_unclassified",
+      "scenario_mutations": [
+        {
+          "path": "/definition/valid_from",
+          "value": "2021-01-01"
+        },
+        {
+          "path": "/definition/valid_to",
+          "value": "2021-12-31"
+        }
+      ],
+      "candidate_mutations": [],
+      "reseal_candidate": false,
+      "expected_validation_outcome": "PASS",
+      "expected_findings": [],
+      "expected_classification": "UNCLASSIFIED"
+    },
+    {
+      "case_id": "stale_input_unclassified",
+      "scenario_mutations": [
+        {
+          "path": "/criteria/0/observation/lifecycle_state",
+          "value": "STALE"
+        }
+      ],
+      "candidate_mutations": [],
+      "reseal_candidate": false,
+      "expected_validation_outcome": "PASS",
+      "expected_findings": [],
+      "expected_classification": "UNCLASSIFIED"
+    },
+    {
+      "case_id": "superseded_input_unclassified",
+      "scenario_mutations": [
+        {
+          "path": "/criteria/0/observation/lifecycle_state",
+          "value": "SUPERSEDED"
+        }
+      ],
+      "candidate_mutations": [],
+      "reseal_candidate": false,
+      "expected_validation_outcome": "PASS",
+      "expected_findings": [],
+      "expected_classification": "UNCLASSIFIED"
+    },
+    {
+      "case_id": "withdrawn_input_unclassified",
+      "scenario_mutations": [
+        {
+          "path": "/criteria/1/observation/lifecycle_state",
+          "value": "WITHDRAWN"
+        }
+      ],
+      "candidate_mutations": [],
+      "reseal_candidate": false,
+      "expected_validation_outcome": "PASS",
+      "expected_findings": [],
+      "expected_classification": "UNCLASSIFIED"
+    },
+    {
+      "case_id": "corrected_input_without_current_lineage_unclassified",
+      "scenario_mutations": [
+        {
+          "path": "/criteria/1/observation/lifecycle_state",
+          "value": "CORRECTED_PENDING"
+        },
+        {
+          "path": "/criteria/1/observation/correction_state",
+          "value": "CORRECTED"
+        },
+        {
+          "path": "/criteria/1/observation/accepted_current_lineage",
+          "value": false
+        }
+      ],
+      "candidate_mutations": [],
+      "reseal_candidate": false,
+      "expected_validation_outcome": "PASS",
+      "expected_findings": [],
+      "expected_classification": "UNCLASSIFIED"
+    },
+    {
+      "case_id": "source_role_mirror_mismatch_unclassified",
+      "scenario_mutations": [
+        {
+          "path": "/criteria/0/source_role_mirror_state",
+          "value": "MISMATCH"
+        }
+      ],
+      "candidate_mutations": [],
+      "reseal_candidate": false,
+      "expected_validation_outcome": "PASS",
+      "expected_findings": [],
+      "expected_classification": "UNCLASSIFIED"
+    },
+    {
+      "case_id": "evidence_ref_missing_unclassified",
+      "scenario_mutations": [
+        {
+          "path": "/criteria/0/evidence/state",
+          "value": "MISSING"
+        }
+      ],
+      "candidate_mutations": [],
+      "reseal_candidate": false,
+      "expected_validation_outcome": "PASS",
+      "expected_findings": [],
+      "expected_classification": "UNCLASSIFIED"
+    },
+    {
+      "case_id": "evidence_bundle_identity_mismatch_unclassified",
+      "scenario_mutations": [
+        {
+          "path": "/criteria/0/evidence/bundle_state",
+          "value": "IDENTITY_MISMATCH"
+        }
+      ],
+      "candidate_mutations": [],
+      "reseal_candidate": false,
+      "expected_validation_outcome": "PASS",
+      "expected_findings": [],
+      "expected_classification": "UNCLASSIFIED"
+    },
+    {
+      "case_id": "evidence_bundle_member_mismatch_unclassified",
+      "scenario_mutations": [
+        {
+          "path": "/criteria/1/evidence/bundle_state",
+          "value": "MEMBER_MISMATCH"
+        }
+      ],
+      "candidate_mutations": [],
+      "reseal_candidate": false,
+      "expected_validation_outcome": "PASS",
+      "expected_findings": [],
+      "expected_classification": "UNCLASSIFIED"
+    },
+    {
+      "case_id": "uncertainty_missing_unclassified",
+      "scenario_mutations": [
+        {
+          "path": "/criteria/0/uncertainty/state",
+          "value": "MISSING"
+        }
+      ],
+      "candidate_mutations": [],
+      "reseal_candidate": false,
+      "expected_validation_outcome": "PASS",
+      "expected_findings": [],
+      "expected_classification": "UNCLASSIFIED"
+    },
+    {
+      "case_id": "uncertainty_crosses_threshold_unclassified",
+      "scenario_mutations": [
+        {
+          "path": "/criteria/0/uncertainty/lower",
+          "value": 25.0
+        },
+        {
+          "path": "/criteria/0/uncertainty/upper",
+          "value": 35.0
+        }
+      ],
+      "candidate_mutations": [],
+      "reseal_candidate": false,
+      "expected_validation_outcome": "PASS",
+      "expected_findings": [],
+      "expected_classification": "UNCLASSIFIED"
+    },
+    {
+      "case_id": "uncertainty_exceeds_admitted_width_unclassified",
+      "scenario_mutations": [
+        {
+          "path": "/criteria/0/uncertainty/lower",
+          "value": 10.0
+        },
+        {
+          "path": "/criteria/0/uncertainty/upper",
+          "value": 50.0
+        }
+      ],
+      "candidate_mutations": [],
+      "reseal_candidate": false,
+      "expected_validation_outcome": "PASS",
+      "expected_findings": [],
+      "expected_classification": "UNCLASSIFIED"
+    },
+    {
+      "case_id": "threshold_policy_missing_unclassified",
+      "scenario_mutations": [
+        {
+          "path": "/criteria/0/threshold_policy/state",
+          "value": "MISSING"
+        }
+      ],
+      "candidate_mutations": [],
+      "reseal_candidate": false,
+      "expected_validation_outcome": "PASS",
+      "expected_findings": [],
+      "expected_classification": "UNCLASSIFIED"
+    },
+    {
+      "case_id": "threshold_policy_indicator_mismatch_unclassified",
+      "scenario_mutations": [
+        {
+          "path": "/criteria/0/threshold_policy/indicator_definition_ref",
+          "value": "kfm://indicator-definition/synthetic-population@sha256:3333333333333333333333333333333333333333333333333333333333333333"
+        }
+      ],
+      "candidate_mutations": [],
+      "reseal_candidate": false,
+      "expected_validation_outcome": "PASS",
+      "expected_findings": [],
+      "expected_classification": "UNCLASSIFIED"
+    },
+    {
+      "case_id": "threshold_policy_operator_mismatch_unclassified",
+      "scenario_mutations": [
+        {
+          "path": "/criteria/0/threshold_policy/comparison_operator",
+          "value": "LESS_THAN_OR_EQUAL"
+        }
+      ],
+      "candidate_mutations": [],
+      "reseal_candidate": false,
+      "expected_validation_outcome": "PASS",
+      "expected_findings": [],
+      "expected_classification": "UNCLASSIFIED"
+    },
+    {
+      "case_id": "threshold_policy_not_admitted_unclassified",
+      "scenario_mutations": [
+        {
+          "path": "/criteria/1/threshold_policy/state",
+          "value": "NOT_ADMITTED"
+        }
+      ],
+      "candidate_mutations": [],
+      "reseal_candidate": false,
+      "expected_validation_outcome": "PASS",
+      "expected_findings": [],
+      "expected_classification": "UNCLASSIFIED"
+    },
+    {
+      "case_id": "panel_digest_binding_tamper_denied",
+      "scenario_mutations": [],
+      "candidate_mutations": [
+        {
+          "path": "/inputs/county_year_panel_spec_hash",
+          "value": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+        }
+      ],
+      "reseal_candidate": true,
+      "expected_validation_outcome": "DENY",
+      "expected_findings": [
+        "PANEL_BINDING_MISMATCH"
+      ]
+    },
+    {
+      "case_id": "definition_digest_binding_tamper_denied",
+      "scenario_mutations": [],
+      "candidate_mutations": [
+        {
+          "path": "/inputs/frontier_definition_spec_hash",
+          "value": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+        }
+      ],
+      "reseal_candidate": true,
+      "expected_validation_outcome": "DENY",
+      "expected_findings": [
+        "DEFINITION_BINDING_MISMATCH"
+      ]
+    },
+    {
+      "case_id": "classification_result_tamper_denied",
+      "scenario_mutations": [],
+      "candidate_mutations": [
+        {
+          "path": "/classification/value",
+          "value": "NOT_FRONTIER"
+        }
+      ],
+      "reseal_candidate": true,
+      "expected_validation_outcome": "DENY",
+      "expected_findings": [
+        "CLASSIFICATION_OUTPUT_MISMATCH"
+      ]
+    },
+    {
+      "case_id": "extra_criterion_trace_denied",
+      "scenario_mutations": [],
+      "candidate_mutations": [
+        {
+          "path": "/criteria/2",
+          "value": {
+            "criterion_key": "extra_rule",
+            "indicator_definition_ref": "kfm://indicator-definition/extra@sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+            "observation_kind": "ACCESS",
+            "panel_observation_ref": null,
+            "source_role_ref": null,
+            "source_role": null,
+            "observation_identity": null,
+            "observation_spec_hash": null,
+            "observation_state": "MISSING",
+            "uncertainty_ref": null,
+            "uncertainty_posture": "MISSING",
+            "evidence_ref": null,
+            "evidence_bundle_id": null,
+            "evidence_bundle_spec_hash": null,
+            "evidence_posture": "MISSING",
+            "geography_alignment": "UNRESOLVED",
+            "geography_crosswalk_ref": null,
+            "time_alignment": "UNRESOLVED",
+            "threshold_policy_ref": null,
+            "threshold_policy_posture": "MISSING",
+            "comparison_operator": "GREATER_THAN_OR_EQUAL",
+            "comparison_state": "INDETERMINATE",
+            "reason_codes": [
+              "OBSERVATION_MISSING"
+            ]
+          }
+        }
+      ],
+      "reseal_candidate": true,
+      "expected_validation_outcome": "DENY",
+      "expected_findings": [
+        "CRITERION_TRACE_SET_MISMATCH"
+      ]
+    },
+    {
+      "case_id": "missing_criterion_trace_denied",
+      "scenario_mutations": [],
+      "candidate_mutations": [
+        {
+          "path": "/criteria",
+          "value": []
+        }
+      ],
+      "reseal_candidate": true,
+      "expected_validation_outcome": "DENY",
+      "expected_findings": [
+        "SCHEMA_INVALID"
+      ]
+    },
+    {
+      "case_id": "assessment_id_tamper_denied",
+      "scenario_mutations": [],
+      "candidate_mutations": [
+        {
+          "path": "/assessment_id",
+          "value": "kfm:frontier-classification:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+        }
+      ],
+      "reseal_candidate": false,
+      "expected_validation_outcome": "DENY",
+      "expected_findings": [
+        "ASSESSMENT_ID_MISMATCH"
+      ]
+    },
+    {
+      "case_id": "spec_hash_tamper_denied",
+      "scenario_mutations": [],
+      "candidate_mutations": [
+        {
+          "path": "/spec_hash",
+          "value": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+        }
+      ],
+      "reseal_candidate": false,
+      "expected_validation_outcome": "DENY",
+      "expected_findings": [
+        "SPEC_HASH_MISMATCH"
+      ]
+    },
+    {
+      "case_id": "corrected_assessment_preserves_prior",
+      "scenario_mutations": [
+        {
+          "path": "/lineage/state",
+          "value": "CORRECTED"
+        },
+        {
+          "path": "/lineage/correction_record_ref",
+          "value": "kfm://correction/frontier-classification/synthetic-001@sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+        },
+        {
+          "path": "/lineage/corrected_input_refs",
+          "value": [
+            "kfm://observation/access/corrected@sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+          ]
+        }
+      ],
+      "candidate_mutations": [],
+      "reseal_candidate": false,
+      "expected_validation_outcome": "PASS",
+      "expected_findings": [],
+      "expected_classification": "FRONTIER"
+    },
+    {
+      "case_id": "corrected_assessment_missing_predecessor_denied",
+      "scenario_mutations": [
+        {
+          "path": "/lineage/state",
+          "value": "CORRECTED"
+        },
+        {
+          "path": "/lineage/correction_record_ref",
+          "value": "kfm://correction/frontier-classification/synthetic-001@sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+        },
+        {
+          "path": "/lineage/corrected_input_refs",
+          "value": [
+            "kfm://observation/access/corrected@sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+          ]
+        }
+      ],
+      "candidate_mutations": [
+        {
+          "path": "/lineage/supersedes_assessment_ref",
+          "value": null
+        }
+      ],
+      "reseal_candidate": true,
+      "expected_validation_outcome": "DENY",
+      "expected_findings": [
+        "CORRECTION_PREDECESSOR_REQUIRED"
+      ]
+    },
+    {
+      "case_id": "real_subject_attempt_denied",
+      "scenario_mutations": [
+        {
+          "path": "/subject/synthetic_subject",
+          "value": false
+        }
+      ],
+      "candidate_mutations": [],
+      "reseal_candidate": false,
+      "expected_validation_outcome": "DENY",
+      "expected_findings": [
+        "REAL_SUBJECT_DENIED"
+      ]
+    },
+    {
+      "case_id": "fixture_registry_failure_errors",
+      "scenario_mutations": [],
+      "candidate_mutations": [],
+      "reseal_candidate": false,
+      "expected_validation_outcome": "ERROR",
+      "expected_findings": [
+        "FIXTURE_REGISTRY_ERROR"
+      ],
+      "force_registry_error": true
+    }
+  ]
+}

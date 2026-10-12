@@ -1,0 +1,11 @@
+{
+  "id": "ai2",
+  "run_id": "run2",
+  "adapter": "mock",
+  "model_ref": "none",
+  "inputs_digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+  "outputs_digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+  "policy_decision_ref": "dec2",
+  "citation_validation_ref": "val2",
+  "outcome": "ANSWER"
+}

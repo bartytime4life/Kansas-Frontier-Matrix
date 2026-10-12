@@ -1,0 +1,478 @@
+<!-- [KFM_META_BLOCK_V2]
+doc_id: kfm://doc/docs-brand-logo-print-readme
+title: Print Wordmark Assets — docs/brand/logo/print/
+type: standard
+version: v0.1
+status: draft
+owners: <brand-stewards — NEEDS VERIFICATION>
+created: <YYYY-MM-DD — TODO>
+updated: <YYYY-MM-DD — TODO>
+policy_label: public
+related:
+  - kfm://doctrine/directory-rules
+  - kfm://doc/docs-brand-readme   # NEEDS VERIFICATION
+  - kfm://standard/PDF-ARTIFACT-DIGEST
+tags: [kfm, brand, logo, wordmark, print, pdf]
+notes:
+  - PROPOSED README for the print-wordmark sub-folder
+  - Authority-level placement (docs/brand vs packages/ui) needs ADR
+  - All path-, owner-, and badge-target claims are placeholders
+[/KFM_META_BLOCK_V2] -->
+
+# Print Wordmark Assets
+
+> Print-ready KFM wordmark PDF and its companion governance — used for physical publications, dossier covers, signage, exhibit panels, and offline distribution.
+
+![status](https://img.shields.io/badge/status-draft-orange)
+![authority](https://img.shields.io/badge/authority-PROPOSED-yellow)
+![artifact](https://img.shields.io/badge/artifact-PDF--print-blue)
+![license](https://img.shields.io/badge/license-TODO-lightgrey)
+![review](https://img.shields.io/badge/review-required-red)
+![last%20updated](https://img.shields.io/badge/last%20updated-TODO-lightgrey)
+
+**Status:** `draft` · **Owners:** `<brand stewards — NEEDS VERIFICATION>` · **Last updated:** `<YYYY-MM-DD — TODO>`
+
+> [!IMPORTANT]
+> This README is **PROPOSED**. The folder placement (`docs/brand/` vs `packages/ui/`) is governed by an unresolved Directory Rules ambiguity; no ADR closes it yet. All path-, owner-, and badge-target claims are placeholders pending repo verification.
+
+---
+
+## Contents
+
+- [1. Purpose](#1-purpose)
+- [2. Authority level](#2-authority-level)
+- [3. Status](#3-status)
+- [4. Repo fit](#4-repo-fit)
+- [5. What belongs here](#5-what-belongs-here)
+- [6. What does *not* belong here](#6-what-does-not-belong-here)
+- [7. Directory tree (PROPOSED)](#7-directory-tree-proposed)
+- [8. Governance diagram](#8-governance-diagram)
+- [9. Specifications](#9-specifications)
+- [10. Inputs](#10-inputs)
+- [11. Outputs](#11-outputs)
+- [12. Usage](#12-usage)
+- [13. Validation](#13-validation)
+- [14. Review burden](#14-review-burden)
+- [15. Open tasks](#15-open-tasks)
+- [16. FAQ](#16-faq)
+- [17. Related folders and docs](#17-related-folders-and-docs)
+- [18. ADRs](#18-adrs)
+- [19. Last reviewed](#19-last-reviewed)
+- [Appendix](#appendix)
+
+---
+
+## 1. Purpose
+
+This folder owns the **print-ready KFM wordmark** and its companion governance artifacts. The primary asset is `kfm-wordmark-print.pdf` — a vector PDF intended for prepress workflows (CMYK-aware press conversion, vinyl signage, dossier covers, exhibit panels, and other physical surfaces).
+
+The README sets the rules for what lives in this folder, what each asset must be paired with (sidecar manifest, license declaration, artifact digest), and how a downstream consumer verifies authenticity before printing or embedding.
+
+> [!NOTE]
+> "Print-ready" here is the **distribution intent**, not a guarantee of conformance. Press-house conformance (PDF/X, color profile, output intent) is **NEEDS VERIFICATION** until the production export pipeline is documented and tested.
+
+---
+
+## 2. Authority level
+
+| Aspect | Value |
+|---|---|
+| **Authority class** | `implementation-bearing` *(PROPOSED)* — the asset *is* the brand artifact for print contexts |
+| **Canonical home?** | **PROPOSED** — Directory Rules §6.1 places brand assets at `docs/brand/` "*only if not in `packages/ui/`*". The alternative home cannot be ruled out from this session. |
+| **Compatibility class** | n/a until an ADR closes the canonical-home question |
+| **Trust-bearing?** | Yes — citation-class artifact; subject to artifact-digest discipline |
+
+> [!WARNING]
+> The `docs/brand/` ↔ `packages/ui/` ambiguity is an **ADR backlog candidate** (see §18). Do not treat this folder as canonical until the ADR is accepted; do not create a parallel sibling under `packages/ui/brand/` without an ADR, per Directory Rules §2.4(5).
+
+---
+
+## 3. Status
+
+| Object | Status | Notes |
+|---|---|---|
+| Folder placement | `PROPOSED` | Awaits ADR per §18 |
+| `kfm-wordmark-print.pdf` | `PROPOSED` | Referenced; presence and byte-content are **NEEDS VERIFICATION** |
+| Sidecar manifest | `UNKNOWN` | Not yet confirmed; required once the asset is treated as published (C13-04) |
+| License declaration | `UNKNOWN` | Required by ML-F-002 / ML-F-004 |
+| CI validators | `UNKNOWN` | No validator confirmed in this session |
+
+---
+
+## 4. Repo fit
+
+```text
+docs/                         ← human-facing control plane (Directory Rules §6.1)
+└── brand/                    ← styles guides, logo, voice (PROPOSED canonical home)
+    └── logo/
+        └── print/            ← THIS FOLDER — print-distribution wordmark assets
+```
+
+**Upstream** *(PROPOSED)*
+
+- Brand-design source files (vector source, e.g. `.ai` / `.sketch` / `.fig`) — home **UNKNOWN** in this session; likely not under `docs/brand/` per the docs/ no-binary-source convention. Candidate homes: `data/raw/brand/` or an external design system. **NEEDS VERIFICATION.**
+- Brand color, typography, and voice specifications — likely siblings under `docs/brand/` (`docs/brand/colors.md`, `docs/brand/typography.md`, `docs/brand/voice.md`). **NEEDS VERIFICATION.**
+
+**Downstream** *(PROPOSED)*
+
+- Cover pages and front-matter for KFM PDF dossiers built under the C13 reproducible-PDF chain.
+- Print stationery, exhibit panels, conference materials, signage.
+- Catalog and registry entries that cite the wordmark by `artifact_digest`.
+
+---
+
+## 5. What belongs here
+
+Accepted contents of `docs/brand/logo/print/`:
+
+| File / pattern | Role | Required? |
+|---|---|---|
+| `kfm-wordmark-print.pdf` | Primary print-ready vector wordmark | **Yes** |
+| `kfm-wordmark-print.pdf.sidecar.json` | Sidecar manifest: `spec_hash`, `artifact_digest`, color profile, output intent, font-embed status, conformance level | **Yes** *(PROPOSED — aligns with C13-04)* |
+| `kfm-wordmark-print.license.md` | License + attribution + permitted-use declaration | **Yes** *(PROPOSED — aligns with ML-F-002 / ML-F-004)* |
+| `kfm-wordmark-print-*.pdf` (variants) | Single-color, reversed, monochrome variants — each with its own sidecar + license | Optional |
+| `CHANGELOG.md` | Asset-level version history with rotation reasons and supersession chain | Recommended |
+| `README.md` (this file) | Folder governance | **Yes** |
+
+---
+
+## 6. What does *not* belong here
+
+| Do **not** put here | Belongs in |
+|---|---|
+| Vector design sources (`.ai`, `.sketch`, `.fig`) | `data/raw/brand/` *(PROPOSED)* or external design system |
+| Web-optimized wordmarks (`.svg`, `.png`, web `.pdf`) | A sibling `docs/brand/logo/digital/` *(PROPOSED)* — different distribution profile |
+| MapLibre sprites, glyphs, symbol sheets | `packages/maplibre/` or canonical sprite home *(PROPOSED)* |
+| UI logo components / React assets | `packages/ui/` *(per Directory Rules)* |
+| Receipts, proofs, release manifests | `data/receipts/`, `data/proofs/`, `release/` — never here, per Directory Rules §8.2 |
+| Personal mock-ups, exploratory drafts | `docs/archive/exploratory/` |
+| Compiled marketing decks, slide exports | `artifacts/docs/` if generated; `docs/` if hand-authored governance prose |
+
+> [!CAUTION]
+> The `artifacts/` root MUST NOT be used as a parallel home for the wordmark or its sidecar manifest. Trust-bearing material is governed under `docs/`, `release/`, and `data/` per Directory Rules §8.2.
+
+---
+
+## 7. Directory tree (PROPOSED)
+
+```text
+docs/brand/logo/print/
+├── README.md                                ← this file
+├── kfm-wordmark-print.pdf                   ← primary print wordmark       (PROPOSED)
+├── kfm-wordmark-print.pdf.sidecar.json      ← spec_hash + artifact_digest  (PROPOSED)
+├── kfm-wordmark-print.license.md            ← license + attribution        (PROPOSED)
+├── CHANGELOG.md                             ← asset version history        (PROPOSED)
+└── variants/                                ← optional variant subfolder   (PROPOSED)
+    ├── kfm-wordmark-print-mono.pdf
+    ├── kfm-wordmark-print-mono.pdf.sidecar.json
+    ├── kfm-wordmark-print-reversed.pdf
+    └── kfm-wordmark-print-reversed.pdf.sidecar.json
+```
+
+> [!NOTE]
+> The tree is **PROPOSED**. Until the repo is mounted and inspected, no claim is made about which of these files exist today. The convention follows Directory Rules §15 (per-root README), §8 (compatibility roots), and C13-04 (ARTIFACT_DIGEST sidecar).
+
+[Back to top](#print-wordmark-assets)
+
+---
+
+## 8. Governance diagram
+
+A print-wordmark asset is generated outside the repo, admitted via a documented export workflow, paired with a sidecar manifest, license declaration, and digest, and then either embedded in published artifacts or distributed standalone. The Mermaid diagram below sketches the **PROPOSED** governed flow.
+
+```mermaid
+flowchart LR
+    A[Vector source<br/>design tool<br/>EXTERNAL] -->|deterministic export| B[kfm-wordmark-print.pdf]
+    B --> C[Compute spec_hash<br/>jcs:sha256]
+    B --> D[Compute artifact_digest<br/>sha256 of linearized PDF]
+    C --> E[Sidecar manifest<br/>kfm-wordmark-print.pdf.sidecar.json]
+    D --> E
+    F[License declaration<br/>kfm-wordmark-print.license.md] --> E
+    E --> G{Validation gate}
+    G -->|pass| H[Eligible for embed / distribution]
+    G -->|fail| I[QUARANTINE — fix and re-export]
+    H --> J[Embedded in C13 PDF builds]
+    H --> K[Distributed standalone to press]
+    style I fill:#fbb,stroke:#933
+    style H fill:#bfb,stroke:#393
+```
+
+> [!NOTE]
+> Diagram is **PROPOSED**. It mirrors Directory Rules §8 (compatibility/canonical placement) and C13-01 / C13-04 (toolchain pinning, ARTIFACT_DIGEST). The validation gate is conceptual; the actual validator and its policy bundle are **NEEDS VERIFICATION**.
+
+[Back to top](#print-wordmark-assets)
+
+---
+
+## 9. Specifications
+
+The fields below define the **expected** technical profile of `kfm-wordmark-print.pdf`. Concrete values are **PROPOSED placeholders** pending an authoritative export specification.
+
+| Property | Expected value | Status |
+|---|---|---|
+| Page geometry | Single page, tight crop to wordmark bounds | PROPOSED |
+| Color space | CMYK with embedded output intent *(e.g. `Coated GRACoL 2013`)* | PROPOSED |
+| PDF conformance | PDF/X-4 (preferred for press) or PDF/A-2u (preferred for archive) | PROPOSED |
+| Font embedding | All fonts embedded (subset acceptable) | PROPOSED — aligns with C13-02 |
+| Transparency | Flattened to vector + spot/CMYK; no live transparency under PDF/X-4 | PROPOSED |
+| Bleed / trim | Not applicable for a wordmark-only asset; if framed, include 3 mm bleed | PROPOSED |
+| Minimum reproduction size | TBD (typical wordmark floor: 25 mm wide) | PROPOSED |
+| Clear space | TBD (typically ≥ x-height of the wordmark on all sides) | PROPOSED |
+| Linearization | qpdf-linearized for streamable distribution | PROPOSED — aligns with C13-04 |
+| Tagged structure | Tagged for PDF/UA where the asset is embedded in accessible documents | PROPOSED — aligns with C13-03 |
+| Identity hashes | `spec_hash = jcs:sha256:<hex>`; `artifact_digest = sha256:<hex>` over linearized bytes | PROPOSED — aligns with C1-02 / C13-04 |
+
+> [!IMPORTANT]
+> The values above are **PROPOSED**. Substitute concrete values only when a brand steward signs off on the export specification and an export manifest is committed alongside the asset.
+
+[Back to top](#print-wordmark-assets)
+
+---
+
+## 10. Inputs
+
+What this folder *consumes*:
+
+- **Vector source artwork** *(PROPOSED home unknown)* — the canonical design file. Must not be committed under `docs/brand/logo/print/`; that home is reserved for distribution artifacts.
+- **Brand specification documents** *(PROPOSED siblings under `docs/brand/`)* — colors, typography, voice. The print wordmark inherits its color and typographic decisions from those documents.
+- **Reproducible-build context** *(PROPOSED)* — toolchain pins, `SOURCE_DATE_EPOCH`, embedded fonts, locale neutralization (C13-01 / C13-02).
+
+---
+
+## 11. Outputs
+
+What this folder *emits or supports*:
+
+- **Embeddable wordmark** for KFM PDF dossiers built under the C13 chain.
+- **Standalone download** for press, partners, and signage producers.
+- **Citation anchor** — receipts cite the wordmark by `artifact_digest`, not by path. Path drift never invalidates a citation.
+
+---
+
+## 12. Usage
+
+> [!TIP]
+> Always verify the **artifact_digest** before sending the wordmark to a press house. A digest mismatch means tampering, the wrong version, or a build drift — fail closed, do not print.
+
+### 12.1 Verify the wordmark
+
+```bash
+# (PROPOSED) tool path — verifies the wordmark matches its sidecar
+tools/brand/verify_wordmark.sh docs/brand/logo/print/kfm-wordmark-print.pdf
+```
+
+Expected outcome *(illustrative)*:
+
+```text
+ANSWER: artifact_integrity_verified
+spec_hash:       jcs:sha256:<hex>
+artifact_digest: sha256:<hex>
+license:         see kfm-wordmark-print.license.md
+```
+
+### 12.2 Embed in a downstream PDF
+
+```text
+1. Verify the wordmark and sidecar.
+2. Cite the artifact_digest in the consuming document's run_receipt
+   under inputs[].artifact_digest.
+3. Use the PDF directly in the layout pipeline (do not rasterize).
+4. Confirm the consuming document's post-build digest after qpdf linearization.
+```
+
+### 12.3 Distribute to a press house
+
+```text
+1. Verify the wordmark and sidecar.
+2. Bundle: PDF + sidecar.json + license.md.
+3. Include the press output intent the printer expects (CMYK profile).
+4. Record the distribution in the relevant release manifest, if applicable.
+```
+
+> [!NOTE]
+> The tool path `tools/brand/verify_wordmark.sh` is **PROPOSED**. No validator is confirmed in this session; the script may not yet exist.
+
+[Back to top](#print-wordmark-assets)
+
+---
+
+## 13. Validation
+
+Validation checks that should run before a wordmark is treated as **eligible for embed / distribution**. All gates are **PROPOSED** and fail-closed.
+
+| Gate | Check | Pass criterion | Fail mode |
+|---|---|---|---|
+| **V1 Presence** | All required files present (PDF + sidecar + license) | All three exist | `DENY` |
+| **V2 Spec hash** | Recompute `spec_hash` over the sidecar's normalized spec | Matches recorded hash | `DENY` (drift) |
+| **V3 Artifact digest** | Recompute SHA-256 over linearized PDF | Matches sidecar value | `DENY` (tampering / drift) |
+| **V4 Font embed** | All fonts embedded in the PDF | No `Not embedded` references | `DENY` |
+| **V5 Color profile** | Output intent present and matches sidecar | Match | `ABSTAIN` if absent; `DENY` on mismatch |
+| **V6 PDF conformance** | veraPDF or equivalent reports the conformance level recorded in sidecar | Pass | `DENY` |
+| **V7 License visible** | `license.md` declares license, attribution, permitted use | Present and non-empty | `DENY` (per ML-F-002 / ML-F-004) |
+| **V8 Accessibility** | Tagged structure / PDF/UA where the asset is embedded in accessible builds | Pass | `ABSTAIN` for standalone print use; `DENY` for accessible-build embed |
+
+> [!WARNING]
+> Validators V1 – V8 are **PROPOSED**. None are confirmed to exist in the repo. Do not treat this table as evidence of running CI checks.
+
+---
+
+## 14. Review burden
+
+| Role | Responsibility |
+|---|---|
+| Brand stewards *(PROPOSED CODEOWNERS pattern: `@org/brand-stewards`)* | Approve any change to `kfm-wordmark-print.pdf`, its sidecar, or its license |
+| Documentation maintainers | Review README and convention drift |
+| Release authority | Required co-sign when the wordmark is rotated and downstream artifacts must be reissued |
+
+> [!IMPORTANT]
+> A wordmark rotation is a **release-class change**. It changes the `artifact_digest` of every downstream PDF that embeds it, which means every citing receipt becomes stale. Treat rotations like a schema-home migration: ADR, supersession entry, correction notices to affected published artifacts.
+
+[Back to top](#print-wordmark-assets)
+
+---
+
+## 15. Open tasks
+
+- [ ] **PROPOSED:** Open an ADR resolving `docs/brand/` vs `packages/ui/` as the canonical home for brand assets (Directory Rules §2.4(5)).
+- [ ] **PROPOSED:** Author `kfm-wordmark-print.license.md` with explicit license, attribution, and permitted-use language.
+- [ ] **PROPOSED:** Author `kfm-wordmark-print.pdf.sidecar.json` capturing `spec_hash`, `artifact_digest`, color profile, output intent, font-embed status, and conformance level.
+- [ ] **PROPOSED:** Pin the print-export toolchain (design tool version, prepress profile, qpdf linearization step) in a brand-build companion under `tools/brand/`.
+- [ ] **NEEDS VERIFICATION:** Confirm whether sibling brand docs (`colors.md`, `typography.md`, `voice.md`) exist under `docs/brand/` and link them under §17.
+- [ ] **NEEDS VERIFICATION:** Confirm CODEOWNERS entry for `docs/brand/logo/print/`.
+- [ ] **PROPOSED:** Add `kfm-wordmark-print.pdf` to the artifact registry / catalog matrix so receipts can cite its digest.
+- [ ] **PROPOSED:** Define a rotation procedure: bump `spec_hash`, recompute `artifact_digest`, issue correction notices for downstream documents that embedded prior versions.
+
+---
+
+## 16. FAQ
+
+**Q. Why is a single PDF asset governed like a release artifact?**
+
+A wordmark PDF cited from a published dossier is **citation-class**. If the file silently changes, every downstream receipt that pointed at it now points at moving content. Treating the wordmark as a release artifact — with a `spec_hash`, an `artifact_digest`, and a sidecar manifest — preserves the citation chain. *(Doctrine: C13-04 ARTIFACT_DIGEST as Citation Anchor.)*
+
+**Q. Should the wordmark live in `docs/brand/` or in `packages/ui/`?**
+
+Directory Rules explicitly leaves this open: "*styles guides, logo, voice — only if not in `packages/ui/`*". This README assumes `docs/brand/` provisionally. An ADR is needed to close the question. **PROPOSED.**
+
+**Q. PDF/X-4 or PDF/A-2u?**
+
+PDF/X-4 is the conventional print-distribution conformance target. PDF/A-2u is the project's PDF archival/linearization target under C13. Both can coexist (an asset can be PDF/X-4 and still pass PDF/A-2u checks for archival), but the export workflow must declare which conformance the file claims. **PROPOSED — pending the brand-export spec.**
+
+**Q. What happens when the wordmark changes?**
+
+The rotation is a release event. The new file has a new `artifact_digest`. Every downstream document that embedded the prior wordmark now references a stale digest; correction notices and re-issued builds may be required for already-published artifacts.
+
+---
+
+## 17. Related folders and docs
+
+- [`docs/doctrine/directory-rules.md`](../../../doctrine/directory-rules.md) — placement law; §6.1 places brand under `docs/brand/`, §15 defines the README contract, §8 governs compatibility roots.
+- [`docs/brand/README.md`](../../README.md) *(PROPOSED — NEEDS VERIFICATION)*
+- [`docs/brand/logo/digital/`](../digital/) *(PROPOSED sibling for web-optimized wordmarks — NEEDS VERIFICATION)*
+- [`docs/brand/colors.md`](../../colors.md) *(PROPOSED — NEEDS VERIFICATION)*
+- [`docs/brand/typography.md`](../../typography.md) *(PROPOSED — NEEDS VERIFICATION)*
+- [`docs/standards/`](../../../standards/) — external standards conformance briefs (PDF/A, PDF/UA, PDF/X candidates)
+- [`docs/adr/`](../../../adr/) — ADR home; the `docs/brand/` vs `packages/ui/` ADR will land here
+- [`release/`](../../../../release/) *(PROPOSED downstream consumer when the wordmark is rotated)*
+
+---
+
+## 18. ADRs
+
+| ADR id | Title | Status | Notes |
+|---|---|---|---|
+| *(PROPOSED)* `ADR-XXXX` | Canonical home for brand assets: `docs/brand/` vs `packages/ui/` | **needed** | Required by Directory Rules §2.4(5) before this folder can be promoted from PROPOSED to CONFIRMED canonical. |
+| *(PROPOSED)* `ADR-XXXX` | Print-wordmark sidecar manifest schema (`BrandAssetManifest` v1) | **needed** | Defines `spec_hash`, `artifact_digest`, color profile, conformance level, font-embed status, license reference. |
+
+---
+
+## 19. Last reviewed
+
+`<YYYY-MM-DD — TODO>` *(placeholder — set on first review)*
+
+> [!NOTE]
+> Per Directory Rules §15, a per-root README older than 6 months is flagged for review. The same cadence is recommended for this sub-folder README.
+
+[Back to top](#print-wordmark-assets)
+
+---
+
+## Appendix
+
+<details>
+<summary>A. Why a wordmark needs an artifact digest (extended rationale)</summary>
+
+The C13 category in the KFM Components Pass 10 dossier establishes that any KFM PDF cited by a receipt must be content-addressable, because a receipt that points at mutable content is a moving target. The `ARTIFACT_DIGEST` closes the loop: SHA-256 of the linearized PDF/A-2u output, recorded in a sidecar manifest, cited by every receipt referencing the document. A consumer who fetches the PDF computes its SHA-256 and verifies the match before trusting the content. If the match fails, the document has been tampered with, the wrong version was fetched, or the build chain has drifted; in all three cases, the consumer must not treat the content as authoritative. *(Source: KFM Components Pass 10 dossier, §6.13, C13-04.)*
+
+The same logic applies to a brand wordmark embedded in published artifacts: a wordmark that silently rotates breaks the digest chain of every dossier that embedded it. This is why a print-wordmark sub-folder needs a per-asset sidecar manifest, not just the PDF.
+
+</details>
+
+<details>
+<summary>B. PROPOSED sidecar manifest skeleton</summary>
+
+```json
+{
+  "object_type": "BrandAssetManifest",
+  "schema_version": "v1",
+  "asset_path": "docs/brand/logo/print/kfm-wordmark-print.pdf",
+  "spec_hash": "jcs:sha256:<placeholder>",
+  "artifact_digest": "sha256:<placeholder>",
+  "conformance": {
+    "pdfx": "PDF/X-4",
+    "pdfa": "PDF/A-2u",
+    "pdfua": false,
+    "linearized": true
+  },
+  "color": {
+    "space": "CMYK",
+    "output_intent": "Coated GRACoL 2013 (SCCA)"
+  },
+  "fonts": {
+    "all_embedded": true,
+    "subset_only": false
+  },
+  "license_ref": "docs/brand/logo/print/kfm-wordmark-print.license.md",
+  "rights_status": "<TODO>",
+  "publication_state": "candidate",
+  "supersedes": null,
+  "rollback_of": null
+}
+```
+
+This skeleton is **PROPOSED**. It will not validate against any schema in the repo until a `BrandAssetManifest` contract / schema is authored and an ADR records its home.
+
+</details>
+
+<details>
+<summary>C. PROPOSED license file skeleton</summary>
+
+```markdown
+# kfm-wordmark-print — license and permitted use
+
+**Asset:** `kfm-wordmark-print.pdf`
+**Owner:** <TODO>
+**License:** <TODO — e.g. CC BY-ND 4.0, all rights reserved, or project-specific>
+**Attribution:** <TODO>
+
+## Permitted use
+- <TODO>
+
+## Prohibited use
+- Modification, distortion, recoloring outside approved variants
+- Use that implies endorsement
+- Use on materials that violate KFM CARE / sensitivity governance
+
+## Variants
+- See `variants/` for approved single-color and reversed forms.
+```
+
+This skeleton is **PROPOSED**. Concrete license terms require sign-off from the project's brand and rights holders.
+
+</details>
+
+---
+
+**Related docs:** [Directory Rules](../../../doctrine/directory-rules.md) · [`docs/brand/`](../../) *(PROPOSED)* · [`docs/standards/`](../../../standards/) · [`docs/adr/`](../../../adr/)
+**Last updated:** `<YYYY-MM-DD — TODO>`
+[Back to top](#print-wordmark-assets)

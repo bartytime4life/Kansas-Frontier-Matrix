@@ -1,0 +1,163 @@
+{
+  "receipt_id": "genrec-policy-source-readme-12a66921",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "policy/source/README.md"
+  ],
+  "artifact_hashes": {
+    "policy/source/README.md": "sha256:12a66921e84fee4297f02a0731e483bd65a7f763105371237f77f7512ff63497"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5 Codex",
+    "version": "2026-08-12"
+  },
+  "prompt_or_contract": "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:44f7e94344cb42b630008eb0bc03a13fcb97dbdfba6f3e56579693a272571e6e",
+      "sha256:b7a203460181956333f5a4b4ccda5eea87e97254b5d6396a4ad4186f1013dabb"
+    ],
+    "attached_docs": [
+      "Pasted text(20260813-032334).txt"
+    ],
+    "evidence_refs": [
+      "repo:commit@6888e0391a1e80e45cf3724652cf34d1ec36230c",
+      "repo:policy/source/README.md@6888e0391a1e80e45cf3724652cf34d1ec36230c",
+      "repo:policy/source/descriptor_required_before_ingest.rego@6888e0391a1e80e45cf3724652cf34d1ec36230c",
+      "repo:policy/source/doctrine_artifact_required.rego@6888e0391a1e80e45cf3724652cf34d1ec36230c",
+      "repo:policy/README.md@6888e0391a1e80e45cf3724652cf34d1ec36230c",
+      "repo:docs/doctrine/directory-rules.md@6888e0391a1e80e45cf3724652cf34d1ec36230c",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@6888e0391a1e80e45cf3724652cf34d1ec36230c",
+      "repo:docs/adr/ADR-0017-source-descriptor-admission-process.md@6888e0391a1e80e45cf3724652cf34d1ec36230c",
+      "repo:.github/workflows/source-descriptor-validate.yml@6888e0391a1e80e45cf3724652cf34d1ec36230c",
+      "repo:.github/workflows/policy-test.yml@6888e0391a1e80e45cf3724652cf34d1ec36230c",
+      "repo:.github/workflows/promotion-gate.yml@6888e0391a1e80e45cf3724652cf34d1ec36230c",
+      "repo:tests/policy/test_doctrine_artifact_required.py@6888e0391a1e80e45cf3724652cf34d1ec36230c",
+      "repo:scripts/maintenance/check_required_doctrine_artifacts.py@6888e0391a1e80e45cf3724652cf34d1ec36230c",
+      "repo:control_plane/document_registry_doctrine_required.yaml@6888e0391a1e80e45cf3724652cf34d1ec36230c",
+      "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@6888e0391a1e80e45cf3724652cf34d1ec36230c"
+    ]
+  },
+  "truth_labels": {
+    "policy/source/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-and-authority-preflight",
+      "outcome": "PASS",
+      "reason": "Current main, target bytes and history, direct children, open pull requests, accepted Directory Rules and ADR-0029, parent policy authority, root projection, CODEOWNERS, and directly related policy, registry, checker, test, and workflow evidence were inspected before authoring."
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "One H1, logical heading progression, balanced language-tagged fences, no trailing whitespace, UTF-8-compatible text, and a final newline were verified."
+    },
+    {
+      "gate": "local-links-and-fragments",
+      "outcome": "PASS",
+      "reason": "Repository-relative targets were checked against the pinned base, and all quick-navigation and back-to-top fragments resolve within the authored Markdown."
+    },
+    {
+      "gate": "inventory-and-claim-alignment",
+      "outcome": "PASS",
+      "reason": "The three direct children, two Rego source shapes, SourceDescriptor stub assertion, doctrine registry and checker split, focused tests, promotion hold, parent policy posture, and singular/plural path drift were reconciled against exact repository evidence."
+    },
+    {
+      "gate": "generated-receipt-schema-and-hash",
+      "outcome": "PASS",
+      "reason": "This receipt parses as JSON, conforms to the current GENERATED_RECEIPT schema and bounded cross-field rules, and binds the final README SHA-256 digest."
+    },
+    {
+      "gate": "sensitive-content-review",
+      "outcome": "PASS",
+      "reason": "The authored artifacts contain no credentials, private endpoints, source payloads, doctrine artifact bytes, personal data, or exact sensitive locations."
+    },
+    {
+      "gate": "runtime-and-public-behavior",
+      "outcome": "SKIPPED",
+      "reason": "Documentation and provenance only; no Rego, contract, schema, registry, fixture, test, script, workflow, evaluator, runtime, source state, release object, or public artifact changes."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks require the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "The draft remains pending authorized human review; no policy source, source admission, doctrine artifact, release, or publication authority is created."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "docs/adr/ADR-0017-source-descriptor-admission-process.md",
+    "policy/README.md"
+  ],
+  "citations": [
+    {
+      "id": "policy-source-parent-and-maturity",
+      "validated": true,
+      "evidence_ref": "repo:policy/README.md@6888e0391a1e80e45cf3724652cf34d1ec36230c"
+    },
+    {
+      "id": "policy-placement-and-readme-contract",
+      "validated": true,
+      "evidence_ref": "repo:docs/doctrine/directory-rules.md@6888e0391a1e80e45cf3724652cf34d1ec36230c"
+    },
+    {
+      "id": "descriptor-prerequisite-stub",
+      "validated": true,
+      "evidence_ref": "repo:policy/source/descriptor_required_before_ingest.rego@6888e0391a1e80e45cf3724652cf34d1ec36230c"
+    },
+    {
+      "id": "descriptor-workflow-hold",
+      "validated": true,
+      "evidence_ref": "repo:.github/workflows/source-descriptor-validate.yml@6888e0391a1e80e45cf3724652cf34d1ec36230c"
+    },
+    {
+      "id": "doctrine-prerequisite-source",
+      "validated": true,
+      "evidence_ref": "repo:policy/source/doctrine_artifact_required.rego@6888e0391a1e80e45cf3724652cf34d1ec36230c"
+    },
+    {
+      "id": "doctrine-checker-and-expected-hold",
+      "validated": true,
+      "evidence_ref": "repo:tests/policy/test_doctrine_artifact_required.py@6888e0391a1e80e45cf3724652cf34d1ec36230c"
+    },
+    {
+      "id": "source-admission-proposed-decision",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0017-source-descriptor-admission-process.md@6888e0391a1e80e45cf3724652cf34d1ec36230c"
+    },
+    {
+      "id": "generated-receipt-machine-shape",
+      "validated": true,
+      "evidence_ref": "repo:schemas/contracts/v1/receipts/generated_receipt.schema.json@6888e0391a1e80e45cf3724652cf34d1ec36230c"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-13T03:30:58Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Documentation-only modernization of the mixed-maturity policy/source boundary. The update changes no rule, evaluator, source admission, doctrine artifact, connector, lifecycle state, promotion, release, deployment, publication, or public behavior. Human review remains pending; the receipt is provenance, not approval or authority."
+}

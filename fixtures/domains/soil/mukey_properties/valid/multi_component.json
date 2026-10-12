@@ -1,0 +1,116 @@
+{
+  "profile": "kfm.soil.mukey-properties.v1",
+  "record_id": "soil-mukey-properties:100002",
+  "mukey": "100002",
+  "source": {
+    "source_ref": "source:nrcs-ssurgo:synthetic-ks",
+    "source_family": "nrcs_ssurgo",
+    "source_role": "official_static_survey",
+    "support_type": "authoritative_static_soil",
+    "spatial_support": "map_unit_polygon",
+    "source_version": "fixture:ssurgo-ks-package-v1",
+    "query_hash": "sha256:bdde9af6ddd8d57f13c2d8650feed55eebc785ce021ae9ce2a35621a09d73734",
+    "retrieved_at": "2026-03-31T00:00:00Z"
+  },
+  "aggregation": {
+    "method": "depth_then_component_weighted_arithmetic_v1",
+    "root_zone_cm": {
+      "top_cm": 0,
+      "bottom_cm": 100
+    },
+    "surface_window_cm": {
+      "top_cm": 0,
+      "bottom_cm": 5
+    },
+    "component_percent_min_total": 99.0,
+    "component_percent_max_total": 101.0,
+    "comparison_tolerance": 1e-06
+  },
+  "components": [
+    {
+      "cokey": "200010",
+      "component_name": "Synthetic component beta",
+      "component_pct": 60.0,
+      "horizons": [
+        {
+          "chkey": "300010",
+          "top_cm": 0,
+          "bottom_cm": 40,
+          "sand_total_pct": 60.0,
+          "clay_total_pct": 20.0,
+          "organic_matter_pct": 4.0,
+          "ksat_um_s": 10.0,
+          "available_water_capacity_fraction": 0.2
+        },
+        {
+          "chkey": "300011",
+          "top_cm": 40,
+          "bottom_cm": 100,
+          "sand_total_pct": 50.0,
+          "clay_total_pct": 30.0,
+          "organic_matter_pct": 1.0,
+          "ksat_um_s": 2.0,
+          "available_water_capacity_fraction": 0.15
+        }
+      ]
+    },
+    {
+      "cokey": "200020",
+      "component_name": "Synthetic component gamma",
+      "component_pct": 40.0,
+      "horizons": [
+        {
+          "chkey": "300020",
+          "top_cm": 0,
+          "bottom_cm": 25,
+          "sand_total_pct": 40.0,
+          "clay_total_pct": 40.0,
+          "organic_matter_pct": 2.0,
+          "ksat_um_s": 4.0,
+          "available_water_capacity_fraction": 0.18
+        },
+        {
+          "chkey": "300021",
+          "top_cm": 25,
+          "bottom_cm": 100,
+          "sand_total_pct": 30.0,
+          "clay_total_pct": 50.0,
+          "organic_matter_pct": 0.5,
+          "ksat_um_s": 1.0,
+          "available_water_capacity_fraction": 0.12
+        }
+      ]
+    }
+  ],
+  "derived": {
+    "root_zone_clay_pct": 34.6,
+    "root_zone_ksat_um_s": 3.82,
+    "root_zone_available_water_capacity_fraction": 0.156,
+    "surface_organic_matter_pct": 3.2,
+    "hydrologic_group": "C",
+    "hydrologic_group_basis": "source_muaggatt",
+    "component_pct_total": 100.0,
+    "metric_completeness": "COMPLETE"
+  },
+  "hydric": {
+    "flag": "UNKNOWN",
+    "status": "NEEDS_VERIFICATION",
+    "criteria_ref": null,
+    "source_field": "hydricrating"
+  },
+  "evidence_refs": [
+    "evidence:fixture:ssurgo-ks-mapunit-100002"
+  ],
+  "governance": {
+    "authority": "NONE",
+    "source_activated": false,
+    "evidence_resolution_claimed": false,
+    "policy_evaluated": false,
+    "promotion_authorized": false,
+    "release_authorized": false,
+    "publication_authorized": false,
+    "release_ref": null
+  },
+  "public_use_requested": false,
+  "content_spec_hash": "sha256:76aa999b303de87d8195ba8840944711548e8630832d79ca15e38e45665bb0cb"
+}

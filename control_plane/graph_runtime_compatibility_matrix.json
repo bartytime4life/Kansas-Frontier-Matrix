@@ -1,0 +1,42 @@
+{
+  "canonicalization_profile": "RFC8785-JCS",
+  "governance": {
+    "execution_authorized": false,
+    "migration_authorized": false,
+    "promotion_authorized": false,
+    "publication_authorized": false,
+    "release_authorized": false,
+    "runtime_selected": false
+  },
+  "matrix_id": "kfm://control-plane/graph-runtime-compatibility/v1",
+  "object_type": "GraphRuntimeCompatibilityMatrix",
+  "rows": [
+    {
+      "deployment_mode": "SINGLE",
+      "discovery_rehearsal_ref": null,
+      "discovery_rehearsal_state": "NOT_APPLICABLE",
+      "driver_version": null,
+      "evidence_refs": [],
+      "gds_version": null,
+      "governance": {
+        "migration_authorized": false,
+        "publication_authorized": false,
+        "readiness_authorized": false,
+        "release_authorized": false
+      },
+      "jvm_major": null,
+      "reason_codes": [
+        "COMPATIBILITY_EVIDENCE_REQUIRED",
+        "RUNTIME_VERSION_UNRESOLVED"
+      ],
+      "row_id": "kfm.graph.compat.neo4j.unresolved.single",
+      "runtime_name": "NEO4J",
+      "runtime_version": "UNRESOLVED",
+      "support_state": "NEEDS_VERIFICATION"
+    }
+  ],
+  "schema_version": "1.0.0",
+  "spec_hash": "sha256:527d348443031fb1cf8893ebbd9b5e4ece28471d7db0dbe21735b972decb55f2",
+  "status": "PROPOSED_INACTIVE",
+  "target_family": "PROPERTY_GRAPH_RUNTIME"
+}

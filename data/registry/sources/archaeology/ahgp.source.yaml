@@ -1,0 +1,18 @@
+# source descriptor: ahgp
+# domain: archaeology
+# status: PROPOSED — greenfield template
+# migrated: 2026-10-11 from data/registry/archaeology/sources/ahgp.yaml (owner-directed move under DIR-SOURCE-003/004; field values unchanged; not admitted)
+# domain review: AHGP is a genealogy transcription source (cemetery, census, family trees, obituaries); its archaeology assignment is retained pending source-admission review and may move to people-dna-land.
+id: ahgp
+domain: archaeology
+role: TBD            # primary | corroborating | context | restricted
+authority: TBD
+rights:
+  license: TBD
+  attribution_required: true
+  redistribution: TBD
+sensitivity_floor: TBD
+update_cadence: TBD
+access_posture: TBD   # public | api_key | steward_only
+citation_template: "TBD"
+ingest_receipt_template: "data/receipts/ingest/archaeology/ahgp/<run_id>.json"

@@ -1,0 +1,115 @@
+{
+  "format": "kfm.noaa-nwm-local-delivery/v1",
+  "recorded_at": "2026-10-07T18:25:52Z",
+  "base_commit": "bc1a4f411f53fa7f1f9fb935da3d60c8c252b778",
+  "run": "20261007T180550Z",
+  "local_store": "$HOME/Projects/KFM-data",
+  "source_url": "https://nomads.ncep.noaa.gov/pub/data/nccf/com/nwm/prod/",
+  "geometry_source": "https://maps.water.noaa.gov/server/rest/services/reference/static_nwm_flowlines/FeatureServer/0",
+  "selection": "Kansas envelope intersection; border reaches retained",
+  "bbox": [
+    -102.052,
+    36.993,
+    -94.588,
+    40.004
+  ],
+  "models": {
+    "files": 19,
+    "bytes": 234980314,
+    "version": "v3.1"
+  },
+  "geometry": {
+    "pages": 204,
+    "bytes": 163895202,
+    "source_version_attribute": "3.0",
+    "id_matches": 101599,
+    "version_compatibility_review": "pending"
+  },
+  "source_metadata_files": 6,
+  "retained_disk_bytes": 470454272,
+  "storage_cap_bytes": 536870912,
+  "minimum_free_bytes": 107374182400,
+  "free_disk_bytes_at_recording": 2046134501376,
+  "verification": {
+    "all_geometry_ids_matched": true,
+    "analysis_reference_time": "2026-10-07T13:00:00Z",
+    "analysis_valid_time": "2026-10-07T16:00:00Z",
+    "capture_sha256": "c4c03e6793a194cafba82d8833f0a787b5200b3c3c6a81d72001875655643639",
+    "forecast_end": "2026-10-08T10:00:00Z",
+    "forecast_reference_time": "2026-10-07T16:00:00Z",
+    "forecast_start": "2026-10-07T17:00:00Z",
+    "format": "kfm.noaa-nwm-verification/v1",
+    "frames": 19,
+    "geometry_source_versions": {
+      "3.0": 101599
+    },
+    "geometry_version_compatibility_review": "pending",
+    "map_activated": false,
+    "model_versions": [
+      "v3.1"
+    ],
+    "outputs": [
+      {
+        "bytes": 56165427,
+        "path": "data/work/noaa-nwm/20261007T180550Z/kansas-envelope-flowlines.geojson.gz",
+        "sha256": "81d24660efaa2aae1f1c48a7785c92ba435dbe47688ee8362a5e9f47d3dcb419"
+      },
+      {
+        "bytes": 9425800,
+        "path": "data/work/noaa-nwm/20261007T180550Z/kansas-envelope-streamflow.csv.gz",
+        "sha256": "f09952221b0d7a5a1b65c7ae7c98ea90fa01a25d5a0cf8b460a2c7a2466ff115"
+      },
+      {
+        "bytes": 33216,
+        "path": "data/work/noaa-nwm/20261007T180550Z/subset-metadata.json",
+        "sha256": "724c198f7557f1d18bee95b57ab9aec9e60476614ffb4c1b96de847e3c09d9d6"
+      }
+    ],
+    "published": false,
+    "reaches": 101599,
+    "rows": 1930381,
+    "run": "20261007T180550Z",
+    "software": {
+      "netCDF4": "1.7.4",
+      "numpy": "2.3.3"
+    },
+    "source_admitted": false
+  },
+  "verification_sha256": "35dc7962d76d787480f800ec40a379dfe15bc8409391e7af294174a0bdc4bcfe",
+  "independent_output_readback": {
+    "sha256": "all three outputs matched",
+    "gzip_crc": "passed",
+    "geometry_features": 101599,
+    "csv_rows": 1930381,
+    "complete_reach_sets_per_frame": 19,
+    "missing_streamflow_rows": 19950,
+    "missing_velocity_rows": 19950,
+    "outside_valid_range_rows": 0,
+    "missing_policy": "Decoded blank; original packed sentinel and status retained; never zero-filled"
+  },
+  "source_checksum_state": "No independent provider digests supplied; local hashes identify captured bytes only.",
+  "storage_history": [
+    "96 MiB geometry guard stopped the initial capture without overwriting completed files.",
+    "Append-only plan-v2 corrects filename-cycle semantics and reallocates geometry allowance to 192 MiB within unchanged 512 MiB aggregate cap.",
+    "All completed captures reused; no automatic retries, scheduled refresh, deletion or eviction."
+  ],
+  "paths": {
+    "raw": "data/raw/noaa-nwm/20261007T180550Z",
+    "work": "data/work/noaa-nwm/20261007T180550Z",
+    "receipts": "data/receipts/ingest/noaa-nwm/20261007T180550Z"
+  },
+  "boundaries": {
+    "source_admitted": false,
+    "rights_review_complete": false,
+    "human_review_complete": false,
+    "map_activated": false,
+    "released": false,
+    "published": false
+  },
+  "validation": {
+    "nwm_offline_tests": "17 passed with optional reader and egress guard",
+    "adjacent_and_dependency_tests": "91 passed; 60 subtests passed",
+    "topology": "Exact base and changed tree: same 6 inherited KFM-TOPO-017 findings; 113 warnings; zero invariants.",
+    "gap_scan": "Blocked by unchanged artifacts/qa/reports/dp-15-inventory-20261007/summary.json parse error (line 549); no new count regression."
+  }
+}

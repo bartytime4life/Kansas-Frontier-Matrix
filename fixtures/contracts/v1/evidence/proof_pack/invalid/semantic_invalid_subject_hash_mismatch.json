@@ -1,0 +1,131 @@
+{
+  "assembled_at": "2026-08-05T22:40:00Z",
+  "components": [
+    {
+      "artifact_id": "citation_sample:fixture-08",
+      "kind": "CITATION_SAMPLE",
+      "path": "fixtures/contracts/v1/evidence/proof_pack/artifacts/citation_sample.json",
+      "recorded_at": "2026-08-05T22:08:00Z",
+      "release_id": "release:fixture-proof-pack-20260805",
+      "sha256": "sha256:479bf345c8c6c0ab7d73db57193ceaaebdc1d8d8bde1d7567d55f3d408cf794a",
+      "subject_id": "dataset:fixture-public-safe-v1",
+      "subject_spec_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+    },
+    {
+      "artifact_id": "ci_run:fixture-09",
+      "kind": "CI_RUN",
+      "path": "fixtures/contracts/v1/evidence/proof_pack/artifacts/ci_run.json",
+      "recorded_at": "2026-08-05T22:09:00Z",
+      "release_id": "release:fixture-proof-pack-20260805",
+      "sha256": "sha256:dfa8d8985da0d257117070b81712fd2984a78e47a74ee97bfb72f732be27291a",
+      "subject_id": "dataset:fixture-public-safe-v1",
+      "subject_spec_hash": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+    },
+    {
+      "artifact_id": "evidence_bundle:fixture-01",
+      "kind": "EVIDENCE_BUNDLE",
+      "path": "fixtures/contracts/v1/evidence/proof_pack/artifacts/evidence_bundle.json",
+      "recorded_at": "2026-08-05T22:01:00Z",
+      "release_id": "release:fixture-proof-pack-20260805",
+      "sha256": "sha256:bf4b395ab729951c57106bb82b4ec19dd3b6313b6b590fc3df8683fba9aeef45",
+      "subject_id": "dataset:fixture-public-safe-v1",
+      "subject_spec_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+    },
+    {
+      "artifact_id": "integrity_manifest:fixture-03",
+      "kind": "INTEGRITY_MANIFEST",
+      "path": "fixtures/contracts/v1/evidence/proof_pack/artifacts/integrity_manifest.json",
+      "recorded_at": "2026-08-05T22:03:00Z",
+      "release_id": "release:fixture-proof-pack-20260805",
+      "sha256": "sha256:3786a26c9cf8fb7254fdd5238807f42ded321a2ded2a792f1ccb7364d1bdaae2",
+      "subject_id": "dataset:fixture-public-safe-v1",
+      "subject_spec_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+    },
+    {
+      "artifact_id": "lineage_index:fixture-05",
+      "kind": "LINEAGE_INDEX",
+      "path": "fixtures/contracts/v1/evidence/proof_pack/artifacts/lineage_index.json",
+      "recorded_at": "2026-08-05T22:05:00Z",
+      "release_id": "release:fixture-proof-pack-20260805",
+      "sha256": "sha256:02a05600ee93ea184f464f881409e4c0dedb5e19ee50448999f722b1d7a7957c",
+      "subject_id": "dataset:fixture-public-safe-v1",
+      "subject_spec_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+    },
+    {
+      "artifact_id": "promotion_decision:fixture-06",
+      "kind": "PROMOTION_DECISION",
+      "path": "fixtures/contracts/v1/evidence/proof_pack/artifacts/promotion_decision.json",
+      "recorded_at": "2026-08-05T22:06:00Z",
+      "release_id": "release:fixture-proof-pack-20260805",
+      "sha256": "sha256:d38a4e317c8f4655a6e8ecdeaec4b6c458bafbe33af7f7a831ac137b8048e51d",
+      "subject_id": "dataset:fixture-public-safe-v1",
+      "subject_spec_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+    },
+    {
+      "artifact_id": "prov_export:fixture-04",
+      "kind": "PROV_EXPORT",
+      "path": "fixtures/contracts/v1/evidence/proof_pack/artifacts/prov_export.json",
+      "recorded_at": "2026-08-05T22:04:00Z",
+      "release_id": "release:fixture-proof-pack-20260805",
+      "sha256": "sha256:473b019f30ff553153ea73444cb2945361c6e7b9644ea24d8c4f4cff4aea817d",
+      "subject_id": "dataset:fixture-public-safe-v1",
+      "subject_spec_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+    },
+    {
+      "artifact_id": "release_anchor:fixture-10",
+      "kind": "RELEASE_ANCHOR",
+      "path": "fixtures/contracts/v1/evidence/proof_pack/artifacts/release_anchor.json",
+      "recorded_at": "2026-08-05T22:10:00Z",
+      "release_id": "release:fixture-proof-pack-20260805",
+      "sha256": "sha256:4b3fd2ca3913614d73eb1719f35b24ac4c9059f5d80fd4c624b2df4bcd592d47",
+      "subject_id": "dataset:fixture-public-safe-v1",
+      "subject_spec_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+    },
+    {
+      "artifact_id": "rollback_reference:fixture-11",
+      "kind": "ROLLBACK_REFERENCE",
+      "path": "fixtures/contracts/v1/evidence/proof_pack/artifacts/rollback_reference.json",
+      "recorded_at": "2026-08-05T22:11:00Z",
+      "release_id": "release:fixture-proof-pack-20260805",
+      "sha256": "sha256:eff96af9be47b96b25f167adcaec452b03dbc9c716403d00646d7994593b4421",
+      "subject_id": "dataset:fixture-public-safe-v1",
+      "subject_spec_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+    },
+    {
+      "artifact_id": "runtime_proof:fixture-07",
+      "kind": "RUNTIME_PROOF",
+      "path": "fixtures/contracts/v1/evidence/proof_pack/artifacts/runtime_proof.json",
+      "recorded_at": "2026-08-05T22:07:00Z",
+      "release_id": "release:fixture-proof-pack-20260805",
+      "sha256": "sha256:d77cfdbcb4608ae2ecd277d1a1dbef70b22d0889bce30ee2e774c635c8a1ffde",
+      "subject_id": "dataset:fixture-public-safe-v1",
+      "subject_spec_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+    },
+    {
+      "artifact_id": "validation_report:fixture-02",
+      "kind": "VALIDATION_REPORT",
+      "path": "fixtures/contracts/v1/evidence/proof_pack/artifacts/validation_report.json",
+      "recorded_at": "2026-08-05T22:02:00Z",
+      "release_id": "release:fixture-proof-pack-20260805",
+      "sha256": "sha256:b216abf13891fd8f93c0bdff0dfce6f42c62ea2a8dfe185617661d4084dbc43e",
+      "subject_id": "dataset:fixture-public-safe-v1",
+      "subject_spec_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+    }
+  ],
+  "decision": {
+    "authority_created": false,
+    "outcome": "READY_FOR_REVIEW",
+    "publication": false,
+    "reason_codes": [],
+    "release_approved": false
+  },
+  "profile": "kfm.proof-pack.release-support.v1",
+  "proof_pack_id": "proof_pack:invalid-subject-hash-mismatch",
+  "release_id": "release:fixture-proof-pack-20260805",
+  "subject": {
+    "correction_state": "NONE",
+    "spec_hash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "subject_id": "dataset:fixture-public-safe-v1",
+    "subject_type": "DATASET_VERSION"
+  }
+}

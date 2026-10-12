@@ -1,0 +1,54 @@
+{
+  "receipt_id": "genrec-release-candidates-flora-readme-b5f3cb44",
+  "contract_version": "3.0.0",
+  "receipt_type": "GenerationReceipt",
+  "status": "PROPOSED",
+  "generated_at": "2026-07-18T12:01:42-05:00",
+  "repository": "bartytime4life/Kansas-Frontier-Matrix",
+  "base_commit": "653d4b2f323e8021981e7a9402e87ed35aed0a51",
+  "branch": "agent/release-candidates-flora-readme-20260718",
+  "target_path": "release/candidates/flora/README.md",
+  "previous_blob": "cce1bcd5f292d7a1d3e6faf89be8578f7796c20e",
+  "new_blob": "15a08f9fb2cdd33041d3a3f3e3c844f26a7a0998",
+  "sha256": "b5f3cb44a8dc70b1b67d70b1816439a5e85b746581dc1fb0a9fbfb6dc9107b4b",
+  "truth_labels": {
+    "confirmed": [
+      "The Flora candidate-lane README existed at the pinned base and was updated in place.",
+      "The bounded repository search surfaced the parent README but no child Flora candidate dossier.",
+      "The domain-flora workflow checks that this lane contains no non-README candidate record and retains explicit validation, proof, and release-dry-run holds.",
+      "The Flora release index is a draft navigation surface and does not establish a verified release register or emitted release instance.",
+      "Flora sensitivity guidance is deny-by-default for exact rare, protected, culturally sensitive, steward-controlled, private-land, and join-sensitive plant information.",
+      "The Flora sensitivity documentation has an explicit overlapping-authority conflict and the domain and sensitivity policy READMEs remain scaffolds rather than executable policy proof.",
+      "The Flora proof, EvidenceBundle, and citation-validation lanes are documented, while concrete proof inventory, producers, access controls, and release linkage remain unverified.",
+      "The Flora test lane is documentation-first and the sampled direct test module contains only a PROPOSED placeholder docstring.",
+      "The Flora geoprivacy transformer is documented as a proposed package contract; repository search did not establish implementation files in that package lane.",
+      "The published Flora README defines a release-gated public-safe carrier boundary while emitted release-linked artifacts remain unverified.",
+      "CODEOWNERS routes release review to bartytime4life while explicitly denying that routing is stewardship, independent review, release approval, or publication authority."
+    ],
+    "proposed": [
+      "release/candidates/flora/ should operate as a repository-grounded, deny-by-default Flora candidate index and pre-publication review contract without becoming botanical, source, evidence, policy, stewardship, sovereignty, legal, release, or publication authority."
+    ],
+    "needs_verification": [
+      "Exhaustive child inventory and deterministic public-safe candidate-index generation.",
+      "Candidate identity, artifact-manifest, plant-taxon concept/version, object-family, source-role, source-admission, rights, stewardship, sovereignty, time, and EvidenceBundle contracts.",
+      "Executable policy, named geoprivacy profiles, receipt binding, public-safe fixtures, no-leak tests, validator ownership, geoprivacy package implementation, and proof behavior.",
+      "Candidate-to-review, PromotionDecision, ReleaseManifest, correction, withdrawal, supersession, and rollback topology and operational handoff.",
+      "Correction consumers, cache invalidation, rollback drills, branch protection, required checks, immutable action pinning, and independent reviewer assignments."
+    ]
+  },
+  "changes": [
+    "Replaced generic Flora candidate-lane guidance with a repository-grounded, sensitivity-aware candidate index and pre-publication review contract.",
+    "Recorded that no child candidate dossier or active candidate is established by the bounded inspection.",
+    "Preserved the exact A candidate is not a release workflow compatibility sentence and publication-not_yet marker.",
+    "Separated candidate review from botanical, source, evidence, policy, stewardship, sovereignty, validation, review, manifest, correction, rollback, legal, collection, emergency, publication, and public-client authority.",
+    "Added finite candidate states and holds, admission and identity rules, taxonomic and source-role anti-collapse, specimen/current-occurrence and cultivation/wild-occurrence boundaries, time and stale-state discipline, geoprivacy/sovereignty controls, release gates, a public-safe dossier structure, validation and automation posture, review handoff, correction and rollback discipline, public API/map/export/AI boundaries, evidence ledger, definition of done, open verification, and documentation rollback."
+  ],
+  "authority_boundary": "This receipt records an AI-authored documentation revision. It is not a Flora candidate, botanical or taxonomic decision, occurrence or specimen record, rare-plant record, culturally sensitive knowledge record, SourceDescriptor, EvidenceBundle, geoprivacy transform, RedactionReceipt, AggregationReceipt, PolicyDecision, stewardship or sovereignty decision, ReviewRecord, ValidationReport, PromotionDecision, ReleaseManifest, CorrectionNotice, WithdrawalNotice, RollbackCard, collection or legal guidance, emergency authority, steward approval, release approval, publication authority, or proof of runtime behavior.",
+  "rollback": {
+    "strategy": "Close the draft pull request before merge, or revert the generated-receipt commit and README commit in reverse order after merge.",
+    "restores_blob": "cce1bcd5f292d7a1d3e6faf89be8578f7796c20e"
+  },
+  "human_review": {
+    "state": "pending"
+  }
+}

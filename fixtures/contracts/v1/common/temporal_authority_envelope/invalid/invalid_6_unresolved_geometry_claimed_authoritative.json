@@ -1,0 +1,49 @@
+{
+  "schema_version": "1.0.0",
+  "identity": {
+    "object_id": "kfm:candidate:synthetic-briefing-object-001",
+    "object_type": "GovernanceEventCandidate",
+    "native_id": null,
+    "revision_id": "kfm:revision:synthetic-briefing-object-001:20260803T140000Z"
+  },
+  "source": {
+    "source_descriptor_ref": "src:synthetic:briefing-candidate",
+    "source_role_ref": "src:synthetic:briefing-candidate#/source_role",
+    "issuing_authority_ref": "authority:synthetic:briefing-process",
+    "authority_scope": "Non-authoritative discovery candidate only"
+  },
+  "time": {
+    "issued_at": "2026-08-03T13:55:00Z",
+    "effective_at": null,
+    "valid_from": null,
+    "valid_to": null,
+    "observed_at": null,
+    "retrieved_at": "2026-08-03T14:00:00Z",
+    "corrected_at": null,
+    "superseded_at": null
+  },
+  "space": {
+    "native_geography_text": "Unresolved synthetic region",
+    "geography_ref": null,
+    "geometry_role": "authoritative",
+    "geometry_confidence": "confirmed"
+  },
+  "state": {
+    "native_state": null,
+    "normalized_state": "needs_verification",
+    "certainty": "unknown"
+  },
+  "lineage": {
+    "supersedes": [],
+    "superseded_by": [],
+    "correction_refs": [],
+    "withdrawal_refs": []
+  },
+  "governance": {
+    "evidence_refs": [],
+    "policy_refs": [],
+    "review_refs": [],
+    "release_ref": null,
+    "public_use_allowed": false
+  }
+}

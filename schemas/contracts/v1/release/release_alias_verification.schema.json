@@ -1,0 +1,296 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/release/release_alias_verification.schema.json",
+  "title": "ReleaseAliasVerification",
+  "type": "object",
+  "additionalProperties": false,
+  "$defs": {
+    "spec": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "dt": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+    },
+    "release_ref": {
+      "type": "string",
+      "pattern": "^kfm:release:[a-z0-9][a-z0-9._:-]{2,180}$"
+    },
+    "nullable_release_ref": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/release_ref"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "nullable_spec": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/spec"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "nullable_ref": {
+      "oneOf": [
+        {
+          "type": "string",
+          "pattern": "^kfm:[a-z0-9][a-z0-9._:/-]{5,220}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "execution_mode": {
+          "const": "FIXTURE_ONLY"
+        },
+        "alias_mutated": {
+          "const": false
+        },
+        "release_issued": {
+          "const": false
+        },
+        "cache_invalidated": {
+          "const": false
+        },
+        "promotion_authorized": {
+          "const": false
+        },
+        "deployment_authorized": {
+          "const": false
+        },
+        "publication_authorized": {
+          "const": false
+        }
+      },
+      "required": [
+        "execution_mode",
+        "alias_mutated",
+        "release_issued",
+        "cache_invalidated",
+        "promotion_authorized",
+        "deployment_authorized",
+        "publication_authorized"
+      ]
+    }
+  },
+  "properties": {
+    "object_type": {
+      "const": "ReleaseAliasVerification"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "profile": {
+      "const": "kfm.release-alias-verification.fixture.v1"
+    },
+    "verification_id": {
+      "type": "string",
+      "pattern": "^kfm:release-alias-verification:[a-f0-9]{24}$"
+    },
+    "evaluated_at": {
+      "$ref": "#/$defs/dt"
+    },
+    "evaluation_state": {
+      "enum": [
+        "COMPLETE",
+        "ERROR"
+      ]
+    },
+    "alias_ref": {
+      "type": "string",
+      "pattern": "^kfm:release-alias:[a-z0-9][a-z0-9._:-]{2,180}$"
+    },
+    "action": {
+      "enum": [
+        "INITIAL_BIND",
+        "ADVANCE",
+        "CORRECTION",
+        "ROLLBACK"
+      ]
+    },
+    "observed": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "state": {
+          "enum": [
+            "BOUND",
+            "UNBOUND",
+            "UNKNOWN",
+            "ERROR"
+          ]
+        },
+        "target_release_ref": {
+          "$ref": "#/$defs/nullable_release_ref"
+        },
+        "target_manifest_digest": {
+          "$ref": "#/$defs/nullable_spec"
+        },
+        "target_spec_hash": {
+          "$ref": "#/$defs/nullable_spec"
+        },
+        "revision": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "state",
+        "target_release_ref",
+        "target_manifest_digest",
+        "target_spec_hash",
+        "revision"
+      ]
+    },
+    "expected_prior": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "release_ref": {
+          "$ref": "#/$defs/nullable_release_ref"
+        },
+        "manifest_digest": {
+          "$ref": "#/$defs/nullable_spec"
+        },
+        "spec_hash": {
+          "$ref": "#/$defs/nullable_spec"
+        },
+        "revision": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "release_ref",
+        "manifest_digest",
+        "spec_hash",
+        "revision"
+      ]
+    },
+    "proposed": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "release_ref": {
+          "$ref": "#/$defs/release_ref"
+        },
+        "manifest_digest": {
+          "$ref": "#/$defs/spec"
+        },
+        "spec_hash": {
+          "$ref": "#/$defs/spec"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "correction_ref": {
+          "$ref": "#/$defs/nullable_ref"
+        },
+        "rollback_ref": {
+          "$ref": "#/$defs/nullable_ref"
+        }
+      },
+      "required": [
+        "release_ref",
+        "manifest_digest",
+        "spec_hash",
+        "revision",
+        "correction_ref",
+        "rollback_ref"
+      ]
+    },
+    "result": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "outcome": {
+          "enum": [
+            "READY",
+            "HOLD",
+            "DENY",
+            "ERROR"
+          ]
+        },
+        "reason_codes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 6,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "ALIAS_TRANSITION_READY",
+              "ALIAS_STATE_UNKNOWN",
+              "ALIAS_STATE_ERROR",
+              "ALIAS_PRIOR_STATE_MISMATCH",
+              "ALIAS_INITIAL_STATE_INVALID",
+              "ALIAS_REVISION_NON_MONOTONIC",
+              "ALIAS_TARGET_NOT_IMMUTABLE",
+              "ALIAS_CORRECTION_REF_REQUIRED",
+              "ALIAS_CORRECTION_REF_FORBIDDEN",
+              "ALIAS_ROLLBACK_REF_REQUIRED"
+            ]
+          }
+        }
+      },
+      "required": [
+        "outcome",
+        "reason_codes"
+      ]
+    },
+    "governance": {
+      "$ref": "#/$defs/governance"
+    },
+    "spec_hash": {
+      "$ref": "#/$defs/spec"
+    }
+  },
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "verification_id",
+    "evaluated_at",
+    "evaluation_state",
+    "alias_ref",
+    "action",
+    "observed",
+    "expected_prior",
+    "proposed",
+    "result",
+    "governance",
+    "spec_hash"
+  ],
+  "x-kfm": {
+    "status": "PROPOSED_INACTIVE",
+    "contract_doc": "contracts/release/release_alias_verification.md",
+    "authority": "NONE"
+  }
+}

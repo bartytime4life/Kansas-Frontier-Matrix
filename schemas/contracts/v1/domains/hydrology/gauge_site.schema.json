@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/schemas/contracts/v1/domains/hydrology/gauge_site.schema.json",
+  "title": "Gauge Site",
+  "type": "object",
+  "description": "PROPOSED scaffold for schemas/contracts/v1/domains/hydrology/gauge_site.schema.json. Fields are to be defined by the owning domain steward.",
+  "x-kfm": {
+    "status": "PROPOSED",
+    "source_doc": "docs/domains/hydrology/CANONICAL_PATHS.md",
+    "contract_doc": "contracts/domains/hydrology/gauge_site.md"
+  },
+  "properties": {},
+  "additionalProperties": true
+}

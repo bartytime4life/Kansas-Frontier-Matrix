@@ -1,0 +1,162 @@
+{
+  "receipt_id": "genrec-briefing-issue-inventory-20260806",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/briefing-integration.yml",
+    "contracts/governance/issue_inventory_projection.md",
+    "docs/architecture/briefing-integration.md",
+    "fixtures/contracts/v1/governance/issue_inventory_projection/README.md",
+    "fixtures/contracts/v1/governance/issue_inventory_projection/invalid/digest-mismatch.json",
+    "fixtures/contracts/v1/governance/issue_inventory_projection/invalid/duplicate-issue-number.json",
+    "fixtures/contracts/v1/governance/issue_inventory_projection/invalid/issue-updated-after-projection.json",
+    "fixtures/contracts/v1/governance/issue_inventory_projection/invalid/mutation-allowed.json",
+    "fixtures/contracts/v1/governance/issue_inventory_projection/invalid/unsorted-issues.json",
+    "fixtures/contracts/v1/governance/issue_inventory_projection/valid/closed-target.json",
+    "fixtures/contracts/v1/governance/issue_inventory_projection/valid/missing-target.json",
+    "fixtures/contracts/v1/governance/issue_inventory_projection/valid/open-target.json",
+    "schemas/contracts/v1/governance/issue_inventory_projection.schema.json",
+    "tests/governance/test_briefing_signal_issue_inventory.py",
+    "tools/validators/governance/README.md",
+    "tools/validators/governance/route_briefing_signals.py",
+    "tools/validators/governance/validate_issue_inventory_projection.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/briefing-integration.yml": "sha256:278249edbac34535be5470785f8e1b2673688d344afb4064d498bdb494cc7ce7",
+    "contracts/governance/issue_inventory_projection.md": "sha256:fe5e1b2d1215f6d4502151d48ef77065caf9635a32c4268f7f6febb2494b69dc",
+    "docs/architecture/briefing-integration.md": "sha256:710ceebccd90b2f71531eff39c33d1c27d6b9a7c6731be10b60c23dbca5b4f96",
+    "fixtures/contracts/v1/governance/issue_inventory_projection/README.md": "sha256:88e208c5e1eafb98f822dc2304d867648195a90aeea3ec2bce28ccbea988c60e",
+    "fixtures/contracts/v1/governance/issue_inventory_projection/invalid/digest-mismatch.json": "sha256:47b71e2466d9d55c92d948c2b34dd0eb5864988415e938ad4a11a027ceee6911",
+    "fixtures/contracts/v1/governance/issue_inventory_projection/invalid/duplicate-issue-number.json": "sha256:7ef53e28675e04dc9c3a8f13ca7557ee2bbda166384123122e8f5c069830cb1f",
+    "fixtures/contracts/v1/governance/issue_inventory_projection/invalid/issue-updated-after-projection.json": "sha256:616f0dac7daebcb3fdb94d15e385ed49bbc4e4a5ef482a131ca1e80e5cf84ede",
+    "fixtures/contracts/v1/governance/issue_inventory_projection/invalid/mutation-allowed.json": "sha256:fb56d0ccdb96eff01183817ea9d20e7c2ca490b876764bb0372bf1a848feedf6",
+    "fixtures/contracts/v1/governance/issue_inventory_projection/invalid/unsorted-issues.json": "sha256:11b7da4c4777d07a2d3fa3639808e924db11a06d33743dc856d9831b71946fcc",
+    "fixtures/contracts/v1/governance/issue_inventory_projection/valid/closed-target.json": "sha256:4cb041df71ad4e6985c941a46a89937add775697a711c61688ee7ab6661c7b1d",
+    "fixtures/contracts/v1/governance/issue_inventory_projection/valid/missing-target.json": "sha256:953dc8df2949303dd34231e7fcccdd2e04aa775a60f533bffef9d765ffa102b7",
+    "fixtures/contracts/v1/governance/issue_inventory_projection/valid/open-target.json": "sha256:2c24e99df5089aaafaf47df048a7fc822cfbe10a0317772239e3b03183553981",
+    "schemas/contracts/v1/governance/issue_inventory_projection.schema.json": "sha256:99b4109b2c1f9c7979fa64e87347f63727d94b0b71a3cb8ee6d0fb04c9eb5861",
+    "tests/governance/test_briefing_signal_issue_inventory.py": "sha256:ecbc0169b668ab82c349b2344e5206b8bbad68a50190449deec3d15fdfeac54f",
+    "tools/validators/governance/README.md": "sha256:a22fa71b8779ef815b0e0ad5f090747fab7ec126d1a8ff55e378b3912bc44a65",
+    "tools/validators/governance/route_briefing_signals.py": "sha256:13467822762d0b75599e7c52aaa64aca25c871c6dfbb34653a0333d836ceaecf",
+    "tools/validators/governance/validate_issue_inventory_projection.py": "sha256:f73e6eeb0da3ee280e8ba59010c4942481895c8770035c43900ad28f585bbbe2"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-06"
+  },
+  "prompt_or_contract": "sha256:3b192c4ce1b01f27c8b4b27df4a3826ee10da660760010e57eda5df43443cb8b",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local Python 3 validator harness"
+    ]
+  },
+  "inputs": {
+    "evidence_refs": [
+      "repo:docs/architecture/briefing-integration.md",
+      "repo:tools/validators/governance/route_briefing_signals.py",
+      "repo:schemas/contracts/v1/governance/briefing_signal.schema.json",
+      "repo:docs/doctrine/directory-rules.md",
+      "attachment:KFM_Briefing_to_System_Integration_Architecture.docx"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/briefing-integration.yml": "PROPOSED",
+    "contracts/governance/issue_inventory_projection.md": "PROPOSED",
+    "docs/architecture/briefing-integration.md": "PROPOSED",
+    "fixtures/contracts/v1/governance/issue_inventory_projection/README.md": "PROPOSED",
+    "fixtures/contracts/v1/governance/issue_inventory_projection/invalid/digest-mismatch.json": "PROPOSED",
+    "fixtures/contracts/v1/governance/issue_inventory_projection/invalid/duplicate-issue-number.json": "PROPOSED",
+    "fixtures/contracts/v1/governance/issue_inventory_projection/invalid/issue-updated-after-projection.json": "PROPOSED",
+    "fixtures/contracts/v1/governance/issue_inventory_projection/invalid/mutation-allowed.json": "PROPOSED",
+    "fixtures/contracts/v1/governance/issue_inventory_projection/invalid/unsorted-issues.json": "PROPOSED",
+    "fixtures/contracts/v1/governance/issue_inventory_projection/valid/closed-target.json": "PROPOSED",
+    "fixtures/contracts/v1/governance/issue_inventory_projection/valid/missing-target.json": "PROPOSED",
+    "fixtures/contracts/v1/governance/issue_inventory_projection/valid/open-target.json": "PROPOSED",
+    "schemas/contracts/v1/governance/issue_inventory_projection.schema.json": "PROPOSED",
+    "tests/governance/test_briefing_signal_issue_inventory.py": "PROPOSED",
+    "tools/validators/governance/README.md": "PROPOSED",
+    "tools/validators/governance/route_briefing_signals.py": "PROPOSED",
+    "tools/validators/governance/validate_issue_inventory_projection.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "local-python-compile",
+      "outcome": "PASS",
+      "reason": "The new validator, updated router, and focused unittest module passed Python bytecode compilation."
+    },
+    {
+      "gate": "local-projection-positive-negative-fixtures",
+      "outcome": "PASS",
+      "reason": "All three positive IssueInventoryProjection fixtures were accepted; all five structural or semantic negative fixtures were rejected."
+    },
+    {
+      "gate": "local-focused-unittest",
+      "outcome": "PASS",
+      "reason": "Eleven focused no-network tests passed against a declaration-compatible BriefingSignal validator stub, covering open, closed, missing, absent, ambiguous, invalid, deterministic, value-minimized, and CLI behavior."
+    },
+    {
+      "gate": "local-route-integration",
+      "outcome": "PASS",
+      "reason": "The updated router retained UPDATE_EXISTING_ISSUE only for one projected open target and held absent or closed inventory cases."
+    },
+    {
+      "gate": "local-workflow-and-json-parse",
+      "outcome": "PASS",
+      "reason": "The updated GitHub Actions workflow parsed as YAML and every authored JSON schema, fixture, and receipt candidate parsed successfully."
+    },
+    {
+      "gate": "local-artifact-integrity",
+      "outcome": "PASS",
+      "reason": "SHA-256 digests were computed over the final authored bytes for all receipt-bound artifacts."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted checks require the pushed exact pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending until the pull request is opened."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "repository:briefing-next-stage",
+      "validated": true,
+      "evidence_ref": "repo:docs/architecture/briefing-integration.md"
+    },
+    {
+      "id": "repository:briefing-router-boundary",
+      "validated": true,
+      "evidence_ref": "repo:tools/validators/governance/route_briefing_signals.py"
+    },
+    {
+      "id": "attachment:briefing-integration-blueprint",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Briefing_to_System_Integration_Architecture.docx"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-06T18:03:52Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Read-only fixture-backed issue inventory projection for BriefingSignal routing. This receipt grants no live GitHub state, repository mutation, evidence, source, policy, review, proof, promotion, release, deployment, publication, or public-use authority."
+}

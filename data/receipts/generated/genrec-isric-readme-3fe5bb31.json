@@ -1,0 +1,167 @@
+{
+  "receipt_id": "genrec-isric-readme-3fe5bb31",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "connectors/isric/README.md"
+  ],
+  "artifact_hashes": {
+    "connectors/isric/README.md": "sha256:d448971c063b63b328b42bc4aa36980cec816454298b77a86deaacd177f95359"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-07-12-session"
+  },
+  "prompt_or_contract": "sha256:a429b36b3010298d8bbec0bc86c74858ee6691c8b389a986a4877131899dea43",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "file_search",
+      "python"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM GitHub Repository Documentation Implementation Agent — Full Operating Prompt v3",
+      "Directory Rules.pdf",
+      "KFM Soil Architecture Extended Pro PDF-Only Planning Report"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/a642470327f32b5b76d81ef4ed996d65de4f6ba0",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/a642470327f32b5b76d81ef4ed996d65de4f6ba0/connectors/isric/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/3fe5bb31c8659137cf0b2e275c8fd57139076fbf",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/3fe5bb31c8659137cf0b2e275c8fd57139076fbf/connectors/isric/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/a642470327f32b5b76d81ef4ed996d65de4f6ba0/connectors/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/a642470327f32b5b76d81ef4ed996d65de4f6ba0/connectors/isric/soilgrids/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/a642470327f32b5b76d81ef4ed996d65de4f6ba0/connectors/soil/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/a642470327f32b5b76d81ef4ed996d65de4f6ba0/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/a642470327f32b5b76d81ef4ed996d65de4f6ba0/docs/domains/soil/ARCHITECTURE.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/a642470327f32b5b76d81ef4ed996d65de4f6ba0/docs/sources/catalog/isric/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/a642470327f32b5b76d81ef4ed996d65de4f6ba0/data/registry/sources/soil/isric-soilgrids.yaml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/a642470327f32b5b76d81ef4ed996d65de4f6ba0/schemas/contracts/v1/receipts/generated_receipt.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/a642470327f32b5b76d81ef4ed996d65de4f6ba0/docs/runbooks/FIRST_GOVERNED_PR_RUNBOOK.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/a642470327f32b5b76d81ef4ed996d65de4f6ba0/.github/PULL_REQUEST_TEMPLATE.md"
+    ]
+  },
+  "truth_labels": {
+    "connectors/isric/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "repository-preflight",
+      "outcome": "PASS",
+      "reason": "Repository identity, permissions, default branch, pinned base, target blob/history, duplicate branch/PR state, and adjacent ISRIC/Soil evidence were inspected."
+    },
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "The substantive update remains in the existing source-specific connectors/ root; the paired receipt uses the repository-prescribed data/receipts/generated/ lane. No new authority root or lifecycle phase is created."
+    },
+    {
+      "gate": "adjacent-contract-reconciliation",
+      "outcome": "PASS",
+      "reason": "The parent was reconciled with the merged v0.2 SoilGrids product contract, connector-root contract, Soil architecture, source catalog, registry placeholder, receipt posture, and test index without claiming implementation."
+    },
+    {
+      "gate": "remote-readback",
+      "outcome": "PASS",
+      "reason": "The committed UTF-8 README was verified through the returned content blob SHA and remote branch read-back."
+    },
+    {
+      "gate": "artifact-integrity",
+      "outcome": "PASS",
+      "reason": "Raw UTF-8 SHA-256 is d448971c063b63b328b42bc4aa36980cec816454298b77a86deaacd177f95359; Git blob SHA-1 is e7bdb57585bf46080aa3bd075aa28861cee254aa."
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "Meta block, heading hierarchy, quick-jump targets, tables, balanced fenced blocks, Mermaid lifecycle flow, implementation sequence, definition of done, verification backlog, and rollback were checked."
+    },
+    {
+      "gate": "authority-boundary-review",
+      "outcome": "PASS",
+      "reason": "Connector mechanics remain separate from source doctrine, SourceDescriptor/activation authority, contracts, schemas, policy, evidence/proof closure, catalog, release, public clients, and publication."
+    },
+    {
+      "gate": "sensitive-data-review",
+      "outcome": "PASS",
+      "reason": "No source payload, farm/parcel record, precise private location, credential, signed URL, model data, or other sensitive material was introduced."
+    },
+    {
+      "gate": "live-source-access",
+      "outcome": "SKIPPED",
+      "reason": "No ISRIC or SoilGrids source interaction was authorized or required for this parent documentation update."
+    },
+    {
+      "gate": "executable-connector-tests",
+      "outcome": "SKIPPED",
+      "reason": "This documentation-only revision creates no executable connector code, package, test, or fixture; common parent implementation paths were absent in bounded probes."
+    },
+    {
+      "gate": "generated-receipt-schema",
+      "outcome": "PASS",
+      "reason": "Required fields, types, hash patterns, truth labels, validation outcomes, review state, link shapes, and notes length were checked against the inspected Draft 2020-12 schema."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "KFM-OPERATING-PROMPT-V3",
+      "validated": true,
+      "evidence_ref": "attached://KFM GitHub Repository Documentation Implementation Agent — Full Operating Prompt v3"
+    },
+    {
+      "id": "KFM-DIRECTORY-RULES",
+      "validated": true,
+      "evidence_ref": "attached://Directory Rules.pdf"
+    },
+    {
+      "id": "KFM-SOIL-ARCHITECTURE",
+      "validated": true,
+      "evidence_ref": "attached://KFM Soil Architecture Extended Pro PDF-Only Planning Report"
+    },
+    {
+      "id": "CONNECTORS-ROOT-CONTRACT",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/a642470327f32b5b76d81ef4ed996d65de4f6ba0/connectors/README.md"
+    },
+    {
+      "id": "ISRIC-SOILGRIDS-PRODUCT-CONTRACT",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/a642470327f32b5b76d81ef4ed996d65de4f6ba0/connectors/isric/soilgrids/README.md"
+    },
+    {
+      "id": "SOIL-DOMAIN-ARCHITECTURE",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/a642470327f32b5b76d81ef4ed996d65de4f6ba0/docs/domains/soil/ARCHITECTURE.md"
+    },
+    {
+      "id": "ISRIC-SOURCE-CATALOG",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/a642470327f32b5b76d81ef4ed996d65de4f6ba0/docs/sources/catalog/isric/README.md"
+    },
+    {
+      "id": "GENERATED-RECEIPT-SCHEMA",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/a642470327f32b5b76d81ef4ed996d65de4f6ba0/schemas/contracts/v1/receipts/generated_receipt.schema.json"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-12T15:54:00Z",
+  "emitter": "ai-builder/openai-gpt-5.6-pro",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored documentation update on a scoped review branch. The parent contract is reconciled with the merged SoilGrids child and current repository evidence, while the path-ratification, descriptor, SourceDescriptor-schema, and model-support conflicts remain visible. No live source, connector implementation, fixture, payload, policy decision, or public artifact was introduced. Human review remains pending; this receipt is well-formed but not merge-authorizing."
+}

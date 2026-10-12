@@ -1,0 +1,97 @@
+{
+  "receipt_id": "genrec-verifier-capability-portability-20260809",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/verifier-capability-portability.yml",
+    "contracts/evidence/verifier_capability_portability.md",
+    "docs/intake/exploratory/verifier-capability-portability-source-map.md",
+    "fixtures/contracts/v1/evidence/verifier_capability_portability/cases.json",
+    "schemas/contracts/v1/evidence/verifier_capability_portability.schema.json",
+    "tests/validators/test_validate_verifier_capability_portability.py",
+    "tools/validators/validate_verifier_capability_portability.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/verifier-capability-portability.yml": "sha256:b0de1905436e7d3f3a65dac15bfc202eec744ac766239b01cc3b22b424e07827",
+    "contracts/evidence/verifier_capability_portability.md": "sha256:b86a579f7584d79103742a83a222c22778d17fd30c8e87fda2c2583a84ea7c47",
+    "docs/intake/exploratory/verifier-capability-portability-source-map.md": "sha256:8234086b783041341f1ac0521cd320ebea48de37e37d09a3da4c02d0e34d1335",
+    "fixtures/contracts/v1/evidence/verifier_capability_portability/cases.json": "sha256:e70b5c58a6b9fb4681bbc3e9f8b4b5dbc64e45be8bc8abe4b2e08646e5b7f0c5",
+    "schemas/contracts/v1/evidence/verifier_capability_portability.schema.json": "sha256:20d58cc7e52450a79826414d52b00a47866383ee54f59c87e9432ee638bfa567",
+    "tests/validators/test_validate_verifier_capability_portability.py": "sha256:7c80969659115b4e10eeec53d1623a66ddaab797e5068abb3fff6aefe250e031",
+    "tools/validators/validate_verifier_capability_portability.py": "sha256:96f721fde594e5bd1cc3acfe5a3cdc6562f8509dbd10463a5acf9d2224c6570a"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-09"
+  },
+  "prompt_or_contract": "sha256:9702908e30e35e912bf3afc02f44f7d15679a4848d7312bf3b1573c0312c9551",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector corpus discovery",
+      "GitHub connector repository inspection and mutation",
+      "local deterministic Python validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Full_Atlas_seed_cards.md",
+      "New Ideas 4-14-26"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/1ab34018d7fb13ad41cfe8a79aed5d4763e58bf8/docs/kfm_full_atlas_seed_cards.md#KFM-TRIAD-067",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/1ab34018d7fb13ad41cfe8a79aed5d4763e58bf8/docs/kfm_full_atlas_seed_cards.md#KFM-CAND-0199",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/1ab34018d7fb13ad41cfe8a79aed5d4763e58bf8/docs/kfm_full_atlas_seed_cards.md#KFM-CAND-0200",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/1ab34018d7fb13ad41cfe8a79aed5d4763e58bf8/docs/kfm_full_atlas_seed_cards.md#KFM-CAND-0201",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/1ab34018d7fb13ad41cfe8a79aed5d4763e58bf8/docs/intake/exploratory/new-ideas-4-14-source-map.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/1ab34018d7fb13ad41cfe8a79aed5d4763e58bf8/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/1ab34018d7fb13ad41cfe8a79aed5d4763e58bf8/contracts/evidence/verification_state_history.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/1ab34018d7fb13ad41cfe8a79aed5d4763e58bf8/contracts/release/cosign_attestation_verification_plan.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/verifier-capability-portability.yml": "CONFIRMED",
+    "contracts/evidence/verifier_capability_portability.md": "PROPOSED",
+    "docs/intake/exploratory/verifier-capability-portability-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/evidence/verifier_capability_portability/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/evidence/verifier_capability_portability.schema.json": "PROPOSED",
+    "tests/validators/test_validate_verifier_capability_portability.py": "CONFIRMED",
+    "tools/validators/validate_verifier_capability_portability.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {"gate": "python-syntax-compilation", "outcome": "PASS"},
+    {"gate": "draft-2020-12-schema-meta-validation", "outcome": "PASS"},
+    {"gate": "focused-unittest-suite", "outcome": "PASS", "reason": "10 deterministic tests passed in the isolated authoring worktree."},
+    {"gate": "exact-fixture-replay", "outcome": "PASS", "reason": "18 exact cases passed across all four portability outcomes plus DENY cases."},
+    {"gate": "documentation-metadata-and-local-link-validation", "outcome": "PASS", "reason": "Both metadata blocks and all local links passed their bounded no-network validators."},
+    {"gate": "workflow-yaml-parse", "outcome": "PASS"},
+    {"gate": "no-network-and-no-cryptography-boundary", "outcome": "PASS"},
+    {"gate": "generated-receipt-artifact-hash-replay", "outcome": "PASS"},
+    {"gate": "hosted-exact-head-ci", "outcome": "SKIPPED", "reason": "Requires the pushed pull-request head."},
+    {"gate": "human-review", "outcome": "SKIPPED", "reason": "Pending on the draft pull request."}
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {"id": "full-atlas-verifier-portability-triad", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/1ab34018d7fb13ad41cfe8a79aed5d4763e58bf8/docs/kfm_full_atlas_seed_cards.md#KFM-TRIAD-067"},
+    {"id": "full-atlas-verifier-profile", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/1ab34018d7fb13ad41cfe8a79aed5d4763e58bf8/docs/kfm_full_atlas_seed_cards.md#KFM-CAND-0199"},
+    {"id": "full-atlas-verifier-review-surface", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/1ab34018d7fb13ad41cfe8a79aed5d4763e58bf8/docs/kfm_full_atlas_seed_cards.md#KFM-CAND-0200"},
+    {"id": "full-atlas-verifier-implementation-surface", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/1ab34018d7fb13ad41cfe8a79aed5d4763e58bf8/docs/kfm_full_atlas_seed_cards.md#KFM-CAND-0201"},
+    {"id": "new-ideas-verifier-portability-gap", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/1ab34018d7fb13ad41cfe8a79aed5d4763e58bf8/docs/intake/exploratory/new-ideas-4-14-source-map.md"},
+    {"id": "accepted-directory-governance", "validated": true, "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/1ab34018d7fb13ad41cfe8a79aed5d4763e58bf8/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"}
+  ],
+  "human_review": {"reviewer_ids": [], "state": "pending", "timestamp": null},
+  "override_record": null,
+  "created_at": "2026-08-10T02:36:15Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only verifier capability portability packet derived from Full Atlas triad KFM-TRIAD-067 and candidates KFM-CAND-0199 through KFM-CAND-0201 plus the Drive-derived New Ideas 4-14 source map. It compares explicit algorithm, canonicalization, trust/revocation, dependency, network, time, and resource declarations and reproduces PORTABLE, QUALIFIED, UNSUPPORTED, or INCOMPARABLE. It performs no cryptography, artifact resolution, trust loading, network use, policy, review, release, publication, or public-use authorization."
+}

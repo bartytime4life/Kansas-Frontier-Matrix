@@ -1,0 +1,187 @@
+{
+  "receipt_id": "genrec-policy-focus-readme-2a548ba0",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "policy/focus/README.md"
+  ],
+  "artifact_hashes": {
+    "policy/focus/README.md": "sha256:2a548ba0192e4e905b60bfb04e3728c8d3a00f2ef49d27e49375416a0e0c888c"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "Codex (GPT-5)",
+    "version": "2026-07-22"
+  },
+  "prompt_or_contract": "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "repository evidence inspection",
+      "attached doctrine inspection",
+      "Directory Rules and ADR/drift preflight",
+      "Markdown, link, hash, and JSON Schema validation",
+      "remote branch, read-back, and diff verification"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "Pasted text(68).txt",
+      "Directory Rules.pdf",
+      "Unified Implementation Architecture Build Manual.md"
+    ],
+    "evidence_hashes": [
+      "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+      "sha256:759de4fcb51cf0f55896089e397d9c47481d60d9fb80ac9a44d47b2f60a0a335",
+      "sha256:e92500f9b40007e8b69d183ecaa6247c542ffec25857875ecd2dbd00709785b1"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8db841822c111cb5b6477003dc72f0455f6c41ad/policy/focus/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8db841822c111cb5b6477003dc72f0455f6c41ad/policy/focus/focus_request.rego",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8db841822c111cb5b6477003dc72f0455f6c41ad/policy/focus/focus_response.rego",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8db841822c111cb5b6477003dc72f0455f6c41ad/policy/focus/citation_validation_required.rego",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8db841822c111cb5b6477003dc72f0455f6c41ad/policy/focus/finite_envelope_required.rego",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8db841822c111cb5b6477003dc72f0455f6c41ad/docs/architecture/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8db841822c111cb5b6477003dc72f0455f6c41ad/docs/registers/DRIFT_REGISTER.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8db841822c111cb5b6477003dc72f0455f6c41ad/docs/architecture/ui/FOCUS_FLOW.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8db841822c111cb5b6477003dc72f0455f6c41ad/docs/architecture/governed-ai/FOCUS_FLOW.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8db841822c111cb5b6477003dc72f0455f6c41ad/contracts/ui/focus_request.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8db841822c111cb5b6477003dc72f0455f6c41ad/contracts/ui/focus_response.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8db841822c111cb5b6477003dc72f0455f6c41ad/contracts/focus_mode/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8db841822c111cb5b6477003dc72f0455f6c41ad/contracts/policy/policy_input_bundle.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8db841822c111cb5b6477003dc72f0455f6c41ad/contracts/policy/policy_decision.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8db841822c111cb5b6477003dc72f0455f6c41ad/schemas/contracts/v1/focus/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8db841822c111cb5b6477003dc72f0455f6c41ad/schemas/contracts/v1/policy/policy_decision.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8db841822c111cb5b6477003dc72f0455f6c41ad/schemas/contracts/v1/runtime/runtime_response_envelope.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8db841822c111cb5b6477003dc72f0455f6c41ad/packages/policy-runtime/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8db841822c111cb5b6477003dc72f0455f6c41ad/tests/fixtures/focus/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8db841822c111cb5b6477003dc72f0455f6c41ad/.github/workflows/focus-mock-test.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/8db841822c111cb5b6477003dc72f0455f6c41ad/.github/workflows/policy-test.yml"
+    ]
+  },
+  "truth_labels": {
+    "policy/focus/README.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "task-contract-and-change-budget",
+      "outcome": "PASS",
+      "reason": "Bounded the task to one existing README and its required generated receipt on a review branch; no Rego, schema, contract, workflow, runtime, release, or publication change is included."
+    },
+    {
+      "gate": "repository-and-authority-preflight",
+      "outcome": "PASS",
+      "reason": "Verified repository identity, default branch, pinned base, target blob, policy ownership, authenticated write capability, exact branch-name availability, and absence of a matching open pull request."
+    },
+    {
+      "gate": "directory-rules-adr-and-drift-preflight",
+      "outcome": "PASS",
+      "reason": "Kept the revision under the existing canonical singular policy root and existing generated-receipt lane. The README discloses policy/focus versus runtime-policy placement tension, conflicting Directory Rules copies, overlapping Focus schemas, and proposed/draft ADR status without creating new authority."
+    },
+    {
+      "gate": "repository-evidence-grounding",
+      "outcome": "PASS",
+      "reason": "Inspected the Focus policy stubs, policy runtime and bundle posture, UI/Focus/policy/runtime contracts and schemas, architecture flows, fixture lane, workflows, contribution rules, CODEOWNERS, PR template, ADRs, and drift register at the pinned base."
+    },
+    {
+      "gate": "no-loss-and-truth-posture",
+      "outcome": "PASS",
+      "reason": "The prior README contained only a heading and greenfield-stub statement. The revision preserves scaffold status, explicitly separates current evidence from proposed behavior, and does not claim an evaluator, bundle, route, fixture suite, enforcement, release, or publication."
+    },
+    {
+      "gate": "markdown-structure-and-links",
+      "outcome": "PASS",
+      "reason": "Local checks confirmed 426 lines, one H1, balanced code fences, no trailing whitespace, and 21 relative links; every linked target was fetched successfully at the pinned base."
+    },
+    {
+      "gate": "workflow-trigger-threat-preflight",
+      "outcome": "PASS",
+      "reason": "Applicable pull-request workflows use GitHub-hosted runners with read-only contents permission and no observed secrets, OIDC, deployment, release, or publication authority. Major-version action tags rather than immutable SHAs remain a visible supply-chain gap."
+    },
+    {
+      "gate": "remote-readback-and-diff-scope",
+      "outcome": "PASS",
+      "reason": "Read back branch commit 957d59131104e019641bd439ce436501517ded52 and confirmed exact 31,026-character README equality, blob b67abf1b788790eedf77724b46e3022ea732c5f6, and a one-file base-to-head diff before adding this required receipt."
+    },
+    {
+      "gate": "security-rights-and-sensitivity",
+      "outcome": "PASS",
+      "reason": "The documentation adds no credentials, private payloads, living-person records, genomic data, or exact sensitive locations and preserves fail-closed disclosure rules without protected examples."
+    },
+    {
+      "gate": "executable-focus-policy",
+      "outcome": "SKIPPED",
+      "reason": "No Focus rule logic, accepted bundle, evaluator, adapter, runtime consumer, API route, schema authority, fixture suite, release integration, or publication path was established or changed."
+    },
+    {
+      "gate": "repository-native-tests",
+      "outcome": "SKIPPED",
+      "reason": "The API-only task had no mounted checkout, and the current repository workflows explicitly describe readiness holds rather than executable Focus-policy conformance. Remote pull-request checks remain authoritative for this branch."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "target-and-focus-policy-scaffolds",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/8db841822c111cb5b6477003dc72f0455f6c41ad/policy/focus/README.md"
+    },
+    {
+      "id": "directory-placement-and-authority",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/8db841822c111cb5b6477003dc72f0455f6c41ad/docs/architecture/directory-rules.md"
+    },
+    {
+      "id": "focus-governed-flow",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/8db841822c111cb5b6477003dc72f0455f6c41ad/docs/architecture/governed-ai/FOCUS_FLOW.md"
+    },
+    {
+      "id": "focus-contract-and-schema-conflict",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/8db841822c111cb5b6477003dc72f0455f6c41ad/schemas/contracts/v1/focus/README.md"
+    },
+    {
+      "id": "policy-decision-four-outcome-shape",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/8db841822c111cb5b6477003dc72f0455f6c41ad/schemas/contracts/v1/policy/policy_decision.schema.json"
+    },
+    {
+      "id": "policy-runtime-readiness-boundary",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/8db841822c111cb5b6477003dc72f0455f6c41ad/packages/policy-runtime/README.md"
+    },
+    {
+      "id": "focus-workflow-readiness-hold",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/8db841822c111cb5b6477003dc72f0455f6c41ad/.github/workflows/focus-mock-test.yml"
+    },
+    {
+      "id": "general-policy-workflow-readiness-hold",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/8db841822c111cb5b6477003dc72f0455f6c41ad/.github/workflows/policy-test.yml"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-22T14:21:21Z",
+  "emitter": "openai/codex",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "AI-authored repository-grounded revision of policy/focus/README.md on a scoped review branch. This receipt records provenance and validation boundaries, not approval, evidence truth, policy permission, runtime enforcement, release authority, or publication. The README SHA-256 was computed from prepared local bytes, and remote read-back confirmed exact equality before receipt creation. The change adds documentation and this required provenance receipt only. Human review remains pending."
+}

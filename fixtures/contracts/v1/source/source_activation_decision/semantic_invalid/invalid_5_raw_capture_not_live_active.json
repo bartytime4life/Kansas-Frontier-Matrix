@@ -1,0 +1,58 @@
+{
+  "object_type": "SourceActivationDecision",
+  "schema_version": "1.0.0",
+  "activation_decision_id": "activation:synthetic-live-source:20260803",
+  "source_id": "src:synthetic:live-source",
+  "source_descriptor_ref": "source-descriptor:src:synthetic:live-source:2.1.0",
+  "descriptor_version": "2.1.0",
+  "source_descriptor_digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+  "source_role_ref": "source-descriptor:src:synthetic:live-source:2.1.0#/source_role",
+  "operation": "initial_activation",
+  "context": {
+    "rights_status": "verified_open",
+    "sensitivity_class": "public",
+    "access_posture": "open",
+    "descriptor_review_state": "approved",
+    "registry_state": "active"
+  },
+  "decision": {
+    "route": "ADMIT_TO_RAW",
+    "activation_state": "live_candidate",
+    "activation_scope": "raw_capture",
+    "reason_codes": [
+      "INTAKE_ADMITTED"
+    ],
+    "obligations": [
+      "require_source_descriptor",
+      "record_source_head",
+      "require_digest_pinning",
+      "require_ingest_receipt",
+      "route_to_raw_candidate"
+    ],
+    "policy_decision_refs": [
+      "policy:synthetic:rights-open",
+      "policy:synthetic:sensitivity-public"
+    ],
+    "review_state": "approved",
+    "review_refs": [
+      "review:synthetic:live-source"
+    ],
+    "decision_authority_ref": "authority:synthetic:source-and-rights-stewards"
+  },
+  "timing": {
+    "created_at": "2026-08-03T12:00:00Z",
+    "effective_at": "2026-08-03T12:00:00Z",
+    "expires_at": "2026-09-03T12:00:00Z",
+    "hold_expires_at": null
+  },
+  "lineage": {
+    "supersedes": null,
+    "superseded_by": null
+  },
+  "governance": {
+    "public_use_allowed": false,
+    "release_ref": null,
+    "spec_hash": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+    "authority_created": false
+  }
+}

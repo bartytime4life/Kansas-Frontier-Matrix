@@ -1,0 +1,12 @@
+# Generated build outputs are intentionally replaceable.
+# Keep the scaffold and stable build-environment metadata in source control.
+
+*
+!*/
+!.gitignore
+!README.md
+!dist/README.md
+!env/README.md
+!env/build-env.json
+!env/tool-versions.yaml
+!pdf/README.md

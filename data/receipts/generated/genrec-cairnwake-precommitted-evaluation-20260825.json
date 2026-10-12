@@ -1,0 +1,108 @@
+{
+  "artifact_hashes": {
+    ".github/workflows/precommitted-evaluation-record.yml": "sha256:ec07ffb22b43b327fec2a7ac28f673467bcea1f0343cfaf9d5d51255a89665e6",
+    "contracts/validation/precommitted_evaluation_record.md": "sha256:7c8e96ff8078a17b032e1b6227e93fb23164e3a21b3b9bf3f8fbdaa1ae5c9716",
+    "docs/intake/exploratory/cairnwake-precommitted-evaluation-source-map.md": "sha256:a41426166431b07d824b4fa3ebf80ef10a7cc973b1092c64bfc4ed4990de424f",
+    "fixtures/contracts/v1/validation/precommitted_evaluation_record/cases.json": "sha256:f0dfe52e37d2b65de0b598a5b6d547112a396abcdd5aace2fc3a8f0fe3f233f1",
+    "schemas/contracts/v1/validation/precommitted_evaluation_record.schema.json": "sha256:defe240bacfb5bfa34a738c1efd22f216b31aeeeadead82614243987e7668d83",
+    "tests/validators/test_validate_precommitted_evaluation_record.py": "sha256:d25d2e457f56799c69aba085a47d59c0b26bc7b35b18f3ddd5aae102d2996723",
+    "tools/generators/precommitted_evaluation_record/build_precommitted_evaluation_record.py": "sha256:adb1058cb25b88dae4f2507e0f13b4d5708adde9101b94350e88a8db0033565a",
+    "tools/validators/validate_precommitted_evaluation_record.py": "sha256:995748156efe2a72e7d50df60b0173ced07fae9c81bac744dae2fef1a6c3c57d"
+  },
+  "artifact_paths": [
+    ".github/workflows/precommitted-evaluation-record.yml",
+    "contracts/validation/precommitted_evaluation_record.md",
+    "docs/intake/exploratory/cairnwake-precommitted-evaluation-source-map.md",
+    "fixtures/contracts/v1/validation/precommitted_evaluation_record/cases.json",
+    "schemas/contracts/v1/validation/precommitted_evaluation_record.schema.json",
+    "tests/validators/test_validate_precommitted_evaluation_record.py",
+    "tools/generators/precommitted_evaluation_record/build_precommitted_evaluation_record.py",
+    "tools/validators/validate_precommitted_evaluation_record.py"
+  ],
+  "citations": [
+    {
+      "evidence_ref": "https://cairnwake.com/experiments.html",
+      "id": "SRC-CAIRNWAKE-SEALED-EXPERIMENTS",
+      "validated": true
+    },
+    {
+      "evidence_ref": "https://cairnwake.com/answers.html",
+      "id": "SRC-CAIRNWAKE-SCORED-ANSWERS",
+      "validated": true
+    },
+    {
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "id": "ADR-0029-directory-rules-v2",
+      "validated": true
+    }
+  ],
+  "contract_version": "3.0.0",
+  "created_at": "2026-08-25T20:15:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "inputs": {
+    "attached_docs": [],
+    "evidence_refs": [
+      "https://cairnwake.com/experiments.html",
+      "https://cairnwake.com/answers.html",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@46d50eaa9ac2b6ef11d83c1ed7b5bd459a56f31e",
+      "repo:contracts/validation/pipeline_replay_assessment.md@46d50eaa9ac2b6ef11d83c1ed7b5bd459a56f31e"
+    ]
+  },
+  "links": {
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null,
+    "pr_number": null
+  },
+  "model_identity": {
+    "model": "GPT-5.6 Pro",
+    "provider": "OpenAI",
+    "version": "2026-08-25"
+  },
+  "notes": "Authoring provenance for an additive, inactive, fixture-only PrecommittedEvaluationRecord candidate derived from read-only external idea sources. The receipt excludes itself from artifact hashes. The profile does not publish a commitment, collect observations, run an experiment, update a scoreboard, or create merge, release, deployment, publication, or public-use authority. Base main was 46d50eaa9ac2b6ef11d83c1ed7b5bd459a56f31e.",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "tools_enabled": ["GitHub connector", "local deterministic validation"],
+    "top_p": null
+  },
+  "policy_decisions": ["docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"],
+  "prompt_or_contract": "sha256:de19993f9c8ddc9dd74711d08d9aa44a0c8a9aa28f1db35640a3888279b04e64",
+  "receipt_id": "genrec-cairnwake-precommitted-evaluation-20260825",
+  "truth_labels": {
+    ".github/workflows/precommitted-evaluation-record.yml": "PROPOSED",
+    "contracts/validation/precommitted_evaluation_record.md": "PROPOSED",
+    "docs/intake/exploratory/cairnwake-precommitted-evaluation-source-map.md": "PROPOSED",
+    "fixtures/contracts/v1/validation/precommitted_evaluation_record/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/validation/precommitted_evaluation_record.schema.json": "PROPOSED",
+    "tests/validators/test_validate_precommitted_evaluation_record.py": "CONFIRMED",
+    "tools/generators/precommitted_evaluation_record/build_precommitted_evaluation_record.py": "PROPOSED",
+    "tools/validators/validate_precommitted_evaluation_record.py": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "json-shape-and-python-compile",
+      "outcome": "PASS",
+      "reason": "Schema and fixtures parsed as JSON; builder, validator, and focused test module compiled."
+    },
+    {
+      "gate": "deterministic-fixture-builder",
+      "outcome": "PASS",
+      "reason": "Representative valid and incomplete-outcome fixtures rendered deterministically and parsed as JSON."
+    },
+    {
+      "gate": "focused-jsonschema-tests",
+      "outcome": "SKIPPED",
+      "reason": "The scratch runtime does not include the repository test dependency set; the pinned read-only workflow installs it and runs the focused suite."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Pending branch and draft pull-request creation."
+    }
+  ]
+}

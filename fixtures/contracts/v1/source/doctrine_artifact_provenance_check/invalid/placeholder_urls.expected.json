@@ -1,0 +1,13 @@
+{
+  "check": "required_doctrine_artifact_provenance",
+  "entry_count": 3,
+  "invalid_status": [],
+  "invalid_urls": [],
+  "missing_fields": [],
+  "placeholder_urls": [
+    "KFM_Pass_18_Idea_Index_Category_Atlas_and_Expansion_Dossier.pdf",
+    "Master_MapLibre_Components-Functions-Features.pdf",
+    "Kansas_Frontier_Matrix_Definitive_Greenfield_Building_Plan_v1_1.pdf"
+  ],
+  "result": "fail"
+}

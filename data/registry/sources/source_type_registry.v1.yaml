@@ -1,0 +1,78 @@
+# Source Type Registry v1 (starter)
+# Status: PROPOSED companion registry for SourceDescriptor v1.
+# Purpose: Human-readable explanation of source_type and source_role values.
+# Machine shape: schemas/contracts/v1/sources/source_descriptor.schema.json
+schema_version: v1
+object_type: SourceTypeRegistry
+source_types:
+  official_government_dataset:
+    intent: Dataset published by a government agency or office.
+    caution: May be authoritative only for specific fields and time ranges.
+  regulatory_record:
+    intent: Regulatory, administrative, or compliance context.
+    caution: Do not treat as observed event evidence unless the descriptor allows that role.
+  legal_record:
+    intent: Legal instrument, filing, court, deed, title, or statutory record.
+    caution: Legal truth depends on jurisdiction, time, completeness, and source role.
+  assessor_tax_record:
+    intent: Assessment or tax administration record.
+    caution: Not title truth by default.
+  scientific_observation:
+    intent: Instrumented, field, or research observation.
+    caution: Preserve method, QC flags, time, uncertainty, and source identifiers.
+  operational_feed:
+    intent: Time-sensitive operational status feed.
+    caution: Not life-safety authority unless explicitly reviewed and allowed; KFM generally labels as context.
+  remote_sensing_product:
+    intent: Imagery, raster, LiDAR, radar, COG, or EO-derived product.
+    caution: Preserve quality masks, latency, lineage, CRS/resolution, and processing chain.
+  model_output:
+    intent: Modeled prediction, estimate, simulation, index, or suitability surface.
+    caution: Interpretive derivative, not observed truth.
+  community_observation:
+    intent: Volunteer or public observation submission.
+    caution: Requires review, bias/effort context, and sensitivity controls.
+  occurrence_aggregator:
+    intent: Aggregated species or event occurrence platform.
+    caution: Aggregator is not automatically the original authority.
+  historical_archive:
+    intent: Historic map, newspaper, collection, report, oral history, or archive.
+    caution: Rights, interpretation, temporal context, and georeferencing uncertainty matter.
+  field_survey:
+    intent: Steward, researcher, or KFM field collection.
+    caution: Field record is candidate evidence until descriptor, review, rights, and sensitivity close.
+  steward_controlled_record:
+    intent: Record controlled by a steward, tribe, agency, landholder, or rights holder.
+    caution: Fail closed on public release until steward posture is explicit.
+  derived_index:
+    intent: Rebuildable index, ranking, score, crosswalk, graph, or vector/search projection.
+    caution: Derived carrier, not root truth.
+  map_artifact:
+    intent: Tile archive, layer, map style, scene, or rendered map asset.
+    caution: Public map artifacts require release manifest, proof, policy, and rollback linkage.
+  bibliography_or_report:
+    intent: Written report, bibliography, paper, or citation-bearing reference.
+    caution: Supports citation and interpretation; may not authorize source data reuse.
+  web_service_endpoint:
+    intent: Service endpoint used for source discovery, metadata, query, or download.
+    caution: Endpoint availability is not source admissibility.
+  synthetic_fixture:
+    intent: No-network fixture for schema, validator, and CI tests.
+    caution: Must never support real-world public claims.
+source_roles:
+  authoritative_for_claim: Supports a claim within stated limits.
+  regulatory_context: Supports regulatory context only.
+  legal_context: Supports legal context only.
+  observation: Supports observed measurement or record.
+  occurrence_evidence: Supports occurrence evidence subject to review and sensitivity.
+  aggregator: Carries aggregated records; original authority may differ.
+  operational_context: Carries operational status context; generally not life-safety authority.
+  remote_sensing_observation: Carries remote-sensing observation with quality and lineage labels.
+  model_context: Carries modeled/interpreted context.
+  candidate_signal: Candidate only; cannot confirm without review.
+  historical_context: Supports historical context or interpretation.
+  corroborating_context: Corroborates but does not stand alone.
+  derived_public_product: Public-safe derived output after transforms.
+  steward_review_source: Requires steward review before use or release.
+  citation_source: Supports citation and attribution.
+  fixture_only: Fixture-only; no public claim authority.

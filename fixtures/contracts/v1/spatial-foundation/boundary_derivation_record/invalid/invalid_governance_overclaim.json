@@ -1,0 +1,136 @@
+{
+  "object_type": "BoundaryDerivationRecord",
+  "schema_version": "1.0.0",
+  "derivation_id": "boundary-derivation:accepted-for-analysis-0001",
+  "hash_profile": "kfm-fixture-json-v1",
+  "spec_hash": "sha256:c62d56f5c7b54e402498f9b92595574eff603aeddc74b504506261330605599d",
+  "source_context": {
+    "source_descriptor_refs": [
+      "kfm://source/blm-cadnsdi-synthetic",
+      "kfm://source/glo-plat-synthetic"
+    ],
+    "source_record_refs": [
+      "kfm://source-record/cadnsdi-section-synthetic",
+      "kfm://source-record/glo-plat-synthetic"
+    ],
+    "source_roles": [
+      "CONTROL_GEOMETRY",
+      "HISTORICAL_SURVEY"
+    ],
+    "survey_generation": "synthetic-comparison-v1",
+    "legal_context": "NON_TITLE_CONTEXT_ONLY"
+  },
+  "controls": [
+    {
+      "control_id": "survey-control:corner-a-0001",
+      "observation_ref": "kfm://survey-observation/corner-a-0001",
+      "control_status": "OBSERVED",
+      "coordinate_ref": "kfm://synthetic-coordinate/corner-a-0001",
+      "method": "synthetic-control-observation",
+      "observed_at": "2026-04-25T09:00:00Z",
+      "uncertainty_meters": 1.5,
+      "evidence_refs": [
+        "kfm://evidence/synthetic-control-a"
+      ]
+    },
+    {
+      "control_id": "survey-control:corner-b-0001",
+      "observation_ref": "kfm://survey-observation/corner-b-0001",
+      "control_status": "REESTABLISHED",
+      "coordinate_ref": "kfm://synthetic-coordinate/corner-b-0001",
+      "method": "synthetic-record-reconstruction",
+      "observed_at": "2026-04-25T09:01:00Z",
+      "uncertainty_meters": 2.0,
+      "evidence_refs": [
+        "kfm://evidence/synthetic-control-b"
+      ]
+    },
+    {
+      "control_id": "survey-control:corner-c-0001",
+      "observation_ref": "kfm://survey-observation/corner-c-0001",
+      "control_status": "MONUMENTED",
+      "coordinate_ref": "kfm://synthetic-coordinate/corner-c-0001",
+      "method": "synthetic-control-observation",
+      "observed_at": "2026-04-25T09:02:00Z",
+      "uncertainty_meters": 1.0,
+      "evidence_refs": [
+        "kfm://evidence/synthetic-control-c"
+      ]
+    }
+  ],
+  "derivation": {
+    "method_id": "derivation-method:least-squares-synthetic-v1",
+    "method_version": "1.0.0",
+    "parameters_digest": "sha256:ace3da1454c20b4416376f107f4c35e079ba57e7b4907edafa0eec4c03f8662f",
+    "adjustment_type": "LEAST_SQUARES",
+    "input_control_ids": [
+      "survey-control:corner-a-0001",
+      "survey-control:corner-b-0001",
+      "survey-control:corner-c-0001"
+    ],
+    "residual_summary": {
+      "rmse_meters": 1.25,
+      "max_residual_meters": 2.1,
+      "point_count": 3,
+      "units": "meters"
+    },
+    "output_geometry_ref": "kfm://synthetic-geometry/derived-boundary-0001",
+    "output_geometry_digest": "sha256:2a2fead7fd8cb2cf9badf425d4abbebefca18acbbbdf9be6371ec58180e51687"
+  },
+  "lineage": {
+    "input_refs": [
+      "kfm://source-record/cadnsdi-section-synthetic",
+      "kfm://source-record/glo-plat-synthetic"
+    ],
+    "transform_receipt_ref": "kfm://transform-receipt/boundary-0001",
+    "derived_from_refs": [
+      "kfm://survey-observation/corner-a-0001",
+      "kfm://survey-observation/corner-b-0001",
+      "kfm://survey-observation/corner-c-0001"
+    ],
+    "supersedes_derivation_ref": null
+  },
+  "limitations": {
+    "legal_boundary_authority": false,
+    "title_or_ownership_authority": false,
+    "parcel_authority": false,
+    "source_geometry_overwritten": false,
+    "use_class": "ANALYTIC_DERIVATION_ONLY",
+    "limitation_codes": [
+      "NON_TITLE_CONTEXT",
+      "SYNTHETIC_FIXTURE_ONLY"
+    ]
+  },
+  "review": {
+    "outcome": "ACCEPTED_FOR_ANALYSIS",
+    "reviewed_at": "2026-04-25T10:30:00Z",
+    "review_record_ref": "kfm://review/boundary-derivation-0001",
+    "analysis_use_allowed": true,
+    "unresolved": false,
+    "reason_codes": [
+      "RESIDUALS_REVIEWED"
+    ],
+    "evidence_refs": [
+      "kfm://evidence/boundary-review-0001"
+    ]
+  },
+  "provenance": {
+    "recorded_at": "2026-04-25T11:00:00Z",
+    "run_receipt_ref": "kfm://run/boundary-derivation-0001",
+    "input_refs": [
+      "kfm://source-record/cadnsdi-section-synthetic",
+      "kfm://source-record/glo-plat-synthetic"
+    ]
+  },
+  "governance": {
+    "source_admitted": false,
+    "evidence_closure_claimed": false,
+    "policy_evaluated": false,
+    "legal_boundary_certified": true,
+    "promotion_authorized": false,
+    "release_authorized": false,
+    "publication_authorized": false,
+    "public_use_allowed": false,
+    "release_ref": null
+  }
+}

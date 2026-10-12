@@ -1,0 +1,348 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kansasfrontiermatrix.org/schemas/contracts/v1/policy/policy_input_bundle_profile_v1.schema.json",
+  "title": "PolicyInputBundleProfileV1",
+  "description": "Fixture-first explicit policy input profile for governed exposure and release-adjacent checks.",
+  "type": "object",
+  "additionalProperties": false,
+  "x-kfm": {
+    "contract_doc": "contracts/policy/policy_input_bundle_profile_v1.md",
+    "parent_contract": "contracts/policy/policy_input_bundle.md",
+    "fixtures_root": "fixtures/contracts/v1/policy/policy_input_bundle_profile_v1/",
+    "validator": "tools/validators/policy/validate_policy_input_bundle_profile_v1.py",
+    "vocabulary": "policy/decision/vocabulary.v1.json",
+    "status": "PROPOSED_INACTIVE",
+    "execution_mode": "FIXTURE_ONLY"
+  },
+  "required": [
+    "object_type",
+    "profile_version",
+    "bundle_id",
+    "operation",
+    "audience",
+    "subject",
+    "evidence",
+    "source",
+    "rights",
+    "sensitivity",
+    "review",
+    "release",
+    "evaluator",
+    "governance"
+  ],
+  "properties": {
+    "object_type": {
+      "const": "PolicyInputBundle"
+    },
+    "profile_version": {
+      "const": "v1"
+    },
+    "bundle_id": {
+      "type": "string",
+      "pattern": "^policy-input:[a-z0-9][a-z0-9_.:-]{7,127}$"
+    },
+    "operation": {
+      "type": "string",
+      "enum": [
+        "ANSWER",
+        "RENDER",
+        "EXPORT",
+        "PROMOTE",
+        "RELEASE"
+      ]
+    },
+    "audience": {
+      "type": "string",
+      "enum": [
+        "PUBLIC",
+        "RESTRICTED_REVIEW",
+        "STEWARD",
+        "INTERNAL",
+        "AI_ADAPTER",
+        "MAP_RUNTIME",
+        "RELEASE_GATE"
+      ]
+    },
+    "subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "object_ref",
+        "domain",
+        "lifecycle_phase"
+      ],
+      "properties": {
+        "object_ref": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 256
+        },
+        "domain": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_-]{1,63}$"
+        },
+        "lifecycle_phase": {
+          "type": "string",
+          "enum": [
+            "RAW",
+            "WORK",
+            "QUARANTINE",
+            "PROCESSED",
+            "CATALOG",
+            "TRIPLET",
+            "PUBLISHED"
+          ]
+        }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evidence_refs",
+        "resolution_status",
+        "citation_validation"
+      ],
+      "properties": {
+        "evidence_refs": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 256
+          }
+        },
+        "resolution_status": {
+          "type": "string",
+          "enum": [
+            "RESOLVED",
+            "UNRESOLVED",
+            "STALE",
+            "CONFLICTED"
+          ]
+        },
+        "citation_validation": {
+          "type": "string",
+          "enum": [
+            "PASS",
+            "FAIL",
+            "NOT_APPLICABLE"
+          ]
+        }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_descriptor_refs",
+        "source_roles"
+      ],
+      "properties": {
+        "source_descriptor_refs": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 256
+          }
+        },
+        "source_roles": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "enum": [
+              "ADVISORY",
+              "CLASSIFICATION",
+              "CONTEXT",
+              "FORECAST",
+              "MODEL",
+              "OBSERVATION"
+            ]
+          }
+        }
+      }
+    },
+    "rights": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "redistribution_allowed",
+        "attribution_required"
+      ],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "CLEAR",
+            "RESTRICTED",
+            "UNKNOWN"
+          ]
+        },
+        "redistribution_allowed": {
+          "type": "boolean"
+        },
+        "attribution_required": {
+          "type": "boolean"
+        }
+      }
+    },
+    "sensitivity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "exact_location",
+        "transform_refs"
+      ],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "PUBLIC",
+            "GENERALIZED",
+            "RESTRICTED",
+            "QUARANTINE",
+            "UNKNOWN"
+          ]
+        },
+        "exact_location": {
+          "type": "boolean"
+        },
+        "transform_refs": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 256
+          }
+        }
+      }
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state",
+        "review_refs"
+      ],
+      "properties": {
+        "state": {
+          "type": "string",
+          "enum": [
+            "NOT_REQUIRED",
+            "PENDING",
+            "APPROVED",
+            "CHANGES_REQUESTED"
+          ]
+        },
+        "review_refs": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 256
+          }
+        }
+      }
+    },
+    "release": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state",
+        "release_manifest_ref",
+        "rollback_ref"
+      ],
+      "properties": {
+        "state": {
+          "type": "string",
+          "enum": [
+            "NOT_APPLICABLE",
+            "CANDIDATE",
+            "RELEASED",
+            "CORRECTED",
+            "WITHDRAWN"
+          ]
+        },
+        "release_manifest_ref": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 3,
+          "maxLength": 256
+        },
+        "rollback_ref": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 3,
+          "maxLength": 256
+        }
+      }
+    },
+    "evaluator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "bundle_ref",
+        "bundle_version",
+        "fail_closed"
+      ],
+      "properties": {
+        "bundle_ref": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 256
+        },
+        "bundle_version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "fail_closed": {
+          "const": true
+        }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "hidden_fetch_allowed",
+        "policy_evaluated",
+        "promotion_authorized",
+        "release_authorized",
+        "publication_authorized"
+      ],
+      "properties": {
+        "hidden_fetch_allowed": {
+          "const": false
+        },
+        "policy_evaluated": {
+          "const": false
+        },
+        "promotion_authorized": {
+          "const": false
+        },
+        "release_authorized": {
+          "const": false
+        },
+        "publication_authorized": {
+          "const": false
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,267 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.kfm.local/contracts/v1/source/source_event_run_receipt.schema.json",
+  "title": "SourceEventRunReceiptCandidate",
+  "description": "Fixture-only signed-shape receipt candidate binding one source event, one deterministic prefilter output, and one finite admission disposition. The fixture signature is not production cryptographic attestation and creates no operational authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "execution_mode",
+    "receipt_type",
+    "receipt_id",
+    "spec_hash",
+    "event_ref",
+    "event_payload_spec_hash",
+    "prefilter_ref",
+    "prefilter_spec_hash",
+    "recorded_at",
+    "decision",
+    "target_lane",
+    "policy_summary",
+    "review_required",
+    "reason_codes",
+    "signature",
+    "claims"
+  ],
+  "properties": {
+    "object_type": {
+      "const": "SourceEventRunReceiptCandidate"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "profile": {
+      "const": "kfm.source_event_run_receipt_candidate.v1"
+    },
+    "execution_mode": {
+      "const": "FIXTURE_ONLY"
+    },
+    "receipt_type": {
+      "const": "kfm.source_event_run_receipt_candidate.v1"
+    },
+    "receipt_id": {
+      "type": "string",
+      "pattern": "^kfm:event-run-receipt:sha256:[0-9a-f]{64}$"
+    },
+    "spec_hash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "event_ref": {
+      "type": "string",
+      "pattern": "^kfm:source-event:sha256:[0-9a-f]{64}$"
+    },
+    "event_payload_spec_hash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "prefilter_ref": {
+      "type": "string",
+      "pattern": "^kfm:source-prefilter:sha256:[0-9a-f]{64}$"
+    },
+    "prefilter_spec_hash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "recorded_at": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "(?:Z|[+-][0-9]{2}:[0-9]{2})$"
+    },
+    "decision": {
+      "enum": [
+        "ALLOW",
+        "HOLD",
+        "QUARANTINE",
+        "REJECT",
+        "NO_ACTION"
+      ]
+    },
+    "target_lane": {
+      "enum": [
+        "RAW",
+        "WORK",
+        "QUARANTINE",
+        "NONE"
+      ]
+    },
+    "policy_summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "outcome",
+        "rights_state",
+        "sensitivity_state",
+        "policy_refs"
+      ],
+      "properties": {
+        "outcome": {
+          "enum": [
+            "ALLOW",
+            "HOLD",
+            "DENY",
+            "NOT_EVALUATED"
+          ]
+        },
+        "rights_state": {
+          "enum": [
+            "KNOWN",
+            "UNKNOWN",
+            "CONFLICTED"
+          ]
+        },
+        "sensitivity_state": {
+          "enum": [
+            "KNOWN",
+            "UNKNOWN",
+            "CONFLICTED"
+          ]
+        },
+        "policy_refs": {
+          "type": "array",
+          "maxItems": 32,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 640,
+            "pattern": "\\S"
+          }
+        }
+      }
+    },
+    "review_required": {
+      "type": "boolean"
+    },
+    "reason_codes": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 16,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^[A-Z][A-Z0-9_]{2,95}$"
+      }
+    },
+    "signature": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "profile",
+        "signer_ref",
+        "signed_spec_hash",
+        "signature_value",
+        "verification_status",
+        "production_signature_claimed"
+      ],
+      "properties": {
+        "profile": {
+          "const": "kfm.fixture.sha256-attestation.v1"
+        },
+        "signer_ref": {
+          "type": "string",
+          "pattern": "^kfm://fixture/signer/[^\\s]+$",
+          "maxLength": 640
+        },
+        "signed_spec_hash": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "signature_value": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "verification_status": {
+          "const": "FIXTURE_VERIFIED"
+        },
+        "production_signature_claimed": {
+          "const": false
+        }
+      }
+    },
+    "claims": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "operational_effect",
+        "raw_write_allowed",
+        "raw_write_performed",
+        "work_write_performed",
+        "quarantine_write_performed",
+        "authority_created",
+        "evidence_created",
+        "proof_created",
+        "policy_authority_created",
+        "review_approved",
+        "promoted",
+        "released",
+        "published",
+        "network_access_performed"
+      ],
+      "properties": {
+        "operational_effect": {
+          "const": "NONE_FIXTURE_ONLY"
+        },
+        "raw_write_allowed": {
+          "const": false
+        },
+        "raw_write_performed": {
+          "const": false
+        },
+        "work_write_performed": {
+          "const": false
+        },
+        "quarantine_write_performed": {
+          "const": false
+        },
+        "authority_created": {
+          "const": false
+        },
+        "evidence_created": {
+          "const": false
+        },
+        "proof_created": {
+          "const": false
+        },
+        "policy_authority_created": {
+          "const": false
+        },
+        "review_approved": {
+          "const": false
+        },
+        "promoted": {
+          "const": false
+        },
+        "released": {
+          "const": false
+        },
+        "published": {
+          "const": false
+        },
+        "network_access_performed": {
+          "const": false
+        }
+      }
+    }
+  },
+  "x-kfm": {
+    "status": "PROPOSED",
+    "contract_doc": "contracts/source/source_event_admission.md",
+    "fixtures_root": "fixtures/contracts/v1/source/source_event_admission/",
+    "validator": "tools/validators/validate_source_event_admission.py",
+    "tests": "tests/validators/test_validate_source_event_admission.py",
+    "authority": "fixture_only_source_event_run_receipt_candidate",
+    "signature_profile": "fixture_only_not_production_attestation",
+    "non_effects": [
+      "no_production_signature_claim",
+      "no_source_activation",
+      "no_raw_or_lifecycle_write",
+      "no_evidence_or_proof_creation",
+      "no_policy_or_review_authority",
+      "no_promotion_release_or_publication"
+    ]
+  }
+}

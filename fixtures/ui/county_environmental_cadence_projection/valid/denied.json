@@ -1,0 +1,16 @@
+{
+  "profile": "kfm.explorer.county-environmental-cadence.fixture.v1",
+  "calendar_id": "kfm:county-environmental-cadence:synthetic-denied",
+  "outcome": "DENY",
+  "reason_code": "POLICY_DENIED",
+  "status": "PROPOSED_INACTIVE",
+  "execution_mode": "FIXTURE_ONLY",
+  "county": null,
+  "week": null,
+  "source_availability_watchlist_ref": null,
+  "lanes": [],
+  "summary": null,
+  "interpretation_authorized": false,
+  "publication_authorized": false,
+  "public_use_allowed": false
+}

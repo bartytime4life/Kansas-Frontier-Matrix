@@ -1,0 +1,57 @@
+{
+  "schema_version": "v1",
+  "suite": "source-intake-record",
+  "cases": [
+    {
+      "case_id": "valid-no-material-change",
+      "input": "valid/valid_no_material_change.json",
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "valid-proposed-work-record",
+      "input": "valid/valid_proposed_work_record.json",
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "valid-quarantine-blocking",
+      "input": "valid/valid_quarantine_blocking.json",
+      "expected_outcome": "PASS",
+      "expected_findings": []
+    },
+    {
+      "case_id": "invalid-direct-publish",
+      "input": "invalid/invalid_direct_publish.json",
+      "expected_outcome": "ERROR",
+      "expected_findings": [
+        "SCHEMA_INVALID"
+      ]
+    },
+    {
+      "case_id": "invalid-resolved-without-bundle-ref",
+      "input": "invalid/invalid_resolved_without_bundle_ref.json",
+      "expected_outcome": "ERROR",
+      "expected_findings": [
+        "SCHEMA_INVALID"
+      ]
+    },
+    {
+      "case_id": "semantic-candidate-on-no-change",
+      "input": "semantic_invalid/semantic_candidate_delta_on_no_change.json",
+      "expected_outcome": "ERROR",
+      "expected_findings": [
+        "CANDIDATE_DELTA_DISPOSITION_INVALID",
+        "NO_MATERIAL_CHANGE_INVALID"
+      ]
+    },
+    {
+      "case_id": "semantic-quarantine-not-blocking",
+      "input": "semantic_invalid/semantic_quarantine_without_blocking.json",
+      "expected_outcome": "ERROR",
+      "expected_findings": [
+        "QUARANTINE_MATERIALITY_INVALID"
+      ]
+    }
+  ]
+}

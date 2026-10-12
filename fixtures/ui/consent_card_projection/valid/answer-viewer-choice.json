@@ -1,0 +1,18 @@
+{
+  "profile": "kfm.explorer.consent-card.public-safe.v1",
+  "id": "kfm:consent-card:synthetic:soil-moisture",
+  "outcome": "ANSWER",
+  "reason_code": "CONSENT_CARD_READY",
+  "layer_ref": "kfm://layer/synthetic/soil-moisture-generalized",
+  "layer_label": "Synthetic generalized soil-moisture layer",
+  "basis": "Viewer acknowledgement is required before this synthetic, generalized layer is shown.",
+  "scope": [
+    "View aggregate values only",
+    "No exact private locations",
+    "No redistribution from this viewer surface"
+  ],
+  "expires_at": "2099-08-08T00:00:00Z",
+  "subject_consent_state": "NOT_APPLICABLE",
+  "obligation_set_ref": "kfm://policy/obligation-set/c05e17c05e17c05e17c05e17",
+  "policy_decision_ref": "kfm://policy/decision/synthetic-consent-card"
+}

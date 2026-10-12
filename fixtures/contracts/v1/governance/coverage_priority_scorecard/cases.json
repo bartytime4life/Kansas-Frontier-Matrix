@@ -1,0 +1,268 @@
+{
+  "profile": "kfm.governance.coverage-priority-scorecard.fixture.v1",
+  "base": {
+    "object_type": "CoveragePriorityScorecard",
+    "schema_version": "0.1.0",
+    "profile": "kfm.governance.coverage-priority-scorecard.fixture.v1",
+    "scorecard_id": "AUTO",
+    "subject_scope": "SYNTHETIC_AREA_SET",
+    "weight_profiles": [
+      {
+        "profile_id": "DENSITY_LED",
+        "profile_version": "1.0.0",
+        "weights": {
+          "data_richness": 260,
+          "recency": 140,
+          "sampling_effort": 150,
+          "source_diversity": 90,
+          "geographic_coverage_gap": 50,
+          "uncertainty_reduction": 70,
+          "sensitivity_burden": 60,
+          "steward_capacity": 70,
+          "public_value": 70,
+          "review_cost": 40
+        },
+        "missingness": {"strategy": "PENALIZE", "penalty_points": 5000},
+        "source_role_cap_basis_points": 7000
+      },
+      {
+        "profile_id": "GAP_LED",
+        "profile_version": "1.0.0",
+        "weights": {
+          "data_richness": 40,
+          "recency": 60,
+          "sampling_effort": 40,
+          "source_diversity": 80,
+          "geographic_coverage_gap": 260,
+          "uncertainty_reduction": 200,
+          "sensitivity_burden": 70,
+          "steward_capacity": 100,
+          "public_value": 100,
+          "review_cost": 50
+        },
+        "missingness": {"strategy": "PENALIZE", "penalty_points": 5000},
+        "source_role_cap_basis_points": 7000
+      }
+    ],
+    "candidates": [
+      {
+        "area_ref": "kfm:fixture:area:data-rich-alpha",
+        "metrics": {
+          "data_richness": 95,
+          "recency": 90,
+          "sampling_effort": 90,
+          "source_diversity": 80,
+          "geographic_coverage_gap": 10,
+          "uncertainty_reduction": 30,
+          "sensitivity_burden": 20,
+          "steward_capacity": 80,
+          "public_value": 75,
+          "review_cost": 20
+        },
+        "missing_metrics": [],
+        "source_role_shares": [
+          {"role_code": "PRIMARY", "share_basis_points": 5000},
+          {"role_code": "CORROBORATIVE", "share_basis_points": 3000},
+          {"role_code": "CONTEXT_ONLY", "share_basis_points": 2000}
+        ]
+      },
+      {
+        "area_ref": "kfm:fixture:area:coverage-gap-beta",
+        "metrics": {
+          "data_richness": 25,
+          "recency": 30,
+          "sampling_effort": 20,
+          "source_diversity": 30,
+          "geographic_coverage_gap": 95,
+          "uncertainty_reduction": 90,
+          "sensitivity_burden": 25,
+          "steward_capacity": 65,
+          "public_value": 80,
+          "review_cost": 45
+        },
+        "missing_metrics": [],
+        "source_role_shares": [
+          {"role_code": "PRIMARY", "share_basis_points": 4000},
+          {"role_code": "CORROBORATIVE", "share_basis_points": 3500},
+          {"role_code": "CONTEXT_ONLY", "share_basis_points": 2500}
+        ]
+      },
+      {
+        "area_ref": "kfm:fixture:area:balanced-gamma",
+        "metrics": {
+          "data_richness": 65,
+          "recency": 60,
+          "sampling_effort": 60,
+          "source_diversity": 70,
+          "geographic_coverage_gap": 55,
+          "uncertainty_reduction": 60,
+          "sensitivity_burden": 15,
+          "steward_capacity": 75,
+          "public_value": 70,
+          "review_cost": 25
+        },
+        "missing_metrics": [],
+        "source_role_shares": [
+          {"role_code": "PRIMARY", "share_basis_points": 4500},
+          {"role_code": "CORROBORATIVE", "share_basis_points": 3000},
+          {"role_code": "CONTEXT_ONLY", "share_basis_points": 2500}
+        ]
+      }
+    ],
+    "rankings": [],
+    "stability": {
+      "compared_profile_ids": ["DENSITY_LED", "GAP_LED"],
+      "rank_correlation_milli": null,
+      "rank_flip_count": null,
+      "stable": false,
+      "counterfactual_status": "INSUFFICIENT_COMPARABLE_RANKS"
+    },
+    "decision": {
+      "outcome": "HOLD",
+      "reason_codes": ["COUNTERFACTUAL_RANKING_REVIEW_REQUIRED"],
+      "obligations": ["DISPLAY_ALL_SCORE_COMPONENTS", "LABEL_WORKFLOW_TRIAGE_ONLY", "DO_NOT_INFER_ECOLOGICAL_IMPORTANCE"]
+    },
+    "evaluated_at": "2026-08-09T18:00:00Z",
+    "governance": {
+      "fixture_only": true,
+      "no_network": true,
+      "source_activation_authority": false,
+      "work_assignment_authority": false,
+      "ecological_claim_authority": false,
+      "policy_authority": false,
+      "review_authority": false,
+      "release_authority": false,
+      "publication_authority": false
+    },
+    "spec_hash": "AUTO"
+  },
+  "cases": [
+    {
+      "name": "density_and_gap_rankings_are_counterfactual",
+      "mutations": [],
+      "expected_outcome": "HOLD",
+      "expected_findings": []
+    },
+    {
+      "name": "declared_missing_metric_is_penalized",
+      "mutations": [
+        {"path": "/candidates/1/metrics/recency", "value": null},
+        {"path": "/candidates/1/missing_metrics", "value": ["RECENCY"]}
+      ],
+      "expected_outcome": "HOLD",
+      "expected_findings": []
+    },
+    {
+      "name": "abstain_missingness_strategy_is_finite",
+      "mutations": [
+        {"path": "/weight_profiles/0/missingness/strategy", "value": "ABSTAIN"},
+        {"path": "/weight_profiles/1/missingness/strategy", "value": "ABSTAIN"},
+        {"path": "/candidates/1/metrics/recency", "value": null},
+        {"path": "/candidates/1/missing_metrics", "value": ["RECENCY"]}
+      ],
+      "expected_outcome": "HOLD",
+      "expected_findings": []
+    },
+    {
+      "name": "source_role_cap_abstains_without_silent_ranking",
+      "mutations": [
+        {"path": "/candidates/0/source_role_shares/0/share_basis_points", "value": 8000},
+        {"path": "/candidates/0/source_role_shares/1/share_basis_points", "value": 1000},
+        {"path": "/candidates/0/source_role_shares/2/share_basis_points", "value": 1000}
+      ],
+      "expected_outcome": "HOLD",
+      "expected_findings": []
+    },
+    {
+      "name": "score_tamper_is_rejected",
+      "mutations": [
+        {"path": "/rankings/0/entries/0/score", "value": 999999}
+      ],
+      "rederive": false,
+      "expected_outcome": "DENY",
+      "expected_findings": ["RANKING_DERIVATION_MISMATCH"]
+    },
+    {
+      "name": "stability_tamper_is_rejected",
+      "mutations": [
+        {"path": "/stability/rank_correlation_milli", "value": 999}
+      ],
+      "rederive": false,
+      "expected_outcome": "DENY",
+      "expected_findings": ["STABILITY_DERIVATION_MISMATCH"]
+    },
+    {
+      "name": "missing_metric_declaration_must_match_nulls",
+      "mutations": [
+        {"path": "/candidates/1/metrics/recency", "value": null}
+      ],
+      "rederive": false,
+      "expected_outcome": "DENY",
+      "expected_findings": ["MISSING_METRIC_DECLARATION_MISMATCH"]
+    },
+    {
+      "name": "profile_weights_must_sum_to_one_thousand",
+      "mutations": [
+        {"path": "/weight_profiles/0/weights/data_richness", "value": 259}
+      ],
+      "rederive": false,
+      "expected_outcome": "DENY",
+      "expected_findings": ["WEIGHT_SUM_INVALID"]
+    },
+    {
+      "name": "source_role_shares_must_close",
+      "mutations": [
+        {"path": "/candidates/0/source_role_shares/0/share_basis_points", "value": 4999}
+      ],
+      "rederive": false,
+      "expected_outcome": "DENY",
+      "expected_findings": ["SOURCE_ROLE_SHARE_SUM_INVALID"]
+    },
+    {
+      "name": "source_role_cap_cannot_be_bypassed_by_stored_score",
+      "mutations": [
+        {"path": "/candidates/0/source_role_shares/0/share_basis_points", "value": 8000},
+        {"path": "/candidates/0/source_role_shares/1/share_basis_points", "value": 1000},
+        {"path": "/candidates/0/source_role_shares/2/share_basis_points", "value": 1000}
+      ],
+      "rederive": false,
+      "expected_outcome": "DENY",
+      "expected_findings": ["RANKING_DERIVATION_MISMATCH", "PRIORITY_DECISION_MISMATCH"]
+    },
+    {
+      "name": "work_assignment_authority_is_rejected",
+      "mutations": [
+        {"path": "/governance/work_assignment_authority", "value": true}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["SCHEMA_INVALID"]
+    },
+    {
+      "name": "identity_tamper_is_rejected",
+      "mutations": [
+        {"path": "/evaluated_at", "value": "2026-08-09T19:00:00Z"}
+      ],
+      "rederive": false,
+      "reseal": false,
+      "expected_outcome": "DENY",
+      "expected_findings": ["SPEC_HASH_MISMATCH", "SCORECARD_ID_MISMATCH"]
+    },
+    {
+      "name": "undeclared_field_is_rejected",
+      "mutations": [
+        {"path": "/ecological_importance", "value": 100}
+      ],
+      "expected_outcome": "DENY",
+      "expected_findings": ["SCHEMA_INVALID"]
+    },
+    {
+      "name": "duplicate_profile_identity_is_rejected",
+      "mutations": [
+        {"path": "/weight_profiles/1/profile_id", "value": "DENSITY_LED"}
+      ],
+      "rederive": false,
+      "expected_outcome": "DENY",
+      "expected_findings": ["WEIGHT_PROFILE_ID_DUPLICATE"]
+    }
+  ]
+}

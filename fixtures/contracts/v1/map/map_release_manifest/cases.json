@@ -1,0 +1,528 @@
+{
+  "base_payload": {
+    "artifact_manifests": [
+      {
+        "artifact_id": "artifact:pmtiles:soil-public",
+        "artifact_ref": "oci://registry.example/kfm/soil@sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "artifact_type": "PMTILES",
+        "cache_policy": "IMMUTABLE",
+        "cors_allowed": true,
+        "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "immutable": true,
+        "media_type": "application/vnd.pmtiles",
+        "range_supported": true
+      },
+      {
+        "artifact_id": "artifact:style:soil-public",
+        "artifact_ref": "kfm://published/map/styles/soil-public-v1",
+        "artifact_type": "STYLE_JSON",
+        "cache_policy": "IMMUTABLE",
+        "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "immutable": true,
+        "media_type": "application/vnd.mapbox.style+json"
+      }
+    ],
+    "attestation_refs": [
+      "kfm://attestation/map/soil-public-v1"
+    ],
+    "catalog_refs": {
+      "dcat": [
+        "kfm://catalog/dcat/soil-public-v1"
+      ],
+      "prov": [
+        "kfm://catalog/prov/soil-public-v1"
+      ],
+      "stac": [
+        "kfm://catalog/stac/soil-public-v1"
+      ]
+    },
+    "correction": {
+      "cache_invalidation_refs": [],
+      "correction_notice_refs": [],
+      "superseded_by_ref": null,
+      "supersedes_refs": [],
+      "withdrawal_notice_ref": null
+    },
+    "evidence_refs": [
+      "kfm://evidence/map/soil-public-v1"
+    ],
+    "layer_manifest_refs": [
+      "kfm://layer-manifest/soil-moisture-public-v1"
+    ],
+    "policy_decision_refs": [
+      "kfm://policy-decision/map/soil-public-v1"
+    ],
+    "profile_status": "PROPOSED_INACTIVE",
+    "public_boundary": {
+      "canonical_store_exposed": false,
+      "direct_model_output_exposed": false,
+      "geometry_posture": "PUBLIC",
+      "quarantine_path_exposed": false,
+      "raw_path_exposed": false,
+      "rights_state": "RESOLVED_PUBLIC",
+      "sensitivity_state": "PUBLIC",
+      "unreleased_fetch_allowed": false,
+      "work_path_exposed": false
+    },
+    "published_at": "2026-08-07T20:00:00Z",
+    "redaction_receipt_refs": [],
+    "release_ref": "kfm://release/map/synthetic-2026-08-07",
+    "release_state": "PUBLISHED",
+    "review_refs": [
+      "kfm://review/map/soil-public-v1"
+    ],
+    "rights_refs": [
+      "kfm://rights/map/soil-public-v1"
+    ],
+    "rollback": {
+      "restoration_receipt_ref": null,
+      "rollback_card_ref": "kfm://rollback-card/map/synthetic-2026-08-07",
+      "rollback_target_ref": "kfm://release/map/synthetic-prior",
+      "verified": true
+    },
+    "schema_version": "v1",
+    "sensitivity_refs": [
+      "kfm://sensitivity/map/soil-public-v1"
+    ],
+    "state_reason_codes": [
+      "RELEASE_CLOSED"
+    ],
+    "style_manifest_refs": [
+      "kfm://style-manifest/soil-public-v1"
+    ]
+  },
+  "invalid_cases": [
+    {
+      "expected_codes": [
+        "PUBLISHED_CLOSURE_INCOMPLETE"
+      ],
+      "name": "published_missing_evidence",
+      "patches": [
+        {
+          "path": "/evidence_refs",
+          "value": []
+        }
+      ]
+    },
+    {
+      "expected_codes": [
+        "PUBLISHED_ROLLBACK_CLOSURE_REQUIRED"
+      ],
+      "name": "published_missing_rollback",
+      "patches": [
+        {
+          "path": "/rollback/rollback_target_ref",
+          "value": null
+        },
+        {
+          "path": "/rollback/rollback_card_ref",
+          "value": null
+        }
+      ]
+    },
+    {
+      "expected_codes": [
+        "PUBLISHED_RIGHTS_NOT_RESOLVED"
+      ],
+      "name": "published_rights_unknown",
+      "patches": [
+        {
+          "path": "/public_boundary/rights_state",
+          "value": "UNKNOWN"
+        }
+      ]
+    },
+    {
+      "expected_codes": [
+        "SCHEMA_INVALID"
+      ],
+      "name": "public_raw_exposure",
+      "patches": [
+        {
+          "path": "/public_boundary/raw_path_exposed",
+          "value": true
+        }
+      ]
+    },
+    {
+      "expected_codes": [
+        "FLOATING_ARTIFACT_REF_DENIED"
+      ],
+      "name": "floating_artifact_ref",
+      "patches": [
+        {
+          "path": "/artifact_manifests/0/artifact_ref",
+          "value": "oci://registry.example/kfm/soil:latest"
+        }
+      ]
+    },
+    {
+      "expected_codes": [
+        "REDACTION_RECEIPT_REQUIRED"
+      ],
+      "name": "generalized_missing_redaction",
+      "patches": [
+        {
+          "path": "/public_boundary/geometry_posture",
+          "value": "GENERALIZED"
+        },
+        {
+          "path": "/public_boundary/sensitivity_state",
+          "value": "GENERALIZED"
+        }
+      ]
+    },
+    {
+      "expected_codes": [
+        "WITHDRAWAL_NOTICE_REQUIRED"
+      ],
+      "name": "withdrawn_missing_notice",
+      "patches": [
+        {
+          "path": "/release_state",
+          "value": "WITHDRAWN"
+        },
+        {
+          "path": "/state_reason_codes",
+          "value": [
+            "WITHDRAWN_BY_STEWARD"
+          ]
+        },
+        {
+          "path": "/correction/cache_invalidation_refs",
+          "value": [
+            "kfm://cache-invalidation/map/x"
+          ]
+        }
+      ]
+    },
+    {
+      "expected_codes": [
+        "SPEC_HASH_MISMATCH"
+      ],
+      "name": "spec_hash_mismatch",
+      "patches": [],
+      "post_identity_patches": [
+        {
+          "path": "/spec_hash",
+          "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+        }
+      ]
+    },
+    {
+      "expected_codes": [
+        "EVIDENCE_REFS_NOT_CANONICAL"
+      ],
+      "name": "noncanonical_evidence_refs",
+      "patches": [
+        {
+          "path": "/evidence_refs",
+          "value": [
+            "kfm://evidence/z",
+            "kfm://evidence/a"
+          ]
+        }
+      ]
+    },
+    {
+      "expected_codes": [
+        "RANGE_SUPPORT_REQUIRED"
+      ],
+      "name": "pmtiles_without_range",
+      "patches": [
+        {
+          "path": "/artifact_manifests/0/range_supported",
+          "value": false
+        }
+      ]
+    },
+    {
+      "expected_codes": [
+        "RESTORATION_RECEIPT_REQUIRED"
+      ],
+      "name": "rolled_back_missing_restoration",
+      "patches": [
+        {
+          "path": "/release_state",
+          "value": "ROLLED_BACK"
+        },
+        {
+          "path": "/state_reason_codes",
+          "value": [
+            "ROLLBACK_EXECUTED"
+          ]
+        },
+        {
+          "path": "/correction/cache_invalidation_refs",
+          "value": [
+            "kfm://cache-invalidation/map/synthetic-rollback"
+          ]
+        },
+        {
+          "path": "/rollback/restoration_receipt_ref",
+          "value": null
+        }
+      ]
+    }
+  ],
+  "schema_version": "v1",
+  "valid_cases": [
+    {
+      "expected_state": "PUBLISHED",
+      "name": "published_public",
+      "patches": []
+    },
+    {
+      "expected_state": "PUBLISHED",
+      "name": "published_generalized",
+      "patches": [
+        {
+          "path": "/release_ref",
+          "value": "kfm://release/map/synthetic-generalized"
+        },
+        {
+          "path": "/public_boundary/geometry_posture",
+          "value": "GENERALIZED"
+        },
+        {
+          "path": "/public_boundary/sensitivity_state",
+          "value": "GENERALIZED"
+        },
+        {
+          "path": "/redaction_receipt_refs",
+          "value": [
+            "kfm://redaction-receipt/map/synthetic-generalized"
+          ]
+        }
+      ]
+    },
+    {
+      "expected_state": "CANDIDATE",
+      "name": "candidate_pending_review",
+      "patches": [
+        {
+          "path": "/release_state",
+          "value": "CANDIDATE"
+        },
+        {
+          "path": "/published_at",
+          "value": null
+        },
+        {
+          "path": "/state_reason_codes",
+          "value": [
+            "CANDIDATE_PENDING_REVIEW"
+          ]
+        },
+        {
+          "path": "/artifact_manifests",
+          "value": []
+        },
+        {
+          "path": "/layer_manifest_refs",
+          "value": []
+        },
+        {
+          "path": "/style_manifest_refs",
+          "value": []
+        },
+        {
+          "path": "/catalog_refs",
+          "value": {
+            "dcat": [],
+            "prov": [],
+            "stac": []
+          }
+        },
+        {
+          "path": "/evidence_refs",
+          "value": []
+        },
+        {
+          "path": "/policy_decision_refs",
+          "value": []
+        },
+        {
+          "path": "/rights_refs",
+          "value": []
+        },
+        {
+          "path": "/sensitivity_refs",
+          "value": []
+        },
+        {
+          "path": "/review_refs",
+          "value": []
+        },
+        {
+          "path": "/attestation_refs",
+          "value": []
+        },
+        {
+          "path": "/rollback",
+          "value": {
+            "restoration_receipt_ref": null,
+            "rollback_card_ref": null,
+            "rollback_target_ref": null,
+            "verified": false
+          }
+        }
+      ]
+    },
+    {
+      "expected_state": "HELD",
+      "name": "held_rights_unknown",
+      "patches": [
+        {
+          "path": "/release_state",
+          "value": "HELD"
+        },
+        {
+          "path": "/published_at",
+          "value": null
+        },
+        {
+          "path": "/state_reason_codes",
+          "value": [
+            "RIGHTS_UNRESOLVED"
+          ]
+        },
+        {
+          "path": "/public_boundary/rights_state",
+          "value": "UNKNOWN"
+        },
+        {
+          "path": "/artifact_manifests",
+          "value": []
+        },
+        {
+          "path": "/layer_manifest_refs",
+          "value": []
+        },
+        {
+          "path": "/style_manifest_refs",
+          "value": []
+        },
+        {
+          "path": "/catalog_refs",
+          "value": {
+            "dcat": [],
+            "prov": [],
+            "stac": []
+          }
+        },
+        {
+          "path": "/evidence_refs",
+          "value": []
+        },
+        {
+          "path": "/policy_decision_refs",
+          "value": []
+        },
+        {
+          "path": "/rights_refs",
+          "value": []
+        },
+        {
+          "path": "/sensitivity_refs",
+          "value": []
+        },
+        {
+          "path": "/review_refs",
+          "value": []
+        },
+        {
+          "path": "/attestation_refs",
+          "value": []
+        },
+        {
+          "path": "/rollback",
+          "value": {
+            "restoration_receipt_ref": null,
+            "rollback_card_ref": null,
+            "rollback_target_ref": null,
+            "verified": false
+          }
+        }
+      ]
+    },
+    {
+      "expected_state": "SUPERSEDED",
+      "name": "superseded",
+      "patches": [
+        {
+          "path": "/release_state",
+          "value": "SUPERSEDED"
+        },
+        {
+          "path": "/state_reason_codes",
+          "value": [
+            "SUPERSEDED_BY_NEW_RELEASE"
+          ]
+        },
+        {
+          "path": "/correction/superseded_by_ref",
+          "value": "kfm://release/map/synthetic-new"
+        },
+        {
+          "path": "/correction/cache_invalidation_refs",
+          "value": [
+            "kfm://cache-invalidation/map/synthetic-old"
+          ]
+        }
+      ]
+    },
+    {
+      "expected_state": "WITHDRAWN",
+      "name": "withdrawn",
+      "patches": [
+        {
+          "path": "/release_state",
+          "value": "WITHDRAWN"
+        },
+        {
+          "path": "/state_reason_codes",
+          "value": [
+            "WITHDRAWN_BY_STEWARD"
+          ]
+        },
+        {
+          "path": "/correction/withdrawal_notice_ref",
+          "value": "kfm://withdrawal-notice/map/synthetic"
+        },
+        {
+          "path": "/correction/cache_invalidation_refs",
+          "value": [
+            "kfm://cache-invalidation/map/synthetic-withdrawn"
+          ]
+        }
+      ]
+    },
+    {
+      "expected_state": "ROLLED_BACK",
+      "name": "rolled_back",
+      "patches": [
+        {
+          "path": "/release_state",
+          "value": "ROLLED_BACK"
+        },
+        {
+          "path": "/state_reason_codes",
+          "value": [
+            "ROLLBACK_EXECUTED"
+          ]
+        },
+        {
+          "path": "/rollback/restoration_receipt_ref",
+          "value": "kfm://receipt/map/rollback-synthetic"
+        },
+        {
+          "path": "/correction/cache_invalidation_refs",
+          "value": [
+            "kfm://cache-invalidation/map/synthetic-rollback"
+          ]
+        }
+      ]
+    }
+  ]
+}

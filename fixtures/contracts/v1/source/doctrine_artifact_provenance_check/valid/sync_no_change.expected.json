@@ -1,0 +1,7 @@
+{
+  "changed": [],
+  "changed_count": 0,
+  "check": "sync_doctrine_artifact_provenance_status",
+  "result": "no_change",
+  "write": false
+}

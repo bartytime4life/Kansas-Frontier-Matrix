@@ -1,0 +1,161 @@
+{
+  "receipt_id": "genrec-county-environmental-recency-spine-20260809",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/county-environmental-recency-spine.yml",
+    "contracts/data/county_environmental_recency_spine.md",
+    "docs/intake/exploratory/pass-32-county-environmental-recency-source-map.md",
+    "fixtures/contracts/v1/data/county_environmental_recency_spine/cases.json",
+    "schemas/contracts/v1/data/county_environmental_recency_spine.schema.json",
+    "tests/validators/test_validate_county_environmental_recency_spine.py",
+    "tools/validators/data/validate_county_environmental_recency_spine.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/county-environmental-recency-spine.yml": "sha256:c4c65c4a71629539c20d96d9a521e1b70060a920479323b80ec6bf4819d9faef",
+    "contracts/data/county_environmental_recency_spine.md": "sha256:9c0ebce34e281b0a72100c3637c66487662ce717c35e765f006d1a6a3dfef4f6",
+    "docs/intake/exploratory/pass-32-county-environmental-recency-source-map.md": "sha256:a32f420b7453548f19fdb3c831c1479dafe546af13ecc1c834450c8d5892321f",
+    "fixtures/contracts/v1/data/county_environmental_recency_spine/cases.json": "sha256:577e8bdcdcb0f6963fcb36b6623fc6e384a045d69d9b1ed7b5af7e5a35dffab7",
+    "schemas/contracts/v1/data/county_environmental_recency_spine.schema.json": "sha256:1e28b9a72ca211f0708b7b6ae14f6ea1d6f46b28f6befb6fc17924da53636f27",
+    "tests/validators/test_validate_county_environmental_recency_spine.py": "sha256:bfb659de58a58037055545fa6062442586797debe7bfaaac5e5288b84f3e040b",
+    "tools/validators/data/validate_county_environmental_recency_spine.py": "sha256:ea9e52d57292bfc2a281b0f8b7697ae5d4fa2e4782c04d83ef80bb841ceccca8"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5",
+    "version": "2026-08-09"
+  },
+  "prompt_or_contract": "sha256:702abd7c779fb6c41252be783610ecbe001f8f4d25d18dab5de2c5ad84cc5dc7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "Google Drive connector corpus discovery",
+      "GitHub connector repository inspection and mutation",
+      "local PDF page rendering and deterministic Python validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#KFM-P32-FEAT-0015",
+      "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#KFM-P32-IDEA-0001",
+      "gdrive://1w7Qrf5Na7PSvwdTuplZnFbyueToPtQaa",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/76da0a048590710bd927891d43075d989568bf7d/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/76da0a048590710bd927891d43075d989568bf7d/contracts/source/source_health_assessment.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/76da0a048590710bd927891d43075d989568bf7d/contracts/source/source_availability_watchlist.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/county-environmental-recency-spine.yml": "CONFIRMED",
+    "contracts/data/county_environmental_recency_spine.md": "PROPOSED",
+    "docs/intake/exploratory/pass-32-county-environmental-recency-source-map.md": "CONFIRMED",
+    "fixtures/contracts/v1/data/county_environmental_recency_spine/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/data/county_environmental_recency_spine.schema.json": "PROPOSED",
+    "tests/validators/test_validate_county_environmental_recency_spine.py": "CONFIRMED",
+    "tools/validators/data/validate_county_environmental_recency_spine.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "python-syntax-compilation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "draft-2020-12-schema-meta-validation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "focused-unittest-suite",
+      "outcome": "PASS",
+      "reason": "12 deterministic tests passed in the isolated authoring worktree."
+    },
+    {
+      "gate": "exact-fixture-replay",
+      "outcome": "PASS",
+      "reason": "15 exact cases passed across PASS, ABSTAIN, DENY, and ERROR."
+    },
+    {
+      "gate": "adjacent-source-health-and-temporal-contracts",
+      "outcome": "PASS",
+      "reason": "14 adjacent tests and 15 subtests passed."
+    },
+    {
+      "gate": "documentation-metadata-and-local-link-validation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "no-network-boundary",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Requires the pushed pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "pass-32-county-environmental-cadence-card",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#KFM-P32-FEAT-0015"
+    },
+    {
+      "id": "pass-32-county-environmental-recency-spine-card",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Domains_v1_1_plus_Pass23_Pass32_Consolidated_Atlas.pdf#KFM-P32-IDEA-0001"
+    },
+    {
+      "id": "google-drive-pass-23-32-consolidated-atlas",
+      "validated": true,
+      "evidence_ref": "gdrive://1w7Qrf5Na7PSvwdTuplZnFbyueToPtQaa"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/76da0a048590710bd927891d43075d989568bf7d/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "existing-source-health-contract",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/76da0a048590710bd927891d43075d989568bf7d/contracts/source/source_health_assessment.md"
+    },
+    {
+      "id": "existing-source-availability-watchlist-contract",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/76da0a048590710bd927891d43075d989568bf7d/contracts/source/source_availability_watchlist.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-09T21:17:47Z",
+  "emitter": "OpenAI GPT-5 via ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Fixture-only CountyEnvironmentalRecencySpine packet derived from Pass 32 cards KFM-P32-FEAT-0015 and KFM-P32-IDEA-0001. It composes declared references to existing source-health and watchlist contracts. It does not probe a source, author source health, interpret environmental conditions, write a lifecycle lane, evaluate policy, promote, release, deploy, publish, or authorize public use."
+}

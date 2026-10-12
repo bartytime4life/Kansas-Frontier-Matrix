@@ -1,0 +1,125 @@
+{
+  "receipt_id": "genrec-map-build-sustainability-telemetry-stable-20260811",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/map-build-sustainability-telemetry.yml",
+    "contracts/telemetry/map_build_sustainability.md",
+    "docs/intake/exploratory/pass-18-map-build-sustainability-source-map.md",
+    "fixtures/contracts/v1/telemetry/map_build_sustainability/README.md",
+    "fixtures/contracts/v1/telemetry/map_build_sustainability/cases.json",
+    "schemas/contracts/v1/telemetry/map_build_sustainability.schema.json",
+    "tests/validators/telemetry/test_map_build_sustainability.py",
+    "tools/validators/telemetry/validate_map_build_sustainability.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/map-build-sustainability-telemetry.yml": "sha256:e7b4def9e5b24782189a918cf7023e82e6772695ee747ba2e1e1ac44a96f7495",
+    "contracts/telemetry/map_build_sustainability.md": "sha256:593ec42b91e0a997331483b4c2c34bfcf7ba0872f96197052fbeaad9466fe764",
+    "docs/intake/exploratory/pass-18-map-build-sustainability-source-map.md": "sha256:c6844e214e6a7f34a73beda2607f0c6d85055d03bddf0eb94b04f420e3a320d1",
+    "fixtures/contracts/v1/telemetry/map_build_sustainability/README.md": "sha256:e2d07fd4d5f7f9ebc993b9efb6f769c71283fbef6e4aaa5fa8c1ea3ec03747f6",
+    "fixtures/contracts/v1/telemetry/map_build_sustainability/cases.json": "sha256:80d2e5b155c6427a3209ee28f0f025058dd81c14d113428fd3487867ca05619c",
+    "schemas/contracts/v1/telemetry/map_build_sustainability.schema.json": "sha256:52ccb83757bcd5251eee906d817631e3d2cf36081a7d4a52e853dc5394375dbb",
+    "tests/validators/telemetry/test_map_build_sustainability.py": "sha256:c71cb5fb638f830db03538f49a4a6526a10107218f862cacfbe5897fc48878e4",
+    "tools/validators/telemetry/validate_map_build_sustainability.py": "sha256:37bf6c9c303cd8f8fd4d6dd010f7942cce42bce27308bfa9a4db57335ac14573"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5 Codex",
+    "version": "2026-08-11"
+  },
+  "prompt_or_contract": "sha256:f3f1179c6a2d6baebed40bf2dbac9ef0fd9e7284b4f0c1598e34d08fc2e3d9c7",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [],
+    "attached_docs": [],
+    "evidence_refs": [
+      "repo:data/receipts/generated/genrec-map-build-sustainability-telemetry-20260811.json",
+      "github:bartytime4life/Kansas-Frontier-Matrix#2548@7f7b2810d066adf87d6c25b24011ab8fd823c7db",
+      "github:bartytime4life/Kansas-Frontier-Matrix:actions/run/31514917198"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/map-build-sustainability-telemetry.yml": "PROPOSED",
+    "contracts/telemetry/map_build_sustainability.md": "PROPOSED",
+    "docs/intake/exploratory/pass-18-map-build-sustainability-source-map.md": "PROPOSED",
+    "fixtures/contracts/v1/telemetry/map_build_sustainability/README.md": "PROPOSED",
+    "fixtures/contracts/v1/telemetry/map_build_sustainability/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/telemetry/map_build_sustainability.schema.json": "PROPOSED",
+    "tests/validators/telemetry/test_map_build_sustainability.py": "CONFIRMED",
+    "tools/validators/telemetry/validate_map_build_sustainability.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "historical-receipt-preservation",
+      "outcome": "PASS",
+      "reason": "The merged PR #2548 receipt remains unchanged as historical process memory; this successor supplies current-byte validation without rebinding its shared telemetry indexes or dashboard specification."
+    },
+    {
+      "gate": "stable-artifact-scope",
+      "outcome": "PASS",
+      "reason": "This successor binds eight profile-owned workflow, contract, source-map, fixture, schema, test, and validator artifacts while excluding independently changing shared telemetry indexes and dashboard documentation."
+    },
+    {
+      "gate": "focused-hosted-tests",
+      "outcome": "PASS",
+      "reason": "Merged exact-head GitHub Actions run 31514917198 completed the map-build sustainability profile tests, fixture replay, and then-current receipt validation successfully."
+    },
+    {
+      "gate": "current-byte-local-validation",
+      "outcome": "PASS",
+      "reason": "All fifteen deterministic map-build sustainability tests and the exact eleven-case fixture replay passed locally against current main."
+    },
+    {
+      "gate": "generated-receipt-integrity",
+      "outcome": "PASS",
+      "reason": "Eight non-self stable-packet artifacts were rebound to their final SHA-256 digests."
+    },
+    {
+      "gate": "hosted-exact-head-checks",
+      "outcome": "SKIPPED",
+      "reason": "The follow-up pull-request head did not yet exist when this receipt was emitted; GitHub Actions remains authoritative for that head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the follow-up draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "repository:historical-map-build-sustainability-receipt",
+      "validated": true,
+      "evidence_ref": "repo:data/receipts/generated/genrec-map-build-sustainability-telemetry-20260811.json"
+    },
+    {
+      "id": "github:merged-map-build-sustainability-run",
+      "validated": true,
+      "evidence_ref": "github:bartytime4life/Kansas-Frontier-Matrix:actions/run/31514917198"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-11T17:06:10Z",
+  "emitter": "OpenAI Codex via ChatGPT Work",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Supersedes genrec-map-build-sustainability-telemetry-20260811 for current-byte workflow validation while preserving the merged receipt as historical process memory. The stable packet excludes independently changing shared indexes and dashboard documentation. It changes no measurement, provider, methodology, threshold, evidence, policy, review, promotion, release, deployment, publication, or public-use authority."
+}

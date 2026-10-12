@@ -1,0 +1,158 @@
+{
+  "receipt_id": "genrec-tests-domains-atmosphere-policy-deny-aod-vs-pm25-readme-2457da14",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "tests/domains/atmosphere/policy-deny/aod-vs-pm25/README.md"
+  ],
+  "artifact_hashes": {
+    "tests/domains/atmosphere/policy-deny/aod-vs-pm25/README.md": "sha256:2457da143ba3b3fbe8be75b75127da4a1137e805c30237deae64d1f2e4e2f913"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Thinking",
+    "version": "2026-07-16-session"
+  },
+  "prompt_or_contract": "sha256:b061d3d8b153af8083cd1f62f447b389c396b5a882e590328ede7c3e3ff25e85",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "container/Python validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "KFM GitHub Repository Documentation Implementation Agent — Full Operating Prompt v3.1",
+      "Directory Rules.pdf",
+      "Kansas Frontier Matrix — AI Build Operating Contract.md"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/44c4e5e1432f36efa2cbf9958458ba0c3c6c0e85",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/44c4e5e1432f36efa2cbf9958458ba0c3c6c0e85/tests/domains/atmosphere/policy-deny/aod-vs-pm25/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/44c4e5e1432f36efa2cbf9958458ba0c3c6c0e85/tests/domains/atmosphere/policy-deny/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/44c4e5e1432f36efa2cbf9958458ba0c3c6c0e85/tests/domains/atmosphere/test_aod_as_pm25_denied.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/44c4e5e1432f36efa2cbf9958458ba0c3c6c0e85/docs/domains/atmosphere/POLICY.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/44c4e5e1432f36efa2cbf9958458ba0c3c6c0e85/policy/domains/atmosphere/aod-not-pm25.rego",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/44c4e5e1432f36efa2cbf9958458ba0c3c6c0e85/policy/domains/atmosphere/aod_is_not_pm25.rego",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/44c4e5e1432f36efa2cbf9958458ba0c3c6c0e85/contracts/domains/atmosphere/AODRaster.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/44c4e5e1432f36efa2cbf9958458ba0c3c6c0e85/contracts/domains/atmosphere/PM25Observation.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/44c4e5e1432f36efa2cbf9958458ba0c3c6c0e85/contracts/domains/atmosphere/aod-raster.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/44c4e5e1432f36efa2cbf9958458ba0c3c6c0e85/contracts/domains/atmosphere/pm25-observation.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/44c4e5e1432f36efa2cbf9958458ba0c3c6c0e85/schemas/contracts/v1/domains/atmosphere/AODRaster.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/44c4e5e1432f36efa2cbf9958458ba0c3c6c0e85/schemas/contracts/v1/domains/atmosphere/PM25Observation.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/44c4e5e1432f36efa2cbf9958458ba0c3c6c0e85/fixtures/domains/atmosphere/objects/AODRaster.invalid.tagged_as_pm25.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/44c4e5e1432f36efa2cbf9958458ba0c3c6c0e85/.github/workflows/domain-atmosphere.yml",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/44c4e5e1432f36efa2cbf9958458ba0c3c6c0e85/Makefile"
+    ]
+  },
+  "truth_labels": {
+    "tests/domains/atmosphere/policy-deny/aod-vs-pm25/README.md": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "directory-rules-placement",
+      "outcome": "PASS",
+      "reason": "The target remains under tests/, the enforceability root; policy, contracts, schemas, fixtures, evidence, lifecycle data, release state, and public implementation remain in their owning roots."
+    },
+    {
+      "gate": "target-precondition-and-drift",
+      "outcome": "PASS",
+      "reason": "The target prior blob was rechecked at the pinned base. No matching task branch, duplicate document ID, or open pull request surfaced before mutation."
+    },
+    {
+      "gate": "aod-pm25-authority-split",
+      "outcome": "PASS",
+      "reason": "The README distinguishes canonical CamelCase semantic contracts, lowercase compatibility pointers, human doctrine, competing Rego scaffolds, permissive schema scaffolds, fixtures, tests, validators, evidence, and release authority."
+    },
+    {
+      "gate": "current-maturity",
+      "outcome": "PASS",
+      "reason": "The child lane is recorded as README-only; the adjacent parent-level test is a one-line placeholder; both Rego files are default-deny scaffolds; both schemas are permissive; and the invalid fixture is metadata-only."
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "The committed README has one H1, sixty-eight unique headings, thirty-six fenced-block delimiter lines, a final newline, and all forty-four internal fragment links resolve."
+    },
+    {
+      "gate": "remote-byte-integrity",
+      "outcome": "PASS",
+      "reason": "The committed README is Git blob 2091593dab6d0f0be4a736f11804ae994fe57694, 55403 bytes, 1111 lines, and SHA-256 2457da143ba3b3fbe8be75b75127da4a1137e805c30237deae64d1f2e4e2f913."
+    },
+    {
+      "gate": "secret-sensitive-and-health-safety-review",
+      "outcome": "PASS",
+      "reason": "No common credential patterns, real source payloads, private endpoints, protected-location data, living-person data, current official alerts, medical guidance, emergency instructions, or production trust artifacts were introduced."
+    },
+    {
+      "gate": "executable-aod-pm25-policy-tests",
+      "outcome": "SKIPPED",
+      "reason": "This change is documentation-only; no substantive direct test, policy adapter, fixture payload, or validator was established or modified."
+    },
+    {
+      "gate": "ci-status",
+      "outcome": "SKIPPED",
+      "reason": "Pull-request workflows had not run when this receipt was emitted; final status must be read from the pull-request head."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "tests/domains/atmosphere/policy-deny/aod-vs-pm25/README.md@44c4e5e1",
+      "validated": true
+    },
+    {
+      "id": "tests/domains/atmosphere/test_aod_as_pm25_denied.py@44c4e5e1",
+      "validated": true
+    },
+    {
+      "id": "docs/domains/atmosphere/POLICY.md@44c4e5e1",
+      "validated": true
+    },
+    {
+      "id": "policy/domains/atmosphere/aod-not-pm25.rego@44c4e5e1",
+      "validated": true
+    },
+    {
+      "id": "policy/domains/atmosphere/aod_is_not_pm25.rego@44c4e5e1",
+      "validated": true
+    },
+    {
+      "id": "contracts/domains/atmosphere/AODRaster.md@44c4e5e1",
+      "validated": true
+    },
+    {
+      "id": "contracts/domains/atmosphere/PM25Observation.md@44c4e5e1",
+      "validated": true
+    },
+    {
+      "id": "schemas/contracts/v1/domains/atmosphere/AODRaster.schema.json@44c4e5e1",
+      "validated": true
+    },
+    {
+      "id": "schemas/contracts/v1/domains/atmosphere/PM25Observation.schema.json@44c4e5e1",
+      "validated": true
+    },
+    {
+      "id": "fixtures/domains/atmosphere/objects/AODRaster.invalid.tagged_as_pm25.json@44c4e5e1",
+      "validated": true
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-07-17T00:26:21Z",
+  "emitter": "OpenAI GPT-5.6 Thinking via GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Generated provenance receipt for the repository-grounded v0.2 Atmosphere AOD-versus-PM2.5 policy-deny README. The README records README-only child maturity, an adjacent placeholder test, duplicate default-deny Rego scaffolds, canonical contracts plus compatibility pointers, permissive schemas, a metadata-only invalid fixture, required negative and positive-control matrices, derived-product boundaries, finite outcomes, carrier preservation, CI, correction, and rollback. No executable test, policy bundle, fixture payload, schema, contract, validator, workflow, lifecycle object, release object, health guidance, alert, or public output was changed. Human review remains pending."
+}

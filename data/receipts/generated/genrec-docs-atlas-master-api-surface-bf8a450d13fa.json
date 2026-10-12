@@ -1,0 +1,203 @@
+{
+  "receipt_id": "genrec-docs-atlas-master-api-surface-bf8a450d13fa",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    "docs/atlas/master-api-surface.md"
+  ],
+  "artifact_hashes": {
+    "docs/atlas/master-api-surface.md": "sha256:bf8a450d13fa97b697ebc11ad5fad7d05596ee22945c6eb022c5ff77cc0d437b"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "exact serving revision not exposed"
+  },
+  "prompt_or_contract": "sha256:e2dc839bcd9a4f0cabaaa08a6fee7fc65aad687e75d265a4310b428ab68101ec",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "current-repository inspection",
+      "same-path Markdown modernization",
+      "Python SHA-256 and structural validation",
+      "remote branch, blob, diff, and pull-request verification"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [],
+    "attached_docs": [
+      "KFM Repository Build-Out & Markdown Modernization Implementation Agent v6.0.0"
+    ],
+    "evidence_refs": [
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/2481e12958cbc237b7339302c69e2ebe17263d5b",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2481e12958cbc237b7339302c69e2ebe17263d5b/docs/atlas/master-api-surface.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2481e12958cbc237b7339302c69e2ebe17263d5b/docs/atlas/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2481e12958cbc237b7339302c69e2ebe17263d5b/docs/atlases/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2481e12958cbc237b7339302c69e2ebe17263d5b/docs/atlases/domains-atlas-v1.1.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2481e12958cbc237b7339302c69e2ebe17263d5b/docs/architecture/governed-api/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2481e12958cbc237b7339302c69e2ebe17263d5b/docs/adr/ADR-0004-apps-governed-api-is-the-trust-membrane.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2481e12958cbc237b7339302c69e2ebe17263d5b/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2481e12958cbc237b7339302c69e2ebe17263d5b/docs/doctrine/directory-rules.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2481e12958cbc237b7339302c69e2ebe17263d5b/apps/governed-api/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2481e12958cbc237b7339302c69e2ebe17263d5b/apps/governed-api/routes/README.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2481e12958cbc237b7339302c69e2ebe17263d5b/apps/governed-api/src/governed_api/main.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2481e12958cbc237b7339302c69e2ebe17263d5b/apps/governed-api/src/governed_api/routes/registry.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2481e12958cbc237b7339302c69e2ebe17263d5b/apps/governed-api/src/governed_api/stub.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2481e12958cbc237b7339302c69e2ebe17263d5b/apps/governed-api/tests/test_abstain_routes.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2481e12958cbc237b7339302c69e2ebe17263d5b/contracts/runtime/runtime_response_envelope.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2481e12958cbc237b7339302c69e2ebe17263d5b/schemas/contracts/v1/runtime/runtime_response_envelope.schema.json",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2481e12958cbc237b7339302c69e2ebe17263d5b/tools/validators/validate_runtime_response_envelope.py",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/2481e12958cbc237b7339302c69e2ebe17263d5b/.github/CODEOWNERS"
+    ]
+  },
+  "truth_labels": {
+    "docs/atlas/master-api-surface.md": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "current-main-target-and-overlap-preflight",
+      "outcome": "PASS",
+      "reason": "Pinned main at 2481e12958cbc237b7339302c69e2ebe17263d5b; the target remained at prior blob b5bd266b1f04b2aebcd49d4f5a7d620dbad52cb1, exact open-PR and matching task-branch searches found no overlapping master-api-surface work, and the intervening main delta changed only unrelated Focus Mode documentation."
+    },
+    {
+      "gate": "complete-target-parent-and-api-evidence-read",
+      "outcome": "PASS",
+      "reason": "Read the complete prior target, legacy and canonical atlas lane boundaries, Atlas v1.1 source carrier, accepted Directory Rules and ADR-0029, Governed API architecture/app/route boundaries, WSGI dispatcher, exact route registry, negative-envelope builder, route tests, RuntimeResponseEnvelope contract/schema, CODEOWNERS, and current main."
+    },
+    {
+      "gate": "same-path-placement-review",
+      "outcome": "PASS",
+      "reason": "The existing compatibility pointer remains at docs/atlas/master-api-surface.md. Accepted Directory Rules v2 supports the bounded same-path human-document repair; no move, split, mirror, alias, deletion, standalone atlas carrier, or parallel API authority was introduced."
+    },
+    {
+      "gate": "current-repository-api-reconciliation",
+      "outcome": "PASS",
+      "reason": "The revision replaces historical route and target assumptions with the exact three-route GET registry, schema-shaped ABSTAIN/ERROR scaffold behavior, current Governed API architecture landing page, absent standalone atlas target, and explicit HOLDs for substantive ANSWER, deployment, migration, and physical deletion."
+    },
+    {
+      "gate": "legacy-anchor-compatibility",
+      "outcome": "PASS",
+      "reason": "All seven material v1 section anchors were retained exactly once as explicit compatibility anchors, alongside top and document identity anchors."
+    },
+    {
+      "gate": "markdown-structure",
+      "outcome": "PASS",
+      "reason": "One KFM metadata block, one H1, nine unique explicit anchors, resolving local fragments, balanced fences, consistent tables, no tabs or trailing whitespace, LF-only text, no conflict markers, and a final newline."
+    },
+    {
+      "gate": "repository-relative-link-review",
+      "outcome": "PASS",
+      "reason": "All introduced repository-relative links are limited to inspected repository-present atlas, architecture, ADR, doctrine, app, code, contract, schema, validator, test, and CODEOWNERS surfaces at the pinned base."
+    },
+    {
+      "gate": "security-rights-and-public-state-boundary",
+      "outcome": "PASS",
+      "reason": "The pointer introduces no credentials, private records, sensitive locations, blocked payloads, operational internals, source data, policy decisions, release objects, or claims that runtime, deployment, or public state changed."
+    },
+    {
+      "gate": "exact-sha256-artifact-binding",
+      "outcome": "PASS",
+      "reason": "Computed SHA-256 from the final UTF-8 Markdown bytes: bf8a450d13fa97b697ebc11ad5fad7d05596ee22945c6eb022c5ff77cc0d437b."
+    },
+    {
+      "gate": "json-schema-draft-2020-12-receipt-validation",
+      "outcome": "PASS",
+      "reason": "The receipt was validated in-session against the current generated receipt schema required fields, closed object shapes, enums, hash patterns, and date-time constraints."
+    },
+    {
+      "gate": "repository-native-generated-receipt-validator",
+      "outcome": "SKIPPED",
+      "reason": "No mounted checkout was available to execute tools/validators/validate_generated_receipt.py against the authored branch tree."
+    },
+    {
+      "gate": "repository-native-markdown-link-topology-and-full-validator-suite",
+      "outcome": "SKIPPED",
+      "reason": "Connector-only execution did not expose a mounted checkout or repository-native command runner; hosted pull-request checks remain separate evidence."
+    },
+    {
+      "gate": "operational-api-policy-evidence-release-deployment-validation",
+      "outcome": "SKIPPED",
+      "reason": "No identity provider, authorization middleware, live policy engine, authoritative evidence resolver, release service, deployed API, browser transport, runtime log, dashboard, or public request was exercised; the document records those limits rather than claiming them."
+    }
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {
+      "id": "pinned-current-main",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/commit/2481e12958cbc237b7339302c69e2ebe17263d5b"
+    },
+    {
+      "id": "prior-compatibility-pointer",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/2481e12958cbc237b7339302c69e2ebe17263d5b/docs/atlas/master-api-surface.md"
+    },
+    {
+      "id": "canonical-atlas-lane",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/2481e12958cbc237b7339302c69e2ebe17263d5b/docs/atlases/README.md"
+    },
+    {
+      "id": "atlas-lineage-carrier",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/2481e12958cbc237b7339302c69e2ebe17263d5b/docs/atlases/domains-atlas-v1.1.md"
+    },
+    {
+      "id": "governed-api-architecture",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/2481e12958cbc237b7339302c69e2ebe17263d5b/docs/architecture/governed-api/README.md"
+    },
+    {
+      "id": "governed-api-dispatcher",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/2481e12958cbc237b7339302c69e2ebe17263d5b/apps/governed-api/src/governed_api/main.py"
+    },
+    {
+      "id": "governed-api-route-registry",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/2481e12958cbc237b7339302c69e2ebe17263d5b/apps/governed-api/src/governed_api/routes/registry.py"
+    },
+    {
+      "id": "governed-api-negative-envelope-builder",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/2481e12958cbc237b7339302c69e2ebe17263d5b/apps/governed-api/src/governed_api/stub.py"
+    },
+    {
+      "id": "governed-api-route-test",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/2481e12958cbc237b7339302c69e2ebe17263d5b/apps/governed-api/tests/test_abstain_routes.py"
+    },
+    {
+      "id": "runtime-response-contract",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/2481e12958cbc237b7339302c69e2ebe17263d5b/contracts/runtime/runtime_response_envelope.md"
+    },
+    {
+      "id": "runtime-response-schema",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/2481e12958cbc237b7339302c69e2ebe17263d5b/schemas/contracts/v1/runtime/runtime_response_envelope.schema.json"
+    },
+    {
+      "id": "directory-rules-adoption",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/2481e12958cbc237b7339302c69e2ebe17263d5b/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-22T16:29:49Z",
+  "emitter": "ChatGPT GitHub connector",
+  "links": {
+    "pr_number": null,
+    "adr_link": null,
+    "drift_register_entry": null
+  },
+  "notes": "Documentation/provenance-only change. This receipt binds the exact final master-api-surface pointer Markdown bytes and records human review as pending. It does not prove factual truth beyond cited repository evidence, API authority, caller authorization, evidence closure, policy approval, release state, governed ANSWER execution, deployment, publication, or mergeability. The prompt hash binds the visible task contract, not hidden reasoning."
+}

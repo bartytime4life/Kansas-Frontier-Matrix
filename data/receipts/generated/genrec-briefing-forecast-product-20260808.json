@@ -1,0 +1,153 @@
+{
+  "receipt_id": "genrec-briefing-forecast-product-20260808",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/forecast-product.yml",
+    "contracts/common/forecast_product.md",
+    "docs/intake/exploratory/briefing-forecast-product-source-map.md",
+    "fixtures/contracts/v1/common/forecast_product/README.md",
+    "fixtures/contracts/v1/common/forecast_product/cases.json",
+    "schemas/contracts/v1/common/forecast_product.schema.json",
+    "tests/validators/test_validate_forecast_product.py",
+    "tools/validators/validate_forecast_product.py"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/forecast-product.yml": "sha256:50df02af2b0ef56ec914df9eb95d477eff134474602e8b040e09e234e7ebf734",
+    "contracts/common/forecast_product.md": "sha256:036f876d8bf649f7ebd39a6eeea730e73098c7d246478af8634d8b57bd98f317",
+    "docs/intake/exploratory/briefing-forecast-product-source-map.md": "sha256:2d7668edd1697d7b78bc0e68e0623a2b896a8c96bae14ae8a69407a394c660a3",
+    "fixtures/contracts/v1/common/forecast_product/README.md": "sha256:7d3abcc04e1492257622ed30f79d06b87b1eebd117d25343dbad4dfe0672a48e",
+    "fixtures/contracts/v1/common/forecast_product/cases.json": "sha256:549dd1926037904ebf30d7cfb3e7673030ff39e732caa7dfe1c2efcc038da945",
+    "schemas/contracts/v1/common/forecast_product.schema.json": "sha256:146b82ec57d18151cfbfcb3bd16d45a395bd9cc0474ce7f8cfc9e9c24ccfab45",
+    "tests/validators/test_validate_forecast_product.py": "sha256:6df520101986c105a425873e47efd121d6eec81076ee0579c6f8a9d04a855075",
+    "tools/validators/validate_forecast_product.py": "sha256:0105c6ba9a9da886713e166f65251121c2421354f77e17d62a9fc22e346c7b8f"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-08"
+  },
+  "prompt_or_contract": "sha256:60a2ff27c52322600779a7325307c555d27af5d5fe9a43a10784bf8b848420eb",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "uploaded-file search",
+      "GitHub connector repository inspection and mutation",
+      "local deterministic Python validation"
+    ]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:68872f9226c4e4a288e888b51fb9d80c4a621a4d660ee36dd6fef7edb3c34c4e",
+      "sha256:2b8db8901f893d9aabb94bb32db5cbc2e0bb0c881bf74068551e9b3b76602893"
+    ],
+    "attached_docs": [
+      "KFM_Briefing_to_System_Integration_Architecture.docx",
+      "KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf"
+    ],
+    "evidence_refs": [
+      "attachment:KFM_Briefing_to_System_Integration_Architecture.docx#sections-14.1-14.5",
+      "attachment:KFM_Briefing_to_System_Integration_Architecture.docx#section-25.1-phase-4-conditions-framework",
+      "attachment:KFM_Directory_Governance_Standard_v2.0.0-draft.1.pdf#sections-9.3-12.2",
+      "github://bartytime4life/Kansas-Frontier-Matrix/commit/fb5aecfffe7a66242b0823d229be43a8629fb929",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/fb5aecfffe7a66242b0823d229be43a8629fb929/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/fb5aecfffe7a66242b0823d229be43a8629fb929/contracts/common/classification_release.md",
+      "github://bartytime4life/Kansas-Frontier-Matrix/blob/fb5aecfffe7a66242b0823d229be43a8629fb929/contracts/common/condition_relation.md"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/forecast-product.yml": "PROPOSED",
+    "contracts/common/forecast_product.md": "PROPOSED",
+    "docs/intake/exploratory/briefing-forecast-product-source-map.md": "PROPOSED",
+    "fixtures/contracts/v1/common/forecast_product/README.md": "CONFIRMED",
+    "fixtures/contracts/v1/common/forecast_product/cases.json": "CONFIRMED",
+    "schemas/contracts/v1/common/forecast_product.schema.json": "PROPOSED",
+    "tests/validators/test_validate_forecast_product.py": "CONFIRMED",
+    "tools/validators/validate_forecast_product.py": "CONFIRMED"
+  },
+  "validation_gates": [
+    {
+      "gate": "python-syntax-compilation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "draft-2020-12-schema-meta-validation",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "focused-unittest-suite-14-tests",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "fixture-polarity-5-pass-12-deny-1-error",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "forecast-role-time-method-uncertainty-geometry-lineage-and-authority-boundary",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "no-network-and-value-free-diagnostics",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "generated-receipt-artifact-hash-replay",
+      "outcome": "PASS"
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted validation runs after the draft pull request is opened."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human semantic, governance, source, and release review remains pending."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "briefing-forecast-product-source-role",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Briefing_to_System_Integration_Architecture.docx#sections-14.1-14.5"
+    },
+    {
+      "id": "briefing-conditions-phase",
+      "validated": true,
+      "evidence_ref": "attachment:KFM_Briefing_to_System_Integration_Architecture.docx#section-25.1-phase-4-conditions-framework"
+    },
+    {
+      "id": "accepted-directory-governance",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/fb5aecfffe7a66242b0823d229be43a8629fb929/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+    },
+    {
+      "id": "current-classification-and-relation-boundaries",
+      "validated": true,
+      "evidence_ref": "github://bartytime4life/Kansas-Frontier-Matrix/blob/fb5aecfffe7a66242b0823d229be43a8629fb929/contracts/common/classification_release.md"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-09T00:36:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Implements the briefing conditions framework's ForecastProduct as an inactive, fixture-only common profile. It preserves forecast, observation, classification, and model source roles; keeps data cutoff, issue, valid, retrieval, correction, and supersession times distinct; requires explicit method and uncertainty; and creates no source activation, model execution, evidence, policy, advisory, lifecycle, release, publication, or public-use authority."
+}

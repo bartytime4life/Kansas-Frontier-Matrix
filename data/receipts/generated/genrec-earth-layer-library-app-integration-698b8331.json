@@ -1,0 +1,121 @@
+{
+  "receipt_id": "genrec-earth-layer-library-app-integration-698b8331",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/earth-layer-library-app-validation.yml",
+    "apps/kansas-frontier-matrix-explorer/app/layout.tsx",
+    "apps/kansas-frontier-matrix-explorer/app/page.tsx",
+    "apps/kansas-frontier-matrix-explorer/app/site-layer-library-metadata.ts",
+    "apps/kansas-frontier-matrix-explorer/app/site-layer-library.css",
+    "apps/kansas-frontier-matrix-explorer/app/site-layer-library.tsx",
+    "apps/kansas-frontier-matrix-explorer/app/site-requested-layer-state.ts",
+    "apps/kansas-frontier-matrix-explorer/docs/earth-layer-library-integration.md",
+    "apps/kansas-frontier-matrix-explorer/tests/earth-layer-library.app.mjs",
+    "apps/kansas-frontier-matrix-explorer/tests/earth-layer-library.browser.py",
+    "apps/kansas-frontier-matrix-explorer/tests/earth-layer-library.test.mjs",
+    "apps/kansas-frontier-matrix-explorer/tests/site-requested-layer-state.test.mjs",
+    "packages/ui/src/README.md",
+    "packages/ui/src/layer-library-model.ts",
+    "packages/ui/src/layer-library-view.ts",
+    "packages/ui/src/layer-library.css"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/earth-layer-library-app-validation.yml": "sha256:33105d46fb970a6294ee7203d472ee7c826f32132ca3d966d048086a6d7abe57",
+    "apps/kansas-frontier-matrix-explorer/app/layout.tsx": "sha256:69b5c29469a0e07733c0a2e92e8f99deedacf0715ba20e0417377b40fd1ecf99",
+    "apps/kansas-frontier-matrix-explorer/app/page.tsx": "sha256:a3c3501b7029ae271435d8a3b66b5e573dcafc4c3e71832d96534669c16db59d",
+    "apps/kansas-frontier-matrix-explorer/app/site-layer-library-metadata.ts": "sha256:ded8b57c7eeabc8af2445714efbe2fdc0760d023149c85ed890b1ce5cff36e36",
+    "apps/kansas-frontier-matrix-explorer/app/site-layer-library.css": "sha256:afa9d94127d3e534fb98cc261db0a85db5d8a81c43f88b8b350a9a4e592e85ea",
+    "apps/kansas-frontier-matrix-explorer/app/site-layer-library.tsx": "sha256:4509cfe45325da265deb83cfe47be7852e8f86542ae47be149f3e83cd6049535",
+    "apps/kansas-frontier-matrix-explorer/app/site-requested-layer-state.ts": "sha256:3d0e58c7254323a63c87e55cc1a8fe28d54867cddf3c3f52b54ab6210f2ade80",
+    "apps/kansas-frontier-matrix-explorer/docs/earth-layer-library-integration.md": "sha256:56eb92b3cbc8d8e05baf16aa72d1ddb4b36960375c0f51feeaf50cf2de0e0903",
+    "apps/kansas-frontier-matrix-explorer/tests/earth-layer-library.app.mjs": "sha256:672bfe6877a7051563f7a51023cdf610ef41431fa3afb69bd541e4e9d38610d6",
+    "apps/kansas-frontier-matrix-explorer/tests/earth-layer-library.browser.py": "sha256:445b49e7af658a606c526e3a81de7dca69973f33d3a006f0980b099763d64d08",
+    "apps/kansas-frontier-matrix-explorer/tests/earth-layer-library.test.mjs": "sha256:6e19720c652e0fd6cb6a829ff8c39369a1b227f20502eac388773e242ba3083c",
+    "apps/kansas-frontier-matrix-explorer/tests/site-requested-layer-state.test.mjs": "sha256:60dfd4222ad2d89e4dbe2452a1fa14d60d9404b227dd56533996364b061cda57",
+    "packages/ui/src/README.md": "sha256:af3e0510b4f260acaea3381641febd96c6e5db9e34988695cde40579f4699a63",
+    "packages/ui/src/layer-library-model.ts": "sha256:65087f91b96a7fa18820099eaf6af080c26837f8629745efb9a7fbbb6e9add46",
+    "packages/ui/src/layer-library-view.ts": "sha256:dd73fd711dda55d447f77490e21474d17a31d75878d9737b7142a96fbbfb584c",
+    "packages/ui/src/layer-library.css": "sha256:255eef794dc659e276a6abb67861ba7f393f02dff5ec00c67a70827b05c0efeb"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Sol",
+    "version": "runtime build identifier not exposed"
+  },
+  "prompt_or_contract": "sha256:208211a04291ad0a934fcd38bced9911ab0f28b040e745ce502004a62907e087",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": ["GitHub", "Google Drive", "Notion", "container"]
+  },
+  "inputs": {
+    "evidence_hashes": [
+      "sha256:4d64e510ff9bb9ae1b592df5296afc24fba67616b69b2296c2a21a1bf82e50dd",
+      "sha256:5751f3b911590be1a579f48b61b063fb5285242296636fbc33d0bfc7a82467be"
+    ],
+    "attached_docs": [
+      "Notion: KFM Repository Workbench coordination checkpoint",
+      "Google Drive: KFM Living Atlas / Earth Layer Library design record"
+    ],
+    "evidence_refs": [
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/698b833109e3b58bcb9ef5321cb9a8a49a3823e6",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/commit/8b9c52d88687986879c8f87d7e3835f6a58bbacd",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/33991522670",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8b9c52d88687986879c8f87d7e3835f6a58bbacd/docs/doctrine/directory-rules.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8b9c52d88687986879c8f87d7e3835f6a58bbacd/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8b9c52d88687986879c8f87d7e3835f6a58bbacd/data/receipts/generated/README.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8b9c52d88687986879c8f87d7e3835f6a58bbacd/tools/validators/directory_governance/README.md",
+      "https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4228"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/earth-layer-library-app-validation.yml": "PROPOSED",
+    "apps/kansas-frontier-matrix-explorer/app/layout.tsx": "PROPOSED",
+    "apps/kansas-frontier-matrix-explorer/app/page.tsx": "PROPOSED",
+    "apps/kansas-frontier-matrix-explorer/app/site-layer-library-metadata.ts": "PROPOSED",
+    "apps/kansas-frontier-matrix-explorer/app/site-layer-library.css": "PROPOSED",
+    "apps/kansas-frontier-matrix-explorer/app/site-layer-library.tsx": "PROPOSED",
+    "apps/kansas-frontier-matrix-explorer/app/site-requested-layer-state.ts": "PROPOSED",
+    "apps/kansas-frontier-matrix-explorer/docs/earth-layer-library-integration.md": "PROPOSED",
+    "apps/kansas-frontier-matrix-explorer/tests/earth-layer-library.app.mjs": "PROPOSED",
+    "apps/kansas-frontier-matrix-explorer/tests/earth-layer-library.browser.py": "PROPOSED",
+    "apps/kansas-frontier-matrix-explorer/tests/earth-layer-library.test.mjs": "PROPOSED",
+    "apps/kansas-frontier-matrix-explorer/tests/site-requested-layer-state.test.mjs": "PROPOSED",
+    "packages/ui/src/README.md": "PROPOSED",
+    "packages/ui/src/layer-library-model.ts": "PROPOSED",
+    "packages/ui/src/layer-library-view.ts": "PROPOSED",
+    "packages/ui/src/layer-library.css": "PROPOSED"
+  },
+  "validation_gates": [
+    {"gate":"exact-head-lineage-and-artifact-hash-manifest","outcome":"PASS","reason":"Run 33991522670 candidate checkout pinned 698b833109e3b58bcb9ef5321cb9a8a49a3823e6, verified ancestry of original 34a9348ce7882284a5843f414368b92ade9d79db and main 8b9c52d88687986879c8f87d7e3835f6a58bbacd, and emitted SHA-256 bindings for the 16 current AI-authored/substantively modified non-receipt artifacts."},
+    {"gate":"diff-hygiene","outcome":"PASS","reason":"git diff --check against pinned main produced no findings on candidate 698b833109e3b58bcb9ef5321cb9a8a49a3823e6."},
+    {"gate":"root-registry-projection","outcome":"PASS","reason":"Repository-native validate_root_registry.py returned outcome PASS on both candidate and independently checked-out pinned main."},
+    {"gate":"repository-topology-ratchet","outcome":"FAIL","reason":"Repository-native topology validator is red on both candidate and pinned main with the same five FAIL_NEW_DRIFT identities and the same five STALE_BASELINE identities (KFM-TOPO-001, -004, -009, -010, -016). Candidate adds no distinct topology fingerprint. This is same-base attribution, not a waiver or baseline mutation."},
+    {"gate":"historical-generated-receipt-immutability","outcome":"PASS","reason":"Historical genrec-earth-layer-library-20260905-a7374a0d9e32.json is byte-unchanged from original candidate ancestry; current integration provenance is add-only."},
+    {"gate":"frozen-workspace-install-and-sites-build","outcome":"PASS","reason":"Candidate and pinned main both completed pnpm install --frozen-lockfile and the existing kansas-frontier-matrix-explorer Vinext build without modifying dependency/build-policy hashes."},
+    {"gate":"library-and-requested-state-node-tests","outcome":"PASS","reason":"Candidate exact-head run completed 61 targeted Node tests: 61 pass, 0 fail."},
+    {"gate":"actual-http-react-app-chromium","outcome":"PASS","reason":"Candidate exact-head run completed 14 actual loopback HTTP/Vinext/React Chromium scenarios: 14 pass, 0 fail, zero page errors and zero off-origin requests; Node 22.23.2 / Chromium 151.0.7922.34."},
+    {"gate":"complete-explorer-node-suite","outcome":"FAIL","reason":"Candidate full suite: 81 pass / 12 fail; pinned main: 20 pass / the same 12 fail. Failing test names and error messages match exactly (ReactJSX/ESNext compiler-enum access). The failures remain blocking evidence, not ignored tests."},
+    {"gate":"complete-explorer-typecheck","outcome":"FAIL","reason":"Candidate and pinned-main typecheck logs are byte-identical (SHA-256 3063e3a570e5609cd0b31152c901513cfff3d56db8055601d420db1a018d3795): missing cloudflare:workers, Fetcher and D1Database declarations."},
+    {"gate":"dependency-policy-and-worktree-immutability","outcome":"PASS","reason":"Five dependency/build-policy preimage hashes verified after execution and tracked worktree remained clean on both candidate and pinned-main jobs."},
+    {"gate":"current-generated-receipt-native-validator","outcome":"SKIPPED","reason":"This receipt did not exist at run 33991522670 emission time. The branch workflow is wired to run validate_generated_receipt.py on exactly one genrec-earth-layer-library-app-integration-*.json after this add-only receipt commit; that later exact-head result must not be retroactively written into this receipt."},
+    {"gate":"independent-human-review","outcome":"SKIPPED","reason":"Pending. No reviewer approval or override is fabricated."},
+    {"gate":"renderer-source-release-publication","outcome":"SKIPPED","reason":"No renderer/GPU validation, live-source admission, governed API delivery, public Sites readback, deployment, release, promotion or publication was performed."}
+  ],
+  "policy_decisions": [],
+  "citations": [
+    {"id":"directory-rules-adoption","validated":true,"evidence_ref":"https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8b9c52d88687986879c8f87d7e3835f6a58bbacd/docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"},
+    {"id":"generated-receipt-lane","validated":true,"evidence_ref":"https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8b9c52d88687986879c8f87d7e3835f6a58bbacd/data/receipts/generated/README.md"},
+    {"id":"repository-topology-validator-boundary","validated":true,"evidence_ref":"https://github.com/bartytime4life/Kansas-Frontier-Matrix/blob/8b9c52d88687986879c8f87d7e3835f6a58bbacd/tools/validators/directory_governance/README.md"},
+    {"id":"exact-head-app-and-governance-run","validated":true,"evidence_ref":"https://github.com/bartytime4life/Kansas-Frontier-Matrix/actions/runs/33991522670"},
+    {"id":"frozen-catalog-stage-boundary","validated":true,"evidence_ref":"https://github.com/bartytime4life/Kansas-Frontier-Matrix/issues/4228"}
+  ],
+  "human_review": {"reviewer_ids":[],"state":"pending","timestamp":null},
+  "override_record": null,
+  "created_at": "2026-09-05T20:58:01.548700Z",
+  "emitter": "ChatGPT GPT-5.6 Sol: GitHub-connected branch authoring and exact-head validation",
+  "links": {"pr_number":null,"adr_link":"docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md","drift_register_entry":null},
+  "notes": "Add-only current integration receipt emitted after exact-head run 33991522670. It does not rewrite the historical Earth Layer Library receipt. Main remains 8b9c52d88687986879c8f87d7e3835f6a58bbacd; the emission source is candidate 698b833109e3b58bcb9ef5321cb9a8a49a3823e6. The topology ratchet is intentionally recorded FAIL because identical five-fingerprint drift/stale-baseline sets reproduce on pinned main and candidate; no correction register, baseline, validator, or frozen catalog path is changed. #4024 is currently closed in GitHub metadata but its body is stale and closure alone is not used as delivery authority. #4228 remains open with Stage 1A accepted / Stage 1B HOLD / Stage 2 unauthorized. No PR lifecycle, merge, source admission, renderer activation, release, deployment or publication is authorized by this receipt."
+}

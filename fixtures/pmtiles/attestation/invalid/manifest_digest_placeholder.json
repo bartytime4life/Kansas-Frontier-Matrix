@@ -1,0 +1,9 @@
+{
+  "case_id": "tile-manifest-digest-placeholder",
+  "expected": {
+    "issue_codes": ["TILE_MANIFEST_DIGEST_INVALID"],
+    "status": "DENY"
+  },
+  "fixture_profile": "kfm.pmtiles.tile-artifact-manifest.compat.v1",
+  "mutation": "manifest_digest_placeholder"
+}

@@ -1,0 +1,1035 @@
+from __future__ import annotations
+
+import importlib.util
+import io
+import json
+import os
+import subprocess
+import sys
+import tempfile
+import unittest
+import base64
+import zlib
+from datetime import date
+from pathlib import Path
+from unittest import mock
+from contextlib import redirect_stdout
+
+
+REPO_ROOT = Path(__file__).resolve().parents[3]
+MODULE_PATH = (
+    REPO_ROOT
+    / "tools/validators/directory_governance/validate_repository_topology.py"
+)
+BASELINE_PATH = MODULE_PATH.with_name("repository_topology_baseline.json")
+# Merge commit of the one-time baseline recovery (#4782).
+RECOVERY_COMMIT = "e32729b1e74590a7b89661598e1beb680582b6f0"
+SPEC = importlib.util.spec_from_file_location(
+    "kfm_validate_repository_topology", MODULE_PATH
+)
+assert SPEC is not None and SPEC.loader is not None
+module = importlib.util.module_from_spec(SPEC)
+sys.modules[SPEC.name] = module
+SPEC.loader.exec_module(module)
+
+def _entry(finding: object) -> dict[str, object]:
+    entry = module._serialized_baseline_entry(finding)
+    entry["evidence_members"] = finding.evidence_members
+    return entry
+
+
+def _mirror_register(
+    *mirrors: dict[str, object], sha256: str | None = None, decision_ref: str = "ADR-0048"
+) -> bytes:
+    return json.dumps(
+        {
+            "registry": "external_mirror_register",
+            "authority": "machine_projection_only",
+            "doctrine": {
+                "sha256": sha256 or f"sha256:{module.ADOPTED_SHA256}",
+                "decision_ref": "ADR-0029",
+            },
+            "mirrors": list(mirrors),
+            "decision_ref": decision_ref,
+        }
+    ).encode("utf-8")
+
+
+def _mirror_decision(status: str = "accepted", effective: str = "accepted") -> bytes:
+    return (
+        "<!-- [KFM_META_BLOCK_V2]\nadr_id: ADR-0048\ntype: adr\n"
+        f"status: {status}\neffective_decision_status: {effective}\n"
+        "[/KFM_META_BLOCK_V2] -->\n"
+    ).encode("utf-8")
+
+
+ACCEPTED_MIRROR_DECISION = _mirror_decision()
+
+
+SITE_MIRROR = {
+    "mirror_id": "mirror.apps-site-source",
+    "status": "ACTIVE",
+    "path_prefix": "apps/site/source/",
+    "parity_check": "tools/qa/site_mirror.py",
+    "relaxed_rules": ["path-grammar:uppercase"],
+}
+MIRROR_RECEIPT_PATH = "data/receipts/generated/site-mirror.json"
+SITE_MIRROR_EVIDENCE = (MIRROR_RECEIPT_PATH, SITE_MIRROR["parity_check"])
+
+
+def _parity_check(*receipt_lines: str) -> bytes:
+    lines = ("ROOT = Path(__file__).resolve().parents[2]",) + receipt_lines
+    return ("\n".join(lines) + "\n").encode("utf-8")
+
+
+PARITY_CHECK = _parity_check(f'RECEIPT = ROOT / "{MIRROR_RECEIPT_PATH}"')
+
+
+def _mirror_receipt(upstream: tuple[str, ...], repository_only: tuple[str, ...] = ()) -> bytes:
+    comparison = {name: {"state": "identical", "site_sha256": "a" * 64, "mirror_sha256": "a" * 64}
+                  for name in upstream}
+    comparison.update({name: {"state": "repository_only_overlay", "mirror_sha256": "b" * 64}
+                       for name in repository_only})
+    return json.dumps({"comparison": comparison}).encode("utf-8")
+
+
+def _root_registry(*roots: dict[str, object]) -> bytes:
+    normalized_roots = []
+    for root in roots:
+        normalized = dict(root)
+        normalized.setdefault("class", "canonical")
+        normalized_roots.append(normalized)
+    return json.dumps(
+        {
+            "class_defaults": {
+                "canonical": {"status": "ACTIVE"},
+                "compatibility": {"status": "ACTIVE"},
+                "conditional": {"status": "PROPOSED"},
+                "deprecated": {"status": "DEPRECATED"},
+                "platform": {"status": "ACTIVE"},
+                "retired": {"status": "RETIRED"},
+            },
+            "roots": normalized_roots,
+        },
+        sort_keys=True,
+    ).encode("utf-8")
+
+
+class RepositoryTopologyTests(unittest.TestCase):
+    def test_profile_has_exactly_twenty_stable_rule_ids(self) -> None:
+        self.assertEqual(20, len(module.RULES))
+        self.assertEqual(
+            [f"KFM-TOPO-{number:03d}" for number in range(1, 21)],
+            [rule.rule_id for rule in module.RULES],
+        )
+        self.assertEqual(20, len(module.RULE_BY_ID))
+
+    def test_live_index_matches_baseline_after_reviewed_authority_resolution(self) -> None:
+        baseline_data = json.loads(BASELINE_PATH.read_text(encoding="utf-8"))
+        baseline = module.load_baseline(BASELINE_PATH)
+        findings, tracked_count = module.scan(REPO_ROOT)
+
+        self.assertGreater(tracked_count, 0)
+        self.assertGreater(len(findings), 0)
+        self.assertEqual(
+            {finding.fingerprint for finding in findings},
+            set(baseline),
+        )
+        code, report = module.evaluate(
+            findings,
+            tracked_count,
+            baseline,
+            expires_on=baseline_data["expires_on"],
+            as_of=date(2026, 8, 12),
+        )
+        self.assertEqual(0, code, report)
+        self.assertEqual("PASS", report["outcome"])
+        self.assertEqual(0, report["counts"]["fail_new_drift"])
+        self.assertEqual(len(baseline), report["counts"]["baselined_warning"])
+        self.assertEqual([], report["baseline"]["stale_fingerprints"])
+        self.assertFalse(report["authority"]["authorizes_repository_write"])
+
+    def test_cli_json_is_deterministic(self) -> None:
+        command = [
+            sys.executable,
+            str(MODULE_PATH),
+            "--repo-root",
+            str(REPO_ROOT),
+            "--baseline",
+            str(BASELINE_PATH),
+        ]
+        environment = os.environ.copy()
+        environment["PYTHONDONTWRITEBYTECODE"] = "1"
+        first = subprocess.run(
+            command,
+            cwd=REPO_ROOT,
+            env=environment,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        second = subprocess.run(
+            command,
+            cwd=REPO_ROOT,
+            env=environment,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        self.assertEqual(0, first.returncode, first.stdout + first.stderr)
+        self.assertEqual(first.stdout, second.stdout)
+        self.assertEqual(first.stderr, second.stderr)
+        report = json.loads(first.stdout)
+        self.assertEqual("PASS", report["outcome"])
+        self.assertEqual(0, report["counts"]["fail_new_drift"])
+        self.assertEqual(len(module.load_baseline(BASELINE_PATH)), report["counts"]["baselined_warning"])
+        self.assertEqual([], report["baseline"]["stale_fingerprints"])
+        self.assertEqual(20, report["rule_count"])
+        self.assertNotIn("duration", first.stdout)
+        self.assertNotIn("timestamp", first.stdout)
+
+    def test_baseline_accepts_exact_drift_and_rejects_growth_and_stale_entries(
+        self,
+    ) -> None:
+        inherited = module._finding(
+            "KFM-TOPO-003", "legacy-root-file.txt", "ROOT_FILE_NOT_ALLOWED"
+        )
+        baseline = {inherited.fingerprint: _entry(inherited)}
+
+        code, report = module.evaluate(
+            [inherited],
+            1,
+            baseline,
+            expires_on="2026-11-10",
+            as_of=date(2026, 8, 12),
+        )
+        self.assertEqual(0, code, report)
+        self.assertEqual("PASS", report["outcome"])
+
+        added = module._finding(
+            "KFM-TOPO-003", "new-root-file.txt", "ROOT_FILE_NOT_ALLOWED"
+        )
+        code, report = module.evaluate(
+            [inherited, added],
+            2,
+            baseline,
+            expires_on="2026-11-10",
+            as_of=date(2026, 8, 12),
+        )
+        self.assertEqual(1, code)
+        self.assertEqual("FAIL_NEW_DRIFT", report["outcome"])
+        self.assertEqual(1, report["counts"]["fail_new_drift"])
+
+        code, report = module.evaluate(
+            [],
+            0,
+            baseline,
+            expires_on="2026-11-10",
+            as_of=date(2026, 8, 12),
+        )
+        self.assertEqual(1, code)
+        self.assertEqual("FAIL_INVARIANT", report["outcome"])
+        self.assertEqual([inherited.fingerprint], report["baseline"]["stale_fingerprints"])
+
+    def test_invariants_cannot_be_evaluated_or_loaded_as_waivers(self) -> None:
+        invariant = module._finding(
+            "KFM-TOPO-002", "unregistered/", "UNREGISTERED_ROOT"
+        )
+        code, report = module.evaluate(
+            [invariant],
+            1,
+            {},
+            expires_on="2026-11-10",
+            as_of=date(2026, 8, 12),
+        )
+        self.assertEqual(1, code)
+        self.assertEqual("FAIL_INVARIANT", report["outcome"])
+        self.assertEqual(1, report["counts"]["fail_invariant"])
+
+        payload = json.loads(BASELINE_PATH.read_text(encoding="utf-8"))
+        payload["entries"] = [module._serialized_baseline_entry(invariant)]
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "baseline.json"
+            path.write_text(
+                json.dumps(payload, indent=2, sort_keys=True) + "\n",
+                encoding="utf-8",
+            )
+            with self.assertRaisesRegex(module.TopologyError, "waive an invariant"):
+                module.load_baseline(path)
+
+        candidate = module.candidate_baseline(
+            [invariant], expires_on="2026-11-10"
+        )
+        self.assertEqual([], candidate["entries"])
+
+    def test_hard_path_safety_findings_cannot_be_baselined(self) -> None:
+        paths = ("docs/link.md",)
+        modes = {"docs/link.md": "120000"}
+        blobs = {
+            "control_plane/root_registry.yaml": _root_registry(
+                {"path": "docs/"}
+            )
+        }
+        object_ids = {path: "a" * 40 for path in paths}
+        findings = module._path_findings(paths, modes, object_ids, blobs)
+        path_finding = next(
+            finding for finding in findings if finding.rule_id == "KFM-TOPO-001"
+        )
+        self.assertFalse(path_finding.baseline_allowed)
+        candidate = module.candidate_baseline(
+            [path_finding], expires_on="2026-11-10"
+        )
+        self.assertEqual([], candidate["entries"])
+
+    def test_soft_path_grammar_fingerprint_is_content_insensitive(self) -> None:
+        paths = ("docs/example(name).md",)
+        modes = {paths[0]: "100644"}
+        blobs = {
+            "control_plane/root_registry.yaml": _root_registry(
+                {"path": "docs/"}
+            )
+        }
+        first = module._path_findings(paths, modes, {paths[0]: "a" * 40}, blobs)
+        second = module._path_findings(paths, modes, {paths[0]: "b" * 40}, blobs)
+        first_path = next(
+            finding
+            for finding in first
+            if (finding.rule_id, finding.subject)
+            == ("KFM-TOPO-001", paths[0])
+        )
+        second_path = next(
+            finding
+            for finding in second
+            if (finding.rule_id, finding.subject)
+            == ("KFM-TOPO-001", paths[0])
+        )
+
+        self.assertEqual(first_path.fingerprint, second_path.fingerprint)
+        self.assertEqual(("mode=100644", "parentheses"), first_path.evidence_members)
+
+        executable = module._path_findings(
+            paths, {paths[0]: "100755"}, {paths[0]: "b" * 40}, blobs
+        )
+        executable_path = next(
+            finding
+            for finding in executable
+            if (finding.rule_id, finding.subject)
+            == ("KFM-TOPO-001", paths[0])
+        )
+        self.assertNotEqual(first_path.fingerprint, executable_path.fingerprint)
+
+    def test_site_api_route_brackets_are_scoped(self) -> None:
+        paths = (
+            "apps/site/source/app/api/data-submissions/[id]/route.ts",
+            "apps/site/source/app/api/earth-engine-context/[setId]/[layerId]/[...tile]/route.ts",
+            "apps/site/source/app/api/unsafe/[bad-name!]/route.ts",
+            "docs/[id].md",
+        ) + SITE_MIRROR_EVIDENCE
+        modes = {path: "100644" for path in paths}
+        blobs = {
+            "control_plane/root_registry.yaml": _root_registry(
+                {"path": "apps/"}, {"path": "docs/"}, {"path": "data/"}, {"path": "tools/"}
+            ),
+            module.EXTERNAL_MIRROR_REGISTER: _mirror_register(SITE_MIRROR),
+            module.EXTERNAL_MIRROR_DECISION_PATH: ACCEPTED_MIRROR_DECISION,
+            SITE_MIRROR["parity_check"]: PARITY_CHECK,
+            MIRROR_RECEIPT_PATH: _mirror_receipt(
+                tuple(path.removeprefix("apps/site/source/") for path in paths[:3])
+            ),
+        }
+        object_ids = {path: "a" * 40 for path in paths}
+
+        findings = module._path_findings(paths, modes, object_ids, blobs)
+        punctuation = next(
+            finding
+            for finding in findings
+            if (finding.rule_id, finding.subject)
+            == ("KFM-TOPO-001", "path-grammar:nonportable-punctuation")
+        )
+        self.assertEqual(
+            ("apps/site/source/app/api/unsafe/[bad-name!]/route.ts", "docs/[id].md"),
+            punctuation.evidence_members,
+        )
+        # Mirrored external site paths keep upstream casing (see
+        # test_external_site_mirror_is_an_explicit_uppercase_exception).
+        self.assertFalse(
+            any(
+                (finding.rule_id, finding.subject)
+                == ("KFM-TOPO-001", "path-grammar:uppercase")
+                for finding in findings
+            )
+        )
+
+    def _uppercase_members(
+        self, paths, register=None, receipt=None, decision=ACCEPTED_MIRROR_DECISION,
+        parity_check=PARITY_CHECK,
+    ):
+        modes = {path: "100644" for path in paths}
+        blobs = {
+            "control_plane/root_registry.yaml": _root_registry(
+                {"path": "apps/"}, {"path": "docs/"}, {"path": "data/"}, {"path": "tools/"}
+            )
+        }
+        if decision is not None:
+            blobs[module.EXTERNAL_MIRROR_DECISION_PATH] = decision
+        if register is not None:
+            blobs[module.EXTERNAL_MIRROR_REGISTER] = register
+        if parity_check is not None:
+            blobs[SITE_MIRROR["parity_check"]] = parity_check
+        if receipt is not None:
+            blobs[MIRROR_RECEIPT_PATH] = receipt
+        object_ids = {path: "a" * 40 for path in paths}
+        findings = module._path_findings(paths, modes, object_ids, blobs)
+        for finding in findings:
+            if (finding.rule_id, finding.subject) == ("KFM-TOPO-001", "path-grammar:uppercase"):
+                return finding.evidence_members
+        return ()
+
+    def test_registered_external_mirror_is_an_explicit_uppercase_exception(self) -> None:
+        paths = (
+            "apps/site/source/docs/RIVER_DELIVERY_2026-10-11.md",
+            "apps/site/source/AGENTS.md",
+            "apps/siteextra/SHOUT.md",
+            "docs/SHOUT.md",
+        ) + SITE_MIRROR_EVIDENCE
+
+        receipt = _mirror_receipt(("docs/RIVER_DELIVERY_2026-10-11.md", "AGENTS.md"))
+        members = self._uppercase_members(paths, _mirror_register(SITE_MIRROR), receipt)
+
+        self.assertEqual(("apps/siteextra/SHOUT.md", "docs/SHOUT.md"), members)
+
+    def test_repository_only_overlay_inside_mirror_keeps_default_grammar(self) -> None:
+        upstream = "apps/site/source/AGENTS.md"
+        overlay = "apps/site/source/docs/LOCAL_OVERLAY.md"
+        unlisted = "apps/site/source/docs/UNLISTED.md"
+        paths = (upstream, overlay, unlisted) + SITE_MIRROR_EVIDENCE
+        receipt = _mirror_receipt(("AGENTS.md",), repository_only=("docs/LOCAL_OVERLAY.md",))
+
+        members = self._uppercase_members(paths, _mirror_register(SITE_MIRROR), receipt)
+
+        self.assertEqual((overlay, unlisted), members)
+
+    def test_mirror_exception_requires_upstream_backed_state_and_digest(self) -> None:
+        backed = "apps/site/source/README.md"
+        claimed = "apps/site/source/docs/LOCAL_OVERLAY.md"
+        malformed = "apps/site/source/docs/MALFORMED.md"
+        paths = (backed, claimed, malformed) + SITE_MIRROR_EVIDENCE
+        receipt = json.dumps(
+            {
+                "comparison": {
+                    "README.md": {"state": "inherited_repository_overlay", "site_sha256": "c" * 64},
+                    # A repository-only state never qualifies, even with an upstream digest.
+                    "docs/LOCAL_OVERLAY.md": {"state": "repository_only_overlay", "site_sha256": "d" * 64},
+                    "docs/MALFORMED.md": {"state": "identical", "site_sha256": "not-a-digest"},
+                }
+            }
+        ).encode("utf-8")
+
+        members = self._uppercase_members(paths, _mirror_register(SITE_MIRROR), receipt)
+
+        self.assertEqual((claimed, malformed), members)
+
+    def test_mirror_exception_requires_accepted_adr_0048(self) -> None:
+        mirrored = "apps/site/source/AGENTS.md"
+        paths = (mirrored,) + SITE_MIRROR_EVIDENCE
+        receipt = _mirror_receipt(("AGENTS.md",))
+        register = _mirror_register(SITE_MIRROR)
+        self.assertEqual((), self._uppercase_members(paths, register, receipt))
+        # A register not bound to ADR-0048 relaxes nothing (it does not raise, so
+        # a base tree with an older register remains scannable for parity).
+        for decision_ref in ("ADR-0029", None):
+            with self.subTest(decision_ref=decision_ref):
+                unbound = _mirror_register(SITE_MIRROR, decision_ref=decision_ref)
+                self.assertEqual((mirrored,), self._uppercase_members(paths, unbound, receipt))
+        for decision in (
+            None,
+            _mirror_decision(status="proposed"),
+            _mirror_decision(effective="proposed"),
+            _mirror_decision().replace(b"ADR-0048", b"ADR-0049"),
+            # Accepted lines quoted in the body do not count; only the leading block does.
+            _mirror_decision(status="superseded", effective="superseded")
+            + b"\n```yaml\nadr_id: ADR-0048\nstatus: accepted\neffective_decision_status: accepted\n```\n",
+            # The metadata block must lead the file.
+            b"# ADR-0048\n\n" + _mirror_decision(),
+            # Each field must appear exactly once, at top level.
+            _mirror_decision().replace(b"status: accepted\neff", b"status: accepted\nstatus: proposed\neff"),
+            _mirror_decision(status="proposed").replace(
+                b"status: proposed\n", b"status: proposed\nnotes:\n  status: accepted\n"
+            ),
+        ):
+            with self.subTest(decision=decision):
+                self.assertEqual((mirrored,), self._uppercase_members(paths, register, receipt, decision))
+
+    def test_registered_decision_is_accepted_adr_0048(self) -> None:
+        register = json.loads(
+            (REPO_ROOT / module.EXTERNAL_MIRROR_REGISTER).read_text(encoding="utf-8")
+        )
+        self.assertEqual(module.EXTERNAL_MIRROR_DECISION, register["decision_ref"])
+        self.assertEqual(module.EXTERNAL_MIRROR_DECISION_PATH, register["decision_path"])
+        blobs = {
+            module.EXTERNAL_MIRROR_DECISION_PATH: (
+                REPO_ROOT / module.EXTERNAL_MIRROR_DECISION_PATH
+            ).read_bytes()
+        }
+        self.assertTrue(module._external_mirror_decision_accepted(blobs))
+
+    def test_live_receipt_is_derived_from_the_site_mirror_check(self) -> None:
+        register = json.loads(
+            (REPO_ROOT / module.EXTERNAL_MIRROR_REGISTER).read_text(encoding="utf-8")
+        )
+        for entry in register["mirrors"]:
+            if entry["mirror_id"] == "mirror.apps-site-source":
+                # The register keeps no receipt copy that a mirror sync could leave stale.
+                self.assertNotIn("receipt_path", entry)
+                check = entry["parity_check"]
+                receipt = module._mirror_pinned_receipt(
+                    {check: (REPO_ROOT / check).read_bytes()}, check
+                )
+                self.assertIsNotNone(receipt)
+                self.assertTrue((REPO_ROOT / receipt).is_file())
+                break
+        else:
+            self.fail("mirror.apps-site-source is not registered")
+
+    def test_mirror_receipt_must_be_pinned_once_by_the_parity_check(self) -> None:
+        mirrored = "apps/site/source/AGENTS.md"
+        paths = (mirrored,) + SITE_MIRROR_EVIDENCE
+        receipt = _mirror_receipt(("AGENTS.md",))
+        register = _mirror_register(SITE_MIRROR)
+        pinned = f'RECEIPT = ROOT / "{MIRROR_RECEIPT_PATH}"'
+        self.assertEqual((), self._uppercase_members(paths, register, receipt))
+        # Formatting of the canonical assignment does not matter once parsed.
+        spaced = _parity_check(f'RECEIPT=ROOT/"{MIRROR_RECEIPT_PATH}"  # pinned')
+        self.assertEqual((), self._uppercase_members(paths, register, receipt, parity_check=spaced))
+        for check in (
+            None,
+            _parity_check(),
+            _parity_check(pinned, 'RECEIPT = ROOT / "data/receipts/generated/other.json"'),
+            _parity_check(pinned, "RECEIPT = Path('/tmp/other.json')"),
+            _parity_check(f'RECEIPT = ROOT / "../{MIRROR_RECEIPT_PATH}"'),
+            _parity_check('RECEIPT = ROOT / "docs/site-mirror.json"'),
+            # Any further binding of RECEIPT, at any depth or by any construct.
+            _parity_check(pinned, "if True:", '    RECEIPT = ROOT / "data/receipts/generated/other.json"'),
+            _parity_check(pinned, "def use():", "    global RECEIPT", "    RECEIPT = None"),
+            _parity_check(pinned, "for RECEIPT in ():", "    pass"),
+            _parity_check(pinned, "(RECEIPT := None)"),
+            _parity_check(pinned, "from json import loads as RECEIPT"),
+            _parity_check(pinned, "from os.path import *"),
+            _parity_check(pinned, "RECEIPT += ''"),
+            _parity_check(pinned, "del RECEIPT"),
+            # The single binding must be the module-level canonical assignment.
+            _parity_check("if True:", f"    {pinned}"),
+            _parity_check(f'RECEIPT: Path = ROOT / "{MIRROR_RECEIPT_PATH}"'),
+            _parity_check(f'RECEIPT = Path("/repo") / "{MIRROR_RECEIPT_PATH}"'),
+            _parity_check(f'RECEIPT, OTHER = ROOT / "{MIRROR_RECEIPT_PATH}", None'),
+            # Unparseable source.
+            _parity_check(pinned, "def broken(:"),
+        ):
+            with self.subTest(check=check):
+                self.assertEqual(
+                    (mirrored,), self._uppercase_members(paths, register, receipt, parity_check=check)
+                )
+
+    def test_legacy_register_receipt_path_is_ignored(self) -> None:
+        mirrored = "apps/site/source/AGENTS.md"
+        paths = (mirrored,) + SITE_MIRROR_EVIDENCE
+        stale = dict(SITE_MIRROR, receipt_path="data/receipts/generated/stale.json")
+        receipt = _mirror_receipt(("AGENTS.md",))
+        self.assertEqual((), self._uppercase_members(paths, _mirror_register(stale), receipt))
+
+    def test_mirror_exception_fails_closed_without_register_or_evidence(self) -> None:
+        mirrored = "apps/site/source/AGENTS.md"
+        # No register: nothing is relaxed.
+        self.assertEqual((mirrored,), self._uppercase_members((mirrored,) + SITE_MIRROR_EVIDENCE))
+        # Register present but the pinned receipt is not tracked.
+        receipt = _mirror_receipt(("AGENTS.md",))
+        self.assertEqual(
+            (mirrored,),
+            self._uppercase_members(
+                (mirrored, SITE_MIRROR["parity_check"]), _mirror_register(SITE_MIRROR), receipt
+            ),
+        )
+        # Retired entries relax nothing.
+        retired = dict(SITE_MIRROR, status="RETIRED")
+        self.assertEqual(
+            (mirrored,),
+            self._uppercase_members(
+                (mirrored,) + SITE_MIRROR_EVIDENCE, _mirror_register(retired), receipt
+            ),
+        )
+
+    def test_mirror_register_rejects_unsafe_or_unbound_entries(self) -> None:
+        paths = ("apps/site/source/AGENTS.md",) + SITE_MIRROR_EVIDENCE
+        bad_registers = (
+            _mirror_register(SITE_MIRROR, sha256="sha256:" + "0" * 64),
+            _mirror_register(dict(SITE_MIRROR, relaxed_rules=["path-grammar:nonportable-punctuation"])),
+            _mirror_register(dict(SITE_MIRROR, path_prefix="apps/")),
+            _mirror_register(dict(SITE_MIRROR, path_prefix="apps/site/source")),
+            _mirror_register(dict(SITE_MIRROR, path_prefix="apps/../docs/")),
+            _mirror_register(SITE_MIRROR, dict(SITE_MIRROR)),
+        )
+        for register in bad_registers:
+            with self.subTest(register=register):
+                with self.assertRaises(module.TopologyError):
+                    self._uppercase_members(paths, register)
+
+    def test_conventional_readme_does_not_expand_populated_alias_drift(
+        self,
+    ) -> None:
+        paths = ("policy/people/README.md", "policy/people/rule.rego")
+        modes = {path: "100644" for path in paths}
+        blobs = {
+            "control_plane/root_registry.yaml": _root_registry(
+                {"path": "policy/"}
+            )
+        }
+        object_ids = {path: "a" * 40 for path in paths}
+
+        findings = module._path_findings(paths, modes, object_ids, blobs)
+        identities = {
+            (finding.rule_id, finding.subject): finding for finding in findings
+        }
+
+        self.assertNotIn(
+            ("KFM-TOPO-001", "path-grammar:uppercase"), identities
+        )
+        self.assertEqual(
+            ("policy/people/rule.rego",),
+            identities[
+                ("KFM-TOPO-006", "scope-alias:people")
+            ].evidence_members,
+        )
+
+    def test_readme_only_alias_directory_remains_scaffold_drift(self) -> None:
+        paths = ("policy/transport/README.md",)
+        modes = {path: "100644" for path in paths}
+        blobs = {
+            "control_plane/root_registry.yaml": _root_registry(
+                {"path": "policy/"}
+            )
+        }
+        object_ids = {path: "a" * 40 for path in paths}
+
+        findings = module._path_findings(paths, modes, object_ids, blobs)
+        identities = {
+            (finding.rule_id, finding.subject): finding for finding in findings
+        }
+
+        self.assertNotIn(("KFM-TOPO-006", "scope-alias:transport"), identities)
+        self.assertEqual(
+            ("policy/transport",),
+            identities[
+                ("KFM-TOPO-009", "scaffold-only-leaf-directories")
+            ].evidence_members,
+        )
+
+    def test_nonconventional_uppercase_name_still_fails(self) -> None:
+        paths = (
+            "policy/Example/README.md",
+            "policy/example/SHOUT.md",
+        )
+        modes = {path: "100644" for path in paths}
+        blobs = {
+            "control_plane/root_registry.yaml": _root_registry(
+                {"path": "policy/"}
+            )
+        }
+        object_ids = {path: "a" * 40 for path in paths}
+
+        findings = module._path_findings(paths, modes, object_ids, blobs)
+        uppercase = next(
+            finding
+            for finding in findings
+            if (
+                finding.rule_id,
+                finding.subject,
+            )
+            == ("KFM-TOPO-001", "path-grammar:uppercase")
+        )
+
+        self.assertEqual(paths, uppercase.evidence_members)
+
+    def test_canonical_numbered_adr_name_is_an_explicit_uppercase_exception(
+        self,
+    ) -> None:
+        paths = (
+            "docs/adr/ADR-0042-conventional-decision.md",
+            "docs/adr/ADR-0043-Bad-Slug.md",
+        )
+        modes = {path: "100644" for path in paths}
+        blobs = {
+            "control_plane/root_registry.yaml": _root_registry(
+                {"path": "docs/"}
+            )
+        }
+        object_ids = {path: "a" * 40 for path in paths}
+
+        findings = module._path_findings(paths, modes, object_ids, blobs)
+        uppercase = next(
+            finding
+            for finding in findings
+            if (finding.rule_id, finding.subject)
+            == ("KFM-TOPO-001", "path-grammar:uppercase")
+        )
+
+        self.assertEqual(("docs/adr/ADR-0043-Bad-Slug.md",), uppercase.evidence_members)
+
+    def test_unmerged_or_duplicate_index_entries_fail_closed(self) -> None:
+        conflict = b"100644 " + b"a" * 40 + b" 1\tdocs/a.md\0"
+        with mock.patch.object(module, "_git", return_value=conflict):
+            with self.assertRaisesRegex(module.TopologyError, "unmerged"):
+                module.tracked_index(REPO_ROOT)
+
+        duplicate = (
+            b"100644 " + b"a" * 40 + b" 0\tdocs/a.md\0"
+            + b"100644 " + b"b" * 40 + b" 0\tdocs/a.md\0"
+        )
+        with mock.patch.object(module, "_git", return_value=duplicate):
+            with self.assertRaisesRegex(module.TopologyError, "duplicate path"):
+                module.tracked_index(REPO_ROOT)
+
+    def test_governance_json_rejects_duplicate_keys_and_root_paths(self) -> None:
+        with self.assertRaisesRegex(module.TopologyError, "invalid indexed JSON"):
+            module._blob_json(
+                {"control_plane/root_registry.yaml": b'{"roots":[],"roots":[]}'},
+                "control_plane/root_registry.yaml",
+            )
+
+        duplicate_roots = {
+            "control_plane/root_registry.yaml": _root_registry(
+                {"path": "docs/"},
+                {"path": "docs"},
+            )
+        }
+        with self.assertRaisesRegex(module.TopologyError, "duplicate or invalid"):
+            module._registered_roots(duplicate_roots)
+
+    def test_compressed_baseline_evidence_is_bounded(self) -> None:
+        oversized = b"x" * (module.MAX_EVIDENCE_BYTES + 1)
+        encoded = base64.b64encode(zlib.compress(oversized, level=9)).decode("ascii")
+        with self.assertRaisesRegex(module.TopologyError, "compressed evidence"):
+            module._decode_evidence_members(encoded, module._digest(oversized))
+
+        payload = json.loads(BASELINE_PATH.read_text(encoding="utf-8"))
+        payload["entries"] = [
+            module._serialized_baseline_entry(
+                module._finding("KFM-TOPO-003", f"legacy-{index}.txt", "legacy")
+            )
+            for index in range(3)
+        ]
+        payload["entries"].sort(key=lambda item: item["fingerprint"])
+        prior_limit = module.MAX_BASELINE_EVIDENCE_BYTES
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "baseline.json"
+            path.write_text(json.dumps(payload), encoding="utf-8")
+            try:
+                module.MAX_BASELINE_EVIDENCE_BYTES = 10
+                with self.assertRaisesRegex(module.TopologyError, "aggregate limit"):
+                    module.load_baseline(path)
+            finally:
+                module.MAX_BASELINE_EVIDENCE_BYTES = prior_limit
+
+    def test_frozen_root_content_change_changes_the_fingerprint(self) -> None:
+        paths = ("catalog/README.md",)
+        modes = {paths[0]: "100644"}
+        blobs = {
+            "control_plane/root_registry.yaml": _root_registry(
+                {"path": "catalog/", "class": "deprecated"}
+            )
+        }
+        first = module._path_findings(
+            paths, modes, {paths[0]: "a" * 40}, blobs
+        )
+        second = module._path_findings(
+            paths, modes, {paths[0]: "b" * 40}, blobs
+        )
+        first_frozen = next(
+            finding for finding in first if finding.rule_id == "KFM-TOPO-004"
+        )
+        second_frozen = next(
+            finding for finding in second if finding.rule_id == "KFM-TOPO-004"
+        )
+        self.assertNotEqual(first_frozen.fingerprint, second_frozen.fingerprint)
+
+    def test_emit_baseline_refuses_invariant_findings(self) -> None:
+        invariant = module._finding(
+            "KFM-TOPO-002", "unregistered/", "UNREGISTERED_ROOT"
+        )
+        output = io.StringIO()
+        with mock.patch.object(module, "scan", return_value=((invariant,), 1)):
+            with redirect_stdout(output):
+                code = module.main(["--emit-baseline"])
+        self.assertEqual(2, code)
+        self.assertEqual("ERROR_VALIDATOR", json.loads(output.getvalue())["outcome"])
+
+    def test_trusted_baseline_transition_allows_only_shrinkage(self) -> None:
+        current_data = json.loads(BASELINE_PATH.read_text(encoding="utf-8"))
+        current_entries = module.load_baseline(BASELINE_PATH)
+        trusted_data = json.loads(BASELINE_PATH.read_text(encoding="utf-8"))
+        trusted_entries = module.load_baseline(BASELINE_PATH)
+        module.validate_baseline_transition(
+            current_data, current_entries, trusted_data, trusted_entries
+        )
+
+        added = module._finding(
+            "KFM-TOPO-003", "new-root-file.txt", "ROOT_FILE_NOT_ALLOWED"
+        )
+        added_entry = _entry(added)
+        with self.assertRaisesRegex(module.TopologyError, "adds waiver"):
+            module.validate_baseline_transition(
+                current_data,
+                {**current_entries, added.fingerprint: added_entry},
+                trusted_data,
+                trusted_entries,
+            )
+
+        extended_data = dict(current_data)
+        extended_data["expires_on"] = "2027-01-01"
+        with self.assertRaisesRegex(module.TopologyError, "extends expiry"):
+            module.validate_baseline_transition(
+                extended_data,
+                current_entries,
+                trusted_data,
+                trusted_entries,
+            )
+
+        inherited_group = module._finding(
+            "KFM-TOPO-009", "scaffold-only-leaf-directories", ["docs/a", "docs/b"]
+        )
+        repaired_group = module._finding(
+            "KFM-TOPO-009", "scaffold-only-leaf-directories", ["docs/b"]
+        )
+        group_trusted = {inherited_group.fingerprint: _entry(inherited_group)}
+        group_current = {repaired_group.fingerprint: _entry(repaired_group)}
+        module.validate_baseline_transition(
+            current_data,
+            group_current,
+            trusted_data,
+            group_trusted,
+        )
+        code, report = module.evaluate(
+            [repaired_group],
+            1,
+            group_current,
+            expires_on=str(current_data["expires_on"]),
+            as_of=date(2026, 8, 12),
+        )
+        self.assertEqual(0, code, report)
+        self.assertEqual("PASS", report["outcome"])
+
+    def test_one_time_recovery_admits_only_its_exact_batch(self) -> None:
+        # Replay the baseline exactly as the recovery landed it; later changes may
+        # legitimately shrink the recovered waivers under the ordinary rules.
+        raw = subprocess.run(
+            ["git", "show", f"{RECOVERY_COMMIT}:{module.BASELINE_REPOSITORY_PATH}"],
+            cwd=REPO_ROOT, capture_output=True, check=True,
+        ).stdout
+        data, current = module._load_baseline_bytes(raw, label="recovery")
+        self.assertLessEqual(module.RECOVERY_FINGERPRINTS, set(current))
+        trusted = {
+            fingerprint: entry
+            for fingerprint, entry in current.items()
+            if fingerprint not in module.RECOVERY_FINGERPRINTS
+        }
+        pinned = module.RECOVERY_TRUSTED_BASELINE_SHA256
+
+        module.validate_baseline_transition(data, current, data, trusted, pinned)
+
+        with self.assertRaisesRegex(module.TopologyError, "adds waiver"):
+            module.validate_baseline_transition(data, current, data, trusted)
+        with self.assertRaisesRegex(module.TopologyError, "adds waiver"):
+            module.validate_baseline_transition(
+                data, current, data, trusted, module._digest(b"another trusted baseline")
+            )
+
+        partial = dict(current)
+        del partial[min(module.RECOVERY_FINGERPRINTS)]
+        with self.assertRaisesRegex(module.TopologyError, "exact reviewed batch"):
+            module.validate_baseline_transition(data, partial, data, trusted, pinned)
+
+        unrelated = module._finding(
+            "KFM-TOPO-003", "new-root-file.txt", "ROOT_FILE_NOT_ALLOWED"
+        )
+        with self.assertRaisesRegex(module.TopologyError, "adds waiver"):
+            module.validate_baseline_transition(
+                data,
+                {**current, unrelated.fingerprint: _entry(unrelated)},
+                data,
+                trusted,
+                pinned,
+            )
+
+        # After the recovery lands the trusted baseline already holds the batch, so
+        # the ordinary shrink-only rules apply unchanged.
+        module.validate_baseline_transition(data, current, data, current, pinned)
+
+    def test_artifact_fingerprints_bind_to_indexed_content(self) -> None:
+        paths = ("artifacts/release/example/release_manifest.json",)
+        modes = {paths[0]: "100644"}
+        blobs = {
+            "control_plane/root_registry.yaml": _root_registry(
+                {"path": "artifacts/", "class": "compatibility"}
+            )
+        }
+        first = module._path_findings(paths, modes, {paths[0]: "a" * 40}, blobs)
+        second = module._path_findings(paths, modes, {paths[0]: "b" * 40}, blobs)
+        for rule_id in ("KFM-TOPO-005", "KFM-TOPO-013"):
+            first_finding = next(item for item in first if item.rule_id == rule_id)
+            second_finding = next(item for item in second if item.rule_id == rule_id)
+            self.assertNotEqual(first_finding.fingerprint, second_finding.fingerprint)
+
+    def test_app_configuration_and_schema_inputs_fail_closed(self) -> None:
+        fixed_paths = (
+            "control_plane/path_alias_register.yaml",
+            "control_plane/root_registry.yaml",
+            "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+            "docs/doctrine/directory-rules.md",
+        )
+        fixed = {path: (REPO_ROOT / path).read_bytes() for path in fixed_paths}
+        config_path = "apps/web/config.json"
+        config_blobs = dict(fixed)
+        config_blobs[config_path] = b'{"source":"data/raw/private.json"}'
+        findings = module._content_findings((config_path,), config_blobs)
+        self.assertIn("KFM-TOPO-014", {finding.rule_id for finding in findings})
+
+        constructed_path = "apps/web/main.py"
+        constructed_blobs = dict(fixed)
+        constructed_blobs[constructed_path] = b'PATH = Path("data") / "raw" / "private.json"\n'
+        constructed = module._content_findings((constructed_path,), constructed_blobs)
+        self.assertIn("KFM-TOPO-014", {finding.rule_id for finding in constructed})
+
+        invalid_app = dict(fixed)
+        invalid_app[config_path] = b"\xff"
+        with self.assertRaisesRegex(module.TopologyError, "not UTF-8"):
+            module._content_findings((config_path,), invalid_app)
+
+        schema_path = "schemas/broken.schema.json"
+        invalid_schema = dict(fixed)
+        invalid_schema[schema_path] = b'{"$id":"a","$id":"b"}'
+        with self.assertRaisesRegex(module.TopologyError, "cannot be inspected"):
+            module._content_findings((schema_path,), invalid_schema)
+
+        decoy_path = "artifacts/qa/decoy.json"
+        decoy_blobs = dict(fixed)
+        decoy_blobs[decoy_path] = (
+            b'{"note":"generated_from generator generator_version sha256 edit_policy"}'
+        )
+        decoy = module._content_findings((decoy_path,), decoy_blobs)
+        provenance = next(
+            finding for finding in decoy if finding.rule_id == "KFM-TOPO-017"
+        )
+        self.assertTrue(provenance.evidence_sha256)
+
+        invalid_values_path = "artifacts/qa/invalid-values.json"
+        invalid_values_blobs = dict(fixed)
+        invalid_values_blobs[invalid_values_path] = (
+            b'{"generated_from":null,"generator":"","generator_version":null,'
+            b'"sha256":"not-a-digest","edit_policy":false}'
+        )
+        invalid_values = module._content_findings(
+            (invalid_values_path,), invalid_values_blobs
+        )
+        self.assertIn("KFM-TOPO-017", {finding.rule_id for finding in invalid_values})
+
+    def test_high_value_synthetic_path_rules(self) -> None:
+        registered_roots = {
+            "artifacts",
+            "catalog",
+            "connectors",
+            "data",
+            "docs",
+            "release",
+            "src",
+            "tools",
+        }
+        root_classes = {
+            "artifacts": "compatibility",
+            "catalog": "deprecated",
+            "src": "conditional",
+        }
+        root_registry = _root_registry(
+            *[
+                {
+                    "path": root + "/",
+                    "class": root_classes.get(root, "canonical"),
+                }
+                for root in sorted(registered_roots)
+            ]
+        )
+        paths = tuple(
+            sorted(
+                {
+                    "bad-root.json",
+                    "artifacts/release/release_manifest.json",
+                    "catalog/README.md",
+                    "connectors/air/README.md",
+                    "connectors/air/source.py",
+                    "data/rogue/README.md",
+                    "data/triplet(s)/.gitkeep",
+                    "data/triplets/README.md",
+                    "docs/standards/IIIF.md",
+                    "docs/standards/iiif.md",
+                    "release/manifest/.gitkeep",
+                    "release/rogue/README.md",
+                    "src/kfm/__init__.py",
+                    "tools/bad.rego",
+                    "unregistered/README.md",
+                }
+            )
+        )
+        modes = {path: "100644" for path in paths}
+        modes["connectors/air/README.md"] = "120000"
+        blobs = {"control_plane/root_registry.yaml": root_registry}
+        object_ids = {path: "a" * 40 for path in paths}
+        findings = module._path_findings(paths, modes, object_ids, blobs)
+        observed = {finding.rule_id for finding in findings}
+        self.assertTrue(
+            {f"KFM-TOPO-{number:03d}" for number in range(1, 14)}.issubset(
+                observed
+            ),
+            sorted(observed),
+        )
+
+    def test_high_value_synthetic_content_rules_and_authority_binding(self) -> None:
+        fixed_paths = (
+            "control_plane/path_alias_register.yaml",
+            "control_plane/root_registry.yaml",
+            "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+            "docs/doctrine/directory-rules.md",
+        )
+        blobs = {
+            path: (REPO_ROOT / path).read_bytes()
+            for path in fixed_paths
+        }
+        synthetic = {
+            "apps/site/config.py": b'SOURCE = "data/raw/private.json"\n',
+            "schemas/a.schema.json": b'{"$id":"kfm://schema/shared"}\n',
+            "schemas/b.schema.json": b'{"$id":"kfm://schema/shared"}\n',
+            "docs/a.md": b'doc_id: kfm://doc/shared\n',
+            "docs/b.md": b'doc_id: kfm://doc/shared\n',
+            "artifacts/qa/output.json": b'{"status":"placeholder"}\n',
+            "policy/redaction/profiles.yaml": b'profiles: []\n',
+        }
+        blobs.update(synthetic)
+        findings = module._content_findings(tuple(sorted(synthetic)), blobs)
+        observed = {finding.rule_id for finding in findings}
+        self.assertTrue(
+            {
+                "KFM-TOPO-014",
+                "KFM-TOPO-015",
+                "KFM-TOPO-016",
+                "KFM-TOPO-017",
+                "KFM-TOPO-018",
+                "KFM-TOPO-020",
+            }.issubset(observed),
+            sorted(observed),
+        )
+        self.assertNotIn("KFM-TOPO-019", observed)
+
+        blobs["docs/doctrine/directory-rules.md"] = b"tampered\n"
+        tampered = module._content_findings(tuple(sorted(synthetic)), blobs)
+        self.assertIn("KFM-TOPO-019", {finding.rule_id for finding in tampered})
+
+
+if __name__ == "__main__":
+    unittest.main()

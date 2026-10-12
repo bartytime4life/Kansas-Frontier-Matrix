@@ -1,0 +1,117 @@
+# Validate the proposed MRTS-02 seven-registry projection packet.
+#
+# A green result proves only strict schema shape, exact packet membership,
+# canonical ordering, repository path/digest binding, fixture polarity, focused
+# tests, and authoring-receipt integrity. It does not create authority, activate
+# a source, approve policy or review, resolve a contradiction, complete
+# verification, or authorize release, deployment, promotion, or publication.
+name: control-plane-registry-packet
+
+"on":
+  pull_request:
+    paths:
+      - ".github/workflows/control-plane-registry-packet.yml"
+      - ".github/workflows/trust-spine-baseline.yml"
+      - "Makefile"
+      - "contracts/governance/control_plane_registry_packet.md"
+      - "contracts/governance/trust_spine_baseline.md"
+      - "control_plane/contradiction_register.yaml"
+      - "control_plane/deprecation_register.yaml"
+      - "control_plane/document_registry.yaml"
+      - "control_plane/document_registry_doctrine_required.yaml"
+      - "control_plane/policy_gate_register.yaml"
+      - "control_plane/release_state_register.yaml"
+      - "control_plane/source_authority_register.yaml"
+      - "control_plane/verification_backlog.yaml"
+      - "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+      - "docs/doctrine/directory-rules.md"
+      - "schemas/contracts/v1/governance/control_plane_registry.schema.json"
+      - "fixtures/contracts/v1/governance/control_plane_registry/**"
+      - "tools/validators/control_plane/validate_control_plane_registry_packet.py"
+      - "tools/validators/control_plane/validate_trust_spine_baseline.py"
+      - "tests/validators/test_validate_control_plane_registry_packet.py"
+      - "tests/validators/test_validate_trust_spine_baseline.py"
+      - "data/receipts/generated/genrec-control-plane-registry-packet-*.json"
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/control-plane-registry-packet.yml"
+      - ".github/workflows/trust-spine-baseline.yml"
+      - "Makefile"
+      - "contracts/governance/control_plane_registry_packet.md"
+      - "contracts/governance/trust_spine_baseline.md"
+      - "control_plane/contradiction_register.yaml"
+      - "control_plane/deprecation_register.yaml"
+      - "control_plane/document_registry.yaml"
+      - "control_plane/document_registry_doctrine_required.yaml"
+      - "control_plane/policy_gate_register.yaml"
+      - "control_plane/release_state_register.yaml"
+      - "control_plane/source_authority_register.yaml"
+      - "control_plane/verification_backlog.yaml"
+      - "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+      - "docs/doctrine/directory-rules.md"
+      - "schemas/contracts/v1/governance/control_plane_registry.schema.json"
+      - "fixtures/contracts/v1/governance/control_plane_registry/**"
+      - "tools/validators/control_plane/validate_control_plane_registry_packet.py"
+      - "tools/validators/control_plane/validate_trust_spine_baseline.py"
+      - "tests/validators/test_validate_control_plane_registry_packet.py"
+      - "tests/validators/test_validate_trust_spine_baseline.py"
+      - "data/receipts/generated/genrec-control-plane-registry-packet-*.json"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: control-plane-registry-packet-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  KFM_NO_NETWORK: "1"
+  PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  PIP_NO_INPUT: "1"
+  PYTHONDONTWRITEBYTECODE: "1"
+  PYTHONHASHSEED: "0"
+  PYTHONUNBUFFERED: "1"
+  TZ: UTC
+
+jobs:
+  validate-control-plane-registry-packet:
+    name: validate-control-plane-registry-packet
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out tested revision without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up repository Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install declared schema and test dependencies
+        shell: bash
+        run: python tools/ci/install_python_ci.py project-test
+
+      - name: Run deterministic MRTS-02 profile
+        shell: bash
+        run: make control-plane-registry-packet
+
+      - name: Record validation boundary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo "### MRTS-02 normalized control-plane registries"
+            echo
+            echo "- Result: ${{ job.status }}."
+            echo "- Scope: strict schema, exact seven-file membership, canonical ordering, repository path/digest binding, fixture polarity, focused unit tests, and authoring-receipt integrity."
+            echo "- Known state: six registries remain explicitly empty and the document registry retains an authority conflict pending steward resolution."
+            echo "- Boundary: this projection cannot create authority, activate a source, approve policy or review, resolve a contradiction, complete verification, or release, deploy, promote, or publish."
+          } >> "$GITHUB_STEP_SUMMARY"

@@ -1,0 +1,50 @@
+{
+  "profile": "kfm.ui.story-node.public-safe.v1",
+  "id": "kfm://story-node/ready-released",
+  "version": "1.0.0",
+  "manifest_ref": "kfm://story-manifest/synthetic-pass1",
+  "node_type": "SECTION",
+  "order_index": 0,
+  "state": "READY",
+  "outcome": "ANSWER",
+  "reason_code": "SUPPORTED",
+  "title": "Synthetic Ready node",
+  "summary": "Synthetic public-safe StoryNode fixture.",
+  "accessibility_label": "Ready story node status",
+  "map_context_refs": [
+    "map:context/synthetic-kansas"
+  ],
+  "support": {
+    "evidence_bundle_refs": [
+      "kfm://evidence/bundle/synthetic-ready"
+    ],
+    "citation_validation_refs": [
+      "kfm://citation/report/synthetic-ready"
+    ],
+    "policy_decision_refs": [
+      "kfm://policy/decision/synthetic-allow"
+    ],
+    "release_refs": [
+      "kfm://release/synthetic-story-v1"
+    ],
+    "review_refs": [
+      "kfm://review/synthetic-story-v1"
+    ],
+    "correction_refs": []
+  },
+  "trust_state": {
+    "rights": "CLEARED",
+    "sensitivity": "PUBLIC",
+    "policy": "ALLOW",
+    "review": "REVIEWED",
+    "release": "UNRELEASED",
+    "freshness": "CURRENT",
+    "correction": "NONE"
+  },
+  "caveats": [
+    "Synthetic fixture; not publication authority."
+  ],
+  "authoritative": false,
+  "projection_only": true,
+  "body_ref": "artifact:story/body/ready-released"
+}

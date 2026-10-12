@@ -1,0 +1,53 @@
+{
+  "receipt_id": "genrec-release-candidates-fauna-readme-25962807",
+  "contract_version": "3.0.0",
+  "receipt_type": "GenerationReceipt",
+  "status": "PROPOSED",
+  "generated_at": "2026-07-18T11:48:43-05:00",
+  "repository": "bartytime4life/Kansas-Frontier-Matrix",
+  "base_commit": "eaeebdafeea381ec5532acfd5cc43091f9e81b28",
+  "branch": "agent/release-candidates-fauna-readme-20260718",
+  "target_path": "release/candidates/fauna/README.md",
+  "previous_blob": "360f8bdd8b5474b0ef696a033ee8aefbd1dfdd61",
+  "new_blob": "653277efe3a44a96c29af481a73d7d90c41443ce",
+  "sha256": "25962807e333a0895325c04102c63088a2166d1463030ca0b3c1e20cb2faa2af",
+  "truth_labels": {
+    "confirmed": [
+      "The Fauna candidate-lane README existed at the pinned base and was updated in place.",
+      "The bounded repository search surfaced the parent README but no child Fauna candidate dossier.",
+      "The domain-fauna workflow checks that this lane contains no non-README candidate record and retains explicit validation, proof, and release-dry-run holds.",
+      "The Fauna release index is a draft human navigation surface whose identifiers and release-state forms remain illustrative, proposed, or conflicted rather than verified release instances.",
+      "Fauna sensitivity doctrine is deny-by-default and deliberately excludes exact locations and operational transform parameters from public documentation.",
+      "The Fauna domain and sensitivity policy READMEs are scaffolds and do not establish executable policy enforcement.",
+      "The Fauna proof lane is a draft guide; concrete proof inventory, producers, access controls, and release linkage remain unverified.",
+      "The Fauna test lane is a scaffold and sampled direct test modules contain only PROPOSED placeholder docstrings.",
+      "The published Fauna README defines a release-gated public-safe carrier boundary while emitted release-linked artifacts remain unverified.",
+      "CODEOWNERS routes release and Fauna documentation review to bartytime4life while explicitly denying that routing is stewardship, review completion, release approval, or publication authority."
+    ],
+    "proposed": [
+      "release/candidates/fauna/ should operate as a repository-grounded, deny-by-default Fauna candidate index and pre-publication review contract without becoming taxonomic, source, evidence, policy, stewardship, legal, release, or publication authority."
+    ],
+    "needs_verification": [
+      "Exhaustive child inventory and deterministic public-safe candidate-index generation.",
+      "Candidate identity, artifact-manifest, taxon, object-family, source-role, source-admission, rights, stewardship, time, and EvidenceBundle contracts.",
+      "Executable policy, named geoprivacy profiles, receipt binding, public-safe fixtures, no-leak tests, validator ownership, and proof behavior.",
+      "Candidate-to-review, PromotionDecision, ReleaseManifest, correction, withdrawal, supersession, and rollback topology and operational handoff.",
+      "Correction consumers, cache invalidation, rollback drills, branch protection, required checks, immutable action pinning, and independent reviewer assignments."
+    ]
+  },
+  "changes": [
+    "Replaced generic Fauna candidate-lane guidance with a repository-grounded, sensitivity-aware candidate index and pre-publication review contract.",
+    "Recorded that no child candidate dossier or active candidate is established by the bounded inspection.",
+    "Preserved the exact A candidate is not a release workflow compatibility sentence and publication-not_yet marker.",
+    "Separated candidate review from taxonomic, source, evidence, policy, stewardship, validation, review, manifest, correction, rollback, legal, hunting, fishing, emergency, publication, and public-client authority.",
+    "Added finite candidate states and holds, admission and identity rules, taxonomic and source-role anti-collapse, geoprivacy and safe-representation controls, release gates, a public-safe dossier structure, validation and automation posture, review handoff, correction and rollback discipline, public API/map/export/AI boundaries, evidence ledger, definition of done, open verification, and documentation rollback."
+  ],
+  "authority_boundary": "This receipt records an AI-authored documentation revision. It is not a Fauna candidate, taxonomic decision, occurrence record, sensitive-site record, SourceDescriptor, EvidenceBundle, geoprivacy transform, RedactionReceipt, AggregationReceipt, PolicyDecision, stewardship decision, ReviewRecord, ValidationReport, PromotionDecision, ReleaseManifest, CorrectionNotice, WithdrawalNotice, RollbackCard, hunting or legal guidance, emergency authority, steward approval, release approval, publication authority, or proof of runtime behavior.",
+  "rollback": {
+    "strategy": "Close the draft pull request before merge, or revert the generated-receipt commit and README commit in reverse order after merge.",
+    "restores_blob": "360f8bdd8b5474b0ef696a033ee8aefbd1dfdd61"
+  },
+  "human_review": {
+    "state": "pending"
+  }
+}

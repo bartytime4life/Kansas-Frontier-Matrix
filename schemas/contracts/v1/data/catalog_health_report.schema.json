@@ -1,0 +1,125 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kansasfrontiermatrix.org/schemas/contracts/v1/data/catalog_health_report.schema.json",
+  "title": "CatalogHealthReport",
+  "description": "Deterministic report for the proposed KFM STAC Item catalog-health profile. A PASS creates no evidence, policy, review, release, publication, or public-use authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "object_type",
+    "schema_version",
+    "profile",
+    "validator",
+    "target",
+    "network",
+    "summary",
+    "outcome",
+    "findings",
+    "scope",
+    "authority_created"
+  ],
+  "properties": {
+    "object_type": { "const": "CatalogHealthReport" },
+    "schema_version": { "const": "1.0.0" },
+    "profile": { "const": "kfm.catalog-health.stac-item.v1" },
+    "validator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version"],
+      "properties": {
+        "name": { "const": "validate_catalog_health" },
+        "version": { "const": "1.0.0" }
+      }
+    },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["file", "record_id", "record_digest"],
+      "properties": {
+        "file": { "type": "string", "minLength": 1 },
+        "record_id": { "type": ["string", "null"], "minLength": 1 },
+        "record_digest": {
+          "oneOf": [
+            { "type": "null" },
+            { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
+          ]
+        }
+      }
+    },
+    "network": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "attempted", "succeeded"],
+      "properties": {
+        "mode": { "enum": ["DENY", "HEAD"] },
+        "attempted": { "type": "integer", "minimum": 0 },
+        "succeeded": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "assets_total",
+        "assets_local_verified",
+        "assets_remote_reachable",
+        "assets_embargoed",
+        "assets_held"
+      ],
+      "properties": {
+        "assets_total": { "type": "integer", "minimum": 0 },
+        "assets_local_verified": { "type": "integer", "minimum": 0 },
+        "assets_remote_reachable": { "type": "integer", "minimum": 0 },
+        "assets_embargoed": { "type": "integer", "minimum": 0 },
+        "assets_held": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "outcome": { "enum": ["PASS", "HOLD", "FAIL", "ERROR"] },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["code", "field", "severity"],
+        "properties": {
+          "code": { "type": "string", "pattern": "^CAT_[A-Z0-9_]+$" },
+          "field": { "type": "string", "pattern": "^/" },
+          "severity": { "enum": ["blocking", "hold"] }
+        }
+      }
+    },
+    "scope": { "const": "catalog-record-health-only" },
+    "authority_created": { "const": false }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "outcome": { "const": "PASS" } } },
+      "then": { "properties": { "findings": { "maxItems": 0 } } }
+    },
+    {
+      "if": { "properties": { "outcome": { "const": "HOLD" } } },
+      "then": {
+        "properties": {
+          "findings": {
+            "minItems": 1,
+            "contains": {
+              "type": "object",
+              "properties": { "severity": { "const": "hold" } },
+              "required": ["severity"]
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "outcome": { "enum": ["FAIL", "ERROR"] } } },
+      "then": { "properties": { "findings": { "minItems": 1 } } }
+    }
+  ],
+  "x-kfm": {
+    "status": "PROPOSED",
+    "scope": "catalog-record-health-only",
+    "network_default": "DENY",
+    "authority_created": false
+  }
+}

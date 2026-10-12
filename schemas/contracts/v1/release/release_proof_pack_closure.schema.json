@@ -1,0 +1,26 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"https://kansasfrontiermatrix.org/schemas/contracts/v1/release/release_proof_pack_closure.schema.json",
+  "title":"ReleaseProofPackClosure",
+  "type":"object",
+  "additionalProperties":false,
+  "required":["object_type","closure_id","candidate_state","release_manifest_ref","receipt_refs","proof_refs","catalog_refs","review_refs","correction_ref","rollback_ref","outcome","governance"],
+  "properties":{
+    "object_type":{"const":"ReleaseProofPackClosure"},
+    "closure_id":{"type":"string","minLength":1,"maxLength":160},
+    "candidate_state":{"type":"string","enum":["CANDIDATE","HELD"]},
+    "release_manifest_ref":{"$ref":"#/$defs/ref"},
+    "receipt_refs":{"$ref":"#/$defs/refs"},
+    "proof_refs":{"$ref":"#/$defs/refs"},
+    "catalog_refs":{"$ref":"#/$defs/refs"},
+    "review_refs":{"$ref":"#/$defs/refs"},
+    "correction_ref":{"$ref":"#/$defs/ref"},
+    "rollback_ref":{"$ref":"#/$defs/ref"},
+    "outcome":{"type":"string","enum":["PASS","ABSTAIN","DENY","ERROR"]},
+    "governance":{"type":"object","additionalProperties":false,"required":["promotion_authorized","release_authorized","publication_authorized","mutation_performed"],"properties":{"promotion_authorized":{"const":false},"release_authorized":{"const":false},"publication_authorized":{"const":false},"mutation_performed":{"const":false}}}
+  },
+  "$defs":{
+    "ref":{"type":"string","minLength":3,"maxLength":512},
+    "refs":{"type":"array","minItems":1,"uniqueItems":true,"items":{"$ref":"#/$defs/ref"}}
+  }
+}

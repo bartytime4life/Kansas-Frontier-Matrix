@@ -1,0 +1,97 @@
+{
+  "receipt_id": "genrec-soil-mesonet-fixture-normalizer-20260805",
+  "contract_version": "3.0.0",
+  "artifact_paths": [
+    ".github/workflows/soil-mesonet-fixture-normalizer.yml"
+  ],
+  "artifact_hashes": {
+    ".github/workflows/soil-mesonet-fixture-normalizer.yml": "sha256:27e436753c81fb6e8b30454a961b177a01a4690c16fb18a3d37d340c37d0f8cc"
+  },
+  "model_identity": {
+    "provider": "OpenAI",
+    "model": "GPT-5.6 Pro",
+    "version": "2026-08-05"
+  },
+  "prompt_or_contract": "sha256:4c7cf37292691c03cfb7f27caa318983c05bfda3d79768264323ce286f7cecd5",
+  "parameters": {
+    "seed": null,
+    "temperature": null,
+    "top_p": null,
+    "max_tokens": null,
+    "tools_enabled": [
+      "GitHub connector",
+      "uploaded-file search",
+      "local deterministic validation"
+    ]
+  },
+  "inputs": {
+    "attached_docs": [
+      "New Ideas 4-15-26(2).pdf"
+    ],
+    "evidence_refs": [
+      "attachment:New Ideas 4-15-26(2).pdf#mesonet-normalization-and-receipts",
+      "repo:.github/workflows/soil-mesonet-fixture-normalizer.yml@cf7ad3270bf8f33fcf45c33b1f26391d95d81070",
+      "repo:pipelines/domains/soil/mesonet_normalizer/fixture_normalizer.py@cf7ad3270bf8f33fcf45c33b1f26391d95d81070",
+      "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@cf7ad3270bf8f33fcf45c33b1f26391d95d81070"
+    ]
+  },
+  "truth_labels": {
+    ".github/workflows/soil-mesonet-fixture-normalizer.yml": "PROPOSED"
+  },
+  "validation_gates": [
+    {
+      "gate": "workflow-yaml-parse",
+      "outcome": "PASS",
+      "reason": "The updated workflow parses as YAML and retains one read-only validation job."
+    },
+    {
+      "gate": "receipt-byte-binding",
+      "outcome": "PASS",
+      "reason": "The generated receipt SHA-256 binds the exact updated workflow bytes."
+    },
+    {
+      "gate": "hosted-exact-head-ci",
+      "outcome": "SKIPPED",
+      "reason": "Hosted validation requires the pushed exact pull-request head."
+    },
+    {
+      "gate": "human-review",
+      "outcome": "SKIPPED",
+      "reason": "Human review remains pending on the draft pull request."
+    }
+  ],
+  "policy_decisions": [
+    "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md"
+  ],
+  "citations": [
+    {
+      "id": "attachment:new-ideas-mesonet-normalization",
+      "validated": true,
+      "evidence_ref": "attachment:New Ideas 4-15-26(2).pdf#mesonet-normalization-and-receipts"
+    },
+    {
+      "id": "repository:mesonet-fixture-workflow",
+      "validated": true,
+      "evidence_ref": "repo:.github/workflows/soil-mesonet-fixture-normalizer.yml@cf7ad3270bf8f33fcf45c33b1f26391d95d81070"
+    },
+    {
+      "id": "repository:directory-governance-adr",
+      "validated": true,
+      "evidence_ref": "repo:docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md@cf7ad3270bf8f33fcf45c33b1f26391d95d81070"
+    }
+  ],
+  "human_review": {
+    "reviewer_ids": [],
+    "state": "pending",
+    "timestamp": null
+  },
+  "override_record": null,
+  "created_at": "2026-08-05T23:59:00Z",
+  "emitter": "OpenAI GPT-5.6 Pro via ChatGPT",
+  "links": {
+    "pr_number": null,
+    "adr_link": "docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md",
+    "drift_register_entry": null
+  },
+  "notes": "Adds byte-bound authoring-receipt validation to the existing fixture-only Kansas Mesonet Soil normalizer workflow. The change does not activate a live source, write lifecycle data, resolve evidence, evaluate policy, or authorize release or publication."
+}
