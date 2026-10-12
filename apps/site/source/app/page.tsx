@@ -15,6 +15,7 @@ import { DEFAULT_SOIL_MAP_STATE, hideSoilContext, restoreSoilMapState, serialize
 import { GovernedWaterControl } from "./governed-water-control";
 import { GovernedWeatherControl } from "./governed-weather-control";
 import { GovernedSoilControl } from "./governed-soil-control";
+import { GovernedStormEventsControl } from "./governed-storm-events-control";
 import { LivingWatersControl } from "./living-waters-control";
 import { LIVING_WATERS_SOURCE } from "./living-waters-fixture";
 import { resizeMapAfterLayout } from "./cutaway-locator";
@@ -1611,6 +1612,7 @@ export default function Home() {
   const [reviewedWaterSelected, setReviewedWaterSelected] = useState(false);
   const [reviewedWeatherSelected, setReviewedWeatherSelected] = useState(false);
   const [reviewedSoilSelected, setReviewedSoilSelected] = useState(false);
+  const [reviewedStormEventsSelected, setReviewedStormEventsSelected] = useState(false);
   const [soilMapState, setSoilMapState] = useState<SoilMapState>(DEFAULT_SOIL_MAP_STATE);
   const changeSoilMapState = useCallback((next: Partial<SoilMapState>) => setSoilMapState(current => ({ ...current, ...next })), []);
   const [soilMoistureContext, setSoilMoistureContext] = useState<SoilMoistureEngineContext | null>(null);
@@ -1847,6 +1849,7 @@ export default function Home() {
     { id: "reviewed-water", title: "Reviewed water stations", keywords: "USGS governed snapshot evidence", topics: ["water"], selected: reviewedWaterSelected },
     { id: "reviewed-weather", title: "Reviewed daily weather", keywords: "NOAA GHCN-Daily precipitation temperature governed snapshot evidence", topics: ["disaster"], selected: reviewedWeatherSelected },
     { id: "reviewed-soil", title: "Reviewed soil moisture", keywords: "NOAA USCRN reference station soil temperature depth governed snapshot evidence", topics: ["land"], selected: reviewedSoilSelected },
+    { id: "reviewed-storm-events", title: "Reviewed storm event reports", keywords: "NOAA NCEI Storm Events hail wind tornado flood historical reports governed snapshot evidence", topics: ["disaster"], selected: reviewedStormEventsSelected },
     ...EARTH_ENGINE_CONTEXT_LAYERS.map(layer => ({ id: layer.id, title: layer.title, keywords: `${layer.source} ${layer.attribution}`, topics: imageryTopics(layer.id), selected: Boolean(earthEngineDisplay.visible[layer.id]), imagery: true })),
     ...LAYER_REGISTRY.map(layer => ({ id: layer.id, title: layer.title, keywords: `${layer.domain} ${layer.description}`, topics: ["places"] as const, selected: Boolean(visibility[layer.id]) })),
   ];
@@ -9486,6 +9489,7 @@ export default function Home() {
             <div hidden={!shownCatalogIds.has("reviewed-water")}><GovernedWaterControl mapRef={mapRef} styleReady={styleReady} onSelectionChange={setReviewedWaterSelected} /></div>
             <div hidden={!shownCatalogIds.has("reviewed-weather")}><GovernedWeatherControl mapRef={mapRef} styleReady={styleReady} onSelectionChange={setReviewedWeatherSelected} /></div>
             <div hidden={!shownCatalogIds.has("reviewed-soil")}><GovernedSoilControl mapRef={mapRef} styleReady={styleReady} onSelectionChange={setReviewedSoilSelected} /></div>
+            <div hidden={!shownCatalogIds.has("reviewed-storm-events")}><GovernedStormEventsControl mapRef={mapRef} styleReady={styleReady} onSelectionChange={setReviewedStormEventsSelected} /></div>
             <div hidden={!shownCatalogIds.has("soil")}><SoilMoistureControl mapRef={mapRef} styleReady={styleReady} state={soilMapState} onChange={changeSoilMapState} onEngineContextChange={setSoilMoistureContext} /></div>
             <div hidden={!shownCatalogIds.has("crop")}><CropCasmaControl mapRef={mapRef} styleReady={styleReady} projection={projection} onSelectionChange={setCropSelected} /></div>
             {LAYER_REGISTRY.map(layer => <article key={layer.id} hidden={!shownCatalogIds.has(layer.id)} className="official-context-row" data-visible={visibility[layer.id]}><div className="official-context-primary"><label className="visibility-switch"><input type="checkbox" checked={visibility[layer.id]} aria-label={`${visibility[layer.id] ? "Hide" : "Show"} ${layer.title}`} onChange={event => setVisibility(current => ({ ...current, [layer.id]: event.target.checked }))} /><span aria-hidden="true" /></label><i style={{ "--swatch": layer.legend[0]?.color ?? "#8bbeb8" } as React.CSSProperties} /><div><strong>{layer.title}</strong><small>{layer.sourceId} · {visibility[layer.id] ? sourceStates[layer.id] : "Off"}</small></div></div><details className="specialty-layer-details"><summary>Source details</summary><div className="official-context-option-body"><p>{layer.description}</p><button type="button" onClick={() => zoomToLayer(layer)}>Fit layer</button><button type="button" onClick={() => inspectSourceConnection(layer)}>Inspect records</button></div></details></article>)}

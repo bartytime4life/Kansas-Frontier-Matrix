@@ -57,6 +57,13 @@
       "when": 1791806400000,
       "tag": "0007_governed_soil",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "6",
+      "when": 1791892800000,
+      "tag": "0008_governed_storm_events",
+      "breakpoints": true
     }
   ]
 }

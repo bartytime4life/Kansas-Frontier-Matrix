@@ -124,10 +124,11 @@ def _site_origin(site_url: str) -> str:
 def _site_call(netloc: str, path: str, *, data: bytes | None = None, opener=None, admin: str = "water-admin") -> dict:
     """One bounded request to a release-admin route with the staging token; no redirects followed.
 
-    ``admin`` names the family's route prefix (``water-admin``, ``weather-admin`` or ``soil-admin``); the Site holds
+    ``admin`` names the family's route prefix (``water-admin``, ``weather-admin``, ``soil-admin`` or
+    ``storm-events-admin``); the Site holds
     one staging token, and each family's routes accept only that family's package profile.
     """
-    if admin not in ("water-admin", "weather-admin", "soil-admin"):
+    if admin not in ("water-admin", "weather-admin", "soil-admin", "storm-events-admin"):
         raise ValueError("ADMIN_ROUTE_INVALID")
     token = os.environ.get("KFM_WATER_WORKER_TOKEN", "")
     if len(token) < 32:
