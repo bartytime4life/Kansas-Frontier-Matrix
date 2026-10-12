@@ -67,6 +67,7 @@ related:
   - ../tests/README.md
 tags: [kfm, apps, deployables, trust-membrane, governed-api, explorer-web, finite-outcomes, mixed-maturity]
 notes:
+  - "v0.10 also points to the machine projection of that decision, control_plane/external_mirror_register.yaml; the decision's authority is accepted ADR-0048, and it covers only upstream-backed receipt entries."
   - "v0.10 records the apps/ root naming decision that apps/site/source/ keeps upstream file names (Directory Rules §2.3 root naming decision; §13.2 externally fixed names); documentation only."
   - "v0.9 records the dependency-closed Sites repair: both Explorer compositions use NullMapRuntime through the accepted package seam, while full Sites renderer capabilities remain held."
   - "The attached KFM manuals, Drive Atlas, and Notion reconciliation are read-only design and coordination inputs; they do not establish repository behavior, source admission, review, release, deployment, promotion, or publication."
@@ -444,16 +445,16 @@ Source-derived ideas advance only through the normal sequence: classify the clai
 
 ## Root naming decision: external site mirror
 
-**Decision (2026-10-12, owner-directed; root naming decision under Directory Rules §2.3):** files under `apps/site/source/` keep the names they have in the external site source, including uppercase names. That directory is a byte mirror: its file set and digests are pinned by the reviewed mirror receipt and checked by `tools/qa/site_mirror.py --check`. A KFM-side rename would break mirror parity and the receipt's `identical` claims. These names count as *externally fixed* under Directory Rules §13.2.
+**Decision (2026-10-12; authority: accepted [ADR-0048](../docs/adr/ADR-0048-external-mirror-names-are-externally-fixed.md), interpreting Directory Rules §13.2):** files under `apps/site/source/` that exist in the external site source keep their upstream names, including uppercase names. The directory mirrors that source. Its generated receipt pins the file set, per-file digests and upstream presence, and `tools/qa/site_mirror.py --check` enforces content parity with it. The receipt is `REVIEW_ONLY`: it pins content and does not record human review acceptance. A KFM-side rename would break mirror parity. This README records how the decision applies to the `apps/` root; it is not the source of the authority.
 
 | Aspect | Rule |
 |---|---|
-| Scope | `apps/site/source/**` only. Every other path under `apps/` follows the default lowercase grammar. |
-| What is relaxed | The uppercase path-grammar check alone (`_is_external_site_mirror_path` in `tools/validators/directory_governance/validate_repository_topology.py`). |
+| Scope | Only receipt entries under `apps/site/source/` that exist upstream (they carry an upstream digest). Repository-only overlays, files missing from the receipt, and every other path under `apps/` follow the default lowercase grammar. |
+| What is relaxed | The uppercase path-grammar check alone. The mirror is registered as `mirror.apps-site-source` in [`control_plane/external_mirror_register.yaml`](../control_plane/external_mirror_register.yaml), which the topology validator reads. The relaxation applies only while the entry is `ACTIVE` and its receipt and parity check are tracked. |
 | What still applies | Unsafe-path checks (control characters, non-NFC, symlinks, trailing dots or spaces, Windows reserved names) and the nonportable-punctuation check. |
-| How names change | Rename upstream in the site source, then bring the new names in through a reviewed mirror sync with a fresh receipt. Never rename a mirrored file in place. |
+| How names change | Rename upstream in the site source, then bring the new names in through a mirror sync with a fresh receipt. Update the register's `receipt_path` in the same change; a test checks it against `site_mirror.py`. Never rename a mirrored file in place. |
 | Baseline effect | The `path-grammar:uppercase` topology waiver shrank by the ten mirror paths it held. No waiver was added (#5060). |
-| Authority limit | This is a naming decision inside one root. It does not amend Directory Rules, change root classification, or grant the mirror any source, release, or publication authority. |
+| Authority limit | ADR-0048 interprets §13.2 without changing Directory Rules bytes; the literal §13.2 text waits for the next doctrine revision. Nothing here grants the mirror any source, release, or publication authority. |
 
 ## Safe change pattern
 

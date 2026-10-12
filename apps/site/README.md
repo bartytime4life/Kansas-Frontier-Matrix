@@ -197,7 +197,7 @@ local development state are excluded.
 
 ### Mirrored file names
 
-Files under `source/` keep the names they have in the external site source, including uppercase names such as `docs/RIVER_DELIVERY_2026-10-11.md`. Do not rename a mirrored file here: `tools/qa/site_mirror.py --check` requires the mirrored file set to match the reviewed receipt. To rename one, change it upstream and bring it in through a reviewed mirror sync. The repository topology check exempts this directory from its uppercase rule only. See the [apps/ root naming decision](../README.md#root-naming-decision-external-site-mirror).
+Files under `source/` that exist in the external site source keep their upstream names, including uppercase names such as `docs/SITE_PRESERVATION.md`. Do not rename a mirrored file here: `tools/qa/site_mirror.py --check` requires the mirrored file set to match the pinned receipt. That receipt is `REVIEW_ONLY`: it pins content and does not record human review. To rename a file, change it upstream and bring it in through a mirror sync. The repository topology check relaxes only its uppercase rule, and only for upstream-backed receipt entries. Repository-only files here follow the default lowercase grammar. See accepted [ADR-0048](../../docs/adr/ADR-0048-external-mirror-names-are-externally-fixed.md) and the [apps/ root naming decision](../README.md#root-naming-decision-external-site-mirror).
 
 ## Run locally
 

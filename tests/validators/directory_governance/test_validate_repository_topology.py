@@ -38,6 +38,39 @@ def _entry(finding: object) -> dict[str, object]:
     return entry
 
 
+def _mirror_register(*mirrors: dict[str, object], sha256: str | None = None) -> bytes:
+    return json.dumps(
+        {
+            "registry": "external_mirror_register",
+            "authority": "machine_projection_only",
+            "doctrine": {
+                "sha256": sha256 or f"sha256:{module.ADOPTED_SHA256}",
+                "decision_ref": "ADR-0029",
+            },
+            "mirrors": list(mirrors),
+        }
+    ).encode("utf-8")
+
+
+SITE_MIRROR = {
+    "mirror_id": "mirror.apps-site-source",
+    "status": "ACTIVE",
+    "path_prefix": "apps/site/source/",
+    "receipt_path": "data/receipts/generated/site-mirror.json",
+    "parity_check": "tools/qa/site_mirror.py",
+    "relaxed_rules": ["path-grammar:uppercase"],
+}
+SITE_MIRROR_EVIDENCE = (SITE_MIRROR["receipt_path"], SITE_MIRROR["parity_check"])
+
+
+def _mirror_receipt(upstream: tuple[str, ...], repository_only: tuple[str, ...] = ()) -> bytes:
+    comparison = {name: {"state": "identical", "site_sha256": "a" * 64, "mirror_sha256": "a" * 64}
+                  for name in upstream}
+    comparison.update({name: {"state": "repository_only_overlay", "mirror_sha256": "b" * 64}
+                       for name in repository_only})
+    return json.dumps({"comparison": comparison}).encode("utf-8")
+
+
 def _root_registry(*roots: dict[str, object]) -> bytes:
     normalized_roots = []
     for root in roots:
@@ -269,12 +302,16 @@ class RepositoryTopologyTests(unittest.TestCase):
             "apps/site/source/app/api/earth-engine-context/[setId]/[layerId]/[...tile]/route.ts",
             "apps/site/source/app/api/unsafe/[bad-name!]/route.ts",
             "docs/[id].md",
-        )
+        ) + SITE_MIRROR_EVIDENCE
         modes = {path: "100644" for path in paths}
         blobs = {
             "control_plane/root_registry.yaml": _root_registry(
-                {"path": "apps/"}, {"path": "docs/"}
-            )
+                {"path": "apps/"}, {"path": "docs/"}, {"path": "data/"}, {"path": "tools/"}
+            ),
+            module.EXTERNAL_MIRROR_REGISTER: _mirror_register(SITE_MIRROR),
+            SITE_MIRROR["receipt_path"]: _mirror_receipt(
+                tuple(path.removeprefix("apps/site/source/") for path in paths[:3])
+            ),
         }
         object_ids = {path: "a" * 40 for path in paths}
 
@@ -299,30 +336,96 @@ class RepositoryTopologyTests(unittest.TestCase):
             )
         )
 
-    def test_external_site_mirror_is_an_explicit_uppercase_exception(self) -> None:
+    def _uppercase_members(self, paths, register=None, receipt=None):
+        modes = {path: "100644" for path in paths}
+        blobs = {
+            "control_plane/root_registry.yaml": _root_registry(
+                {"path": "apps/"}, {"path": "docs/"}, {"path": "data/"}, {"path": "tools/"}
+            )
+        }
+        if register is not None:
+            blobs[module.EXTERNAL_MIRROR_REGISTER] = register
+        if receipt is not None:
+            blobs[SITE_MIRROR["receipt_path"]] = receipt
+        object_ids = {path: "a" * 40 for path in paths}
+        findings = module._path_findings(paths, modes, object_ids, blobs)
+        for finding in findings:
+            if (finding.rule_id, finding.subject) == ("KFM-TOPO-001", "path-grammar:uppercase"):
+                return finding.evidence_members
+        return ()
+
+    def test_registered_external_mirror_is_an_explicit_uppercase_exception(self) -> None:
         paths = (
             "apps/site/source/docs/RIVER_DELIVERY_2026-10-11.md",
             "apps/site/source/AGENTS.md",
             "apps/siteextra/SHOUT.md",
             "docs/SHOUT.md",
-        )
-        modes = {path: "100644" for path in paths}
-        blobs = {
-            "control_plane/root_registry.yaml": _root_registry(
-                {"path": "apps/"}, {"path": "docs/"}
-            )
-        }
-        object_ids = {path: "a" * 40 for path in paths}
+        ) + SITE_MIRROR_EVIDENCE
 
-        findings = module._path_findings(paths, modes, object_ids, blobs)
-        uppercase = next(
-            finding
-            for finding in findings
-            if (finding.rule_id, finding.subject)
-            == ("KFM-TOPO-001", "path-grammar:uppercase")
+        receipt = _mirror_receipt(("docs/RIVER_DELIVERY_2026-10-11.md", "AGENTS.md"))
+        members = self._uppercase_members(paths, _mirror_register(SITE_MIRROR), receipt)
+
+        self.assertEqual(("apps/siteextra/SHOUT.md", "docs/SHOUT.md"), members)
+
+    def test_repository_only_overlay_inside_mirror_keeps_default_grammar(self) -> None:
+        upstream = "apps/site/source/AGENTS.md"
+        overlay = "apps/site/source/docs/LOCAL_OVERLAY.md"
+        unlisted = "apps/site/source/docs/UNLISTED.md"
+        paths = (upstream, overlay, unlisted) + SITE_MIRROR_EVIDENCE
+        receipt = _mirror_receipt(("AGENTS.md",), repository_only=("docs/LOCAL_OVERLAY.md",))
+
+        members = self._uppercase_members(paths, _mirror_register(SITE_MIRROR), receipt)
+
+        self.assertEqual((overlay, unlisted), members)
+
+    def test_registered_receipt_matches_site_mirror_check(self) -> None:
+        register = json.loads(
+            (REPO_ROOT / "control_plane/external_mirror_register.yaml").read_text(encoding="utf-8")
+        )
+        site_mirror = (REPO_ROOT / "tools/qa/site_mirror.py").read_text(encoding="utf-8")
+        for entry in register["mirrors"]:
+            if entry["mirror_id"] == "mirror.apps-site-source":
+                self.assertIn(f'RECEIPT = ROOT / "{entry["receipt_path"]}"', site_mirror)
+                self.assertTrue((REPO_ROOT / entry["receipt_path"]).is_file())
+                break
+        else:
+            self.fail("mirror.apps-site-source is not registered")
+
+    def test_mirror_exception_fails_closed_without_register_or_evidence(self) -> None:
+        mirrored = "apps/site/source/AGENTS.md"
+        # No register: nothing is relaxed.
+        self.assertEqual((mirrored,), self._uppercase_members((mirrored,) + SITE_MIRROR_EVIDENCE))
+        # Register present but the pinned receipt is not tracked.
+        receipt = _mirror_receipt(("AGENTS.md",))
+        self.assertEqual(
+            (mirrored,),
+            self._uppercase_members(
+                (mirrored, SITE_MIRROR["parity_check"]), _mirror_register(SITE_MIRROR), receipt
+            ),
+        )
+        # Retired entries relax nothing.
+        retired = dict(SITE_MIRROR, status="RETIRED")
+        self.assertEqual(
+            (mirrored,),
+            self._uppercase_members(
+                (mirrored,) + SITE_MIRROR_EVIDENCE, _mirror_register(retired), receipt
+            ),
         )
 
-        self.assertEqual(("apps/siteextra/SHOUT.md", "docs/SHOUT.md"), uppercase.evidence_members)
+    def test_mirror_register_rejects_unsafe_or_unbound_entries(self) -> None:
+        paths = ("apps/site/source/AGENTS.md",) + SITE_MIRROR_EVIDENCE
+        bad_registers = (
+            _mirror_register(SITE_MIRROR, sha256="sha256:" + "0" * 64),
+            _mirror_register(dict(SITE_MIRROR, relaxed_rules=["path-grammar:nonportable-punctuation"])),
+            _mirror_register(dict(SITE_MIRROR, path_prefix="apps/")),
+            _mirror_register(dict(SITE_MIRROR, path_prefix="apps/site/source")),
+            _mirror_register(dict(SITE_MIRROR, path_prefix="apps/../docs/")),
+            _mirror_register(SITE_MIRROR, dict(SITE_MIRROR)),
+        )
+        for register in bad_registers:
+            with self.subTest(register=register):
+                with self.assertRaises(module.TopologyError):
+                    self._uppercase_members(paths, register)
 
     def test_conventional_readme_does_not_expand_populated_alias_drift(
         self,

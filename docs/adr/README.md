@@ -2,7 +2,7 @@
 doc_id: kfm://doc/adr-readme
 title: docs/adr — Architecture Decision Records
 type: standard
-version: v2.6
+version: v2.7
 status: draft; repository-grounded
 owners:
   - Architecture steward
@@ -27,6 +27,7 @@ related:
   - .github/workflows/docs-control-plane.yml
 tags: [kfm, governance, adr, decisions, audit, control-plane]
 notes:
+  - "v2.7 records ADR-0048 as accepted by the repository owner on 2026-10-12 and refreshes every snapshot counter and badge (64 direct files; 48 numbered; source metadata 27 proposed, 11 draft, 10 accepted; 10 accepted, 38 proposed effective)."
   - "v2.6 registers ADR-0048 as a proposed Directory Rules §13.2 wording decision for names inside receipt-pinned external byte mirrors; registration does not amend Directory Rules, change its adopted digest, or alter ADR-0029."
   - "v2.5 registers ADR-0043 as a proposed People/DNA/Land genealogy policy tooling-placement decision, the policy-root sibling of ADR-0042, raised from a same-day DRIFT_REGISTER.md entry; registration does not accept the decision or authorize any migration."
   - "v2.4 registers ADR-0042 as a proposed People/DNA/Land genealogy validator tooling-placement decision, raised from a same-day DRIFT_REGISTER.md entry; registration does not accept the decision or authorize any migration."
@@ -36,22 +37,22 @@ notes:
   - "ADR-0039 is newly registered as proposed and selects no LayerManifest/LayerFrame migration or implementation."
   - "ADR-0040 accepts only seven exact catalog redirect-document target blobs; it does not bind or consume corrections or authorize a topology-baseline transition."
   - "ADR-0037, ADR-0036, and ADR-0035 remain proposed; their registration does not accept their candidate decisions."
-  - "File presence does not accept a decision. ADR-0006, ADR-0007, ADR-0029, ADR-0038, and ADR-0040 are accepted in their stated scopes; the other 39 numbered ADRs remain proposed."
+  - "File presence does not accept a decision. ADR-0006, ADR-0007, ADR-0029, ADR-0038, ADR-0040, ADR-0044, ADR-0045, ADR-0046, ADR-0047, and ADR-0048 are accepted in their stated scopes; the other 38 numbered ADRs remain proposed."
   - "This README is the operating contract; docs/adr/INDEX.md is the canonical human inventory."
 [/KFM_META_BLOCK_V2] -->
 
 # `docs/adr/` — Architecture Decision Records
 
 [![authority](https://img.shields.io/badge/authority-canonical-1f6feb)](../doctrine/directory-rules.md)
-[![inventory](https://img.shields.io/badge/numbered_ADRs-43-0969da)](./INDEX.md)
-[![decision status](https://img.shields.io/badge/decisions-5_accepted_%7C_38_proposed-1a7f37)](./INDEX.md)
+[![inventory](https://img.shields.io/badge/numbered_ADRs-48-0969da)](./INDEX.md)
+[![decision status](https://img.shields.io/badge/decisions-10_accepted_%7C_38_proposed-1a7f37)](./INDEX.md)
 [![validation](https://img.shields.io/badge/index_coherence-enforced-1a7f37)](../../tools/validators/validate_adr_index.py)
 [![review route](https://img.shields.io/badge/CODEOWNERS-%40bartytime4life-8250df)](../../.github/CODEOWNERS)
 
 Architecture Decision Records preserve why KFM made—or is considering—a consequential architectural choice. They are append-only governance memory: one decision per record, explicit status, evidence, consequences, alternatives, migration impact, validation, correction, and rollback.
 
 > [!IMPORTANT]
-> A tracked ADR is not automatically accepted. ADR-0006, ADR-0007, ADR-0029, ADR-0038, and ADR-0040 carry matching accepted source/index status in their stated scopes; the other 39 numbered records remain proposed. This summary does not independently promote any decision.
+> A tracked ADR is not automatically accepted. ADR-0006, ADR-0007, ADR-0029, ADR-0038, ADR-0040, ADR-0044, ADR-0045, ADR-0046, ADR-0047, and ADR-0048 carry matching accepted source/index status in their stated scopes; the other 38 numbered records remain proposed. This summary does not independently promote any decision.
 
 **Quick links:** [Verified snapshot](#verified-snapshot) · [Authority](#authority-and-boundaries) · [Inventory](#inventory-contract) · [Lifecycle](#decision-lifecycle) · [ADR triggers](#when-an-adr-is-required) · [Naming](#naming-and-numbering) · [Authoring](#authoring-workflow) · [Validation](#validation) · [Review](#review-and-supersession) · [Open work](#open-governance-work)
 
@@ -59,14 +60,14 @@ Architecture Decision Records preserve why KFM made—or is considering—a cons
 
 ## Verified snapshot
 
-The current inventory snapshot is prepared against `main@a920352e420229078ddc242602779c0a74986c47` plus this bounded ADR-0043 registration.
+The current inventory snapshot is recounted against `main@4fee3f97` plus the ADR-0048 acceptance (2026-10-12).
 
 | Surface | Verified state | Meaning |
 |---|---:|---|
-| Direct Markdown files | 60 | Complete direct-child inventory in the proposed tree |
+| Direct Markdown files | 64 | Complete direct-child inventory in the proposed tree |
 | Numbered records | 48 | Unique, contiguous IDs `ADR-0001` through `ADR-0048` |
-| Numbered source metadata | 27 `proposed`; 11 `draft`; 6 `accepted` | `draft` normalizes to `proposed`; accepted source and index status agree for six records |
-| Verified accepted decisions | 9 | ADR-0006, ADR-0007, ADR-0029, ADR-0038, ADR-0040, ADR-0044, ADR-0045, ADR-0046, and ADR-0047 carry matching source/index `accepted` status in their stated scopes |
+| Numbered source metadata | 27 `proposed`; 11 `draft`; 10 `accepted` | `draft` normalizes to `proposed`; accepted source and index status agree for ten records |
+| Verified accepted decisions | 10 | ADR-0006, ADR-0007, ADR-0029, ADR-0038, ADR-0040, ADR-0044, ADR-0045, ADR-0046, ADR-0047, and ADR-0048 carry matching source/index `accepted` status in their stated scopes |
 | Explicit `NNNN` / `XXXX` placeholders | 4 | Unassigned scaffolds; not ADR numbers |
 | Slug-only ADR scaffolds | 8 | Unassigned scaffolds; not accepted decision records |
 | Template | 1 | [`ADR-template.md`](./ADR-template.md) |

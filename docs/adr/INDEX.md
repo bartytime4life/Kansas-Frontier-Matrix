@@ -2,7 +2,7 @@
 doc_id: kfm://doc/adr-index
 title: Architecture Decision Record Index
 type: register-index
-version: v1.19
+version: v1.20
 status: draft; repository-grounded
 owners:
   - Architecture steward
@@ -25,7 +25,7 @@ related:
   - tools/validators/validate_adr_index.py
 tags: [kfm, adr, index, governance, decisions]
 notes:
-  - "ADR-0048 is registered as proposed; registration assigns inventory identity only and does not amend Directory Rules §13.2, change its adopted digest, or alter ADR-0029."
+  - "ADR-0048 is accepted by the repository owner on 2026-10-12 as the interpretation of Directory Rules §13.2 for upstream-backed names in receipt-pinned external byte mirrors; it does not change Directory Rules bytes, its adopted digest, or ADR-0029, and carries the literal §13.2 text to the next doctrine revision."
   - "ADR-0044 is accepted by the repository owner on 2026-10-10; it allows owner self-release of governed water packages only when every evidence bundle is public and carries an admitted public-domain license, and changes no other release path."
   - "ADR-0045 is accepted by the repository owner on 2026-10-11; it extends the same rule to the GHCN-Daily weather gate with its own license list, and does not widen water self-release."
   - "ADR-0046 is accepted by the repository owner on 2026-10-11; it extends the same rule to the USCRN daily soil gate with its own license list, and does not widen water or weather self-release."
@@ -53,7 +53,7 @@ notes:
 This file is the canonical human inventory for direct ADR records and unassigned ADR scaffolds under `docs/adr/`. It records what exists and how each record is classified; it cannot accept or promote a decision independently.
 
 > [!IMPORTANT]
-> ADR-0006, ADR-0007, ADR-0029, ADR-0038, ADR-0040, ADR-0044, ADR-0045, ADR-0046, and ADR-0047 have effective status `accepted`. The other 39 numbered records remain `proposed`; no numbered record is `superseded` or `rejected`. ADR-0006 and ADR-0007 accept architecture only—their status does not admit `maplibre-gl`, prove implementation or browser readiness, or authorize release, deployment, or publication. ADR-0038 accepts only the trusted-base correction mechanism. ADR-0040 accepts only seven exact target catalog redirect-document blobs; every register entry remains proposed and unbound, Stage 1B remains held, and Stage 2 remains unauthorized. ADR-0041 remains a proposal and changes no check behavior. ADR-0042 remains a proposal and changes no validator-tooling placement. ADR-0043 remains a proposal and changes no policy-tooling placement. ADR-0044 accepts owner self-release only for admitted public water data; all other water packages keep two-person review. ADR-0045 accepts the same rule for admitted public GHCN-Daily weather data only. ADR-0046 accepts it for admitted public USCRN daily soil data only. ADR-0047 accepts it for admitted public NOAA Storm Events data only.
+> ADR-0006, ADR-0007, ADR-0029, ADR-0038, ADR-0040, ADR-0044, ADR-0045, ADR-0046, ADR-0047, and ADR-0048 have effective status `accepted`. The other 38 numbered records remain `proposed`; no numbered record is `superseded` or `rejected`. ADR-0006 and ADR-0007 accept architecture only—their status does not admit `maplibre-gl`, prove implementation or browser readiness, or authorize release, deployment, or publication. ADR-0038 accepts only the trusted-base correction mechanism. ADR-0040 accepts only seven exact target catalog redirect-document blobs; every register entry remains proposed and unbound, Stage 1B remains held, and Stage 2 remains unauthorized. ADR-0041 remains a proposal and changes no check behavior. ADR-0042 remains a proposal and changes no validator-tooling placement. ADR-0043 remains a proposal and changes no policy-tooling placement. ADR-0044 accepts owner self-release only for admitted public water data; all other water packages keep two-person review. ADR-0045 accepts the same rule for admitted public GHCN-Daily weather data only. ADR-0046 accepts it for admitted public USCRN daily soil data only. ADR-0047 accepts it for admitted public NOAA Storm Events data only.
 
 ## Status interpretation
 
@@ -67,7 +67,7 @@ This file is the canonical human inventory for direct ADR records and unassigned
 
 ## Numbered records
 
-The numbered sequence is complete and unique from `ADR-0001` through `ADR-0048`. ADR-0006, ADR-0007, ADR-0029, ADR-0038, ADR-0040, ADR-0044, ADR-0045, ADR-0046, and ADR-0047 are `accepted`; all other numbered records remain effectively `proposed`.
+The numbered sequence is complete and unique from `ADR-0001` through `ADR-0048`. ADR-0006, ADR-0007, ADR-0029, ADR-0038, ADR-0040, ADR-0044, ADR-0045, ADR-0046, ADR-0047, and ADR-0048 are `accepted`; all other numbered records remain effectively `proposed`.
 
 <!-- ADR_INDEX_TABLE_START -->
 | ID | Record | Effective status | Source metadata | Supersedes | Superseded by |
@@ -119,7 +119,7 @@ The numbered sequence is complete and unique from `ADR-0001` through `ADR-0048`.
 | `ADR-0045` | [Owner Self-Release for Admitted Public Weather Data](./ADR-0045-owner-self-release-for-admitted-public-weather-data.md) | `accepted` | `accepted` | — | — |
 | `ADR-0046` | [Owner Self-Release for Admitted Public Soil Data](./ADR-0046-owner-self-release-for-admitted-public-soil-data.md) | `accepted` | `accepted` | — | — |
 | `ADR-0047` | [Owner Self-Release for Admitted Public Storm Events Data](./ADR-0047-owner-self-release-for-admitted-public-storm-events-data.md) | `accepted` | `accepted` | — | — |
-| `ADR-0048` | [Names in a receipt-pinned external byte mirror count as externally fixed under Directory Rules §13.2](./ADR-0048-external-mirror-names-are-externally-fixed.md) | `proposed` | `proposed` | — | — |
+| `ADR-0048` | [Names in a receipt-pinned external byte mirror count as externally fixed under Directory Rules §13.2](./ADR-0048-external-mirror-names-are-externally-fixed.md) | `accepted` | `accepted` | — | — |
 <!-- ADR_INDEX_TABLE_END -->
 
 ## Unassigned scaffolds
