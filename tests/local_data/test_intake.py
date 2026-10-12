@@ -602,10 +602,10 @@ class ServiceTests(unittest.TestCase):
             time.sleep(0.02)
         self.fail("analysis did not finish")
 
-    def test_desk_page_embeds_session_and_strict_headers(self):
+    def test_desk_page_has_no_session_and_keeps_strict_headers(self):
         status, body, headers = self.request("GET", "/", headers={"Origin": None}, raw=True)
         self.assertEqual(status, 200)
-        self.assertIn(self.desk.token.encode(), body)
+        self.assertNotIn(self.desk.token.encode(), body)
         self.assertNotIn(b"__KFM_SESSION__", body)
         self.assertIn("default-src 'none'", headers["Content-Security-Policy"])
         self.assertEqual(headers["X-Frame-Options"], "DENY")

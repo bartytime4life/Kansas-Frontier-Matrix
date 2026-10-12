@@ -2,7 +2,22 @@
 // All data is rendered with textContent / DOM APIs; nothing from the store is parsed as HTML.
 "use strict";
 
-const TOKEN = document.querySelector('meta[name="kfm-session"]').content;
+// Only the operator's terminal supplies this capability; the public shell has none.
+const TOKEN = (() => {
+  const params = new URLSearchParams(location.hash.slice(1));
+  const values = params.getAll("kfm-intake");
+  const key = "kfm-intake-session";
+  let token = "";
+  if (values.length) {
+    token = values.length === 1 && values[0].length === 43 && /^[A-Za-z0-9_-]{43}$/.test(values[0]) ? values[0] : "";
+    params.delete("kfm-intake");
+    history.replaceState(null, "", location.pathname + location.search + (params.size ? "#" + params : ""));
+    try { if (token) sessionStorage.setItem(key, token); else sessionStorage.removeItem(key); } catch { /* Memory still works. */ }
+  } else {
+    try { token = sessionStorage.getItem(key) || ""; } catch { /* Storage can be disabled. */ }
+  }
+  return token.length === 43 && /^[A-Za-z0-9_-]{43}$/.test(token) ? token : "";
+})();
 const PAGE = 50;
 const VIEW = { lon0: -102.6, lon1: -94.0, lat0: 36.55, lat1: 40.45, w: 800, h: 420 };
 // Approximate Kansas outline (WGS84); the north-east edge follows the Missouri River coarsely.
@@ -53,8 +68,9 @@ function toast(message) {
   toast.timer = setTimeout(() => { node.hidden = true; }, 5000);
 }
 async function api(path, body) {
-  const options = body === undefined ? { cache: "no-store" }
-    : { method: "POST", cache: "no-store", headers: { "Content-Type": "application/json", "X-KFM-Session": TOKEN }, body: JSON.stringify(body) };
+  if (!TOKEN) throw new Error("Open the private connection link printed by Intake Desk in your terminal.");
+  const options = body === undefined ? { cache: "no-store", credentials: "omit", redirect: "error", headers: { "X-KFM-Session": TOKEN } }
+    : { method: "POST", cache: "no-store", credentials: "omit", redirect: "error", headers: { "Content-Type": "application/json", "X-KFM-Session": TOKEN }, body: JSON.stringify(body) };
   const response = await fetch(path, options);
   const value = await response.json().catch(() => ({ error: "INVALID_RESPONSE" }));
   if (!response.ok) throw new Error(value.error || `HTTP_${response.status}`);

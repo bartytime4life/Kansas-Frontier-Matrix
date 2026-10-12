@@ -5,8 +5,9 @@ import ts from 'typescript';
 
 const compile = async path => ts.transpileModule(await readFile(path, 'utf8'), { compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 } }).outputText;
 const url = value => `data:text/javascript;base64,${Buffer.from(value).toString('base64')}`;
+const sessionUrl = url(await compile('app/local-companion-session.ts'));
 const bounded = url(await compile('app/bounded-json.ts'));
-const client = await import(url((await compile('app/intake-desk-client.ts')).replace('"./bounded-json"', JSON.stringify(bounded))));
+const client = await import(url((await compile('app/intake-desk-client.ts')).replace('"./local-companion-session"', JSON.stringify(sessionUrl)).replace('"./bounded-json"', JSON.stringify(bounded))));
 
 const budget = patch => ({ github_limit_bytes: 100e9, reserved_for_code_and_interface_bytes: 20e9, data_ceiling_bytes: 80e9, committed_bytes: 36945647578,
   planned_bytes: 0, available_for_new_data_bytes: 43054352422, level: 'ok', committed: [], ...patch });
