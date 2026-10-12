@@ -2,13 +2,13 @@
 doc_id: "kfm://doc/focus-mode/counties/sherman-county/readme"
 title: "Sherman County Focus Mode Identity-Hold Lane"
 type: "readme"
-version: "v1.0"
+version: "v1.1"
 status: "draft; repository-grounded; planning-only; compatibility-lane; identity-conflicted; foreign-plan; duplicate-tree; correction-required; non-release; non-publication"
 owners:
   - "@bartytime4life — verified CODEOWNERS review route; Focus Mode and county-identity stewardship NEEDS VERIFICATION"
   - "NEEDS VERIFICATION — Sherman County source, evidence, rights, sensitivity, documentation-governance, correction, migration, release, and rollback review"
 created: "2026-08-22"
-updated: "2026-08-22"
+updated: "2026-10-12"
 policy_label: "public; documentation; county-scope; compatibility; cite-or-abstain; identity-hold; foreign-plan; duplicate-tree; non-publication"
 owning_root: "docs/"
 responsibility: "Orient maintainers to the Sherman County compatibility lane, prevent the foreign Stevens County build plan from being treated as Sherman evidence or implementation, preserve the confirmed duplicate-tree and filename drift findings, and route future correction through a bounded, reviewable, reversible change."
@@ -35,7 +35,6 @@ evidence_snapshot:
   - "generated_receipt_schema_blob=fba21ed27ebccf1362fe397fe0c3ebd85e072685"
 inspection_boundary: "Current-session GitHub reads covered the complete one-byte predecessor README, the complete foreign Stevens County build plan, current direct listings for both Sherman and Stevens County directories, the complete County Index row and drift ledger, current Focus documentation parent surfaces, accepted Directory Rules v2 and ADR-0029, proposed ADR-0027, CODEOWNERS, the generated-receipt lane contract and schema, and matching open pull requests and task branches. Targeted repository searches did not surface a Sherman-named build plan. No external Sherman source page, historical record, county GIS, source admission, rights review, EvidenceBundle resolver, policy evaluator, governed Focus request, model call, release record, correction propagation, rollback drill, deployment, or public endpoint was exercised."
 related:
-  - "./stevens_county_focus_mode_build_plan.md"
   - "../stevens_county/stevens_county_focus_mode_build_plan.md"
   - "../COUNTY_INDEX.md"
   - "../README.md"
@@ -48,6 +47,7 @@ notes:
   - "v1.0 replaces the one-byte placeholder with a same-path identity-hold README."
   - "The Stevens County build plan in this directory remains byte-unchanged as conflict evidence; this slice does not rename, move, or delete it."
   - "The identical Stevens plan under the Stevens County directory remains the correctly named county-local copy."
+  - "v1.1 (2026-10-12): the foreign Stevens plan copy was deleted from this directory (owner-directed duplicate removal); the Stevens plan remains at ../stevens_county/; sections describing the foreign plan are kept as the historical record at base_commit 8f0957a0; a placeholder sherman_county_focus_mode_build_plan.md now reserves the expected plan path."
   - "No Sherman-specific proof slice, source seed, county fact, or implementation claim is invented to fill the gap."
   - "The shared County Index should be recomputed as a complete 105-county inventory after leaf merges; this README does not partially edit that shared register."
 [/KFM_META_BLOCK_V2] -->
@@ -60,6 +60,15 @@ notes:
 > unmistakable, prevent a Stevens County plan from being used as Sherman
 > evidence, and define the smallest safe correction path without silently
 > creating, moving, deleting, releasing, or publishing anything.
+
+> [!NOTE]
+> **Update 2026-10-12 (v1.1).** The foreign `stevens_county_focus_mode_build_plan.md`
+> copy described below was **deleted** from this directory as an owner-directed
+> duplicate removal. The Stevens County plan remains at
+> [`../stevens_county/stevens_county_focus_mode_build_plan.md`](../stevens_county/stevens_county_focus_mode_build_plan.md).
+> Sherman still has **no** build plan: [`sherman_county_focus_mode_build_plan.md`](./sherman_county_focus_mode_build_plan.md)
+> is a placeholder at the expected path with no Sherman content.
+> The sections below describe the state at `base_commit` `8f0957a0` and are kept as the record of the conflict.
 
 > [!IMPORTANT]
 > **This directory does not currently contain a Sherman County build plan.**
@@ -173,7 +182,7 @@ notes:
 | Artifact | Pinned state | Actual role | Sherman treatment |
 |---|---|---|---|
 | [`README.md`](./README.md) | Prior blob `8b137891...`; one newline. | Lane orientation. | Replaced in place with this identity-hold boundary. |
-| [`stevens_county_focus_mode_build_plan.md`](./stevens_county_focus_mode_build_plan.md) | Blob `e202a688...`; complete Stevens County plan dated 2026-06-08. | Stevens planning lineage accidentally duplicated under Sherman. | Keep byte-unchanged; mark `FOREIGN_PLAN`; do not use for Sherman. |
+| `stevens_county_focus_mode_build_plan.md` (**deleted 2026-10-12**) | Blob `e202a688...`; complete Stevens County plan dated 2026-06-08. | Stevens planning lineage accidentally duplicated under Sherman. | Deleted as a duplicate on owner direction; it was never Sherman evidence. |
 | [Correct Stevens County copy](../stevens_county/stevens_county_focus_mode_build_plan.md) | Same filename and same blob `e202a688...`. | County-local Stevens planning lineage. | Preserve as the correctly named copy; this README does not modify it. |
 | [County Index](../COUNTY_INDEX.md) | Blob `07e9b65c...`; pinned v1.5 inventory. | Shared collision-prevention and drift register. | Its Sherman identity findings remain valid; only the one-byte README fact becomes stale after this leaf update. |
 
@@ -403,7 +412,7 @@ A documentation edit cannot upgrade any of these states.
 
 | Surface | Role in this README | Authority limit |
 |---|---|---|
-| [Foreign sibling plan](./stevens_county_focus_mode_build_plan.md) | Confirms the Sherman identity defect. | Not Sherman evidence or a writable correction target in this slice. |
+| Foreign sibling plan (deleted 2026-10-12; blob `e202a688...` in history) | Confirmed the Sherman identity defect. | Not Sherman evidence. |
 | [Correct Stevens plan](../stevens_county/stevens_county_focus_mode_build_plan.md) | Confirms the same artifact already exists under Stevens. | Stevens planning lineage only; not release evidence. |
 | [County Index](../COUNTY_INDEX.md) | Records `PLAN_NAME_DRIFT`, `FOREIGN_PLAN`, and `DUPLICATE_TREE`. | Inventory and collision prevention only. |
 | [County lane README](../README.md) | Parent planning/control context. | Does not override accepted Directory Rules. |
@@ -573,7 +582,7 @@ resolved.
 
 ### Current repository evidence
 
-- [Foreign Stevens plan under Sherman](./stevens_county_focus_mode_build_plan.md)
+- Foreign Stevens plan under Sherman — deleted 2026-10-12 (blob `e202a688...` remains in git history)
 - [Correct Stevens County plan](../stevens_county/stevens_county_focus_mode_build_plan.md)
 - [County Focus Mode Master Index](../COUNTY_INDEX.md)
 - [County lane README](../README.md)

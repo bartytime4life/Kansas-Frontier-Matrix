@@ -2,12 +2,12 @@
 doc_id: kfm://doc/focus-modes-county-index
 title: County Focus Mode Master Index (Kansas, 105 counties)
 type: standard
-version: v1.5
+version: v1.6
 status: draft; repository-grounded; compatibility-lane; non-release; non-publication
 owners:
   - "NEEDS VERIFICATION — Focus Mode stewardship"
 created: 2026-05-22
-updated: 2026-08-21
+updated: 2026-10-12
 policy_label: public; documentation; county-scope; compatibility; cite-or-abstain
 owning_root: docs/
 responsibility: >-
@@ -88,6 +88,7 @@ notes:
   - "v1.3 repairs Edwards README filename drift, carries the merged Doniphan README forward, and reconciles every README fact visible in the non-truncated current tree; all lifecycle, validator, release, and publication claims remain fail-closed."
   - "v1.4 recomputes all 105 county rows on current main, clears only the resolved Decatur foreign-plan and Elk one-byte README findings, and preserves every remaining naming, identity, placement, validator, lifecycle, release, and publication hold."
   - "v1.5 reconciles the merged Franklin, Graham, Gove, Grant, Gray, Greeley, and Greenwood README modernizations, records 49 one-byte, 56 substantive, and 51 anomalous county rows, and preserves every remaining hold."
+  - "v1.6 (2026-10-12) records the owner-directed deletion of the foreign Stevens plan copy from sherman_county/ and clears the Sherman FOREIGN_PLAN, PLAN_NAME_DRIFT, and Sherman/Stevens DUPLICATE_TREE findings, and lists the new Sherman build-plan placeholder; every other row is unchanged and not recomputed."
   - "The inventory corrections do not decide the singular-versus-plural Focus documentation placement or authorize broader structural migration."
   - "Legacy P1/P2, lane, sensitivity, and source-seed signals are retained as PROPOSED planning context, not promoted as current repository fact."
 [/KFM_META_BLOCK_V2] -->
@@ -269,11 +270,11 @@ Every link below resolves in the pinned county tree. Link resolution proves only
 | [Seward](./seward_county/) | `seward_county` | [`README.md`](./seward_county/README.md) · 1 byte | [`seward_county_focus_mode_build_plan.md`](./seward_county/seward_county_focus_mode_build_plan.md) | `README_1_BYTE` |
 | [Shawnee](./shawnee_county/) | `shawnee_county` | [`README.md`](./shawnee_county/README.md) | [`shawnee_county_focus_mode_build_plan.md`](./shawnee_county/shawnee_county_focus_mode_build_plan.md) | `TRACKED_PAIR` |
 | [Sheridan](./sheridan_county/) | `sheridan_county` | [`README.md`](./sheridan_county/README.md) · 1 byte | [`sheridan_county_focus_mode_build_plan.md`](./sheridan_county/sheridan_county_focus_mode_build_plan.md) | `README_1_BYTE` |
-| [Sherman](./sherman_county/) | `sherman_county` | [`README.md`](./sherman_county/README.md) · 1 byte | [`stevens_county_focus_mode_build_plan.md`](./sherman_county/stevens_county_focus_mode_build_plan.md) | `README_1_BYTE`<br>`PLAN_NAME_DRIFT`<br>`FOREIGN_PLAN`<br>`DUPLICATE_TREE` |
+| [Sherman](./sherman_county/) | `sherman_county` | [`README.md`](./sherman_county/README.md) · 1 byte | [`sherman_county_focus_mode_build_plan.md`](./sherman_county/sherman_county_focus_mode_build_plan.md) · placeholder; foreign Stevens copy deleted 2026-10-12 | `README_1_BYTE` |
 | [Smith](./smith_county/) | `smith_county` | [`README.md`](./smith_county/README.md) · 1 byte | [`smith_county_build_plan.md`](./smith_county/smith_county_build_plan.md) | `README_1_BYTE`<br>`PLAN_NAME_DRIFT` |
 | [Stafford](./stafford_county/) | `stafford_county` | [`README.md`](./stafford_county/README.md) | [`stafford_county_focus_mode_build_plan.md`](./stafford_county/stafford_county_focus_mode_build_plan.md) | `TRACKED_PAIR` |
 | [Stanton](./stanton_county/) | `stanton_county` | [`README.md`](./stanton_county/README.md) · 1 byte | [`stanton_county_focus_mode_build_plan.md`](./stanton_county/stanton_county_focus_mode_build_plan.md) | `README_1_BYTE` |
-| [Stevens](./stevens_county/) | `stevens_county` | [`README.md`](./stevens_county/README.md) · 1 byte | [`stevens_county_focus_mode_build_plan.md`](./stevens_county/stevens_county_focus_mode_build_plan.md) | `README_1_BYTE`<br>`DUPLICATE_TREE` |
+| [Stevens](./stevens_county/) | `stevens_county` | [`README.md`](./stevens_county/README.md) · 1 byte | [`stevens_county_focus_mode_build_plan.md`](./stevens_county/stevens_county_focus_mode_build_plan.md) | `README_1_BYTE` |
 | [Sumner](./sumner_county/) | `sumner_county` | [`README.md`](./sumner_county/README.md) · 1 byte | [`sumner_county_focu_build_plan.md`](./sumner_county/sumner_county_focu_build_plan.md) | `README_1_BYTE`<br>`PLAN_NAME_DRIFT` |
 | [Thomas](./thomas_county/) | `thomas_county` | [`README.md`](./thomas_county/README.md) · 1 byte | [`thomas_county_focus_mode_build_plan.md`](./thomas_county/thomas_county_focus_mode_build_plan.md) | `README_1_BYTE` |
 | [Trego](./trego_county/) | `trego_county` | [`README.md`](./trego_county/README.md) · 1 byte | [`trego_county_focus_mode_build_plan.md`](./trego_county/trego_county_focus_mode_build_plan.md) | `README_1_BYTE` |
@@ -303,7 +304,7 @@ Every link below resolves in the pinned county tree. Link resolution proves only
 | `COUNTY-INV-004` | **RESOLVED IN v1.3:** Edwards has substantive `README.md`; the one-byte `README,md` placeholder is absent from the branch snapshot. | Standard README discovery is restored; the snapshot-scoped topology baseline may retain historical Edwards anomalies until validator-owned regeneration. | Keep the canonical filename; do not reintroduce the typo or weaken the topology convergence ratchet. |
 | `COUNTY-INV-005` | Anderson, Greeley, Nemaha, Russell, Smith, Sumner, and Wichita use alternate or malformed plan filenames. | Filename-based tooling and navigation are unreliable. | Repair one bounded naming cohort with exact consumer checks and rollback. |
 | `COUNTY-INV-006` | **RESOLVED IN v1.4:** Decatur contains only its own plan; the prior Stevens-named foreign plan is absent from the current tree. | The tree-level foreign-plan conflict is cleared; plan content correctness remains `NEEDS VERIFICATION`. | Keep the county-local filename; treat any semantic or provenance review as a separate evidence-backed change. |
-| `COUNTY-INV-007` | Sherman and Stevens share tree `8c963f0daac7582822b0e7ec84d37275ec04e34e`; both contain a Stevens-named plan. | Sherman cannot be treated as independently implemented. | Reconstruct Sherman identity from source/history in a separate correction PR. |
+| `COUNTY-INV-007` | Sherman and Stevens share tree `8c963f0daac7582822b0e7ec84d37275ec04e34e`; both contain a Stevens-named plan. | Sherman cannot be treated as independently implemented. | **RESOLVED 2026-10-12 (duplicate):** the foreign Stevens copy under `sherman_county/` was deleted; the Stevens plan remains under `stevens_county/`. Sherman has only a placeholder at the expected plan path; a separate Sherman planning slice must author the plan. |
 | `COUNTY-INV-008` | 49 README files are one byte; 56 are substantive by byte length. | Directory presence does not establish lane responsibility, ownership, or usage. | Build or repair leaf READMEs only from verified county content and inherited lane rules. |
 | `COUNTY-INV-009` | No current county directory contains the validator's seven required filenames. | No row can be promoted to `draft` or beyond from tree shape alone. | Treat every lifecycle state as `NEEDS VERIFICATION`; do not weaken the validator. |
 | `COUNTY-INV-010` | Per-county source descriptors, rights, evidence resolution, policy outcomes, releases, corrections, and rollback execution were not inspected exhaustively. | Content and public fitness remain unknown. | Verify one county at a time through governed evidence and release boundaries. |
@@ -581,5 +582,6 @@ Before merge, close or abandon this draft PR; the current default-branch tree re
 | v1.3 | 2026-08-21 | Replaced Edwards `README,md` with substantive `README.md`; reconciled its row and resolved drift ledger item `COUNTY-INV-004`; carried the merged Doniphan README and all current-main README facts forward to 58 one-byte, 47 substantive, and 60 anomalous county rows; retained all naming, identity, foreign-plan, duplicate-tree, lifecycle, validator, release, and publication holds. |
 | v1.4 | 2026-08-21 | Recomputed the complete 105-county inventory at current main; cleared the resolved Decatur foreign-plan and Elk one-byte README findings; recorded 56 one-byte, 49 substantive, and 57 anomalous county rows; preserved the singular/plural placement HOLD and every remaining naming, identity, validator, lifecycle, source, policy, release, deployment, and publication boundary. |
 | v1.5 | 2026-08-21 | Reconciled the merged Franklin, Graham, Gove, Grant, Gray, Greeley, and Greenwood README modernizations; recorded 49 one-byte, 56 substantive, and 51 anomalous county rows; preserved the singular/plural placement HOLD and every remaining naming, identity, validator, lifecycle, source, policy, release, deployment, and publication boundary. |
+| v1.6 | 2026-10-12 | Recorded the owner-directed deletion of the foreign Stevens plan copy from `sherman_county/`; cleared the Sherman `FOREIGN_PLAN`/`PLAN_NAME_DRIFT` and Sherman/Stevens `DUPLICATE_TREE` findings and resolved `COUNTY-INV-007`; listed the Sherman build-plan placeholder. Other rows unchanged and not recomputed. |
 
 [↑ Back to top](#top)
