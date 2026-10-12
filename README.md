@@ -1,6 +1,6 @@
 # Kansas Frontier Matrix
 
-A governed, evidence-first, map-first, time-aware spatial knowledge and publication system for inspectable Kansas-centered claims.
+A governed, Kansas-first, evidence-first, map-first, time-aware spatial knowledge and publication system designed for inspectable claims, auditable evidence, and reversible changes.
 
 > [!NOTE]
 > **Status:** `draft`  
