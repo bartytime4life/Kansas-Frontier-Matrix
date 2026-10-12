@@ -1,5 +1,5 @@
 "use client";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import type { Map as AtlasMap } from "./maplibre-seam";
 import { atlasMobilePadding } from "./local-atlas-presentation";
 import { PREPARED_COLLECTIONS } from "./prepared-collection-pins";
@@ -29,7 +29,8 @@ export function PreparedCollectionControl({ map, styleReady, flatMap, suspended,
   const request = useRef<AbortController | null>(null), generation = useRef(0);
   const overlay = useRef<ReturnType<typeof attachAtlasPreview> | null>(null);
   const controlRef = useRef<HTMLElement>(null);
-  const currentView = useRef({ preview, suspended }); currentView.current = { preview, suspended };
+  const currentView = useRef({ preview, suspended });
+  useLayoutEffect(() => { currentView.current = { preview, suspended }; }, [preview, suspended]);
   const profile = PREPARED_COLLECTIONS.find(p => p.id === id)!;
   const clear = useCallback(() => { generation.current++; request.current?.abort(); request.current = null; overlay.current?.dispose(); overlay.current = null; setSelection(null); setPreview(null); setInspected(null); setBusy(false); setMapState(""); setMember(""); setError(""); setFilter(""); setOffset(0); }, []);
   useEffect(() => () => { generation.current++; request.current?.abort(); overlay.current?.dispose(); }, []);
