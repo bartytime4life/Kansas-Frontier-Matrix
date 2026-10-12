@@ -5469,15 +5469,27 @@
     "data_activation": false,
     "hosted_equivalence": false,
     "local_browser": "PENDING",
+    "local_install": {
+      "build_files": 428,
+      "current": "/home/bartytime/Projects/KFM-Explorer-Site-aligned-v252-20261012",
+      "data_migration": false,
+      "health": "PASS",
+      "previous": "/home/bartytime/Projects/KFM-Explorer-Site-final-reviewed-20261011-v251",
+      "retained_old_assets": 44,
+      "source_commit": "190d16acb2f866cb9c2eb108dbd204ca30465269",
+      "source_files": 984,
+      "state": "/home/bartytime/Projects/KFM-Explorer-Site-v109/.wrangler/local-state"
+    },
     "mirror": "PENDING remaining current-source validation",
     "mirror_build": "PASS",
     "mirror_lint": "0 errors; 66 existing warnings",
     "mirror_tests": 1196,
     "mirror_typecheck": "PASS",
-    "python_checks": 25,
+    "python_checks": 23,
     "site_build": "PASS",
     "site_tests": 1138,
     "site_typecheck": "PASS",
-    "source_lint": "0 errors; 66 existing warnings"
+    "source_lint": "0 errors; 66 existing warnings",
+    "topology": "PASS; zero new drift/invariants, 93 inherited warnings; baseline unchanged"
   }
 }
