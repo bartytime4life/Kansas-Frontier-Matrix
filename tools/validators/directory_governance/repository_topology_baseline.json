@@ -234,13 +234,6 @@
       "subject": "separator-alias:tools/validators/habitat_fauna"
     },
     {
-      "evidence_sha256": "sha256:e3002c5595c2f9b98f9972c4c996eb6461df3e1a54b623f89750aa4a1d3cf6fd",
-      "evidence_zlib_base64": "eNpLyU8u1k/Jz03MzCvWT0/Nz8lPr9R3dvTz9/N0dvSJD3AM8QjWy01hSMGqzt8vxNMv1DMkMt7TL8zVL8Q/KBKnYhfHEMd4H083V+dIZx9XoDIAWcsp9g==",
-      "fingerprint": "sha256:5554ad2bea19f461a34996a4c049e309421089274453bfcb860bec3f5fca3f42",
-      "rule_id": "KFM-TOPO-016",
-      "subject": "doc-id:kfm://doc/geology-canonical-paths"
-    },
-    {
       "evidence_sha256": "sha256:726886be0a1cf9d4716533fc14437d07a42a1f6aed44e2d71697f654c61c963c",
       "evidence_zlib_base64": "eNoLcvVxdQx2jXfx93X09Iv3cfRzjQ9yDQz1DHJ1AQB4hwhY",
       "fingerprint": "sha256:5732ad35446a917c3d36da85b364320a25ca8eb3a12d91baab1dba9bd57014eb",

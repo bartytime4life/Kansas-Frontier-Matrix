@@ -2,13 +2,13 @@
 doc_id: kfm://data/proofs/soil/readme
 title: data/proofs/soil README
 type: directory-readme
-version: v0.2.0
+version: v0.2.1
 status: repository-grounded draft; Soil proof production and release readiness remain unverified
 owners:
   - "@bartytime4life — verified CODEOWNERS routing for /data/proofs/; routing is not review or approval"
   - "NEEDS VERIFICATION — data, proof, Soil domain, rights/sensitivity, policy, release, correction/rollback, and independent-review stewardship"
 created: 2026-06-25
-updated: 2026-07-26
+updated: 2026-10-11
 policy_label: public-review
 path: data/proofs/soil/README.md
 related:
@@ -83,7 +83,8 @@ notes:
   - "Same-path Markdown modernization only; no proof payload, source record, contract, schema, policy, validator, fixture, test, workflow, release object, route, or publication state changed."
   - "Support-type separation is mandatory: static survey, gridded derivative, station reading, satellite grid, pedon evidence, and interpretation cannot masquerade as one surface."
   - "Directory Rules v2 and ADR-0029 remain proposed; the legacy architecture rules path is absent at the pinned head, and this README does not treat that deletion as adoption, supersession, or migration authority."
-  - "A dynamic workflow badge is intentionally omitted because the current Soil jobs record validation, proof-production, and release-dry-run holds."
+  - "A dynamic workflow badge is intentionally omitted because the current Soil jobs record proof-production and release-dry-run holds, and the validation job's green result is bounded to synthetic fixtures."
+  - "2026-10-11 (v0.2.1): workflow description corrected to the current .github/workflows/domain-soil.yml (validate-soil now runs bounded no-network suites, the SSURGO drift proof, admitted USCRN descriptor validation, and USCRN pilot tests; build-proof-soil and publish-dry-run-soil keep their WORKFLOW_HOLD strings); documentation only."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -143,8 +144,8 @@ notes:
 | Directory authority | The legacy `docs/architecture/directory-rules.md` body is absent at the pinned head; [Directory Rules v2](../../../docs/doctrine/directory-rules.md) is still `PROPOSED_FOR_ADOPTION`, and [ADR-0029](../../../docs/adr/ADR-0029-adopt-directory-governance-standard-v2.md) is still `proposed`. | No accepted replacement was verified. This README retains the already-existing path and does not infer adoption, supersession, migration, or deletion authority from repository absence. |
 | Contracts and schemas | The [Soil contract lane](../../../contracts/domains/soil/README.md) is draft/experimental; the [Soil schema lane](../../../schemas/contracts/v1/domains/soil/README.md) is a scaffolded draft whose object shapes still need field-complete verification. | No accepted Soil proof profile or proof-object schema was verified. |
 | Policy and fixtures | The [Soil policy README](../../../policy/domains/soil/README.md) and [fixture README](../../../fixtures/domains/soil/README.md) are greenfield scaffolds. | Policy enforcement and representative positive/negative fixture coverage are not established. |
-| Tests and validators | The domain has one `test_placeholder` smoke test and four validator files whose `main()` functions raise `NotImplementedError`. | No substantive Soil proof validation is established. |
-| Automation | The [Soil workflow](../../../.github/workflows/domain-soil.yml) performs bounded readiness checks and records explicit validation, proof, and release-dry-run holds. | A green held job is not proof production, semantic validation, release readiness, or publication authority. |
+| Tests and validators | `tests/domains/soil/` holds bounded test modules, and `validate-soil` runs the suites listed in [Validation and held automation](#validation-and-held-automation); no file under `tools/validators/domains/soil/` or `tests/domains/soil/` raises `NotImplementedError` as of 2026-10-11. | Suites run on synthetic fixtures only. No substantive Soil proof validation or proof producer is established. |
+| Automation | The [Soil workflow](../../../.github/workflows/domain-soil.yml) runs bounded synthetic no-network validation suites and records explicit proof and release-dry-run holds. | A green held job is not proof production, semantic validation, release readiness, or publication authority. |
 | Source registry | The [Soil source registry README](../../registry/sources/soil/README.md) records competing domain-first and subtype-first topology and marks final topology `NEEDS VERIFICATION`. | This proof README cannot resolve registry topology or activate a source. |
 | Ownership | CODEOWNERS routes `/data/proofs/` to `@bartytime4life`. | Accountable proof, data, Soil, rights/sensitivity, policy, release, correction/rollback, and independent-review assignments remain `NEEDS VERIFICATION`. |
 | Proof payloads and external stores | Not established by the bounded file review. | Recursive payload inventory, writers, consumers, access controls, retention, and operational use remain `UNKNOWN`. |
@@ -425,16 +426,16 @@ Proof support may help a release decision, correction, or rollback. It does not 
 
 ## Validation and held automation
 
-The current [domain workflow](../../../.github/workflows/domain-soil.yml) is a fail-closed readiness detector with three jobs:
+The current [domain workflow](../../../.github/workflows/domain-soil.yml) has three jobs. Its header states: "validate-soil runs three bounded synthetic no-network validator profiles, release-readiness guard regressions, and the bounded SSURGO package-drift fixture proof, plus the USCRN daily soil pilot candidate tests; proof and release-dry-run producers remain explicit holds."
 
 | Job | What it currently checks | Recorded boundary |
 |---|---|---|
-| `validate-soil` | Required responsibility boundaries; the exact smoke placeholder; four exact `NotImplementedError` validator placeholders; parseable Soil schema/fixture JSON; absence of a repository-owned Soil validation target. | `WORKFLOW_HOLD: accepted executable Soil validation suite is not established` |
-| `build-proof-soil` | Required proof/runbook/candidate/test boundaries; the literal support-type invariant; surfacing of proof artifacts, proof targets, or Soil proof implementations. | `WORKFLOW_HOLD: no accepted Soil proof producer or deterministic proof command` |
-| `publish-dry-run-soil` | Required candidate, release-index, runbook, published-layer, and shared dry-run boundaries; surfacing of candidate records or release targets. | `WORKFLOW_HOLD: no accepted Soil release dry-run command or candidate manifest contract` |
+| `validate-soil` | Twenty required Soil boundary paths; then, with `KFM_NO_NETWORK: "1"`, the standard-library suites `tests/domains/soil/test_soil_smoke.py`, `test_soil_moisture_qc.py`, `test_smap_l4_anti_collapse.py`, and `test_release_readiness_hold.py`; the bounded SSURGO package-drift fixture proof (`python -m unittest tests.ingest.ssurgo_watch.test_ssurgo_watch`); after installing the hash-locked `water-pilot` profile, `tools/validators/domains/soil/validate_source_descriptor.py data/registry/sources/soil/noaa-uscrn.yaml` ("Admitted NOAA USCRN descriptor (ADR-0046): must stay schema-valid") and `pytest` on `tests/domains/soil/test_uscrn_daily_candidate.py`, `tests/tools/test_uscrn_daily_pilot.py`, and `tests/tools/test_soil_release.py`. | No `WORKFLOW_HOLD`. The step summary records `VALIDATION_SCOPE: synthetic-public-safe-station-smap-l4-and-ssurgo-drift-fixtures-only` and states "The release tests write decisions only into temporary stores; nothing is served." |
+| `build-proof-soil` | Four required paths (this README, `docs/runbooks/soil/PROMOTION_RUNBOOK.md`, `release/candidates/soil/README.md`, `tests/domains/soil/README.md`); the literal support-type invariant string in this README; fails if any file other than `README.md` or `.gitkeep` surfaces under `data/proofs/soil/`, a `soil-proof` / `proof-soil` Makefile target appears, or a `*soil*proof*` / `*proof*soil*` `.py` or `.mjs` file appears under `tools`, `pipelines`, `packages`, or `scripts`. | `WORKFLOW_SKIPPED_EXPLICIT: build-proof-soil` and `WORKFLOW_HOLD: no accepted Soil proof producer or deterministic proof command` |
+| `publish-dry-run-soil` | Six required candidate, release-index, runbook, published-layer, and shared dry-run paths; the literal "A candidate is not a release." in `release/candidates/soil/README.md`; fails if a candidate record surfaces under `release/candidates/soil/`, if `docs/domains/soil/RELEASE_INDEX.md` no longer matches its pinned SHA-256 (the no-release marker restored by PR #4941), or if a `soil-release-dry-run` / `release-dry-run-soil` Makefile target appears. | `WORKFLOW_SKIPPED_EXPLICIT: publish-dry-run-soil` and `WORKFLOW_HOLD: no accepted Soil release dry-run command or candidate manifest contract` |
 
 > [!CAUTION]
-> These jobs are intentionally green-capable while recording holds. Their success means the expected scaffold/hold shape was observed. It does not establish source admission, survey lineage, units, depth, time, freshness, support-type separation, rights, sensitivity, EvidenceBundle closure, policy approval, proof production, release readiness, deployment, or publication.
+> The workflow's own summary bounds a green `validate-soil` result: "A green result does not establish Soil truth, MUKEY/COKEY/CHKEY lineage, live SSURGO package or rights verification, source admission, survey authority, station or satellite freshness, production SMAP identity, canonical support vocabulary, satellite or model scientific fitness, EvidenceBundle closure, policy approval, agronomic or engineering suitability, proof closure, release readiness, or safe public use. The proof and release-dry-run jobs remain held." The two held jobs are green-capable while recording holds; their success means the expected hold shape was observed, not proof production, release readiness, deployment, or publication.
 
 A dynamic workflow-status badge is omitted because a green badge would hide the semantic holds. The static automation badge links here instead.
 
@@ -611,6 +612,11 @@ Unknowns narrow claims and block higher-risk transitions; they do not invite pla
 | Source, payload, contract, schema, policy, validator, fixture, test, workflow, release, route, or publication change | None |
 
 ### Change history
+
+#### v0.2.1 — 2026-10-11
+
+- corrected the [Validation and held automation](#validation-and-held-automation) table and the automation and tests rows to match the current `.github/workflows/domain-soil.yml`: `validate-soil` now runs bounded no-network suites, the SSURGO drift proof, admitted USCRN descriptor validation, and USCRN pilot tests; `build-proof-soil` and `publish-dry-run-soil` keep their `WORKFLOW_HOLD` strings;
+- changed Markdown only; the literal support-type invariant the proof job checks is preserved.
 
 #### v0.2.0 — 2026-07-26
 

@@ -42,7 +42,7 @@ notes:
 
 <!-- Badge row — Shields.io placeholders; replace targets once owners/CI/policies land -->
 ![status](https://img.shields.io/badge/status-draft-orange)
-![doc-version](https://img.shields.io/badge/doc--version-v0.2-blue)
+![doc-version](https://img.shields.io/badge/doc--version-v0.2.1-blue)
 ![product](https://img.shields.io/badge/product-SoilGrids-success)
 ![source-role](https://img.shields.io/badge/source__role-modeled-yellow)
 ![resolution](https://img.shields.io/badge/resolution-250m%20global-blue)
@@ -50,7 +50,7 @@ notes:
 ![receipt-required](https://img.shields.io/badge/ModelRunReceipt-MUST-orange)
 ![family-status](https://img.shields.io/badge/family-PROPOSED%20%E2%80%94%20OPEN--DSC--14-yellow)
 ![activation](https://img.shields.io/badge/activation-NOT%20ACTIVATED-red)
-![last-updated](https://img.shields.io/badge/last--updated-2026--05--21-blue)
+![last-updated](https://img.shields.io/badge/last--updated-2026--10--11-blue)
 
 | Status | Owners | Last reviewed |
 |---|---|---|
@@ -503,5 +503,5 @@ Inheritance: every family-level OPEN item from [`./README.md`](./README.md#11-op
 ### Footer
 
 > **Related:** [`./README.md`](./README.md) (family landing) · [`../README.md`](../README.md) (catalog index) · [`../IDENTITY.md`](../IDENTITY.md) · [`../PROFILES.md`](../PROFILES.md) · [`../RIGHTS-AND-SENSITIVITY-MAP.md`](../RIGHTS-AND-SENSITIVITY-MAP.md) · [`../OPEN-QUESTIONS.md`](../OPEN-QUESTIONS.md) · [Directory Rules](../../../doctrine/directory-rules.md) · [Soil domain dossier](../../../domains/soil/README.md)
-> **Last updated:** 2026-05-21 *(Claude Code product-page revision; v0.1 → v0.2)* · **Status:** draft · **Authority of this doc:** explanatory product-page; does **not** decide admission, activation, or release. Family is **beyond** `directory-rules.md` §7.3 pending **OPEN-DSC-14** ADR ratification.
+> **Last updated:** 2026-10-11 *(v0.2 → v0.2.1: RAW placement wording and metadata fixes; prior revision v0.1 → v0.2 on 2026-05-21)* · **Status:** draft · **Authority of this doc:** explanatory product-page; does **not** decide admission, activation, or release. Family is **beyond** `directory-rules.md` §7.3 pending **OPEN-DSC-14** ADR ratification.
 > [⬆ Back to top](#isric-soilgrids)

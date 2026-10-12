@@ -46,7 +46,7 @@ notes:
 |---|---|
 | **Status** | `draft` (PROPOSED). Not yet reviewed by source registry steward. |
 | **Owners** | _TODO_ — Source registry steward + Soil domain steward + Agriculture domain steward |
-| **Last updated** | _TODO-YYYY-MM-DD_ |
+| **Last updated** | 2026-10-11 |
 | **Doc class** | Standard reference doc (per-source-family catalog entry) |
 | **Authority level** | Documentation. Explains intent; does not decide admission, rights, sensitivity, or release. |
 | **Lifecycle phase** | Pre-RAW (catalog only — no NRCS source is admitted by this document) |
@@ -157,7 +157,7 @@ The table below enumerates the NRCS-issued data products KFM intends to treat as
 | Web Soil Survey — interactive download portal for SSURGO | `nrcs.wss` | Soil | `observed` (manual download path; same underlying authority as SSURGO) | UNKNOWN |
 | NASIS-derived component / horizon / pedon tables | `nrcs.nasis` | Soil | `observed` for survey observations; `modeled` where interpretations are layered | UNKNOWN |
 | SCAN — Soil Climate Analysis Network (automated stations, hourly) | `nrcs.scan` | Soil (joins to Atmosphere/Air, Agriculture) | `observed` (station readings); watcher emits **candidate** signals at Pre-RAW | UNKNOWN |
-| Conservation practice records (NRCS field implementation records) | `nrcs.conservation` | Agriculture (links to Soil) | `administrative` (compilation of agency-implemented practice records) | UNKNOWN |
+| Conservation practice records (NRCS field implementation records) — [product page](conservation-practice-records.md) | `nrcs.conservation` | Agriculture (links to Soil) | `administrative` (compilation of agency-implemented practice records) | UNKNOWN |
 | Soil suitability and erosion-risk ratings derived from SSURGO/SDA | `nrcs.suitability` | Soil (consumer: Agriculture) | `modeled` (interpretation layered on observations; requires `role_model_run_ref`) | UNKNOWN |
 
 > [!CAUTION]
@@ -478,6 +478,6 @@ Field shape for every entry is **NEEDS VERIFICATION** against any mounted schema
 
 ---
 
-<sub>**Status:** draft (PROPOSED, v0.2). **Owners:** _TODO_. **Last updated:** _TODO-YYYY-MM-DD_. This file is human-readable catalog documentation and does not decide source admission. For activation, see the source registry.</sub>
+<sub>**Status:** draft (PROPOSED, v0.2.1). **Owners:** _TODO_. **Last updated:** 2026-10-11. This file is human-readable catalog documentation and does not decide source admission. For activation, see the source registry.</sub>
 
 [↥ Back to top](#-nrcs--source-catalog-entry)

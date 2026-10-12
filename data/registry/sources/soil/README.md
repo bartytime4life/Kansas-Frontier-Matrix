@@ -4,7 +4,7 @@ name: Soil Subtype-First Source Registry README
 title: Canonical Soil Source Registry README
 path: data/registry/sources/soil/README.md
 type: data-registry-sources-soil-readme
-version: v0.2.0
+version: v0.2.1
 status: draft
 owners:
   - <registry-steward>
@@ -18,7 +18,7 @@ owners:
   - <release-steward>
   - <docs-steward>
 created: 2026-06-29
-updated: 2026-08-24
+updated: 2026-10-11
 policy_label: restricted-review
 truth_posture: cite-or-abstain
 responsibility_root: data/
@@ -111,6 +111,7 @@ notes:
   - "The repository also contains data/registry/soil/ and data/registry/soil/sources/ as unmigrated compatibility surfaces; independent writes there are denied."
   - "Soil source registry records are admission and authority-control records. They do not store source payloads, prove soil claims, define contracts, enforce schemas, hold policy, close catalogs, or publish artifacts."
   - "NRCS and other soil source families must not be collapsed into one source role, cadence, scale, support type, rights posture, or release posture."
+  - "2026-10-11 (v0.2.1): RAW destinations and admission-flow node aligned to accepted DIR-SOURCE-001 (source-first capture; physical placement HOLD; data/raw/soil/ is a compatibility/reference lane); catalog row aligned to subtype-first data/catalog/ (Directory Rules §12.3); status row records the admitted noaa-uscrn.yaml descriptor; documentation only."
 [/KFM_META_BLOCK_V2] -->
 
 <a id="top"></a>
@@ -196,7 +197,7 @@ regeneration controls.
 | Cross-domain source registry parent | [`../README.md`](../README.md) | General source registry doctrine and `data/registry/sources/<domain>/` pattern. |
 | Domain-first registry parent | [`../../soil/README.md`](../../soil/README.md) | Existing routing/compatibility parent; independent writes denied. |
 | Domain-first compatibility view | [`../../soil/sources/README.md`](../../soil/sources/README.md) | Four retained templates pending reviewed mapping, generation, redirect, or retirement. |
-| Source payloads | `../../../raw/soil/`, `../../../work/soil/`, `../../../quarantine/soil/`, `../../../processed/soil/` | Actual data belongs in lifecycle lanes, not registry records. |
+| Source payloads | The accepted source-first RAW home (physical placement HOLD; [`data/raw/soil/`](../../../raw/soil/README.md) is a compatibility/reference lane), `../../../work/soil/`, `../../../quarantine/soil/`, `../../../processed/soil/` | Actual data belongs in lifecycle lanes, not registry records. |
 | Domain placement guidance | [`../../../../docs/domains/soil/CANONICAL_PATHS.md`](../../../../docs/domains/soil/CANONICAL_PATHS.md) | Soil lane placement, responsibility-root map, path variance, and anti-patterns. |
 | Soil lifecycle / continuity docs | [`../../../../docs/domains/soil/DATA_LIFECYCLE.md`](../../../../docs/domains/soil/DATA_LIFECYCLE.md) | Human-facing inventory and lifecycle orientation; not registry storage. |
 | NRCS catalog docs | [`../../../../docs/sources/catalog/nrcs/README.md`](../../../../docs/sources/catalog/nrcs/README.md), [`ssurgo.md`](../../../../docs/sources/catalog/nrcs/ssurgo.md), [`soil-data-access.md`](../../../../docs/sources/catalog/nrcs/soil-data-access.md), [`web-soil-survey.md`](../../../../docs/sources/catalog/nrcs/web-soil-survey.md) | Reader-oriented source/product pages; not authoritative descriptor instances. |
@@ -206,7 +207,7 @@ regeneration controls.
 | Policy, sensitivity, and rights | `../../../../policy/domains/soil/`, `../../../../policy/rights/`, `../../../../policy/sensitivity/`, and accepted support/sensitivity policy lanes | Exposure, rights, support type, sensitivity, and admissibility rules. |
 | Validation/support receipts | `../../../receipts/` and accepted Soil receipt lanes | Process memory for checks, transforms, aggregation, support validation, and redaction. |
 | Proof/evidence | `../../../proofs/` or accepted proof lanes | EvidenceBundle closure, proof packs, signatures, and citation validation. |
-| Catalog and graph projections | `../../../catalog/domain/soil/`, `../../../triplets/domain/soil/`, STAC/DCAT/PROV lanes, and accepted graph/catalog lanes | Catalog/discovery carriers after catalog closure. |
+| Catalog and graph projections | Subtype-first `data/catalog/` lanes (`data/catalog/domains/soil/`, STAC/DCAT/PROV per Directory Rules §12.3; the tracked `../../../catalog/domain/soil/` lane is a migration candidate, disposition HOLD), `../../../triplets/domain/soil/`, and accepted graph lanes | Catalog/discovery carriers after catalog closure. |
 | Release decisions | `../../../../release/` | Promotion, correction, rollback, supersession, withdrawal, and release manifests. |
 | Public surfaces | governed APIs and released artifacts only | Public clients do not read this registry lane directly. |
 
@@ -271,7 +272,7 @@ Accepted content is limited to Soil source registry records and registry-local s
 
 | Do not put here | Correct home or owner | Why |
 |---|---|---|
-| Raw source payloads, API dumps, shapefiles, file geodatabases, GeoPackages, GeoJSON, GeoParquet, rasters, COGs, PMTiles, CSVs, database exports, or transformed datasets | `../../../raw/soil/`, `../../../work/soil/`, `../../../quarantine/soil/`, `../../../processed/soil/` | Registry records describe source authority; lifecycle lanes hold data. |
+| Raw source payloads, API dumps, shapefiles, file geodatabases, GeoPackages, GeoJSON, GeoParquet, rasters, COGs, PMTiles, CSVs, database exports, or transformed datasets | The accepted source-first RAW home (physical placement HOLD; [`data/raw/soil/`](../../../raw/soil/README.md) is a compatibility/reference lane), `../../../work/soil/`, `../../../quarantine/soil/`, `../../../processed/soil/` | Registry records describe source authority; lifecycle lanes hold data. |
 | Live source fetchers, scrapers, credentials, or source-specific admission code | `connectors/`, `pipelines/`, `pipeline_specs/`, `configs/`, secret-management infrastructure | Source activation is governed and source-specific, not registry-local executable code. |
 | Semantic contracts | `../../../../contracts/domains/soil/` or ADR-selected contract lane | Contracts define meaning; registry records reference them. |
 | JSON Schemas | `../../../../schemas/contracts/v1/source/`, `../../../../schemas/contracts/v1/domains/soil/`, `../../../../schemas/contracts/v1/soil/`, or ADR-selected schema lane | Schemas define machine shape; registry records are instances or indexes. |
@@ -322,7 +323,7 @@ flowchart LR
     Activation -- restricted --> Restricted[Admit restricted scope]
     Activation -- needs_review --> Hold[Hold for steward review]
     Activation -- denied --> Deny[DENY admission]
-    Admit --> RAW[data/raw/soil/]
+    Admit --> RAW["RAW: source-first capture (placement HOLD)"]
     Restricted --> RAW
     Hold --> Role
     RAW --> Lifecycle[WORK / QUARANTINE -> PROCESSED -> CATALOG / TRIPLET -> PUBLISHED]
@@ -482,7 +483,7 @@ review:
 | Domain-first registry parent | CONFIRMED | `data/registry/soil/README.md` is the compatibility parent; independent writes are denied. |
 | Domain-first source child | CONFIRMED | `data/registry/soil/sources/README.md` retains four compatibility templates pending migration. |
 | Final canonical registry lane | CONFIRMED | ADR-0029 adopts Directory Rules that make `data/registry/sources/` the canonical writer. |
-| Source descriptor payloads | PARTIAL | Nine small `PROPOSED` placeholder records exist; completeness and schema binding remain unverified. |
+| Source descriptor payloads | PARTIAL | Nine records exist. `noaa-uscrn.yaml` is an admitted `SourceDescriptor` (`review_state: approved`, `lifecycle.registry_state: active`, `rights.rights_status: verified_open`, `release_state: candidate`; admitted by the repository owner on 2026-10-11, see ADR-0046). The other eight remain small `PROPOSED` placeholders; their completeness and schema binding remain unverified. |
 | Compatibility migration | NEEDS VERIFICATION | No reviewed mapping, generator, redirect, retirement record, consumer closure, or rollback proof was found. |
 | Source schema and validator enforcement | NEEDS VERIFICATION | Schema paths, validator paths, fixtures, and CI behavior were not proven by this edit. |
 | Source-role vocabulary | NEEDS VERIFICATION | Current docs show canonical seven-role vocabulary and legacy/source-family role language. Use accepted schema before adding records. |
