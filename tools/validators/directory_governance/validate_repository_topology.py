@@ -532,6 +532,18 @@ def _is_conventional_uppercase_path(path: str) -> bool:
     )
 
 
+def _is_external_site_mirror_path(path: str) -> bool:
+    """Mirrored external site bytes keep upstream names.
+
+    ``apps/site/source/`` is a byte mirror of the external site source. Its
+    file set and digests are pinned by the reviewed mirror receipt and checked
+    by ``tools/qa/site_mirror.py --check``, so renaming a file here to satisfy
+    KFM path grammar would break mirror parity. Only the uppercase grammar is
+    relaxed; unsafe and nonportable path checks still apply.
+    """
+    return path.startswith("apps/site/source/")
+
+
 def _is_site_api_route_parameter(path: str, segment: str) -> bool:
     """Next route parameter brackets are portable, required path syntax."""
     return bool(
@@ -578,6 +590,7 @@ def _path_findings(
             if (
                 segment != "README.md"
                 and not _is_conventional_uppercase_path(path)
+                and not _is_external_site_mirror_path(path)
                 and any(character.isupper() for character in segment)
             ):
                 grammar_groups["uppercase"].append(path)

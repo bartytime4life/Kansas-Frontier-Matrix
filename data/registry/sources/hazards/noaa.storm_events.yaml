@@ -2,10 +2,12 @@
   "object_type": "SourceDescriptor",
   "schema_version": "v1",
   "source_id": "kfm://source/noaa-storm-events",
-  "descriptor_version": "0.1.0",
+  "descriptor_version": "1.0.0",
   "title": "NOAA NCEI Storm Events Database: Kansas event-details pilot",
-  "description": "Proposed scope: the Kansas (STATE_FIPS 20) rows of one data year's NCEI Storm Events details file (StormEvents_details-ftp_v1.0_dYYYY_cYYYYMMDD.csv.gz), chosen as the newest creation vintage the NCEI csvfiles/ listing names for that year, read by connectors/noaa/src/noaa/storm_events_capture.py. Pipeline records carry the short source_id noaa-storm-events. The fatalities and locations files are out of scope, and episode and event narratives are never copied into a candidate. Awaiting the repository owner's admission decision; until review_state is approved and public_release.allowed is true, pipelines/domains/hazards/storm_events_admission.py refuses it. Stored as JSON, which is valid YAML, so the shared SourceDescriptor validator reads it directly.",
-  "domain_scope": ["hazards"],
+  "description": "Admitted scope: the Kansas (STATE_FIPS 20) rows of one data year's NCEI Storm Events details file (StormEvents_details-ftp_v1.0_dYYYY_cYYYYMMDD.csv.gz), chosen as the newest creation vintage the NCEI csvfiles/ listing names for that year, read by connectors/noaa/src/noaa/storm_events_capture.py. Pipeline records carry the short source_id noaa-storm-events. The fatalities and locations files are out of scope, and episode and event narratives are never copied into a candidate. Admitted by the repository owner on 2026-10-12. Stored as JSON, which is valid YAML, so the shared SourceDescriptor validator reads it directly.",
+  "domain_scope": [
+    "hazards"
+  ],
   "source_type": "official_government_dataset",
   "source_role": "historical_context",
   "authority_rank": "authoritative_for_role",
@@ -33,8 +35,8 @@
     "attribution_text": "NOAA National Centers for Environmental Information, Storm Events Database. Records are compiled from National Weather Service reports and may be revised.",
     "redistribution_allowed": "yes",
     "commercial_use_allowed": "yes",
-    "last_verified_at": "2026-10-12T12:00:00Z",
-    "verified_by": "repository owner NOAA rights decision of 2026-09-28 (connectors/noaa/README.md: public-domain-us-government-work; Storm Events role administrative); details-file scope confirmation pending"
+    "last_verified_at": "2026-10-12T13:00:00Z",
+    "verified_by": "@bartytime4life"
   },
   "sensitivity_default": "public",
   "sensitivity_notes": "Event rows carry county or forecast-zone names, begin and end coordinates, and casualty counts, all published by NCEI. Episode and event narratives are unreviewed free text that may describe individuals or private property; the pilot keeps only whether a narrative exists. The fatalities file (age, sex, location of each death) is out of scope.",
@@ -78,26 +80,32 @@
     }
   },
   "admissibility_limits": {
-    "allowed_claim_roles": ["historical_context", "map_display", "citation_support"],
-    "prohibited_claim_roles": ["not_for_life_safety"],
-    "limitations": "Proposed scope covers the Kansas rows of one data year's details file. A record says a National Weather Service office reported an event of that type in that county or zone over that local-time window; it is not a measurement, footprint, inundation extent, warning or declaration. Begin and end coordinates, where present, are report points, not a path or area. Damage is a nominal, unadjusted estimate; blank damage is unreported, never zero. Rows with unreadable damage or casualty values or an end before the begin are withheld and counted. Selection is by NCEI's STATE_FIPS, not a spatial join. The absence of a record does not mean no hazard occurred.",
+    "allowed_claim_roles": [
+      "historical_context",
+      "map_display",
+      "citation_support"
+    ],
+    "prohibited_claim_roles": [
+      "not_for_life_safety"
+    ],
+    "limitations": "Admission covers the Kansas rows of one data year's details file. A record says a National Weather Service office reported an event of that type in that county or zone over that local-time window; it is not a measurement, footprint, inundation extent, warning or declaration. Begin and end coordinates, where present, are report points, not a path or area. Damage is a nominal, unadjusted estimate; blank damage is unreported, never zero. Rows with unreadable damage or casualty values or an end before the begin are withheld and counted. Selection is by NCEI's STATE_FIPS, not a spatial join. The absence of a record does not mean no hazard occurred.",
     "confidence_posture": "source_authoritative_within_role"
   },
   "public_release": {
-    "allowed": false,
+    "allowed": true,
     "requires_review": true,
     "redaction_required": false,
     "release_conditions": [
-      "The repository owner approves this admission (review_state approved, registry_state active, public_release.allowed true).",
-      "Owner self-release requires its own accepted ADR; ADR-0044 covers water, ADR-0045 GHCN-Daily weather and ADR-0046 USCRN soil only.",
+      "Each package needs a kfm.storm-events-release-decision/v1 record that passes the serving gate.",
+      "Owner self-release applies only under ADR-0047: public sensitivity and this admitted license.",
       "Every release keeps the NCEI citation and the revision notice, and no release carries narrative text."
     ]
   },
-  "review_state": "needs_review",
-  "release_state": "not_released",
+  "review_state": "approved",
+  "release_state": "candidate",
   "lifecycle": {
-    "registry_state": "proposed",
+    "registry_state": "active",
     "created_at": "2026-10-12T12:00:00Z",
-    "updated_at": "2026-10-12T12:00:00Z"
+    "updated_at": "2026-10-12T13:00:00Z"
   }
 }

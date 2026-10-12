@@ -21,6 +21,8 @@ evidence_snapshot_spec_hash_schema_blob: 80b496b01b8de8c0e8ba67bf020977e6b1f3c65
 evidence_snapshot_spec_hash_validator_blob: e83a8707548c35411d1fc61911f499ac7ca6d517
 evidence_snapshot_spec_hash_tests_blob: ce981cede288facfa449026e422acfe60a6e4d5d
 evidence_snapshot_spec_hash_workflow_blob: 1da612211bf0d2e0bf339561bc06f336111d614e
+supersedes:
+  - kfm://doc/standards/canonicalization-redirect
 related:
   - docs/standards/README.md
   - docs/standards/canonicalization.md

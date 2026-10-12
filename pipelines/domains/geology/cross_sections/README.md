@@ -30,7 +30,7 @@ related:
   - docs/domains/geology/README.md
   - docs/domains/geology/sublanes/stratigraphy.md
   - docs/domains/geology/SUBLANE-BEDROCK.md
-  - docs/domains/geology/sublanes/surficial.md
+  - docs/domains/geology/surficial.md
   - docs/domains/geology/POLICY.md
   - docs/domains/geology/PRESERVATION_MATRIX.md
   - docs/sources/catalog/kansas/ksgs.md
@@ -71,6 +71,7 @@ tags:
   - restricted
   - governance
 notes:
+  - "2026-10-12: references to docs/domains/geology/sublanes/surficial.md repointed to docs/domains/geology/surficial.md, which absorbed it (owner-directed duplicate removal)"
   - "2026-10-12: references to sublanes/bedrock_geology.md repointed to SUBLANE-BEDROCK.md, which absorbed it (owner-directed duplicate removal)"
   - "This README fills the blank pipelines/domains/geology/cross_sections path as a nested executable Geology cross-section sublane."
   - "Cross-section pipeline logic is executable implementation support only; it does not own source descriptors, source catalog profiles, connectors, schemas, policy, lifecycle data, catalog truth, stratigraphic truth, bedrock truth, surficial truth, well-log truth, geophysics truth, or release decisions."

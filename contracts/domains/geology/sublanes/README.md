@@ -13,7 +13,7 @@ owners:
   - OWNER_TBD — Validation steward
   - OWNER_TBD — Release steward
 created: 2026-06-21
-updated: 2026-06-21
+updated: 2026-10-12
 policy_label: public-with-gates; semantic-contracts; geology; sublanes; source-role-aware; release-gated
 tags: [kfm, contracts, geology, sublanes, semantic-contracts, bounded-context, evidence, source-role, policy, release, rollback]
 related:
@@ -22,7 +22,7 @@ related:
   - ../../../../docs/domains/geology/SCOPE.md
   - ../../../../docs/domains/geology/CANONICAL_PATHS.md
   - ../../../../docs/domains/geology/sublanes/README.md
-  - ../../../../docs/domains/geology/sublanes/surficial.md
+  - ../../../../docs/domains/geology/surficial.md
   - ../../../../pipelines/domains/geology/surficial_units/README.md
   - ../../../../schemas/contracts/v1/domains/geology/
   - ../../../../policy/domains/geology/
@@ -31,6 +31,7 @@ related:
   - ../../../../data/registry/sources/geology/
   - ../../../../release/manifests/geology/
 notes:
+  - "2026-10-12: references to docs/domains/geology/sublanes/surficial.md repointed to docs/domains/geology/surficial.md, which absorbed it (owner-directed duplicate removal)"
   - "This README fills a previously blank repo file at contracts/domains/geology/sublanes/README.md."
   - "The file path is CONFIRMED present, but the broader sublanes/ convention remains PROPOSED / NEEDS VERIFICATION in Geology doctrine."
   - "A sublane is organizational only; it does not create a new domain, root, schema authority, policy authority, release authority, or public interface."

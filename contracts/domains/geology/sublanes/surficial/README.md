@@ -15,14 +15,14 @@ owners:
   - OWNER_TBD — Release steward
   - OWNER_TBD — Docs steward
 created: 2026-06-21
-updated: 2026-06-21
+updated: 2026-10-12
 policy_label: public-with-gates; semantic-contracts; geology; surficial; release-gated; source-role-aware
 tags: [kfm, contracts, geology, surficial, surficial-units, quaternary, unconsolidated-cover, map-units, boundary-version, evidence, source-role, policy, release, rollback]
 related:
   - ../../README.md
   - ../../../../../docs/domains/geology/CANONICAL_PATHS.md
   - ../../../../../docs/domains/geology/SCOPE.md
-  - ../../../../../docs/domains/geology/sublanes/surficial.md
+  - ../../../../../docs/domains/geology/surficial.md
   - ../../../../../pipelines/domains/geology/surficial_units/README.md
   - ../../../../../schemas/contracts/v1/domains/geology/
   - ../../../../../policy/domains/geology/
@@ -32,6 +32,7 @@ related:
   - ../../../../../data/registry/sources/geology/
   - ../../../../../release/manifests/geology/
 notes:
+  - "2026-10-12: references to docs/domains/geology/sublanes/surficial.md repointed to docs/domains/geology/surficial.md, which absorbed it (owner-directed duplicate removal)"
   - "This README fills a previously blank repo file at contracts/domains/geology/sublanes/surficial/README.md."
   - "The target path is CONFIRMED present in the repo, but the broader sublanes/ convention is still PROPOSED / NEEDS VERIFICATION in the Geology doctrine."
   - "This directory is for semantic contract documentation only; schemas, policy, fixtures, tests, lifecycle data, pipelines, source registry records, and release decisions live under their own responsibility roots."
@@ -103,7 +104,7 @@ This README sits inside the `contracts/` responsibility root. That matters more 
 
 | Layer | Path / root | Owns | Status |
 |---|---|---|---|
-| Human-facing doctrine | `docs/domains/geology/sublanes/surficial.md` | Surficial sublane doctrine, source families, object-family narrative, lifecycle posture | CONFIRMED present |
+| Human-facing doctrine | `docs/domains/geology/surficial.md` | Surficial sublane doctrine, source families, object-family narrative, lifecycle posture | CONFIRMED present |
 | Semantic contracts | `contracts/domains/geology/sublanes/surficial/` | Meaning of surficial contract objects | This README path CONFIRMED; child contracts NEEDS VERIFICATION |
 | Machine schemas | `schemas/contracts/v1/domains/geology/…` | JSON Schema / machine-checkable shape | PROPOSED / NEEDS VERIFICATION |
 | Policy | `policy/domains/geology/`, `policy/sensitivity/geology/` | Allow, deny, restrict, abstain, sensitivity, release decisions | NEEDS VERIFICATION |
@@ -116,7 +117,7 @@ This README sits inside the `contracts/` responsibility root. That matters more 
 
 ```mermaid
 flowchart LR
-    D["docs/domains/geology/sublanes/surficial.md<br/>doctrine"]
+    D["docs/domains/geology/surficial.md<br/>doctrine"]
     C["contracts/domains/geology/sublanes/surficial/<br/>semantic meaning"]
     S["schemas/contracts/v1/domains/geology/...<br/>machine shape"]
     P["policy/domains/geology/<br/>allow / deny / abstain"]
@@ -359,7 +360,7 @@ Rollback artifacts should identify affected surficial-unit IDs, boundary-version
 
 ## 13. Maintainer checklist
 
-- [ ] Confirm this README against `docs/domains/geology/CANONICAL_PATHS.md` and `docs/domains/geology/sublanes/surficial.md`.
+- [ ] Confirm this README against `docs/domains/geology/CANONICAL_PATHS.md` and `docs/domains/geology/surficial.md`.
 - [ ] Resolve the `sublanes/` path convention with an ADR or Directory Rules update.
 - [ ] Add or verify child contracts only after the object-family names are stable.
 - [ ] Add paired schemas, fixtures, validators, and policy tests before any public output depends on these contracts.
