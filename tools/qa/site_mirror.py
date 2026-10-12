@@ -8,7 +8,7 @@ import json
 import subprocess
 
 ROOT = Path(__file__).resolve().parents[2]
-RECEIPT = ROOT / "data/receipts/generated/site-v247-underground-ci-corrections-20261011.json"
+RECEIPT = ROOT / "data/receipts/generated/site-v251-final-review-reconciliation-20261011.json"
 DESTINATION = ROOT / "apps/site/source"
 
 
@@ -75,6 +75,16 @@ def reviewed_receipt():
     comparison = receipt["comparison"]
     if not comparison or any(entry.get("state") not in allowed for entry in comparison.values()):
         raise ValueError("MIRROR_RECEIPT_STATE_INVALID")
+    reconciliation = receipt.get("reconciliation")
+    if reconciliation is not None:
+        if not isinstance(reconciliation, dict) or reconciliation.get("current_site") != receipt["site_candidate_commit"]:
+            raise ValueError("MIRROR_RECONCILIATION_SOURCE_DRIFT")
+        # Historical receipts without this section remain readable. A declared
+        # current reconciliation must describe the selected source and its paths.
+        current_paths = set(comparison) | set(receipt.get("canonical_tool_mappings", {}))
+        for change in reconciliation.get("changes", []):
+            if not isinstance(change, dict) or change.get("path") not in current_paths:
+                raise ValueError("MIRROR_RECONCILIATION_PATH_DRIFT")
     actual_counts = {state: sum(entry["state"] == state for entry in comparison.values()) for state in allowed}
     if any(receipt["counts"].get(state, 0) != count for state, count in actual_counts.items()):
         raise ValueError("MIRROR_RECEIPT_COUNTS_DRIFT")

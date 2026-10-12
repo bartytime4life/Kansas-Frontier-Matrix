@@ -54,6 +54,27 @@ test('partial/empty responses are valid snapshots; failures and incompatible dat
   let pending=load(),rejected=assert.rejects(pending,/incompatible/);r.calls[0].resolve({...result(),body:{day:'2024-06-02'}});await rejected;await tick();
   pending=load();r.calls[1].resolve({...result(),body:{...result().body,state:'partial'}});assert.equal((await pending).body.state,'partial');
 });
+test('a fresh read immediately after success starts a new request instead of joining a completed job',async()=>{
+  const r=pool(),url='/api/live-context?feed=usgs-earthquakes';
+  const first=r.reads.read(url,options(new AbortController().signal));
+  r.calls[0].resolve(result());await first;
+  const controller=new AbortController();
+  const next=r.reads.read(url,{...options(controller.signal),cacheMs:0});
+  const settled=next.catch(error=>error);
+  await tick();
+  const count=r.calls.length;
+  if(count===2) r.calls[1].resolve(result());else controller.abort();
+  await settled;
+  assert.equal(count,2,'a completed response must no longer accept consumers');
+});
+test('an immediate retry after failure starts acquisition again',async()=>{
+  const r=pool(),url='/api/live-context?feed=usgs-earthquakes';
+  const first=r.reads.read(url,options(new AbortController().signal));
+  r.calls[0].reject(new Error('offline'));await assert.rejects(first,/offline/);
+  const next=r.reads.read(url,options(new AbortController().signal));
+  await tick();assert.equal(r.calls.length,2);
+  r.calls[1].resolve(result());await next;
+});
 test('hover and click honor rendered overlap order across registry, gauges, and fire',()=>{
   const gauge={layer:{id:'gauge'},source:'water'},fire={layer:{id:'fire'},source:'external-nifc-fire-reports'},local={layer:{id:'local'},source:'local'};
   assert.equal(hit.layerHitStack([gauge,fire,local],['local'],['gauge','fire']).officialCandidate,gauge);

@@ -80,6 +80,27 @@ def test_dirty_source_cannot_be_labeled_with_head_commit(
     assert _git(source, "rev-parse", "HEAD") == commit
 
 
+@pytest.mark.parametrize("drift", ["source", "removed_path"])
+def test_reconciliation_cannot_attest_to_old_source_or_removed_paths(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, drift: str
+) -> None:
+    _, _, commit = _repos(tmp_path, monkeypatch)
+    _receipt(tmp_path, monkeypatch, commit)
+    document = json.loads(TOOL.RECEIPT.read_text())
+    document["reconciliation"] = {
+        "current_site": commit, "changes": [{"path": "app/page.tsx", "kind": "site_advance"}],
+    }
+    TOOL.RECEIPT.write_text(json.dumps(document))
+    assert TOOL.check()["outcome"] == "PASS"
+    if drift == "source":
+        document["reconciliation"]["current_site"] = "0" * 40
+    else:
+        document["reconciliation"]["changes"][0]["path"] = "docs/OLD_PATH.md"
+    TOOL.RECEIPT.write_text(json.dumps(document))
+    with pytest.raises(ValueError, match="MIRROR_RECONCILIATION_.*_DRIFT"):
+        TOOL.check()
+
+
 def test_dirty_source_cli_returns_finite_hold(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:

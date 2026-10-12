@@ -3,6 +3,12 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import ts from "typescript";
 
+const moveInOrder = (layers, id, beforeId) => {
+  const layer = layers.splice(layers.findIndex(layer => layer.id === id), 1)[0];
+  const index = beforeId === undefined ? layers.length : layers.findIndex(layer => layer.id === beforeId);
+  assert.ok(index >= 0); layers.splice(index, 0, layer);
+};
+
 const loadSource = async (path, replacements = []) => {
   let source = await readFile(new URL(path, import.meta.url), "utf8");
   for (const [before, after] of replacements) source = source.replace(before, after);
@@ -18,7 +24,7 @@ test("draws raster under areas and points, with selections above data", async ()
     { id: "external-smoke-fill", type: "fill" }, { id: "kfm-selection-point", type: "circle" },
     { id: "kfm-ee-context-layer-2024", type: "raster" }, { id: "local-fill", type: "fill" },
   ];
-  const map = { getStyle: () => ({ layers }), moveLayer(id) { layers.push(layers.splice(layers.findIndex((layer) => layer.id === id), 1)[0]); } };
+  const map = { getStyle: () => ({ layers }), moveLayer(id, beforeId) { moveInOrder(layers, id, beforeId); } };
   composition.composeMapLayers(map);
   assert.deepEqual(layers.map((layer) => layer.id), ["base", "kfm-ee-context-layer-2024", "external-smoke-fill", "local-fill", "local-point", "kfm-selection-point"]);
   composition.composeMapLayers(map);
@@ -49,7 +55,7 @@ test("orders terrain, water, and dated radar without burying radar when satellit
     { id: "external-usgs-3dhp-hydrography-raster", type: "raster" },
     { id: "external-noaa-hms-smoke-fill", type: "fill" },
   ];
-  const map = { getStyle: () => ({ layers }), moveLayer(id) { layers.push(layers.splice(layers.findIndex((layer) => layer.id === id), 1)[0]); } };
+  const map = { getStyle: () => ({ layers }), moveLayer(id, beforeId) { moveInOrder(layers, id, beforeId); } };
   composition.composeMapLayers(map);
   assert.deepEqual(layers.map(({ id }) => id), [
     "external-noaa-goes-geocolor-raster", "external-usgs-3dhp-hydrography-raster",
@@ -86,7 +92,7 @@ test("Crop-CASMA follows 2D and globe visibility, map order, and shared raster b
   const map = {
     getProjection: () => ({ type: projection }), getStyle: () => ({ layers }),
     getLayer: id => layers.find(layer => layer.id === id),
-    moveLayer(id) { layers.push(layers.splice(layers.findIndex(layer => layer.id === id), 1)[0]); },
+    moveLayer(id, beforeId) { moveInOrder(layers, id, beforeId); },
     getLayoutProperty: id => layout.get(id) ?? "visible",
     setLayoutProperty: (id, key, value) => layout.set(id, value),
     getPaintProperty: id => paint.get(id),
@@ -144,4 +150,44 @@ test("signals require comparable observed or provider forecast data", async () =
   assert.equal(deriveMapSignals({ gauges }).length, 1);
   assert.equal(deriveMapSignals({ gauges: [{ ...gauges[0], forecastUnit: "m" }] }).length, 0);
   assert.equal(deriveMapSignals({ entered: 0, exited: 0 }).length, 0);
+});
+
+
+test("adding one raster to a settled multilayer map moves only that raster", async () => {
+  const registryUrl = `data:text/javascript;base64,${Buffer.from('export const LAYER_REGISTRY=[];').toString("base64")}`;
+  const composition = await loadSource("../app/map-layer-composition.ts", [['from "./explorer-data";', `from "${registryUrl}";`]]);
+  const layers = [{id:"base",type:"background"}, ...Array.from({length:24},(_,i)=>({id:`external-point-${i}`,type:"circle"})), {id:"kfm-selection-point",type:"circle"}];
+  const moves=[];
+  const map={getStyle:()=>({layers}),moveLayer(id,beforeId){moves.push(id);moveInOrder(layers,id,beforeId);}};
+  composition.composeMapLayers(map);assert.equal(moves.length,0);
+  layers.push({id:"external-new-raster",type:"raster"});
+  composition.composeMapLayers(map);
+  assert.equal(layers[1].id,"external-new-raster");
+  assert.equal(layers.at(-1).id,"kfm-selection-point");
+  assert.equal(moves.length,1,"unrelated settled overlays must not be moved");
+  composition.composeMapLayers(map);assert.equal(moves.length,1);
+});
+
+test("custom WebGL order and interspersed basemap layers survive composition", async () => {
+  const registryUrl = `data:text/javascript;base64,${Buffer.from('export const LAYER_REGISTRY=[];').toString("base64")}`;
+  const composition = await loadSource("../app/map-layer-composition.ts", [['from "./explorer-data";', `from "${registryUrl}";`]]);
+  const layers=[{id:"external-point",type:"circle"},{id:"base",type:"background"},{id:"kfm-selection-point",type:"circle"},{id:"scene-custom",type:"custom"},{id:"external-raster",type:"raster"}];
+  const map={getLayersOrder:()=>layers.map(layer=>layer.id),getLayer:id=>layers.find(layer=>layer.id===id),moveLayer(id,beforeId){moveInOrder(layers,id,beforeId);}};
+  composition.composeMapLayers(map);
+  assert.deepEqual(layers.map(layer=>layer.id),["base","scene-custom","external-raster","external-point","kfm-selection-point"]);
+});
+
+
+test("composition converges for every six-layer permutation without moving basemap or custom layers", async () => {
+  const registryUrl = `data:text/javascript;base64,${Buffer.from('export const LAYER_REGISTRY=[];').toString("base64")}`;
+  const composition = await loadSource("../app/map-layer-composition.ts", [['from "./explorer-data";', `from "${registryUrl}";`]]);
+  const originals=[{id:"base",type:"background"},{id:"scene-custom",type:"custom"},{id:"external-raster",type:"raster"},{id:"external-fill",type:"fill"},{id:"external-point",type:"circle"},{id:"kfm-selection-point",type:"circle"}];
+  function* permutations(items) {if(!items.length){yield [];return;}for(let i=0;i<items.length;i++)for(const rest of permutations(items.filter((_,index)=>index!==i)))yield [items[i],...rest];}
+  for(const permutation of permutations(originals)) {
+    const layers=[...permutation],moves=[];
+    const expected=[...layers.filter(layer=>!layer.id.startsWith("external-")&&layer.id!=="kfm-selection-point").map(layer=>layer.id),...composition.orderedOverlayIds(layers)];
+    const map={getStyle:()=>({layers}),moveLayer(id,beforeId){assert.ok(id.startsWith("external-")||id==="kfm-selection-point");moves.push(id);moveInOrder(layers,id,beforeId);}};
+    composition.composeMapLayers(map);assert.deepEqual(layers.map(layer=>layer.id),expected);
+    const count=moves.length;composition.composeMapLayers(map);assert.equal(moves.length,count);
+  }
 });

@@ -72,8 +72,15 @@ export class LayerJsonReads {
             this.cache.set(job.key, { result, expires: this.now() + Math.min(job.cacheMs, 300_000) });
             while (this.cache.size > 4) this.cache.delete(this.cache.keys().next().value!);
           }
+          // Retire before resolving consumers: an await continuation can start
+          // another uncached read before finally runs. A settled job cannot
+          // deliver a response to consumers attached in that interval.
+          if (this.jobs.get(job.key) === job) this.jobs.delete(job.key);
           for (const finish of [...job.consumers]) finish(result);
-        }).catch(error => { for (const finish of [...job.consumers]) finish(undefined, error); })
+        }).catch(error => {
+          if (this.jobs.get(job.key) === job) this.jobs.delete(job.key);
+          for (const finish of [...job.consumers]) finish(undefined, error);
+        })
         .finally(() => { this.active--; if (this.jobs.get(job.key) === job) this.jobs.delete(job.key); this.pump(); });
     }
   }

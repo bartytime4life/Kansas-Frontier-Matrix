@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState, type ComponentProps } from "react";
+import { useEffect, useRef, useState, type ComponentProps } from "react";
 export type { SubsurfaceInspection } from "./underground-panel";
 
 type UndergroundModule = typeof import("./underground-panel");
@@ -37,11 +37,28 @@ function LoadStatus({ failed, retry }: { failed: boolean; retry: () => void }) {
     : "Loading Underground controls…"}</p>{failed && <button type="button" onClick={retry}>Retry Underground</button>}</>;
 }
 
-export default function UndergroundPanelLoader(props: ComponentProps<UndergroundModule["default"]>) {
+export default function UndergroundPanelLoader({ entryFocusRequest = 0, ...props }: ComponentProps<UndergroundModule["default"]> & { entryFocusRequest?: number }) {
   const state = useUndergroundModule();
+  const enteredRef = useRef(false);
+  const lastEntryRequestRef = useRef(entryFocusRequest);
+  const loadingOwnsFocusRef = useRef(false);
+  useEffect(() => {
+    const entry = document.querySelector<HTMLButtonElement>(state.module
+      ? '[aria-label="Underground workspace"] [aria-label="Close Underground"]'
+      : '[aria-label="Underground loading"] [aria-label="Close Underground"]');
+    // Removing a focused loading/retry control leaves BODY active. Transfer that
+    // owned focus after the swap, but do not pull the user back from other tools.
+    const requestedEntry = lastEntryRequestRef.current !== entryFocusRequest;
+    lastEntryRequestRef.current = entryFocusRequest;
+    const shouldEnter = !enteredRef.current || requestedEntry || loadingOwnsFocusRef.current && document.activeElement === document.body;
+    enteredRef.current = true;
+    if (shouldEnter && entry && !entry.closest("[inert]")) entry.focus({ preventScroll: true });
+  }, [state.module, state.failed, entryFocusRequest]);
   if (state.module) { const Panel = state.module.default; return <Panel {...props} />; }
-  return <section className="map-source-status" aria-label="Underground loading" aria-busy={!state.failed}>
-    <header><h2>Underground</h2><button type="button" onClick={props.onClose}>Close Underground</button></header>
+  return <section className="map-source-status" aria-label="Underground loading" aria-busy={!state.failed}
+    onFocusCapture={() => { loadingOwnsFocusRef.current = true; }}
+    onBlurCapture={(event) => { if (!(event.relatedTarget instanceof Node && event.currentTarget.contains(event.relatedTarget))) loadingOwnsFocusRef.current = false; }}>
+    <header><h2>Underground</h2><button type="button" onClick={props.onClose} aria-label="Close Underground">Close Underground</button></header>
     <LoadStatus failed={state.failed} retry={state.retry} />
   </section>;
 }

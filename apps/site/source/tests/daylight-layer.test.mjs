@@ -281,10 +281,13 @@ function mockMap(initialLayers, { glFor } = {}) {
       if (layer.type === "custom" && glFor) layer.onAdd(map, glFor(layer));
     },
     removeLayer: (id) => { const index = layers.findIndex((layer) => layer.id === id); if (index >= 0) layers.splice(index, 1); },
-    moveLayer: (id) => {
+    moveLayer: (id, beforeId) => {
       const index = layers.findIndex((layer) => layer.id === id);
       if (index < 0) return;
-      layers.push(layers.splice(index, 1)[0]);
+      const layer = layers.splice(index, 1)[0];
+      const destination = beforeId === undefined ? layers.length : layers.findIndex(candidate => candidate.id === beforeId);
+      assert.ok(destination >= 0);
+      layers.splice(destination, 0, layer);
     },
     getLayoutProperty: (id, name) => map.getLayer(id)?.layout?.[name],
     setLayoutProperty: (id, name, value) => { const layer = map.getLayer(id); layer.layout ??= {}; layer.layout[name] = value; },
